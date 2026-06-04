@@ -11,62 +11,124 @@ const getProduct = async (path: string, productSlug: string): Promise<SingleProd
       brandId: brandId,
       isArchived: false
     },
-    include: {
-      allCat: {
-        include: {
-          category: true
+    select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        cover_img_url: true,
+        drawing_img_url: true,
+        graph_img_url: true,
+        isKits: true,
+        allCat: {
+            select: {
+                id: true,
+                category: {
+                    select: {
+                        name: true,
+                        slug: true,
+                        type: true
+                    }
+                }
+            }
+        },
+        images_catalogues: {
+            select: {
+                name: true,
+                url: true,
+                id: true
+            }
+        },
+        kitsFinishing: {
+            select: {
+                url: true,
+                order: true,
+                finishing: {
+                    select: {
+                        name: true,
+                        url: true,
+                    }
+                }
+            }
+        },
+        similarProducts: {
+            select: {
+            similarProduct: {
+                select: {
+                    name: true,
+                    slug: true,
+                    cover_img_url: true,
+                    id: true
+                }
+            }
+            }
+        },
+        productsKits: {
+            select: {
+            productUsedInKits: {
+                select: {
+                    name: true,
+                    slug: true,
+                    cover_img_url: true,
+                    id: true
+                }
+            }
+            }
+        },
+        multipleDatasheetProduct: {
+            select: {
+                url: true,
+                name: true,
+            }
+        },
+        multipleFRDZMAFiles: {
+            select: {
+                url: true,
+                name: true,
+            }
+        },
+        multiple3DModels: {
+            select: {
+                url: true,
+                name: true,
+            }
+        },
+        size: {
+            select: {
+                name: true,
+                value: true,
+            }
+        },
+        connectorSpecifications: {
+            select: {
+                value: true,
+                notes: true,
+                dynamicspecification: {
+                    select: {
+                        name: true,
+                        slug: true,
+                        unit: true,
+                        priority: true,
+                    }
+                },
+                dynamicspecificationParent: {
+                    select: {
+                        name: true,
+                        slug: true,
+                        priority: true,
+                    }
+                },
+                dynamicspecificationSubParent: {
+                    select: {
+                        name: true,
+                        slug: true,
+                        priority: true,
+                    }
+                }
+            }
         }
-      },
-      images_catalogues: true,
-      kitsFinishing: {
-        include: {
-          finishing: true
-        }
-      },
-      multipleDatasheetProduct: true,
-      multipleFRDZMAFiles: true,
-      multiple3DModels: true,
-      similarProducts: true,
-      productsUsedInKits: true,
-      size: true,
-      connectorSpecifications: {
-        include: {
-          dynamicspecification: true,
-          dynamicspecificationParent: true,
-          dynamicspecificationSubParent: true
-        }
-      }
     }
   });
-  const similarProd = await prismadb.product.findMany({
-    where: {
-      id: {
-        in: product?.similarProducts.map((prod) => prod.similarProductId)
-      },
-      isArchived: false
-    },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      cover_img_url: true
-    }
-  })
-  
-  const usedInKits = await prismadb.product.findMany({
-    where: {
-      id: {
-        in: product?.productsUsedInKits.map((prod) => prod.productUsedInKitsId)
-      },
-      isArchived: false
-    },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      cover_img_url: true
-    }
-  })
 
   const specsCombined = (product?.connectorSpecifications ?? []).reduce<SpecificationProp[]>(
     (acc, connector) => {
@@ -144,14 +206,6 @@ const getProduct = async (path: string, productSlug: string): Promise<SingleProd
     });
   });
 
-  const allKitsFinishing = await prismadb.allfinishing.findMany({
-    where: {
-      id: {
-        in: product?.kitsFinishing.map((finish) => finish.finishingId)
-      }
-    }
-  })
-
 
 
   let prod_cat: Array<AllCategory> = []
@@ -193,20 +247,17 @@ const getProduct = async (path: string, productSlug: string): Promise<SingleProd
       })
     })
     
-    allKitsFinishing && allKitsFinishing.length > 0 && allKitsFinishing.map((img) => {
-      all_kits_finishing.push({
-        name: img.name,
-        url: img.url,
-        productId: img.id
-      })
-    })
-
     product.kitsFinishing && product.kitsFinishing.length > 0 && product.kitsFinishing.map((img) => {
       all_kits_finishing_preview.push({
         name: img.finishing.name,
         url: img.url,
-        productId: img.productId,
+        productId: product.id,
         order: img.order
+      })
+      all_kits_finishing.push({
+        name: img.finishing.name,
+        url: img.finishing.url,
+        productId: product.id
       })
     })
     
@@ -234,21 +285,21 @@ const getProduct = async (path: string, productSlug: string): Promise<SingleProd
       })
     })
     
-    similarProd && similarProd.length > 0 && similarProd.map((prod) => {
+    product.similarProducts && product.similarProducts.length > 0 && product.similarProducts.map((prod) => {
       all_similar_prods.push({
-        ProductId: prod.id,
-        image_url: prod.cover_img_url,
-        name: prod.name,
-        href: prod.slug,
+        ProductId: prod.similarProduct.id,
+        image_url: prod.similarProduct.cover_img_url,
+        name: prod.similarProduct.name,
+        href: prod.similarProduct.slug,
       })
     })
     
-    usedInKits && usedInKits.length > 0 && usedInKits.map((prod) => {
+    product.productsKits && product.productsKits.length > 0 && product.productsKits.map((prod) => {
       all_products_in_kits.push({
-        ProductId: prod.id,
-        image_url: prod.cover_img_url,
-        name: prod.name,
-        href: prod.slug,
+        ProductId: prod.productUsedInKits.id,
+        image_url: prod.productUsedInKits.cover_img_url,
+        name: prod.productUsedInKits.name,
+        href: prod.productUsedInKits.slug,
       })
     })
 

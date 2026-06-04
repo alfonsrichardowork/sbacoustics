@@ -14,6 +14,7 @@ import SwiperCarouselKitsFinishing from "@/components/single-product-page/swiper
 import { Dot } from "lucide-react";
 import { LightboxOneProduct } from "@/components/drawingOneProduct";
 import React from "react";
+import prismadb from "@/lib/prismadb";
 
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-black p-0 py-1"
 const all_sub_title_style = "text-left font-bold xl:text-2xl lg:text-xl md:text-lg sm:text-md text-black"
@@ -25,13 +26,14 @@ type Props = {
 // export const revalidate = 86400
 
 // export async function generateStaticParams(){
-//   const brandId = process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-//   const API = `${process.env.NEXT_PUBLIC_ROOT_URL}/${process.env.NEXT_PUBLIC_FETCH_ALL_PRODUCTS}`
-//   const API_EDITED_BRANDID = API.replace('{brandId}', brandId ?? '680c5eee-7ed7-41bc-b14b-4185f8a1c379'); //SBAcoustics ID as default
-//   const res = await fetch(API_EDITED_BRANDID,
-//     { next: { revalidate: 86400 } } // ISR for individual product data
-//   );
-//   const products = await res.json();
+//   const products = await prismadb.product.findMany({
+//     where: {
+//       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+//     },
+//     select: {
+//       slug: true,
+//     },
+//   });
 //   return products.map((product: { slug: string }) => ({
 //     productSlug: product.slug
 //   }));

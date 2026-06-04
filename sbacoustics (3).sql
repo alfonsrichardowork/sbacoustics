@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Jun 02, 2026 at 09:12 AM
--- Server version: 8.0.46
--- PHP Version: 8.4.21
+-- Host: 127.0.0.1
+-- Generation Time: Jun 04, 2026 at 11:24 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sbacoust_new_sbacoustics`
+-- Database: `sbacoustics`
 --
 
 -- --------------------------------------------------------
@@ -28,16 +28,16 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `allcategory` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `thumbnail_url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `type` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `slug` text NOT NULL,
+  `description` text NOT NULL,
+  `thumbnail_url` text NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `updatedBy` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `updatedBy` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -117,13 +117,13 @@ INSERT INTO `allcategory` (`id`, `brandId`, `type`, `name`, `slug`, `description
 --
 
 CREATE TABLE `allfinishing` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '680c5eee-7ed7-41bc-b14b-4185f8a1c379',
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `updatedAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `url` text NOT NULL,
+  `brandId` varchar(191) NOT NULL DEFAULT '680c5eee-7ed7-41bc-b14b-4185f8a1c379',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `updatedAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `updatedBy` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -148,10 +148,10 @@ INSERT INTO `allfinishing` (`id`, `name`, `url`, `brandId`, `createdAt`, `update
 --
 
 CREATE TABLE `allproductcategory` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `categoryId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `categoryId` varchar(191) NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1091,24 +1091,24 @@ INSERT INTO `allproductcategory` (`id`, `productId`, `categoryId`, `createdAt`, 
 --
 
 CREATE TABLE `brand` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `userId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `userId` varchar(191) NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `address` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `telephone` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `maps` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cover` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `homepage_about_us_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `homepage_brand_choice_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `homepage_catalogues_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `homepage_open_source_kits_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `homepage_about_us_text` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `homepage_brand_choice_text` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `homepage_catalogues_text` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `homepage_open_source_kits_text` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `address` text NOT NULL DEFAULT '',
+  `email` text NOT NULL DEFAULT '',
+  `telephone` text NOT NULL DEFAULT '',
+  `maps` text NOT NULL DEFAULT '',
+  `cover` text NOT NULL DEFAULT '',
+  `homepage_about_us_url` varchar(191) NOT NULL DEFAULT '',
+  `homepage_brand_choice_url` varchar(191) NOT NULL DEFAULT '',
+  `homepage_catalogues_url` varchar(191) NOT NULL DEFAULT '',
+  `homepage_open_source_kits_url` varchar(191) NOT NULL DEFAULT '',
+  `homepage_about_us_text` varchar(191) NOT NULL DEFAULT '',
+  `homepage_brand_choice_text` varchar(191) NOT NULL DEFAULT '',
+  `homepage_catalogues_text` varchar(191) NOT NULL DEFAULT '',
+  `homepage_open_source_kits_text` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1127,14 +1127,14 @@ INSERT INTO `brand` (`id`, `name`, `userId`, `createdAt`, `updatedAt`, `address`
 --
 
 CREATE TABLE `catalogues` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pdf` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cover` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `pdf` text NOT NULL,
+  `cover` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `pdfname` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `pdfname` text NOT NULL,
+  `brandId` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1152,12 +1152,12 @@ INSERT INTO `catalogues` (`id`, `pdf`, `cover`, `updatedBy`, `createdAt`, `updat
 --
 
 CREATE TABLE `certificate` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `keyId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `packingDate` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `itemNumber` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `keyId` varchar(191) NOT NULL,
+  `packingDate` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `itemNumber` varchar(191) NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1168,22 +1168,22 @@ CREATE TABLE `certificate` (
 --
 
 CREATE TABLE `distributors` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `country` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `website` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `facebook` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `instagram` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lat` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lng` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `continent` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `updatedAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `id` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `country` varchar(191) NOT NULL,
+  `phone` varchar(191) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `website` varchar(191) NOT NULL,
+  `facebook` varchar(191) NOT NULL,
+  `instagram` varchar(191) NOT NULL,
+  `lat` varchar(191) NOT NULL,
+  `lng` varchar(191) NOT NULL,
+  `continent` varchar(191) NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `updatedAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `updatedBy` text NOT NULL DEFAULT '',
+  `address` varchar(191) NOT NULL DEFAULT '',
+  `brandId` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1252,14 +1252,14 @@ INSERT INTO `distributors` (`id`, `name`, `country`, `phone`, `email`, `website`
 --
 
 CREATE TABLE `dynamicspecification` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `unit` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `slug` text NOT NULL,
+  `unit` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `priority` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `priority` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1370,13 +1370,13 @@ INSERT INTO `dynamicspecification` (`id`, `name`, `slug`, `unit`, `updatedBy`, `
 --
 
 CREATE TABLE `dynamicspecificationparent` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `priority` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `slug` text NOT NULL,
+  `priority` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1397,13 +1397,13 @@ INSERT INTO `dynamicspecificationparent` (`id`, `name`, `updatedBy`, `createdAt`
 --
 
 CREATE TABLE `dynamicspecificationsubparent` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `slug` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `priority` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `priority` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1425,13 +1425,13 @@ INSERT INTO `dynamicspecificationsubparent` (`id`, `name`, `slug`, `updatedBy`, 
 --
 
 CREATE TABLE `image_catalogues` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `url` text NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `applicationId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `name` text NOT NULL DEFAULT '',
+  `applicationId` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1761,7 +1761,7 @@ INSERT INTO `image_catalogues` (`id`, `productId`, `url`, `createdAt`, `updatedA
 ('70e22599-7eee-4f43-ab98-b95ebb490ce8', '1f4dcb0e-1e65-4fcc-bc93-3d48e4dcd5e1', '/uploads/productimage/SATORI 16 Magnetic Grille-picture-3.jpg', '2026-02-10 08:25:01.042', '2026-02-10 08:25:01.042', 'Picture 3', ''),
 ('711d07ec-a24c-4746-8cf0-e4e117c28039', 'fad498db-9a64-4e66-a25c-f7d7a30c1ad7', '/uploads/productimage/5x8 inch SB15SFCR39-8-picture-3.jpg', '2025-12-30 10:03:54.706', '2025-12-30 10:03:54.706', 'Picture 3', ''),
 ('71b75d25-9f7c-4a63-93a8-771931d4a0de', '11b9baa4-8f23-4526-816a-2bb2a77ede87', '/uploads/productimage/5 inch SATORI MW13P-4-picture-2.jpg', '2025-12-16 09:31:04.239', '2026-03-02 06:12:09.639', 'Picture 2', ''),
-('71c063aa-6db6-4b5d-8b1a-8a50fbf8d50c', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-picture-3.jpg', '2026-01-14 08:10:21.436', '2026-04-30 01:50:30.302', 'Picture 3', ''),
+('71c063aa-6db6-4b5d-8b1a-8a50fbf8d50c', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-picture-3.jpg', '2026-01-14 08:10:21.436', '2026-06-03 08:40:25.226', 'Picture 3', ''),
 ('72a02c9e-a951-40c1-a08b-dae560dff08e', 'b7c77f67-953e-46fa-866f-80ea117aa9d1', '/uploads/productimage/5 inch SB15CAC30-8-picture-3.jpg', '2025-12-18 10:05:52.034', '2026-03-02 06:15:23.942', 'Picture 3', ''),
 ('72e4f7fc-95c8-4958-bab7-ebb8d23bd362', 'd482987e-9acc-4996-8ca9-57c4347e65d0', '/uploads/productimage/8 inch SB20FRPC30-8-picture-3.jpg', '2025-12-09 10:00:36.962', '2026-04-07 06:51:46.005', 'Picture 3', ''),
 ('7328b818-d8da-4ac9-ac68-9df8a037fd04', 'a4ccfa64-265a-4ee4-a0b6-7d0f565764ee', '/uploads/productimage/8 inch SB20PFC30-8-picture-1.jpg', '2026-01-08 08:02:51.433', '2026-01-08 08:02:51.433', 'Picture 1', ''),
@@ -1834,12 +1834,12 @@ INSERT INTO `image_catalogues` (`id`, `productId`, `url`, `createdAt`, `updatedA
 ('8995624c-058c-4183-88de-930f47cce96e', '7360b1bc-0b1e-4ef4-a5a3-341e75eb66a9', '/uploads/productimage/5 inch SB13PFC25-4-picture-2.jpg', '2026-01-08 04:45:44.676', '2026-01-08 04:45:44.676', 'Picture 2', ''),
 ('899dfc2c-532a-4e59-bda4-c62f8855953a', 'e286fe46-c0fd-4fe6-a268-f9b7e0a12d6b', '/uploads/productimage/Rinjani Be-picture-2.jpg', '2026-01-14 07:46:15.022', '2026-04-29 08:01:39.006', 'Picture 2', ''),
 ('89af45c3-80bc-49cc-80a3-6947f3aededc', 'e9babc62-1886-4347-9ea4-8b21b51eded0', '/uploads/productimage/SATORI TW29BN-B-8-picture-3.jpg', '2025-12-09 07:26:11.042', '2026-05-28 06:53:20.954', 'Picture 3', ''),
-('8a5d98c2-bb1c-4f7b-96b1-d0a85e0f9aab', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-picture-1.jpg', '2026-01-14 08:10:21.436', '2026-04-30 01:50:30.306', 'Picture 1', ''),
+('8a5d98c2-bb1c-4f7b-96b1-d0a85e0f9aab', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-picture-1.jpg', '2026-01-14 08:10:21.436', '2026-06-03 08:40:25.227', 'Picture 1', ''),
 ('8aacc41f-4055-40cb-bf6c-55aeec0c2ad1', 'f42bb052-58aa-419d-bb0e-e84c9c67a010', '/uploads/productimage/8 inch SB23CACS45-8-picture-1.jpg', '2025-12-12 08:35:29.617', '2026-05-29 07:11:12.756', 'Picture 1', ''),
 ('8b0d4738-0af7-4657-8d98-86d7365047f0', 'c966627c-e895-4aad-8e32-7bf2631cdf9f', '/uploads/productimage/8 inch SB23CACS45-4-picture-3.jpg', '2025-12-12 08:23:38.629', '2026-05-29 07:10:28.506', 'Picture 3', ''),
 ('8b1260ce-53d0-433e-8723-42c8dd478124', 'bc10d428-223f-48db-906b-6ae54c8887ba', '/uploads/productimage/6 inch SB17NBAC35-4-picture-2.jpg', '2025-12-19 10:12:28.190', '2026-04-07 06:34:49.675', 'Picture 2', ''),
 ('8bd8b913-e553-4354-a0f4-63d30178d386', '1c75ecd3-003e-4c86-a8c3-6a3788abea4c', '/uploads/productimage/Ara Be-crossover-7.jpg', '2026-04-30 01:57:01.507', '2026-04-30 01:57:01.507', 'Picture 7', ''),
-('8c2d89a4-330d-41cf-bf2f-da693c3f0c5d', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-SATORI 16 magnetic grille-6.jpg', '2026-04-30 01:50:30.300', '2026-04-30 01:50:30.300', 'Picture 6', ''),
+('8c2d89a4-330d-41cf-bf2f-da693c3f0c5d', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-SATORI 16 magnetic grille-6.jpg', '2026-04-30 01:50:30.300', '2026-06-03 08:40:25.227', 'Picture 6', ''),
 ('8cc47d4d-7553-4e6f-9868-229afed05e06', '4d4ea626-11b7-4ff9-b9f9-c5315c371428', '/uploads/productimage/SATORI-WG29-187-frequency-response-with-TW29BN-8.jpg', '2026-04-01 07:26:28.480', '2026-05-29 06:44:37.706', 'SATORI WG29-187 Frequency Response with TW29BN-8', ''),
 ('8ce9d8a6-4726-4564-8b25-370fd008c90d', '1c75ecd3-003e-4c86-a8c3-6a3788abea4c', '/uploads/productimage/Ara Be-picture-1.jpg', '2026-01-15 05:56:04.592', '2026-04-30 01:57:01.513', 'Picture 1', ''),
 ('8d4b63af-340c-48cb-9519-5b783881abd2', 'c96e9e8c-3042-49f0-92fc-c5eaf9a07b83', '/uploads/productimage/4 inch SB12PFCR-00-picture-3.jpg', '2025-12-10 08:19:44.496', '2025-12-10 08:19:44.496', 'Picture 3', ''),
@@ -1880,7 +1880,7 @@ INSERT INTO `image_catalogues` (`id`, `productId`, `url`, `createdAt`, `updatedA
 ('98c5afe4-3631-47c8-9257-ea6c863c0d30', 'd74b797f-7d6c-4234-b146-ca2e452d6e1c', '/uploads/productimage/Bromo-picture-4.jpg', '2026-02-10 07:09:09.626', '2026-02-10 07:09:09.626', 'Picture 4', ''),
 ('992ca86c-4839-465a-9227-efcf160f37e7', '121b8d7c-9f23-4979-869e-63f9dd265e89', '/uploads/productimage/SATORI TW29DN-B-picture-1.jpg', '2025-12-09 07:39:10.112', '2025-12-09 07:39:10.112', 'Picture 1', ''),
 ('99d92c60-8455-4adb-b524-0514133e3d97', 'd1cb7bd4-b7cd-4b36-b530-5812457df9ba', '/uploads/productimage/8 inch SB23NBACS45-4-picture-3.jpg', '2025-12-12 09:38:53.484', '2026-05-29 07:19:49.277', 'Picture 3', ''),
-('9aaba516-30ed-451a-993f-18e2a802fcac', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-picture-2.jpg', '2026-01-14 08:10:21.436', '2026-04-30 01:50:30.306', 'Picture 2', ''),
+('9aaba516-30ed-451a-993f-18e2a802fcac', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-picture-2.jpg', '2026-01-14 08:10:21.436', '2026-06-03 08:40:25.226', 'Picture 2', ''),
 ('9aba3066-6546-4229-8dec-d36afe6c2c85', '46dc41e2-601e-4fdd-aa7c-ca7c95c0d6b2', '/uploads/productimage/4 inch SB12NRXF25-4-picture-3.jpg', '2026-01-08 03:34:34.153', '2026-01-08 03:34:34.153', 'Picture 3', ''),
 ('9ac4ca93-891e-4625-b2be-32cf78b4ef0a', '43483bcd-37d0-4754-b52e-52684274f3d7', '/uploads/productimage/5x8 inch SB15SFCR39-4-picture-1.jpg', '2025-12-30 09:59:06.393', '2025-12-30 09:59:06.393', 'Picture 1', ''),
 ('9aed2402-f01d-46b0-8ddb-ac64bbe4ca73', 'b059c81e-0bdb-4899-8b24-59854c2a6221', '/uploads/productimage/Sasandu Tx-crossover-8.jpg', '2026-04-29 07:54:35.215', '2026-04-29 07:54:35.215', 'Picture 8', ''),
@@ -1928,7 +1928,7 @@ INSERT INTO `image_catalogues` (`id`, `productId`, `url`, `createdAt`, `updatedA
 ('a927f901-a9fc-430c-a58c-58e692c6afb9', '20449ecf-5594-4a83-8a4b-5e4197d787e3', '/uploads/productimage/SBA-Eka-e1624671438528-1753057467791.jpg', '2025-07-21 00:24:27.999', '2025-07-21 00:24:27.999', 'Angle 1', ''),
 ('a972b763-40c5-49dd-b1ab-9700f02c3ede', 'aca50e40-bdbf-44ad-a3c4-2ed53eb3307f', '/uploads/productimage/SATORI TW29TXNWG-4-picture-2.jpg', '2025-12-09 06:46:35.451', '2026-03-17 06:10:58.603', 'Picture 2', ''),
 ('a9b25ac6-f9a4-400e-b1fb-16406a853047', 'f73eb673-d9a8-4c15-a2e1-c07582d5f37c', '/uploads/productimage/SATORI TW29DN-8-picture-3.jpg', '2025-12-09 07:36:49.556', '2026-05-28 07:00:41.090', 'Picture 3', ''),
-('a9e57bfc-02c1-406f-8218-bb03265047e3', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-picture-4.jpg', '2026-01-14 08:10:21.436', '2026-04-30 01:50:30.304', 'Picture 4', ''),
+('a9e57bfc-02c1-406f-8218-bb03265047e3', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-picture-4.jpg', '2026-01-14 08:10:21.436', '2026-06-03 08:40:25.227', 'Picture 4', ''),
 ('aa544301-8bb9-4bc2-bc23-67d6846afa18', 'cbd45351-278c-4720-a176-b897f403b095', '/uploads/productimage/1 inch SB36WBAC21-4-picture-3.jpg', '2025-12-09 09:37:14.910', '2025-12-09 09:37:14.910', 'Picture 3', ''),
 ('aabf0ea6-06ad-4499-9bd9-c2f54fb124ee', 'c791456a-06af-499c-b55e-3a68c9918276', '/uploads/productimage/4 inch SB12PAC25-4-picture-3.jpg', '2026-01-06 02:46:12.611', '2026-01-06 02:46:12.611', 'Picture 3', ''),
 ('aad1b2ec-dd24-4994-8e30-bce887812317', '17b0418f-50a9-4fd2-9d6e-a70ed3636fb2', '/uploads/productimage/10 inch SW26DAC76-4-picture-1.jpg', '2026-01-08 10:20:25.633', '2026-01-08 10:20:25.633', 'Picture 1', ''),
@@ -2001,7 +2001,7 @@ INSERT INTO `image_catalogues` (`id`, `productId`, `url`, `createdAt`, `updatedA
 ('c321d050-7651-41fa-aba4-62e126bfd46d', 'fa06264e-00d5-4adf-95b8-51258f40b6c1', '/uploads/productimage/4 inch SB12PFCR25-4-COAX-picture-3.jpg', '2025-12-10 06:50:17.756', '2025-12-10 06:50:17.756', 'Picture 3', ''),
 ('c32d3052-3f88-4a0e-8331-345becbed9a3', '8a5e9896-1301-44d2-be7c-9267749cee1e', '/uploads/productimage/SB29BAC-C000-4-picture-1.jpg', '2025-12-09 06:23:53.509', '2026-04-06 01:48:55.592', 'Picture 1', ''),
 ('c42e9c8f-4c60-42b8-821d-4971ccb531e0', '58c7adaa-0972-492d-93d6-a2160f00de30', '/uploads/productimage/6.5 inch SATORI MW16PNW-4-picture-3.jpg', '2025-12-17 08:35:36.442', '2025-12-17 08:35:36.442', 'Picture 3', ''),
-('c45858fa-3148-42a9-a45b-60744a7b623f', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-SATORI TW29 magnetic grille-5.jpg', '2026-04-30 01:50:30.300', '2026-04-30 01:50:30.300', 'Picture 5', ''),
+('c45858fa-3148-42a9-a45b-60744a7b623f', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-SATORI TW29 magnetic grille-5.jpg', '2026-04-30 01:50:30.300', '2026-06-03 08:40:25.227', 'Picture 5', ''),
 ('c53d4615-5adb-4a25-b5a4-0ba7920b60ae', '2de60ca1-06e1-4a23-b797-9322c9a6b650', '/uploads/productimage/6.5 inch SATORI MR16P-8-picture-1.jpg', '2026-01-06 04:34:43.904', '2026-01-06 04:34:43.904', 'Picture 1', ''),
 ('c5746da7-b73e-4dad-b2fb-9efd9395cbca', 'e7917dcf-bdbd-432e-8416-1333eaa0fc6d', '/uploads/productimage/SATORI 24 Magnetic Grille-picture-3.jpg', '2026-02-10 08:32:31.985', '2026-02-10 08:32:31.985', 'Picture 3', ''),
 ('c5b6cb97-17a4-4926-9e66-fae058ceaeb2', '1755f6c0-6bb8-4c10-a656-c65e2bb0efbe', '/uploads/productimage/12 inch SB34SWPL76-4-picture-3.jpg', '2025-12-11 09:53:18.114', '2025-12-11 09:53:18.114', 'Picture 3', ''),
@@ -2127,7 +2127,7 @@ INSERT INTO `image_catalogues` (`id`, `productId`, `url`, `createdAt`, `updatedA
 ('f0127f4c-412d-49a3-8163-9fb6b036876b', '0870a243-a3a4-4cae-870b-c67745a004f7', '/uploads/productimage/SATORI TW29RN-picture-3.jpg', '2025-12-09 07:47:42.948', '2026-05-28 07:08:19.108', 'Picture 3', ''),
 ('f02727dd-7e8c-43f6-aa44-fdff656ec987', 'd38b8147-d68e-4d04-953a-3dd02231af99', '/uploads/productimage/Ara Tx-crossover-7.jpg', '2026-04-30 02:00:09.618', '2026-04-30 02:00:09.618', 'Picture 7', ''),
 ('f05667b8-9520-4085-b288-7a0bd64ce8d2', '1b5a2c2c-1e00-4e88-81d9-490a8c3ded10', '/uploads/productimage/SATORI TW29D-B-picture-1.jpg', '2025-12-09 07:32:50.568', '2026-05-28 06:57:11.227', 'Picture 1', ''),
-('f05e7e9d-b195-4e54-bfb1-b5a8375e62b4', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-crossover-7.jpg', '2026-04-30 01:50:30.300', '2026-04-30 01:50:30.300', 'Picture 7', ''),
+('f05e7e9d-b195-4e54-bfb1-b5a8375e62b4', 'c7e7a335-25e3-4cb7-be04-98bcbd22c720', '/uploads/productimage/Rinjani Tx-crossover-7.jpg', '2026-04-30 01:50:30.300', '2026-06-03 08:40:25.227', 'Picture 7', ''),
 ('f065a9ac-16e3-4913-abf8-817f5e43e8c5', 'b4d2a46c-1ae4-4b1d-bab6-f3e6fc687839', '/uploads/productimage/SATORI TW29DN-B-8-picture-2.jpg', '2025-12-09 07:40:57.868', '2026-05-28 07:02:46.229', 'Picture 2', ''),
 ('f0be0aac-79ab-4af6-9cfe-39b1f8a9b7de', 'bb54927d-0d82-466d-a537-143069fe4e46', '/uploads/productimage/8 inch SB23NACS45-4-picture-2.jpg', '2026-01-08 08:56:15.736', '2026-05-29 07:17:07.518', 'Picture 2', ''),
 ('f102c002-bb50-4ac8-8160-81b631f478d9', '46809f7e-5b20-4f4d-9538-f262932bfc3e', '/uploads/productimage/SATORI TW29BNWG-4-picture-2.jpg', '2025-12-09 06:57:11.301', '2026-04-15 01:49:38.072', 'Picture 2', ''),
@@ -2188,11 +2188,11 @@ INSERT INTO `image_catalogues` (`id`, `productId`, `url`, `createdAt`, `updatedA
 --
 
 CREATE TABLE `kitsfinishing` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `finishingId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `order` int NOT NULL DEFAULT '0'
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `finishingId` varchar(191) NOT NULL DEFAULT '',
+  `url` text NOT NULL DEFAULT '',
+  `order` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2286,12 +2286,12 @@ INSERT INTO `kitsfinishing` (`id`, `productId`, `finishingId`, `url`, `order`) V
 --
 
 CREATE TABLE `menupriority` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `priorityNumber` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `productId` text NOT NULL,
+  `priorityNumber` text NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `categoryId` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `categoryId` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2604,10 +2604,10 @@ INSERT INTO `menupriority` (`id`, `productId`, `priorityNumber`, `createdAt`, `u
 --
 
 CREATE TABLE `multiple3dmodels` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `url` text NOT NULL DEFAULT '',
+  `name` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2829,11 +2829,11 @@ INSERT INTO `multiple3dmodels` (`id`, `productId`, `url`, `name`) VALUES
 --
 
 CREATE TABLE `multipledatasheetproduct` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `applicationId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `url` text NOT NULL DEFAULT '',
+  `name` text NOT NULL DEFAULT '',
+  `applicationId` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3162,10 +3162,10 @@ INSERT INTO `multipledatasheetproduct` (`id`, `productId`, `url`, `name`, `appli
 --
 
 CREATE TABLE `multiplefrdzmafiles` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `url` text NOT NULL DEFAULT '',
+  `name` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3270,28 +3270,28 @@ INSERT INTO `multiplefrdzmafiles` (`id`, `productId`, `url`, `name`) VALUES
 --
 
 CREATE TABLE `product` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `isFeatured` tinyint(1) NOT NULL DEFAULT '0',
-  `isArchived` tinyint(1) NOT NULL DEFAULT '0',
-  `sizeId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `isFeatured` tinyint(1) NOT NULL DEFAULT 0,
+  `isArchived` tinyint(1) NOT NULL DEFAULT 0,
+  `sizeId` varchar(191) NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `isNewProduct` tinyint(1) NOT NULL DEFAULT '0',
-  `featuredDesc` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `isKits` tinyint(1) NOT NULL DEFAULT '0',
-  `navbarNotes` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `priority` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `searchbox_desc` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tempAllFinished` tinyint(1) NOT NULL DEFAULT '0',
-  `cover_img_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `drawing_img_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `graph_img_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `featured_img_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `description` text NOT NULL,
+  `slug` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `isNewProduct` tinyint(1) NOT NULL DEFAULT 0,
+  `featuredDesc` text NOT NULL DEFAULT '',
+  `isKits` tinyint(1) NOT NULL DEFAULT 0,
+  `navbarNotes` text NOT NULL DEFAULT '',
+  `priority` varchar(191) NOT NULL DEFAULT '',
+  `searchbox_desc` text NOT NULL DEFAULT '',
+  `tempAllFinished` tinyint(1) NOT NULL DEFAULT 0,
+  `cover_img_url` varchar(191) NOT NULL DEFAULT '',
+  `drawing_img_url` varchar(191) NOT NULL DEFAULT '',
+  `graph_img_url` varchar(191) NOT NULL DEFAULT '',
+  `featured_img_url` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3516,7 +3516,7 @@ INSERT INTO `product` (`id`, `brandId`, `name`, `isFeatured`, `isArchived`, `siz
 ('c642b786-33bd-47f5-a670-b650149bb925', '9e2a9f31-bce3-48ff-b438-0a00f8f8ec0b', 'ROSSO-75CDN-T', 0, 0, '3aa615e1-7464-49b0-aefe-19cb5ab117df', '2025-09-15 08:57:07.431', '2026-04-17 04:11:50.626', '<ul><li><p>Titanium diaphragm</p></li><li><p>Neodymium motor assembly</p></li><li><p>Copper cap for minimum intermodulation distrotion</p></li><li><p>Smooth yet detailed and dynamic character</p></li><li><p>High sensitivity and linear frequency response</p></li><li><p>Advanced voice coil with flat copper clad aluminum wire</p></li><li><p>Extended frequency response and bandwidth</p></li></ul>', 'rosso-75cdn-t', 'admin', 1, '', 0, '', '', '', 0, '/uploads/productimage/ROSSO-75CDN-T.webp', '/uploads/productdrawing/ROSSO-75CDN-T-drawing.jpg', '/uploads/productfrequencyresponse/ROSSO-75CDN-T-frequency response.jpg', ''),
 ('c746e5ab-7c3f-4088-8139-700ab6f103d7', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'SB26CDC-C000-4 / Ceramic', 0, 0, '28c45742-6d1f-44bd-915b-f940e30caf92', '2024-05-08 07:19:00.700', '2025-12-09 06:21:29.489', '<ul><li><p>Aluminium/Ceramic Dome</p></li><li><p>Phase optimized diaphragm design for coherent high frequency radiation</p></li><li><p>Copper cap for reduced voice coil inductance and minimum phase shift</p></li><li><p>Saturation controlled motor system for low distortion</p></li><li><p>Non-reflective rear chamber with optimized damping for improved dynamics</p></li><li><p>Flow optimized vented pole piece for optimum coupling to rear chamber</p></li><li><p>CCAW voice coil for low moving mass</p></li><li><p>Long life silver lead wires</p></li><li><p>Low resonance frequency</p></li></ul>', 'sb26cdc-c000-4', 'admin', 0, '', 0, '', '', '', 1, '/uploads/productimage/SB26CDC-C000-4.jpg', '/uploads/productdrawing/SB26CDC-C000-4-drawing.jpg', '/uploads/productfrequencyresponse/SB26CDC-C000-4-frequency response.jpg', ''),
 ('c791456a-06af-499c-b55e-3a68c9918276', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', '4\" SB12PAC25-4 / Aluminum', 0, 0, 'ee5d459a-eaec-4159-9082-bdbe673a1ea4', '2024-05-06 07:40:31.695', '2026-01-06 02:46:12.657', '<ul><li><p>Vented reinforced plastic chassis</p></li><li><p>Anodised aluminium cone</p></li><li><p>Low damping rubber surround</p></li><li><p>Large vented motor system</p></li><li><p>Long stroke linear suspension</p></li><li><p>Light weight CCAW voice coil</p></li><li><p>Non-conducting fibreglass coil former</p></li><li><p>Non-resonant long life lead wires</p></li></ul>', 'sb12pac25-4', 'admin', 0, '', 0, '', '', '', 1, '/uploads/productimage/4 inch SB12PAC25-4.jpg', '/uploads/productdrawing/4 inch SB12PAC25-4-drawing.jpg', '/uploads/productfrequencyresponse/4 inch SB12PAC25-4-frequency response.jpg', ''),
-('c7e7a335-25e3-4cb7-be04-98bcbd22c720', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'Rinjani TX', 0, 0, '28c45742-6d1f-44bd-915b-f940e30caf92', '2024-05-08 03:07:51.624', '2026-05-29 09:38:11.298', '<p>The RINJANI TX takes advantage of the top of the line SATORI MW16TX-8 with two 6½″ midwoofers used in each speaker for a 2½-way floor standing speaker and pairs them with the 29mm wide surround TeXtreme® tweeter SATORI TW29TXN-B-8 for a visually and acoustically stunning match.</p><p>The crossover of the RINJANI TX has been completely revised for the TeXtreme® drivers to further enhance the performance and sonic qualities. the sound is very natural and true to life with the two 6½″ Mid woofers speaker delivering accurate and solid bass at even high listening levels.</p><p>The RINJANI’s faceted baffle is specially designed to reduce high frequency diffraction an yields superb imaging qualities. The 7 reclined cabinet ensures good time alignment resulting in sublime staging and pin point placement of instruments. the quality crossover lives in it’s own sealed chamber in the bottom of the speaker with a slanted divider to diminish standing waves.</p>', 'rinjani-tx', 'admin', 0, '', 1, '', '6', '2½-way Floor Standing Speaker Kit', 1, '/uploads/productimage/Rinjani tx.jpg', '/uploads/productdrawing/Rinjani Tx-drawing.jpg', '', ''),
+('c7e7a335-25e3-4cb7-be04-98bcbd22c720', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'Rinjani TX', 0, 0, '28c45742-6d1f-44bd-915b-f940e30caf92', '2024-05-08 03:07:51.624', '2026-06-03 08:40:25.237', '<p>The RINJANI TX takes advantage of the top of the line SATORI MW16TX-8 with two 6½″ midwoofers used in each speaker for a 2½-way floor standing speaker and pairs them with the 29mm wide surround TeXtreme® tweeter SATORI TW29TXN-B-8 for a visually and acoustically stunning match.</p><p>The crossover of the RINJANI TX has been completely revised for the TeXtreme® drivers to further enhance the performance and sonic qualities. the sound is very natural and true to life with the two 6½″ Mid woofers speaker delivering accurate and solid bass at even high listening levels.</p><p>The RINJANI’s faceted baffle is specially designed to reduce high frequency diffraction an yields superb imaging qualities. The 7 reclined cabinet ensures good time alignment resulting in sublime staging and pin point placement of instruments. the quality crossover lives in it’s own sealed chamber in the bottom of the speaker with a slanted divider to diminish standing waves.</p>', 'rinjani-tx', 'admin', 0, '', 1, '', '6', '2½-way Floor Standing Speaker Kit', 1, '/uploads/productimage/Rinjani tx.jpg', '/uploads/productdrawing/Rinjani Tx-drawing.jpg', '', ''),
 ('c7ff663b-5d23-4dac-ae90-493dc4daa86c', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', '5\" MW13PNW-4 / Paper', 0, 0, '5f43323d-d9ed-4688-8e2f-ff5247083128', '2024-05-06 06:45:59.636', '2025-12-16 09:46:44.717', '<ul><li><p>Vented aerodynamic cast aluminium chassis for optimum strength and low compression</p></li><li><p>Proprietary cone material with EGYPTIAN PAPYRUS™ fibres made in-house</p></li><li><p>Soft low damping rubber surround for optimum transient response</p></li><li><p>Advanced BIMAX spider for improved linearity</p></li><li><p>Powerful optimized low distortion neodymium motor system</p></li><li><p>Non-conducting fibre glass voice coil former for minimum damping</p></li><li><p>Extended copper sleeve on pole piece for low inductance and reduced distortion</p></li><li><p>CCAW voice coil for reduced moving mass</p></li><li><p>Long life silver lead wires attached 180° apart for improved stability</p></li><li><p>Vented pole piece and coil former for reduced compression</p></li><li><p>Low piston to chassis diameter ratio</p></li><li><p>Gasket and bolt hole protrusions for reduced coupling to speaker cabinet</p></li></ul>', 'mw13pnw-4', 'admin', 0, '', 0, '', '', '', 1, '/uploads/productimage/5 inch SATORI MW13PNW-4-1.jpg', '/uploads/productdrawing/5 inch SATORI MW13PNW-4-drawing.jpg', '/uploads/productfrequencyresponse/5 inch SATORI MW13PNW-4-frequency response.jpg', ''),
 ('c815172c-625d-465e-b3ff-96f7a80b44a6', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'TW29D / Fabric', 0, 0, '28c45742-6d1f-44bd-915b-f940e30caf92', '2024-05-08 03:48:50.833', '2026-05-28 06:55:33.124', '<ul><li><p>Large surround dome for increased acoustic output</p></li><li><p>Dual balanced compression chamber for improved dynamics</p></li><li><p>Dual copper caps for absolute minimum voice coil inductance and minimum phase shift</p></li><li><p>Two part aluminium faceplate with integrated mechanical decoupling</p></li><li><p>Saturation controlled motor system with T-shaped pole piece for lower distortion</p></li><li><p>Non-reflective cast aluminium chamber with optimized damping for improved dynamics</p></li><li><p>Flow optimized vented pole piece for optimum coupling to rear chamber</p></li><li><p>CCAW voice coil for low moving mass</p></li><li><p>Long life silver lead wires</p></li><li><p>Low resonance frequency for extended range</p></li></ul>', 'tw29d', 'admin', 0, '', 0, '', '', '', 1, '/uploads/productimage/SATORI TW29D-1.jpg', '/uploads/productdrawing/SATORI TW29D-drawing.jpg', '/uploads/productfrequencyresponse/SATORI TW29D-frequency response.jpg', ''),
 ('c90663ae-19e1-406d-b46d-ca27cbf11bb9', '9e2a9f31-bce3-48ff-b438-0a00f8f8ec0b', 'NERO-15SW800', 0, 0, '0829acf6-a413-48bd-98a3-de816ea9e77b', '2025-09-17 07:08:01.055', '2026-05-29 08:44:59.782', '<ul><li><p>Proprietary cone paper material with silk cotton tree and manila pulp</p></li><li><p>Minimum damping fiber glass voice coil former</p></li><li><p>4.5\" voice coil with APC (Advanced Polymer Coating)</p></li><li><p>Cast aluminium chassis</p></li><li><p>Vented pole piece for reduced compression</p></li><li><p>Double spider for high stability suspension</p></li><li><p>Cooling device on head yoke for increased heat transfer</p></li></ul>', 'nero-15sw800', 'admin', 0, '', 0, '', '', '', 0, '/uploads/productimage/NERO-15SW800.webp', '/uploads/productdrawing/NER0-15SW800-drawing.jpg', '/uploads/productfrequencyresponse/NER0-15SW800-frequency response.jpg', ''),
@@ -3607,9 +3607,9 @@ INSERT INTO `product` (`id`, `brandId`, `name`, `isFeatured`, `isArchived`, `siz
 --
 
 CREATE TABLE `productsusedinkits` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productUsedInKitsId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `productUsedInKitsId` varchar(191) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3733,10 +3733,10 @@ INSERT INTO `productsusedinkits` (`id`, `productId`, `productUsedInKitsId`) VALU
 --
 
 CREATE TABLE `roles` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `userId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandName` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `userId` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `brandName` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3762,16 +3762,16 @@ INSERT INTO `roles` (`id`, `userId`, `brandId`, `brandName`) VALUES
 --
 
 CREATE TABLE `sbaudienceapplication` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `slug` text NOT NULL,
+  `description` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `author` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cover_img_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `author` text NOT NULL,
+  `cover_img_url` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3790,9 +3790,9 @@ INSERT INTO `sbaudienceapplication` (`id`, `brandId`, `name`, `slug`, `descripti
 --
 
 CREATE TABLE `similarproducts` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `similarProductId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `similarProductId` varchar(191) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -4784,13 +4784,13 @@ INSERT INTO `similarproducts` (`id`, `productId`, `similarProductId`) VALUES
 --
 
 CREATE TABLE `size` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `value` text NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `updatedBy` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `updatedBy` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -4830,13 +4830,13 @@ INSERT INTO `size` (`id`, `brandId`, `name`, `value`, `createdAt`, `updatedAt`, 
 --
 
 CREATE TABLE `socialmedia` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `type` text NOT NULL,
+  `value` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
+  `brandId` varchar(191) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -4859,14 +4859,14 @@ INSERT INTO `socialmedia` (`id`, `type`, `value`, `updatedBy`, `createdAt`, `upd
 --
 
 CREATE TABLE `specificationconnector` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `dynamicspecificationParentId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `dynamicspecificationId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `notes` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `dynamicspecificationSubParentId` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `value` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `dynamicspecificationParentId` varchar(191) NOT NULL,
+  `dynamicspecificationId` varchar(191) NOT NULL,
+  `notes` text NOT NULL,
+  `dynamicspecificationSubParentId` varchar(191) DEFAULT NULL,
+  `value` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -12112,15 +12112,15 @@ INSERT INTO `specificationconnector` (`id`, `brandId`, `productId`, `dynamicspec
 --
 
 CREATE TABLE `technicals` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `desc` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pdf` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pdfname` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `desc` text NOT NULL,
+  `pdf` text NOT NULL,
+  `pdfname` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `brandId` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -12143,14 +12143,14 @@ INSERT INTO `technicals` (`id`, `name`, `desc`, `pdf`, `pdfname`, `updatedBy`, `
 --
 
 CREATE TABLE `users` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `refresh_token` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `email` text NOT NULL,
+  `password` text NOT NULL,
+  `refresh_token` text NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `expiredAt` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `expiredAt` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -12291,6 +12291,7 @@ ALTER TABLE `product`
 --
 ALTER TABLE `productsusedinkits`
   ADD PRIMARY KEY (`id`),
+  ADD KEY `productsusedinkits_productUsedInKitsId_idx` (`productUsedInKitsId`),
   ADD KEY `productsusedinkits_productId_idx` (`productId`);
 
 --
@@ -12312,7 +12313,8 @@ ALTER TABLE `sbaudienceapplication`
 --
 ALTER TABLE `similarproducts`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `similarproducts_productId_idx` (`productId`);
+  ADD KEY `similarproducts_productId_idx` (`productId`),
+  ADD KEY `similarproducts_similarProductId_idx` (`similarProductId`);
 
 --
 -- Indexes for table `size`

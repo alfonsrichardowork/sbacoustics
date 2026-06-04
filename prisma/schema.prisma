@@ -90,8 +90,10 @@ model product {
   multipleDatasheetProduct multipledatasheetproduct[]
   multipleFRDZMAFiles multiplefrdzmafiles[]
   multiple3DModels multiple3dmodels[]
-  similarProducts   similarproducts[]
-  productsUsedInKits  productsusedinkits[]
+  similarProducts     similarproducts[] @relation("ProductToSimilar")
+  similarToProducts   similarproducts[] @relation("SimilarToProduct")
+  productsKits  productsusedinkits[] @relation("ProductToProductsUsedInKits")
+  productsUsedInKits  productsusedinkits[] @relation("ProductUsedInKitsToProduct")
   connectorSpecifications specificationconnector[] @relation("ProductToConnectorSpecification")
   priority    String    @default("")
   updatedBy   String    @db.Text  @default("")
@@ -103,13 +105,17 @@ model product {
 }
 
 model similarproducts {
-  id          String    @id @default(uuid())
-  productId   String   // Foreign Key to product
-  product     product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  similarProductId  String
-  
-  @@index([productId])
+  id String @id @default(uuid())
 
+  productId String
+  similarProductId String
+
+  product product @relation("ProductToSimilar", fields: [productId], references: [id], onDelete: Cascade)
+
+  similarProduct product @relation("SimilarToProduct", fields: [similarProductId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([similarProductId])
 }
 
 model size {
@@ -248,9 +254,13 @@ model menupriority {
 model productsusedinkits {
   id          String    @id @default(uuid())
   productId   String   // Foreign Key to product
-  product     product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  product product @relation("ProductToProductsUsedInKits", fields: [productId], references: [id], onDelete: Cascade)
+
+  productUsedInKits product @relation("ProductUsedInKitsToProduct", fields: [productUsedInKitsId], references: [id], onDelete: Cascade)
   productUsedInKitsId  String
   
+  @@index([productUsedInKitsId])
   @@index([productId])
 
 }
