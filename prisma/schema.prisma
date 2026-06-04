@@ -1,0 +1,409 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model roles {
+  id              String    @id @default(uuid())
+  userId          String    // Foreign Key to brand
+  user            users     @relation("UsersToRoles", fields: [userId], references: [id])
+  brandId         String
+  brandName       String    @db.Text    @default("")
+  
+  @@index([userId])
+}
+
+model users {
+  id              String    @id @default(uuid())
+  name            String    @db.Text
+  email           String    @db.Text
+  password        String    @db.Text
+  role            roles[]   @relation("UsersToRoles")
+  expiredAt       String    @default("")
+  refresh_token   String    @db.Text
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model brand {
+  id              String        @id @default(uuid())
+  name            String        @db.Text
+  userId          String
+  telephone       String        @db.Text @default("")
+  email           String        @db.Text @default("")
+  address         String        @db.Text @default("")
+  maps            String        @db.Text @default("")
+  cover           String        @db.Text @default("")
+  products        product[]     @relation("BrandToProduct")
+  socialmedia     socialmedia[] @relation("BrandToSocialMedia")
+  certificate     certificate[] @relation("BrandToCertificate")
+  technicals      technicals[]  @relation("BrandToTechnicals")
+  catalogues      catalogues[]  @relation("BrandToCatalogues")
+  sizes           size[]        @relation("BrandToSize")
+  allcategories   allcategory[] @relation("BrandToAllCategory")
+  distributor     distributors[] @relation("BrandToDistributor")
+  allfinishing     allfinishing[] @relation("BrandToAllFinishing")
+  sbaudienceapplication     sbaudienceapplication[] @relation("BrandToSBAudienceApplication")
+  connectorSpecifications specificationconnector[] @relation("BrandToConnectorSpecification")
+  homepage_brand_choice_url String @default("")
+  homepage_open_source_kits_url String @default("")
+  homepage_about_us_url String @default("")
+  homepage_catalogues_url String @default("")
+  homepage_brand_choice_text String @default("")
+  homepage_open_source_kits_text String @default("")
+  homepage_about_us_text String @default("")
+  homepage_catalogues_text String @default("")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model product {
+  id          String    @id @default(uuid())
+  brandId     String    // Foreign Key to brand
+  brand       brand     @relation("BrandToProduct", fields: [brandId], references: [id])
+  name        String    @db.Text
+  slug        String    @db.Text
+  description String    @db.Text
+  cover_img_url   String @default("")
+  drawing_img_url String  @default("")
+  graph_img_url String @default("")
+  featured_img_url String @default("")
+  featuredDesc  String  @db.Text  @default("")
+  isFeatured  Boolean   @default(false)
+  isArchived  Boolean   @default(false)
+  isKits    Boolean   @default(false)
+  isNewProduct  Boolean @default(false)
+  navbarNotes   String  @db.Text  @default("")
+  searchbox_desc String @db.Text @default("")
+  sizeId      String    
+  tempAllFinished Boolean  @default(false)
+  size        size      @relation(fields: [sizeId], references: [id])
+  images_catalogues      image_catalogues[]
+  allCat      allproductcategory[]
+  kitsFinishing  kitsfinishing[]
+  multipleDatasheetProduct multipledatasheetproduct[]
+  multipleFRDZMAFiles multiplefrdzmafiles[]
+  multiple3DModels multiple3dmodels[]
+  similarProducts   similarproducts[]
+  productsUsedInKits  productsusedinkits[]
+  connectorSpecifications specificationconnector[] @relation("ProductToConnectorSpecification")
+  priority    String    @default("")
+  updatedBy   String    @db.Text  @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([brandId])
+  @@index([sizeId])
+}
+
+model similarproducts {
+  id          String    @id @default(uuid())
+  productId   String   // Foreign Key to product
+  product     product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  similarProductId  String
+  
+  @@index([productId])
+
+}
+
+model size {
+  id          String    @id @default(uuid())
+  brandId     String    // Foreign Key to brand
+  brand       brand     @relation("BrandToSize", fields: [brandId], references: [id])
+  name        String    @db.Text
+  value       String    @db.Text
+  updatedBy   String    @default("")
+  products    product[] // Relation to product model
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([brandId])
+}
+
+model allcategory {
+  id          String    @id @default(uuid())
+  brandId     String    // Foreign Key to brand
+  brand       brand     @relation("BrandToAllCategory", fields: [brandId], references: [id])
+  type        String    //Category, Sub Category, Sub Sub Category
+  name        String    @db.Text
+  slug        String    @db.Text
+  description String    @db.Text
+  thumbnail_url String  @db.Text
+  // shown_on_navbar Boolean @default(false)
+  updatedBy   String    @default("")
+  // products    product[] // Relation to product model
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  productCategories allproductcategory[]
+  @@index([brandId])
+}
+
+model image_catalogues {
+  id          String   @id @default(uuid())
+  productId   String   // Foreign Key to product
+  product     product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  applicationId   String  @default("") // Foreign Key to product
+  application     sbaudienceapplication  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  url         String   @db.Text
+  name        String   @db.Text @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([productId])
+  @@index([applicationId])
+}
+
+model multipledatasheetproduct {
+  id          String    @id @default(uuid())
+  productId  String   // Foreign Key to product
+  product    product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  applicationId   String  @default("") // Foreign Key to product
+  application     sbaudienceapplication  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  url         String    @db.Text  @default("")
+  name        String    @db.Text  @default("")
+  
+  @@index([productId])
+  @@index([applicationId])
+
+}
+
+model multiplefrdzmafiles {
+  id          String    @id @default(uuid())
+  productId  String   // Foreign Key to product
+  product    product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url         String    @db.Text  @default("")
+  name        String    @db.Text  @default("")
+  
+  @@index([productId])
+
+}
+
+model multiple3dmodels {
+  id          String    @id @default(uuid())
+  productId  String   // Foreign Key to product
+  product    product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url         String    @db.Text  @default("")
+  name        String    @db.Text  @default("")
+  
+  @@index([productId])
+
+}
+
+model kitsfinishing {
+  id          String    @id @default(uuid())
+  productId  String
+  product    product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  finishingId  String   @default("")
+  finishing allfinishing  @relation(fields: [finishingId], references: [id], onDelete: Cascade)
+  url         String    @db.Text  @default("")
+  order      Int      @default(0)
+  @@index([productId])
+  @@index([finishingId])
+
+}
+
+model allfinishing {
+  id    String  @id @default(uuid())
+  brandId     String    @default("680c5eee-7ed7-41bc-b14b-4185f8a1c379")
+  brand       brand     @relation("BrandToAllFinishing", fields: [brandId], references: [id])
+  name  String  @db.Text
+  url   String  @db.Text
+  kitsFinishing  kitsfinishing[]
+  updatedBy   String    @db.Text  @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt @default(now())
+  
+  @@index([brandId])
+}
+
+model allproductcategory {
+  id          String    @id @default(uuid())
+  productId   String   // Foreign Key to product
+  product     product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  categoryId  String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  category allcategory @relation(fields: [categoryId], references: [id])
+  @@index([productId])
+  @@index([categoryId])
+}
+
+model menupriority {
+  id    String  @id @default(uuid())
+  productId  String  @db.Text
+  priorityNumber   String  @db.Text
+  categoryId  String  @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model productsusedinkits {
+  id          String    @id @default(uuid())
+  productId   String   // Foreign Key to product
+  product     product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productUsedInKitsId  String
+  
+  @@index([productId])
+
+}
+
+model distributors {
+  id              String    @id @default(uuid())
+  brandId         String    @default("")  
+  brand           brand     @relation("BrandToDistributor", fields: [brandId], references: [id])
+  name            String
+  country         String
+  phone           String
+  email           String
+  website         String
+  facebook        String
+  instagram       String
+  lat             String
+  lng             String
+  continent       String
+  address         String    @default("")
+  updatedBy   String    @db.Text  @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt @default(now())
+   
+  @@index([brandId])
+}
+
+model sbaudienceapplication {
+  id          String    @id @default(uuid())
+  brandId     String    // Foreign Key to brand
+  brand       brand     @relation("BrandToSBAudienceApplication", fields: [brandId], references: [id])
+  name        String    @db.Text
+  author      String    @db.Text
+  slug        String    @db.Text
+  description String    @db.Text
+  cover_img_url   String @default("")
+  images_catalogues      image_catalogues[]
+  datasheet multipledatasheetproduct[]
+  updatedBy   String    @db.Text  @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([brandId])
+}
+
+model specificationconnector {
+  id        String    @id @default(uuid())
+  brandId   String    
+  brand     brand     @relation("BrandToConnectorSpecification", fields: [brandId], references: [id])
+  productId   String    
+  product     product     @relation("ProductToConnectorSpecification", fields: [productId], references: [id])
+  dynamicspecificationParentId   String    
+  dynamicspecificationParent     dynamicspecificationparent   @relation("DynamicSpecificationParentToConnectorSpecification", fields: [dynamicspecificationParentId], references: [id])
+  dynamicspecificationSubParentId   String?    
+  dynamicspecificationSubParent     dynamicspecificationsubparent?   @relation("DynamicSpecificationSubParentToConnectorSpecification", fields: [dynamicspecificationSubParentId], references: [id])
+  dynamicspecificationId   String    
+  dynamicspecification     dynamicspecification     @relation("DynamicSpecificationToConnectorSpecification", fields: [dynamicspecificationId], references: [id])
+  notes   String    @db.Text
+  value   String    @db.Text
+
+  @@index([brandId])
+  @@index([productId])
+  @@index([dynamicspecificationParentId])
+  @@index([dynamicspecificationSubParentId])
+  @@index([dynamicspecificationId])
+}
+
+model dynamicspecificationparent {
+  id        String    @id @default(uuid())
+  name      String    @db.Text
+  slug      String    @db.Text
+  priority  String    @default("")
+  updatedBy   String    @db.Text  @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  connectorSpecifications specificationconnector[] @relation("DynamicSpecificationParentToConnectorSpecification")
+}
+
+model dynamicspecificationsubparent {
+  id        String    @id @default(uuid())
+  name      String    @db.Text
+  slug      String    @db.Text
+  priority  String    @default("")
+  updatedBy   String    @db.Text  @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  connectorSpecifications specificationconnector[] @relation("DynamicSpecificationSubParentToConnectorSpecification")
+}
+
+model dynamicspecification {
+  id        String    @id @default(uuid())
+  name      String    @db.Text
+  slug      String    @db.Text
+  unit      String    @db.Text
+  priority  String    @default("")
+  updatedBy   String    @db.Text  @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  connectorSpecifications specificationconnector[] @relation("DynamicSpecificationToConnectorSpecification")
+
+}
+
+model catalogues {
+  id        String    @id @default(uuid())
+  brandId     String    @default("")
+  brand       brand     @relation("BrandToCatalogues", fields: [brandId], references: [id])
+  pdfname      String    @db.Text
+  pdf      String    @db.Text
+  cover   String    @db.Text
+  // publicationDate   DateTime  @default(now())
+  updatedBy   String    @db.Text  @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@index([brandId])
+}
+
+model technicals {
+  id          String    @id @default(uuid())
+  brandId     String    @default("")
+  brand       brand     @relation("BrandToTechnicals", fields: [brandId], references: [id])
+  name        String    @db.Text
+  desc        String    @db.Text
+  pdf         String    @db.Text
+  pdfname     String    @db.Text
+  updatedBy   String    @db.Text  @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@index([brandId])
+}
+
+model socialmedia {
+  id          String    @id @default(uuid())
+  brandId     String    // Foreign Key to brand
+  brand       brand     @relation("BrandToSocialMedia", fields: [brandId], references: [id])
+  type        String    @db.Text
+  value       String    @db.Text
+  updatedBy   String    @db.Text  @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@index([brandId])
+}
+
+model certificate {
+  id          String    @id @default(uuid())
+  brandId     String    // Foreign Key to brand
+  brand       brand     @relation("BrandToCertificate", fields: [brandId], references: [id])
+  keyId       String
+  packingDate DateTime  @default(now())
+  itemNumber  String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@index([brandId])
+}

@@ -1,0 +1,11 @@
+{
+    "git.ignoreLimitWarning": true,
+    "python-envs.pythonProjects": [
+        {
+            "path": ".next",
+            "envManager": "ms-python.python:venv",
+            "packageManager": "ms-python.python:pip"
+        }
+    ],
+    "prisma.pinToPrisma6": true
+}
