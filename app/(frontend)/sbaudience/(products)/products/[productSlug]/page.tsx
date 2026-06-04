@@ -1,4 +1,3 @@
-import getProduct from "@/app/(frontend)/actions/get-one-product";
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
@@ -11,6 +10,8 @@ import DOMPurify from 'isomorphic-dompurify';
 import SwiperCarouselSimilarProduct from "@/components/single-product-page/swipercarouselsimilarproduct";
 import SpecificationTable from "@/components/single-product-page/spec-table";
 import { LightboxOneProduct } from "@/components/drawingOneProduct";
+import prismadb from "@/lib/prismadb";
+import { AllCategory, ChildSpecificationProp, SpecificationProp } from "@/app/(frontend)/types";
 
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-foreground p-0 py-1"
 const all_sub_title_style = "text-left font-bold xl:text-2xl lg:text-xl md:text-lg sm:text-md text-foreground"
@@ -21,36 +22,235 @@ type Props = {
 
 // export const revalidate = 86400
 
-// export async function generateStaticParams(){
-//   const brandId = process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
-//   const API = `${process.env.NEXT_PUBLIC_ROOT_URL}/${process.env.NEXT_PUBLIC_FETCH_ALL_PRODUCTS}`
-//   const API_EDITED_BRANDID = API.replace('{brandId}', brandId ?? '680c5eee-7ed7-41bc-b14b-4185f8a1c379'); //SBAcoustics ID as default
-//   const res = await fetch(API_EDITED_BRANDID,
-//     { next: { revalidate: 86400 } } // ISR for individual product data
-//   );
-//   const products = await res.json();
-//   return products.map((product: { slug: string }) => ({
-//     productSlug: product.slug
-//   }));
-// }
+
+export async function generateStaticParams(){
+  const products = await prismadb.product.findMany({
+    where: {
+      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+    },
+    select: {
+      slug: true,
+    },
+  });
+  return products.map((product: { slug: string }) => ({
+    productSlug: product.slug
+  }));
+}
 
 export default async function SingleProductSBAudience(props: Props) {
     const { productSlug = '' } = await props.params;
     const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-    const data = await getProduct("sbaudience", productSlug);
+    
+    const product = await prismadb.product.findFirst({
+        where: {
+        slug: productSlug,
+        brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+        isArchived: false
+        },
+        select: {
+            id: true,
+            name: true,
+            slug: true,
+            description: true,
+            cover_img_url: true,
+            drawing_img_url: true,
+            graph_img_url: true,
+            isKits: true,
+            allCat: {
+                select: {
+                    id: true,
+                    category: {
+                        select: {
+                            name: true,
+                            slug: true,
+                            type: true
+                        }
+                    }
+                }
+            },
+            images_catalogues: {
+                select: {
+                    name: true,
+                    url: true
+                }
+            },
+            similarProducts: {
+                select: {
+                similarProduct: {
+                    select: {
+                        name: true,
+                        slug: true,
+                        cover_img_url: true,
+                    }
+                }
+                }
+            },
+            multipleDatasheetProduct: {
+                select: {
+                    url: true,
+                    name: true,
+                }
+            },
+            multipleFRDZMAFiles: {
+                select: {
+                    url: true,
+                    name: true,
+                }
+            },
+            multiple3DModels: {
+                select: {
+                    url: true,
+                    name: true,
+                }
+            },
+            size: {
+                select: {
+                    name: true,
+                    value: true,
+                }
+            },
+            connectorSpecifications: {
+                select: {
+                    value: true,
+                    notes: true,
+                    dynamicspecification: {
+                        select: {
+                            name: true,
+                            slug: true,
+                            unit: true,
+                            priority: true,
+                        }
+                    },
+                    dynamicspecificationParent: {
+                        select: {
+                            name: true,
+                            slug: true,
+                            priority: true,
+                        }
+                    },
+                    dynamicspecificationSubParent: {
+                        select: {
+                            name: true,
+                            slug: true,
+                            priority: true,
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    if(!product){
+        return null
+    }
+
+    const specsCombined = (product?.connectorSpecifications ?? []).reduce<SpecificationProp[]>(
+            (acc, connector) => {
+            const parentname = connector.dynamicspecificationParent?.name ?? "";
+            const subparentname = connector.dynamicspecificationSubParent?.name ?? "";
+        
+            const child: ChildSpecificationProp = {
+                childname: connector.dynamicspecification?.name ?? "",
+                value: connector.value ?? "",
+                notes: connector.notes ?? "",
+                slug: connector.dynamicspecification?.slug ?? "",
+                unit: connector.dynamicspecification?.unit ?? "",
+            };
+        
+            const existingGroup = acc.find(
+                (group) =>
+                group.parentname === parentname &&
+                group.subparentname === subparentname
+            );
+        
+            if (existingGroup) {
+                existingGroup.child.push(child);
+            } else {
+                acc.push({ parentname, subparentname, child: [child] });
+            }
+        
+            return acc;
+            },
+            []
+        );
+    
+        const parentPriorityMap = new Map(
+            product?.connectorSpecifications.map((c) => [
+            c.dynamicspecificationParent?.name ?? "",
+            c.dynamicspecificationParent?.priority ?? 0,
+            ])
+        );
+        
+        const subParentPriorityMap = new Map(
+            product?.connectorSpecifications.map((c) => [
+            c.dynamicspecificationSubParent?.name ?? "",
+            c.dynamicspecificationSubParent?.priority ?? 0,
+            ])
+        );
+        
+        const childPriorityMap = new Map(
+            product?.connectorSpecifications.map((c) => [
+            c.dynamicspecification?.name ?? "",
+            c.dynamicspecification?.priority ?? 0,
+            ])
+        );
+    
+        specsCombined.sort((a, b) => {
+            const aParentPriority = Number(parentPriorityMap.get(a.parentname)) ?? 0;
+            const bParentPriority = Number(parentPriorityMap.get(b.parentname)) ?? 0;
+            if (aParentPriority !== bParentPriority)
+            return aParentPriority - bParentPriority;
+        
+            const aSubPriority = Number(subParentPriorityMap.get(a.subparentname)) ?? 0;
+            const bSubPriority = Number(subParentPriorityMap.get(b.subparentname)) ?? 0;
+            if (aSubPriority !== bSubPriority)
+            return aSubPriority - bSubPriority;
+        
+            return 0;
+        });
+        
+        specsCombined.forEach((group) => {
+            group.child.sort((a, b) => {
+            const aPriority = Number(childPriorityMap.get(a.childname)) ?? 0;
+            const bPriority = Number(childPriorityMap.get(b.childname)) ?? 0;
+            return aPriority - bPriority;
+        });
+    });
+    
+    let prod_cat: Array<AllCategory> = []
+    let prod_sub_cat: Array<AllCategory> = []
+    let prod_sub_sub_cat: Array<AllCategory> = []
+    if(product.allCat){
+        for (let i = 0; i < product.allCat.length; i++) {
+        let temp: AllCategory = {
+            id: product.allCat[i]?.id ?? '',
+            name: product.allCat[i]?.category.name ?? '',
+            slug: product.allCat[i]?.category.slug ?? ''
+        }
+        if(product.allCat[i]?.category.type === "Category"){
+            prod_cat.push(temp)
+        }
+        else if(product.allCat[i]?.category.type === "Sub Category"){
+            prod_sub_cat.push(temp)
+        }
+        else{
+            prod_sub_sub_cat.push(temp)
+        }
+        }
+    }
 
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Product",
-        "name": data?.name,
-        "description": `Found out more about ${data?.name} from SB Audience!`,
-        "image": data?.coverImg ? `${baseUrl}${data.coverImg}` : '',
-        "sku": data?.slug || '',
+        "name": product.name,
+        "description": `Found out more about ${product.name} from SB Audience!`,
+        "image": product.cover_img_url ? `${baseUrl}${product.cover_img_url}` : '',
+        "sku": product.slug || '',
         "brand": {
           "@type": "Brand",
           "name": "SB Audience"
         },
-        "url": data?.slug ? `${baseUrl}/sbaudience/products/${data.slug}` : `${baseUrl}/sbaudience`,
+        "url": product.slug ? `${baseUrl}/sbaudience/products/${product.slug}` : `${baseUrl}/sbaudience`,
         "mainEntityOfPage": {
           "@type": "WebPage",
           "@id": `${baseUrl}/sbaudience`
@@ -63,33 +263,31 @@ export default async function SingleProductSBAudience(props: Props) {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            {data && 
-                <>
             <div className="block md:flex">
                 {/* Left Column for Images */}
                 <div className="md:flex md:w-1/2 justify-center md:h-1/2 block w-full h-full">
                     <div className="flex-col w-full md:flex hidden pr-10">
                         <div className="w-full h-full pb-4">
                             <SwiperCarouselCoverandCatalogues 
-                            name={data.name}
-                            cover={data.coverImg}
-                            image_catalogues={data.images_Catalogues}
+                            name={product.name}
+                            cover={product.cover_img_url}
+                            image_catalogues={product.images_catalogues}
                             />
                         </div>
-                        {data.drawing !== '' &&
-                            <LightboxOneProduct name={data.name} url={data.drawing} type={"drawing"}/>
+                        {product.drawing_img_url !== '' &&
+                            <LightboxOneProduct name={product.name} url={product.drawing_img_url} type={"drawing"}/>
                         }
-                        {data.graph !== '' &&
-                            <LightboxOneProduct name={data.name} url={data.graph} type={"graph"}/>
+                        {product.graph_img_url !== '' &&
+                            <LightboxOneProduct name={product.name} url={product.graph_img_url} type={"graph"}/>
                         }                       
                     </div>
                     <div className="w-full h-full md:hidden pb-4">
                         <SwiperCarouselOneProduct 
-                        name={data.name}
-                        cover={data.coverImg}
-                        image_catalogues={data.images_Catalogues}
-                        drawing={data.drawing}
-                        graph={data.graph}
+                        name={product.name}
+                        cover={product.cover_img_url}
+                        image_catalogues={product.images_catalogues}
+                        drawing={product.drawing_img_url}
+                        graph={product.graph_img_url}
                         />
                     </div>
                 </div>
@@ -98,17 +296,17 @@ export default async function SingleProductSBAudience(props: Props) {
                 <div className="md:flex md:w-1/2 justify-center md:h-1/2 block w-full h-full">
                     <div className="flex flex-col w-full">
                         <h1 className={all_sub_title_style}>
-                            {data.name}
+                            {product.name}
                         </h1>
                         <div className={all_desc_style}>
-                            {(data.sub_categories.length !== 0 || data.sub_sub_categories.length !== 0) &&
+                            {(prod_sub_cat.length !== 0 || prod_sub_sub_cat.length !== 0) &&
                                 <div className="flex flex-wrap gap-2">
                                     <h2>Categories:</h2> 
-                                    {data.sub_categories.length !== 0 &&
-                                        data.sub_categories.map((subcategory, index) => (
+                                    {prod_sub_cat.length !== 0 &&
+                                        prod_sub_cat.map((subcategory, index) => (
                                         <React.Fragment key={index}>
                                             <Link
-                                            href={`/sbaudience/${data.categories[0]?.name.toLowerCase().replace(/\s+/g, '-')}/${subcategory.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                            href={`/sbaudience/${prod_cat[0]?.name.toLowerCase().replace(/\s+/g, '-')}/${subcategory.name.toLowerCase().replace(/\s+/g, '-')}`}
                                             className="hover:text-primary"
                                             >
                                             <u>{subcategory.name}</u>
@@ -116,11 +314,11 @@ export default async function SingleProductSBAudience(props: Props) {
                                         </React.Fragment>
                                         ))
                                     }
-                                    {data.sub_sub_categories.length !== 0 &&
-                                        data.sub_sub_categories.map((subsubcategory, index) => (
+                                    {prod_sub_sub_cat.length !== 0 &&
+                                        prod_sub_sub_cat.map((subsubcategory, index) => (
                                         <React.Fragment key={index}>
                                             <Link
-                                            href={`/sbaudience/${data.categories[0]?.name.toLowerCase().replace(/\s+/g, '-')}/${data.sub_categories[0]?.name.toLowerCase().replace(/\s+/g, '-')}/${subsubcategory.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                            href={`/sbaudience/${prod_cat[0]?.name.toLowerCase().replace(/\s+/g, '-')}/${prod_sub_cat[0]?.name.toLowerCase().replace(/\s+/g, '-')}/${subsubcategory.name.toLowerCase().replace(/\s+/g, '-')}`}
                                             className="hover:text-primary"
                                             >
                                             <u><h3>{subsubcategory.name}</h3></u>
@@ -135,12 +333,12 @@ export default async function SingleProductSBAudience(props: Props) {
 
                         
                         
-                        {data.desc && data.desc != '<p></p>' && data.desc != '' && data.desc != '<></>' &&
+                        {product.description && product.description != '<p></p>' && product.description != '' && product.description != '<></>' &&
                         <>
                             <div className={`${all_sub_title_style} pt-8`}>
                                     <h2>Features:</h2>
                                 </div>
-                                <h3 className={`${all_desc_style} tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.desc, {
+                                <h3 className={`${all_desc_style} tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description, {
                                     ALLOWED_TAGS: [
                                         'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
                                     ],
@@ -154,24 +352,24 @@ export default async function SingleProductSBAudience(props: Props) {
 
 
                                     
-                                {data.datasheet && data.datasheet.length > 0 &&
+                                {product.multipleDatasheetProduct && product.multipleDatasheetProduct.length > 0 &&
                                     <>
                                         <h2 className="sr-only">Datasheet:</h2>
-                                        {data.datasheet.length===1 && data.datasheet[0]?.url!=''?
+                                        {product.multipleDatasheetProduct.length===1 && product.multipleDatasheetProduct[0]?.url!=''?
                                             <div className="flex justify-start pt-8">
-                                                <Link href={data.datasheet[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
+                                                <Link href={product.multipleDatasheetProduct[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
                                                     <div className="pr-2">
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                         <Image src={'/images/sbacoustics/PDF-download.webp'} alt="PDF Download" className="h-8 w-fit" width={100} height={100}/>
                                                     </div>
                                                     <h3 className="pl-2">
-                                                        {data.datasheet[0]?.name}
+                                                        {product.multipleDatasheetProduct[0]?.name}
                                                     </h3>
                                                 </Link>
                                             </div>
-                                        : data.datasheet[0]?.url!='' &&
+                                        : product.multipleDatasheetProduct[0]?.url!='' &&
                                             <div className="justify-start pt-8">
-                                                {data.datasheet && data.datasheet.map((value, index) => (
+                                                {product.multipleDatasheetProduct && product.multipleDatasheetProduct.map((value, index) => (
                                                     value.url!=''&&
                                                         <div key={index} className={`${index !== 0 && 'pt-4'}`}>
                                                                 <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}> 
@@ -180,7 +378,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                                                 <Image src={'/images/sbacoustics/PDF-download.webp'} alt="PDF Download" className="h-8 w-fit" width={100} height={100}/>
                                                             </div>
                                                             <h3 className="pl-2">
-                                                                {data.datasheet[index]?.name}
+                                                                {product.multipleDatasheetProduct[index]?.name}
                                                             </h3>
                                                             </Link>
                                                         </div>
@@ -191,25 +389,25 @@ export default async function SingleProductSBAudience(props: Props) {
                                 }
 
 
-                                {data.frdzma && data.frdzma.length > 0 &&
+                                {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.length > 0 &&
                                     <>
                                         <h2 className="sr-only">FRD & ZMA Files:</h2>
                                         {
-                                        data.frdzma.length===1 && data.frdzma[0]?.url!=''?
+                                        product.multipleFRDZMAFiles.length===1 && product.multipleFRDZMAFiles[0]?.url!=''?
                                             <div className="flex justify-start pt-4">
-                                                <Link href={data.frdzma[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
+                                                <Link href={product.multipleFRDZMAFiles[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
                                                     <div className="pr-2">
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                         <Image src={'/images/sbacoustics/FRD-ZMA-download.webp'} alt="FRD ZMA Files Download" className="h-8 w-fit" width={100} height={100}/>
                                                     </div>
                                                     <h3 className="pl-2">
-                                                        {data.frdzma[0]?.name}
+                                                        {product.multipleFRDZMAFiles[0]?.name}
                                                     </h3>
                                                 </Link>
                                             </div>
-                                        : data.frdzma[0]?.url!='' &&
+                                        : product.multipleFRDZMAFiles[0]?.url!='' &&
                                             <div className="justify-start pt-4">
-                                                {data.frdzma && data.frdzma.map((value, index) => (
+                                                {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.map((value, index) => (
                                                     value.url!=''&&
                                                         <div key={index} className={`${index !== 0 && 'pt-4'}`}>
                                                                 <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}> 
@@ -218,7 +416,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                                                 <Image src={'/images/sbacoustics/FRD-ZMA-download.webp'} alt="FRD ZMA Files Download" className="h-8 w-fit" width={100} height={100}/>
                                                             </div>
                                                             <h3 className="pl-2">
-                                                                {data.frdzma[index]?.name}
+                                                                {product.multipleFRDZMAFiles[index]?.name}
                                                             </h3>
                                                             </Link>
                                                         </div>
@@ -230,24 +428,24 @@ export default async function SingleProductSBAudience(props: Props) {
 
 
 
-                                {data.models3d && data.models3d.length > 0 &&
+                                {product.multiple3DModels && product.multiple3DModels.length > 0 &&
                                     <>
                                         <h2 className="sr-only">3D Models:</h2>
-                                        {data.models3d.length===1 && data.models3d[0]?.url!=''?
+                                        {product.multiple3DModels.length===1 && product.multiple3DModels[0]?.url!=''?
                                             <div className="flex justify-start pt-4">
-                                                <Link href={data.models3d[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
+                                                <Link href={product.multiple3DModels[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
                                                     <div className="pr-2">
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                         <Image src={'/images/sbacoustics/3D-download.webp'} alt="3D Files Download" className="h-8 w-fit" width={100} height={100}/>
                                                     </div>
                                                     <h3 className="pl-2">
-                                                        {data.models3d[0]?.name}
+                                                        {product.multiple3DModels[0]?.name}
                                                     </h3>
                                                 </Link>
                                             </div>
-                                        : data.models3d[0]?.url!='' &&
+                                        : product.multiple3DModels[0]?.url!='' &&
                                             <div className="justify-start pt-4">
-                                                {data.models3d && data.models3d.map((value, index) => (
+                                                {product.multiple3DModels && product.multiple3DModels.map((value, index) => (
                                                     value.url!=''&&
                                                         <div key={index} className={`${index !== 0 && 'pt-4'}`}>
                                                                 <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}> 
@@ -256,7 +454,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                                                 <Image src={'/images/sbacoustics/3D-download.webp'} alt="3D Files Download" className="h-8 w-fit" width={100} height={100}/>
                                                             </div>
                                                             <h3 className="pl-2">
-                                                                {data.models3d[index]?.name}
+                                                                {product.multiple3DModels[index]?.name}
                                                             </h3>
                                                             </Link>
                                                         </div>
@@ -267,26 +465,24 @@ export default async function SingleProductSBAudience(props: Props) {
                                 }
 
 
-                                {data.specification && data.specification.length > 0 &&
+                                {specsCombined && specsCombined.length > 0 &&
                                     <div className="justify-start pt-4">
-                                        <SpecificationTable  spec={data.specification} styling={all_desc_style} stylingTitle={all_sub_title_style}/>
+                                        <SpecificationTable  spec={specsCombined} styling={all_desc_style} stylingTitle={all_sub_title_style}/>
                                     </div>
                                 }
                         
                     </div>
                 </div>
             </div>
-            {data.similarProds && data.similarProds.length > 0 &&
+            {product.similarProducts && product.similarProducts.length > 0 &&
                 <div className={`${all_sub_title_style} pt-28 justify-center items-center text-center w-full`}>
                     <h2 className="pb-4">
                         Similar Products
                     </h2>
                     <div className='border-2 rounded-lg p-4'>
-                        <SwiperCarouselSimilarProduct similar={data.similarProds}/>
+                        <SwiperCarouselSimilarProduct similar={product.similarProducts} brand={'sbaudience'}/>
                     </div>
                 </div>
-            }
-            </>
             }
 
             

@@ -1,13 +1,12 @@
-import { SingleProductMetadata } from "@/app/(frontend)/types";
 import prismadb from "@/lib/prismadb";
-import { Metadata, ResolvingMetadata } from "next"
+import { Metadata } from "next"
 
 type Props = {
   params: Promise<{ productSlug: string }>
 }
  
 
-export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
   const { productSlug = '' } = await props.params
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
   const product = await prismadb.product.findFirst({

@@ -39,7 +39,7 @@ import { FilesProp } from '@/app/(frontend)/types';
 type PropType = {
   name: string
   cover: string
-  image_catalogues: FilesProp[]
+  image_catalogues: { url: string; name: string }[]
 }
 
 const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
@@ -140,7 +140,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                 </div>
           </SwiperSlide>
           )}
-          {multipleslides && sortedImages.map((item: FilesProp, index) => (
+          {multipleslides && sortedImages.map((item, index) => (
             <SwiperSlide key={`${item.name} - ${index.toString()}`}>
                 <div className="h-full flex justify-center items-center cursor-zoom-in" onClick={() => openLightbox(index+1)}>
                   <Card className="border-none h-full w-full flex items-center justify-center">
@@ -206,7 +206,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
             </div>
           </SwiperSlide>
         )}
-        {multipleslides && sortedImages.map((item: FilesProp, index) => (
+        {multipleslides && sortedImages.map((item, index) => (
           <SwiperSlide key={`${item.name} - ${index.toString()}`} className={`${activeIndex - 1 === index? "opacity-100": "opacity-50"} h-fit flex items-center justify-center hover:cursor-pointer hover:opacity-100`} 
           onClick={() => {
             if (swiperRef.current) {
@@ -245,7 +245,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
               title: name, 
               alt: name 
             },
-            ...sortedImages.map((item: FilesProp, index) => ({ 
+            ...sortedImages.map((item, index) => ({ 
               src: item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url, 
               title: `${item.name} - ${index.toString()}`, 
               alt: `${item.name} - ${index.toString()}`

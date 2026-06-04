@@ -12,18 +12,19 @@ type Props = {
 
 // export const revalidate = 86400
 
-// export async function generateStaticParams(){
-//   const brandId = process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
-//   const API = `${process.env.NEXT_PUBLIC_ROOT_URL}/${process.env.NEXT_PUBLIC_FETCH_APPLICATION}`
-//   const API_EDITED_BRANDID = API.replace('{brandId}', brandId ?? '680c5eee-7ed7-41bc-b14b-4185f8a1c379'); //SBAcoustics ID as default
-//   const res = await fetch(API_EDITED_BRANDID,
-//     { next: { revalidate: 86400 } } 
-//   );
-//   const apps = await res.json();
-//   return apps.map((app: { slug: string }) => ({
-//     applicationSlug: app.slug
-//   }));
-// }
+export async function generateStaticParams(){
+  const app = await prismadb.sbaudienceapplication.findMany({
+    where: {
+      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+    },
+    select: {
+      slug: true,
+    },
+  });
+  return app.map((application: { slug: string }) => ({
+    applicationSlug: application.slug
+  }));
+}
 
 export default async function SingleAppJsonLd(props: Props) {
     const { applicationSlug = '' } = await props.params;

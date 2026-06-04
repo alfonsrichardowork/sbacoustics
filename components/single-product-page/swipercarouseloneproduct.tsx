@@ -36,7 +36,7 @@ import { FilesProp } from '@/app/(frontend)/types';
 type PropType = {
   name: string
   cover: string
-  image_catalogues: FilesProp[]
+  image_catalogues: { url: string; name: string }[]
   drawing: string
   graph: string
 }
@@ -142,7 +142,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
               </div>
         </SwiperSlide>
         )}
-        {image_catalogues && image_catalogues.length > 0 && sortedImages.map((item: FilesProp, index) => (
+        {image_catalogues && image_catalogues.length > 0 && sortedImages.map((item, index) => (
           <SwiperSlide key={`${item.name} - ${index.toString()}`}>
               <div className="h-full flex justify-center items-center cursor-pointer" onClick={() => openLightbox(index + 1)}>
                 <Card className="border-none h-full w-full flex items-center justify-center">

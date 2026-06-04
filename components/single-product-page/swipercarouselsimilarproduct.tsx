@@ -2,19 +2,21 @@
 
 import React, { CSSProperties, useEffect, useRef, useState } from 'react';
 import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
+//@ts-ignore
 import 'swiper/css';
+//@ts-ignore
 import 'swiper/css/navigation';
 import { Navigation, Thumbs } from 'swiper/modules';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { LazyImageCustom } from '@/components/lazyImageCustom';
-import { SimpleProdTypes } from '@/app/(frontend)/types';
 
 type PropType = {
-  similar: SimpleProdTypes[]
+  similar: {similarProduct: {name: string, slug: string, cover_img_url: string}}[]
+  brand: string
 }
 
-const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar }) => {
+const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar, brand }) => {
   const [initialized, setInitialized] = useState(false);
   const [slidesPerView, setSlidesPerView] = useState(1);
   const [spaceBetween, setSpaceBetween] = useState(0);
@@ -78,12 +80,12 @@ const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar }) => {
       >
         {similar.map((sim, index) => (
           <SwiperSlide key={index}>
-            <Link href={sim.href}>
+            <Link href={brand === 'sbaudience' ? `/sbaudience/products/${sim.similarProduct.slug}` : `/products/${sim.similarProduct.slug}`}>
               <Card className="w-full h-[250px] flex flex-col border-2 hover:border-primary">
                 <CardHeader className="p-2 h-[200px]">
                   <LazyImageCustom
-                    src={sim.image_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${sim.image_url}` : sim.image_url}
-                    alt={sim.name}
+                    src={sim.similarProduct.cover_img_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${sim.similarProduct.cover_img_url}` : sim.similarProduct.cover_img_url}
+                    alt={sim.similarProduct.name}
                     width={500}
                     height={500}
                     classname="aspect-auto h-full w-fit object-contain self-center"
@@ -92,7 +94,7 @@ const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar }) => {
                 </CardHeader>
                 <CardContent className="flex flex-col flex-1 h-full p-2">
                   <CardTitle className="text-center justify-center items-center font-bold text-base text-black whitespace-normal break-words pb-2">
-                    {sim.name}
+                    {sim.similarProduct.name}
                   </CardTitle>
                 </CardContent>
               </Card>

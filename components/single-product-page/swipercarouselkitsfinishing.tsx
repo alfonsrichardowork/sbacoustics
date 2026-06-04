@@ -25,39 +25,30 @@ import Image from 'next/image';
 interface CombinedFilesProp {
     name: string
     url: string
-    productId: string
     urlPreview: string
     order: number
 }
 
 type PropType = {
-  kits_finishing: FilesProp[]
-  kits_finishing_preview: FilesWithOrder[]
+  kits_finishing: {url: string, order: number, finishing: {name: string, url: string}}[]
 }
 
 const SwiperCarouselKitsFinishing: React.FC<PropType> = (props) => {
   const [combinedFinishing, setCombinedFinishing] = useState<CombinedFilesProp[]>([])
   const [activeKitsPreview, setActiveKitsPreview] = useState<string>('')
   const [activeKitsPreviewName, setActiveKitsPreviewName] = useState<string>('')
-  const { kits_finishing, kits_finishing_preview } = props
+  const { kits_finishing } = props
 
   useEffect(() => {
     const initializeData = () => {
       if(kits_finishing && kits_finishing.length > 0){ 
         let temp: CombinedFilesProp[] = []
-        const previewMap = new Map(
-          kits_finishing_preview.map(p => [p.name, p])
-        )
-
         kits_finishing.forEach(val => {
-          const preview = previewMap.get(val.name)
-          
           temp.push({
-            name: val.name,
-            url: val.url,
-            productId: val.productId,
-            urlPreview: preview?.url ?? '',
-            order: preview?.order ?? 99
+            name: val.finishing.name,
+            url: val.finishing.url,
+            urlPreview: val.url,
+            order: val.order ?? 99
           })
           
           temp.sort((a, b) => a.order - b.order)
