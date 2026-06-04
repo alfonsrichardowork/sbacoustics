@@ -4,7 +4,6 @@ import prismadb from '@/lib/prismadb';
 import Link from "next/link";
 import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-filters';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
-export const dynamicParams = false;
 export async function generateStaticParams() {
     const connectors = await prismadb.allproductcategory.findMany({
         where: {
@@ -108,9 +107,6 @@ export async function generateStaticParams() {
     const params = uniqueSortedPaths.map(path => ({
         slug: path.split('/').slice(1),
     }));
-
-    console.log(params.slice(0, 10));
-console.log('params count:', params.length);
 
     return params;
 }
