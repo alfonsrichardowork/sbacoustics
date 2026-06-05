@@ -86,6 +86,8 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
         subcat.map((subval) =>
       revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/${val.slug}/${subval.slug}/${createdProduct.slug}`)
       )))
+    revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/drivers`);
+    revalidatePath(`/kits`); 
     return NextResponse.json("success");
   } catch (error) {
     console.log('[SUB_SUB_CATEGORY_POST]', error);

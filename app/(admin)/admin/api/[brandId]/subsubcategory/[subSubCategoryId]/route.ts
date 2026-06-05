@@ -112,6 +112,8 @@ export async function DELETE(
       }
     });
   
+    revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/drivers`);
+    revalidatePath(`/kits`); 
     return NextResponse.json("success");
   } catch (error) {
     console.log('[SUB_SUB_CATEGORY_DELETE]', error);
@@ -222,6 +224,8 @@ export async function PATCH(
             subcat.map((subval) =>
           revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/${val.slug}/${subval.slug}/${updatedSubSubCat.slug}`)
           )))
+        revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/drivers`);
+        revalidatePath(`/kits`); 
         return NextResponse.json("same")
       }
     }
@@ -286,6 +290,8 @@ export async function PATCH(
       revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/${val.slug}/${subval.slug}/${updatedSubSubCat.slug}`)
     )))
   
+    revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/drivers`);
+    revalidatePath(`/kits`); 
     return NextResponse.json("success");
   } catch (error) {
     console.log('[SUB_SUB_CATEGORY_PATCH]', error);
