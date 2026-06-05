@@ -6,11 +6,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "./ui/popover"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { Searchbox } from "@/app/(frontend)/types"
 import getProductsForSearchbox from "@/app/(frontend)/actions/get-product-for-searchbox"
 import { Input } from "./ui/input"
-import Image from "next/image"
 import Fuse from "fuse.js";
 import { FC, useEffect, useRef, useState } from "react"
 import { LazyImageCustom } from "./lazyImageCustom"
@@ -37,41 +36,30 @@ type PropType = {
   mobile: boolean
   changeBrand: boolean
 }
-
+interface ExtendedSearchbox extends Searchbox {
+  namenospace: string; // The extra string you want to add
+}
 const SearchBox: FC<PropType> = (props) => {
   const { mobile, changeBrand } = props
-  const [finalProductSearchbox, setFinalProductSearchbox] = useState<Searchbox[]>([]);
-  const router = useRouter();
+  const [finalProductSearchbox, setFinalProductSearchbox] = useState<ExtendedSearchbox[]>([]);
   const [activeSearch, setactiveSearch] = useState<string>('');
   const [foundProducts, setfoundProducts] = useState<Searchbox[]>([]);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const pathname = usePathname()
   const skipBlurRef = useRef(false);
-  
-  // Setup Fuse
-  const fuse = new Fuse(finalProductSearchbox, {
-      keys: [
-        { name: "name", weight: 1.0 },
-        { name: "size", weight: 0.8 },
-        { name: "cat", weight: 0.5 },
-        { name: "subcat", weight: 0.7 },
-        { name: "subsubcat", weight: 0.7 },
-        { name: "productInKits", weight: 0.5 },
-      ],
-      threshold: 0.15,         // lower = stricter match, higher = looser
-      minMatchCharLength: 1,  // require at least 2 chars for match
-      ignoreLocation: true,   // ignore location of match
-      includeScore: true,     // gives back match score
-      useExtendedSearch: true
-  });
-  
+   
     useEffect(() => {
       const fetchData = async () => {
           try {
               const data : Searchbox[] = await getProductsForSearchbox(pathname);
               data.sort((a, b) => (a.size[0] || "").localeCompare(b.size[0] || ""))
-              setFinalProductSearchbox(data);
+              const extendedData: ExtendedSearchbox[] = data.map((val) => ({
+                ...val,                                  // Copies all existing Searchbox properties
+                namenospace: val.label.replace(/\s+/g, '') // Adds the new required property
+              }));
+              console.log("extendedData: ", extendedData)
+              setFinalProductSearchbox(extendedData);
               // if (pathname === '/drivers') {
               //   const value =
               //     data.map(item => item.slug).join(',') + ',';
@@ -86,10 +74,23 @@ const SearchBox: FC<PropType> = (props) => {
       fetchData();
     }, [pathname, changeBrand]);
 
-    // useEffect(() => {
-    //     document.cookie = `allDriversProducts=; path=/; max-age=86400`;
-    // }, [pathname]);
-
+    const fuse = new Fuse(finalProductSearchbox, {
+        keys: [
+          { name: "name", weight: 1.0 },
+          { name: "info", weight: 1.0 },
+          { name: "namenospace", weight: 0.9 },
+          { name: "size", weight: 0.8 },
+          { name: "cat", weight: 0.5 },
+          { name: "subcat", weight: 0.7 },
+          { name: "subsubcat", weight: 0.7 },
+          { name: "productInKits", weight: 0.5 },
+        ],
+        threshold: 0.15,        
+        minMatchCharLength: 1,  
+        ignoreLocation: true,   
+        includeScore: true,     
+        useExtendedSearch: true
+    });
 
     function searchData(val: string) {
       let select: Searchbox[] = [];

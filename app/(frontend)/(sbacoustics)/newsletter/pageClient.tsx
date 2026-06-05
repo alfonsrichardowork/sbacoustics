@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/hooks/use-toast";
 import { Send } from "lucide-react";
 import { motion } from 'framer-motion';
-import PageLoader from "@/components/pageLoader";
 import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
 
 
