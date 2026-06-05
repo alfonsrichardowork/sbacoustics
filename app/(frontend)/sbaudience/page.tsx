@@ -100,8 +100,8 @@ export default async function LandingPageSBAudience() {
             <img
               src={brandImages.homepage_about_us_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_about_us_url}` : brandImages.homepage_about_us_url}
               alt='Sinar Baja Electric Facility'
-              width={1920}
-              height={1080}
+              width={1000}
+              height={1000}
               className="object-cover w-full h-full grayscale-75"
             />  
             <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 h-fit flex items-end bg-linear-to-t from-black to-transparent w-full">

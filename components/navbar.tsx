@@ -1439,7 +1439,7 @@ useEffect(() => {
         <div className='flex lg:hidden'>
           <Sheet open={isLgScreen?false:undefined}>
             <SheetTrigger asChild>
-              <Button variant={null} className='w-fit p-0'>
+              <Button variant={null} className='w-fit p-0' aria-label='Mobile Menu'>
                 <Menu size={30} />
               </Button>
             </SheetTrigger>

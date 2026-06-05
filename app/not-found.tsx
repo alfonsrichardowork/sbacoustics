@@ -12,7 +12,7 @@ export default function NotFound() {
       <body>
         <div className="relative h-screen w-full overflow-hidden">
             <img
-              src="/images/sbacoustics/not-found.png"
+              src="/images/sbacoustics/not-found.webp"
               alt="SB Acoustics Not Found"
               className="absolute inset-0 w-full h-full object-cover"
             />

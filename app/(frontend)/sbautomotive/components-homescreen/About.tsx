@@ -8,8 +8,8 @@ const About: React.FC = () => {
     <img
       src='/images/sbacoustics/New_SBE.webp'
       alt='Sinar Baja Electric Facility'
-      width={1920}
-      height={1080}
+      width={1000}
+      height={1000}
       className="object-cover w-full h-full grayscale-75"
     />  
      <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 h-fit flex items-end">

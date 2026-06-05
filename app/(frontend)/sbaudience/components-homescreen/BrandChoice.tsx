@@ -52,6 +52,7 @@ export default async function BrandChoice() {
                   width={1000}
                   height={1000}
                   className="sm:w-1/2 w-full h-full"
+                  priority
                 />
               </div>
               <div className="text-left text-sm text-white hidden md:block pb-4">
@@ -87,6 +88,7 @@ export default async function BrandChoice() {
                   width={1000}
                   height={1000}
                   className="sm:w-1/2 w-full h-full"
+                  priority
                 />
               </div>
               <div className="text-left text-sm text-white hidden md:block pb-4">
