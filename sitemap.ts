@@ -2,23 +2,265 @@ import { MetadataRoute } from "next";
 import "dotenv/config"; // Load .env.local variables
 import { writeFile } from "fs/promises";
 import path from "path";
+import prismadb from "./lib/prismadb";
 
-// Fetch your dynamic URLs (from a database, API, or local data)
 async function getProductsDynamicUrls() {
-  const brandId = process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-  const API = `${process.env.NEXT_PUBLIC_ROOT_URL}/${process.env.NEXT_PUBLIC_FETCH_ALL_PRODUCTS}`
-  const API_EDITED_BRANDID = API.replace('{brandId}', brandId ?? '680c5eee-7ed7-41bc-b14b-4185f8a1c379'); //SBAcoustics ID as default
-  const res = await fetch(API_EDITED_BRANDID);
-  const products = await res.json();
-  return products.map((product: { slug: string }) => ({
-    url: `${process.env.NEXT_PUBLIC_ROOT_URL}/products/${product.slug}`,
-    lastModified: new Date().toISOString(),
-  }));
+  const SBAcousticsProducts = await prismadb.product.findMany({
+    where: {
+      brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+    },
+    select: { slug: true },
+  });
+  const SBAudienceProducts = await prismadb.product.findMany({
+    where: {
+      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+    },
+    select: { slug: true },
+  });
+  return [
+    ...SBAcousticsProducts.map((product: { slug: string }) => ({
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/products/${product.slug}`,
+      lastModified: new Date().toISOString(),
+    })),
+    ...SBAudienceProducts.map((product: { slug: string }) => ({
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/products/${product.slug}`,
+      lastModified: new Date().toISOString(),
+    }))
+  ];
 }
+
+async function getSBAcousticsDriversDynamicUrls() {
+  const connectors = await prismadb.allproductcategory.findMany({
+    where: {
+      category: {
+        brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+      },
+      product: {
+        brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+      },
+    },
+    select: {
+      productId: true,
+      category: {
+        select: {
+          slug: true,
+          type: true,
+        },
+      },
+    },
+  });
+
+  const paths = Array.from(
+  connectors.reduce((map, row) => {
+      const existing = map.get(row.productId) ?? [];
+
+      existing.push({
+      slug: row.category.slug,
+      type: row.category.type,
+      });
+
+      map.set(row.productId, existing);
+
+      return map;
+  }, new Map<string, { slug: string; type: string }[]>()).values()
+  ).flatMap(categories => {
+  const category = categories
+      .filter(c => c.type === 'Category')
+      .map(c => c.slug);
+
+  const subCategory = categories
+      .filter(c => c.type === 'Sub Category')
+      .map(c => c.slug);
+
+  const subSubCategory = categories
+      .filter(c => c.type === 'Sub Sub Category')
+      .map(c => c.slug);
+
+  const result: string[] = [];
+
+  // Category only
+  if (!subCategory.length) {
+      return category;
+  }
+
+  // Category + Sub Category
+  for (const cat of category) {
+      for (const sub of subCategory) {
+      if (!subSubCategory.length) {
+          result.push(`${cat}/${sub}`);
+      } else {
+          // Category + Sub Category + Sub Sub Category
+          for (const subSub of subSubCategory) {
+          result.push(`${cat}/${sub}/${subSub}`);
+          }
+      }
+      }
+  }
+
+  return result;
+  });
+
+  const allPaths = new Set<string>();
+
+  for (const path of paths) {
+      const parts = path.split('/');
+
+      // Original path
+      allPaths.add(path);
+
+      // Level 1 (/drivers)
+      if (parts.length >= 1) {
+          allPaths.add(parts[0] ?? '');
+      }
+
+      // Level 2 (/drivers/midranges)
+      if (parts.length >= 2) {
+          allPaths.add(parts.slice(0, 2).join('/'));
+      }
+  }
+
+  const uniqueSortedPaths = [...allPaths].sort((a, b) => {
+    const depthA = a.split('/').length;
+    const depthB = b.split('/').length;
+
+    if (depthA !== depthB) {
+        return depthA - depthB;
+    }
+
+    return a.localeCompare(b);
+  });
+  return uniqueSortedPaths.map((product) => ({
+    url: `${process.env.NEXT_PUBLIC_ROOT_URL}/${product}`,
+    lastModified: new Date().toISOString(),
+  }))
+}
+
+async function getSBAudienceDriversDynamicUrls() {
+  const connectors = await prismadb.allproductcategory.findMany({
+    where: {
+      category: {
+        brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+      },
+      product: {
+        brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+      },
+    },
+    select: {
+      productId: true,
+      category: {
+        select: {
+          slug: true,
+          type: true,
+        },
+      },
+    },
+  });
+
+  const paths = Array.from(
+  connectors.reduce((map, row) => {
+      const existing = map.get(row.productId) ?? [];
+
+      existing.push({
+      slug: row.category.slug,
+      type: row.category.type,
+      });
+
+      map.set(row.productId, existing);
+
+      return map;
+  }, new Map<string, { slug: string; type: string }[]>()).values()
+  ).flatMap(categories => {
+  const category = categories
+      .filter(c => c.type === 'Category')
+      .map(c => c.slug);
+
+  const subCategory = categories
+      .filter(c => c.type === 'Sub Category')
+      .map(c => c.slug);
+
+  const subSubCategory = categories
+      .filter(c => c.type === 'Sub Sub Category')
+      .map(c => c.slug);
+
+  const result: string[] = [];
+
+  // Category only
+  if (!subCategory.length) {
+      return category;
+  }
+
+  // Category + Sub Category
+  for (const cat of category) {
+      for (const sub of subCategory) {
+      if (!subSubCategory.length) {
+          result.push(`${cat}/${sub}`);
+      } else {
+          // Category + Sub Category + Sub Sub Category
+          for (const subSub of subSubCategory) {
+          result.push(`${cat}/${sub}/${subSub}`);
+          }
+      }
+      }
+  }
+
+  return result;
+  });
+
+  const allPaths = new Set<string>();
+
+  for (const path of paths) {
+      const parts = path.split('/');
+
+      // Original path
+      allPaths.add(path);
+
+      // Level 1 (/drivers)
+      if (parts.length >= 1) {
+          allPaths.add(parts[0] ?? '');
+      }
+
+      // Level 2 (/drivers/midranges)
+      if (parts.length >= 2) {
+          allPaths.add(parts.slice(0, 2).join('/'));
+      }
+  }
+
+  const uniqueSortedPaths = [...allPaths].sort((a, b) => {
+    const depthA = a.split('/').length;
+    const depthB = b.split('/').length;
+
+    if (depthA !== depthB) {
+        return depthA - depthB;
+    }
+
+    return a.localeCompare(b);
+  });
+  return uniqueSortedPaths.map((product) => ({
+    url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/${product}`,
+    lastModified: new Date().toISOString(),
+  }))
+}
+
+async function getSBAudienceApplicationsDynamicUrls() {
+  const app = await prismadb.sbaudienceapplication.findMany({
+    where: {
+      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+    },
+    select: { slug: true },
+  });
+  return app.map((singleapp: { slug: string }) => ({
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/application/${singleapp.slug}`,
+      lastModified: new Date().toISOString(),
+    }))
+}
+
 
 // Generate the sitemap dynamically
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const productsDynamicUrls = await getProductsDynamicUrls();
+  const SBAcousticsDriversDynamicUrls = await getSBAcousticsDriversDynamicUrls();
+  const SBAudienceDriversDynamicUrls = await getSBAudienceDriversDynamicUrls();
+  const SBAudienceApplicationsDynamicUrls = await getSBAudienceApplicationsDynamicUrls();
 
   // Static URLs
   const staticUrls = [
@@ -54,212 +296,55 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${process.env.NEXT_PUBLIC_ROOT_URL}/new-products`,
       lastModified: new Date().toISOString(),
     },
-    
     {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers`,
-      lastModified: new Date().toISOString(),
-    },
-
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/tweeters`,
-      lastModified: new Date().toISOString(),
-    },
-    // {
-    //   url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/filler-drivers`,
-    //   lastModified: new Date().toISOString(),
-    // },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/widebanders`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midranges`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/woofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/full-ranges`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/subwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/shallow-subwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/passive-radiators`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/coaxials`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem`,
-      lastModified: new Date().toISOString(),
-    },
-
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/tweeters/satori-tweeters`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/tweeters/dome-tweeter`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/tweeters/ring-radiators`,
-      lastModified: new Date().toISOString(),
-    },
-    
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midranges/satori-midranges`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midranges/nrx-midranges`,
-      lastModified: new Date().toISOString(),
-    },
-
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midwoofers/satori-midwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midwoofers/cac-midwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midwoofers/nbac-midwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midwoofers/crc-midwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midwoofers/mfc-midwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midwoofers/nrx-midwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midwoofers/pfcr-midwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midwoofers/sfcr-midwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/midwoofers/pac-midwoofers`,
-      lastModified: new Date().toISOString(),
-    },
-
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/woofers/satori-woofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/woofers/cac-woofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/woofers/nbac-woofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/woofers/nrx-woofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/woofers/pfcr-woofers`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/woofers/sfcl-woofers`,
-      lastModified: new Date().toISOString(),
-    },
-
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/tweeters-oem`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/midranges-oem`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/midwoofers-oem`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/woofers-oem`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/subwoofers-oem`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/shallow-subwoofers-oem`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/passive-radiators-oem`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/coaxials-oem`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/satori-midwoofers-oem`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/nbac-midwoofers-oem`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/nrx-midwoofers-oem`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/oem/pfcr-midwoofers-oem`,
-      lastModified: new Date().toISOString(),
-    },
-
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/kits/sb-acoustics-kits`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/kits/open-source-kits`,
-      lastModified: new Date().toISOString(),
-    },
-    {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/kits/accessories`,
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/products`,
       lastModified: new Date().toISOString(),
     },
   ];
 
-  return [...staticUrls, ...productsDynamicUrls];
+  const staticUrlsSBAudience = [
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/aboutus`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/catalogues`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/newsletter`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/contact`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/distributors`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/new-products`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/products`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/application`,
+      lastModified: new Date().toISOString(),
+    },
+  ];
+
+  return [...staticUrls, ...staticUrlsSBAudience, ...productsDynamicUrls, ...SBAcousticsDriversDynamicUrls, ...SBAudienceDriversDynamicUrls, ...SBAudienceApplicationsDynamicUrls].sort((a, b) => {
+    return a.url.localeCompare(b.url);
+  });
 }
-
-
 
 sitemap()
   .then(async (data) => {
