@@ -4,6 +4,7 @@ import prismadb from '@/lib/prismadb';
 import Link from "next/link";
 import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-filters';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
+
 export async function generateStaticParams() {
     const connectors = await prismadb.allproductcategory.findMany({
         where: {
@@ -104,11 +105,10 @@ export async function generateStaticParams() {
 
         return a.localeCompare(b);
     });
-    const params = uniqueSortedPaths.map(path => ({
+    
+    return uniqueSortedPaths.map(path => ({
         slug: path.split('/').slice(1),
     }));
-
-    return params;
 }
 
 function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSliderFilter[] {

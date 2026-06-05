@@ -1,61 +1,5 @@
 import { NavbarComponents } from "../types"
 
-
-export const allDriverCatForGenerateStaticParams = [
-  'tweeters',
-  'widebanders',
-  'midranges',
-  'midwoofers',
-  'woofers',
-  'subwoofers',
-  'passive-radiators',
-  'coaxials',
-  'oem',
-  'full-ranges',
-  'shallow-subwoofers'
-]
-
-export const allDriverSubCatForGenerateStaticParams = [
-  ['tweeters', 'satori-tweeters'],
-  ['tweeters', 'dome-tweeters'],
-  ['tweeters', 'ring-radiators'],
-  ['midranges', 'satori-midranges'],
-  ['midranges', 'nrx-midranges'],
-  ['midwoofers', 'satori-midwoofers'],
-  ['midwoofers', 'cac-midwoofers'],
-  ['midwoofers', 'nbac-midwoofers'],
-  ['midwoofers', 'crc-midwoofers'],
-  ['midwoofers', 'mfc-midwoofers'],
-  ['midwoofers', 'nrx-midwoofers'],
-  ['midwoofers', 'pfcr-midwoofers'],
-  ['midwoofers', 'sfcr-midwoofers'],
-  ['midwoofers', 'pac-midwoofers'],
-  ['woofers', 'satori-woofers'],
-  ['woofers', 'cac-woofers'],
-  ['woofers', 'nbac-woofers'],
-  ['woofers', 'nrx-woofers'],
-  ['woofers', 'pfcr-woofers'],
-  ['woofers', 'sfcl-woofers'],
-  ['oem', 'tweeters-oem'],
-  ['oem', 'midranges-oem'],
-  ['oem', 'midwoofers-oem'],
-  ['oem', 'woofers-oem'],
-  ['oem', 'subwoofers-oem'],
-  ['oem', 'shallow-subwoofers-oem'],
-  ['oem', 'passive-radiators-oem'],
-  ['oem', 'coaxials-oem'],
-  ['oem', 'satori-midwoofers-oem'],
-  ['oem', 'nbac-midwoofers-oem'],
-  ['oem', 'nrx-midwoofers-oem'],
-  ['oem', 'pfcr-midwoofers-oem']
-]
-
-export const allKitsCatForGenerateStaticParams = [
-  'sb-acoustics-kits',
-  'open-source-kits',
-  'accessories',
-]
-
 //MENU
 export const DriversMenu: NavbarComponents[] = [
   {
@@ -583,16 +527,6 @@ export const EmptyMenu: NavbarComponents[] = [
 
 
 //SB AUDIENCE
-
-export const allDriverCatSBAudienceForGenerateStaticParams = [
-  'subwoofers',
-  'horn',
-  'coaxials',
-  'open-baffle-drivers',
-  'woofers',
-  'compression-drivers'
-]
-
 export const DriversSBAudienceMenu: NavbarComponents[] = [
   {
     title: "Compression Drivers",
@@ -659,7 +593,5 @@ export const DriversSBAudienceMenu: NavbarComponents[] = [
 
 
 //SB AUTOMOTIVE
-
-export const allDriverCatSBAutomotiveForGenerateStaticParams = []
 
 export const DriversSBAutomotiveMenu: NavbarComponents[] = []
