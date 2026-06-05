@@ -132,7 +132,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { type, name, description, thumbnail_url } = body;
+    const { type, name, description, thumbnail_url, shown_on_all_drivers_page } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -178,6 +178,7 @@ export async function PATCH(
             slug: slugify(name),
             description,
             thumbnail_url,
+            shown_on_all_drivers_page,
             updatedAt: new Date(),
             updatedBy: session.name,
           }
@@ -240,6 +241,7 @@ export async function PATCH(
         slug: slugify(name),
         description,
         thumbnail_url,
+        shown_on_all_drivers_page,
         updatedAt: new Date(),
         updatedBy: session.name,
       }

@@ -79,9 +79,15 @@ export function MainNav({
       ]
     : []),
     {
-      title: "Menu Priority",
+      title: "Product Priority",
       href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/priority`,
-      description: "Set Priorities for Dropdown Menu.",
+      description: "Set Priorities for Products inside Dropdown Menu.",
+      icon: ArrowDown01
+    },
+    {
+      title: "Menu Priority",
+      href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/categorypriority/priority`,
+      description: "Set Menu Priority in All Drivers Page.",
       icon: ArrowDown01
     },
   ]

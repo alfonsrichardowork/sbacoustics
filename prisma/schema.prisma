@@ -140,8 +140,9 @@ model allcategory {
   name        String    @db.Text
   slug        String    @db.Text
   description String    @db.Text
+  priority  String    @default("")
   thumbnail_url String  @db.Text
-  // shown_on_navbar Boolean @default(false)
+  shown_on_all_drivers_page Boolean @default(false)
   updatedBy   String    @default("")
   // products    product[] // Relation to product model
   createdAt   DateTime  @default(now())

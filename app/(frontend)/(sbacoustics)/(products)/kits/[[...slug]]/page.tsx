@@ -6,122 +6,114 @@ import Link from "next/link";
 import AllDriversProducts from '../../components-all-drivers-page/all-product';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
 
-export async function generateStaticParams() {
-    const connectors = await prismadb.allproductcategory.findMany({
-        where: {
-            category: {
-            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-            },
-            product: {
-            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-            },
-        },
-        select: {
-            productId: true,
-            category: {
-                select: {
-                    slug: true,
-                    type: true,
-                },
-            },
-        },
-    });
+// export async function generateStaticParams() {
+//     const connectors = await prismadb.allproductcategory.findMany({
+//         where: {
+//             category: {
+//             brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+//             },
+//             product: {
+//             brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+//             },
+//         },
+//         select: {
+//             productId: true,
+//             category: {
+//                 select: {
+//                     slug: true,
+//                     type: true,
+//                 },
+//             },
+//         },
+//     });
 
-    const paths = Array.from(
-    connectors.reduce((map, row) => {
-        const existing = map.get(row.productId) ?? [];
+//     const paths = Array.from(
+//     connectors.reduce((map, row) => {
+//         const existing = map.get(row.productId) ?? [];
 
-        existing.push({
-        slug: row.category.slug,
-        type: row.category.type,
-        });
+//         existing.push({
+//         slug: row.category.slug,
+//         type: row.category.type,
+//         });
 
-        map.set(row.productId, existing);
+//         map.set(row.productId, existing);
 
-        return map;
-    }, new Map<string, { slug: string; type: string }[]>()).values()
-    ).flatMap(categories => {
-    const category = categories
-        .filter(c => c.type === 'Category' && c.slug === 'kits')
-        .map(c => c.slug);
+//         return map;
+//     }, new Map<string, { slug: string; type: string }[]>()).values()
+//     ).flatMap(categories => {
+//     const category = categories
+//         .filter(c => c.type === 'Category' && c.slug === 'kits')
+//         .map(c => c.slug);
 
-    const subCategory = categories
-        .filter(c => c.type === 'Sub Category')
-        .map(c => c.slug);
+//     const subCategory = categories
+//         .filter(c => c.type === 'Sub Category')
+//         .map(c => c.slug);
 
-    const subSubCategory = categories
-        .filter(c => c.type === 'Sub Sub Category')
-        .map(c => c.slug);
+//     const subSubCategory = categories
+//         .filter(c => c.type === 'Sub Sub Category')
+//         .map(c => c.slug);
 
-    const result: string[] = [];
+//     const result: string[] = [];
 
-    // Category only
-    if (!subCategory.length) {
-        return category;
-    }
+//     // Category only
+//     if (!subCategory.length) {
+//         return category;
+//     }
 
-    // Category + Sub Category
-    for (const cat of category) {
-        for (const sub of subCategory) {
-        if (!subSubCategory.length) {
-            result.push(`${cat}/${sub}`);
-        } else {
-            // Category + Sub Category + Sub Sub Category
-            for (const subSub of subSubCategory) {
-            result.push(`${cat}/${sub}/${subSub}`);
-            }
-        }
-        }
-    }
+//     // Category + Sub Category
+//     for (const cat of category) {
+//         for (const sub of subCategory) {
+//         if (!subSubCategory.length) {
+//             result.push(`${cat}/${sub}`);
+//         } else {
+//             // Category + Sub Category + Sub Sub Category
+//             for (const subSub of subSubCategory) {
+//             result.push(`${cat}/${sub}/${subSub}`);
+//             }
+//         }
+//         }
+//     }
 
-    return result;
-    });
+//     return result;
+//     });
 
-    const allPaths = new Set<string>();
+//     const allPaths = new Set<string>();
 
-    for (const path of paths) {
-        const parts = path.split('/');
+//     for (const path of paths) {
+//         const parts = path.split('/');
 
-        // Original path
-        allPaths.add(path);
+//         // Original path
+//         allPaths.add(path);
 
-        // Level 1 (/drivers)
-        if (parts.length >= 1) {
-            allPaths.add(parts[0] ?? '');
-        }
+//         // Level 1 (/drivers)
+//         if (parts.length >= 1) {
+//             allPaths.add(parts[0] ?? '');
+//         }
 
-        // Level 2 (/drivers/midranges)
-        if (parts.length >= 2) {
-            allPaths.add(parts.slice(0, 2).join('/'));
-        }
-    }
+//         // Level 2 (/drivers/midranges)
+//         if (parts.length >= 2) {
+//             allPaths.add(parts.slice(0, 2).join('/'));
+//         }
+//     }
 
-    const uniqueSortedPaths = [...allPaths].sort((a, b) => {
-        const depthA = a.split('/').length;
-        const depthB = b.split('/').length;
+//     const uniqueSortedPaths = [...allPaths].sort((a, b) => {
+//         const depthA = a.split('/').length;
+//         const depthB = b.split('/').length;
 
-        if (depthA !== depthB) {
-            return depthA - depthB;
-        }
+//         if (depthA !== depthB) {
+//             return depthA - depthB;
+//         }
 
-        return a.localeCompare(b);
-    });
+//         return a.localeCompare(b);
+//     });
 
-    return uniqueSortedPaths.map(path => ({
-        slug: path.split('/').slice(1),
-    }));
-}
+//     return uniqueSortedPaths.map(path => ({
+//         slug: path.split('/').slice(1),
+//     }));
+// }
 
 function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSliderFilter[] {
   return Array.from(new Set(arr));
-}
-
-function createData(
-  value: string,
-  url: string,
-  link: string,
-) {
-  return { url, value, link };
 }
 
 export default async function KitsPage({
@@ -136,93 +128,154 @@ export default async function KitsPage({
     const subsubslug = slug[1] || null;
 
     if(!subslug && !subsubslug){
+
+        const Kits = await prismadb.allproductcategory.findMany({
+            where: {
+                category: {
+                shown_on_all_drivers_page: true,
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+                type: { not: 'Category' }
+                },
+                product: {
+                slug: {
+                    not: 'dw50'
+                },
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+                allCat: {
+                    some: {
+                    category: {
+                        slug: 'kits',
+                    },
+                    },
+                },
+                },
+            },
+            select: {
+                category: {
+                select: {
+                    name: true,
+                    thumbnail_url: true,
+                    slug: true,
+                    priority: true,
+                },
+                },
+            }
+        })
+        const uniqueCategories = [
+            ...new Map(
+                Kits.map(item => [item.category.slug, item.category])
+            ).values()
+        ].sort((a, b) => Number(a.priority) - Number(b.priority))
+
+        const allKit = await prismadb.allcategory.findFirst({
+        where: {
+            slug: 'kits',
+            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+            shown_on_all_drivers_page: true,
+        },
+        select: {
+            name: true,
+            slug: true,
+            thumbnail_url: true,
+        },
+        })
+
+        const itemListElement = [
+            ...(allKit
+                ? [{
+                    "@type": "ListItem",
+                    "position": 1,
+                    "item": {
+                    "@type": "Product",
+                    "url": `${baseUrl}/kits/all`,
+                    "name": `All ${allKit.name}`,
+                    "description": `Discover All ${allKit.name} by SB Acoustics`,
+                    "image": allKit.thumbnail_url.startsWith('/uploads/')
+                        ? `${process.env.NEXT_PUBLIC_ROOT_URL}${allKit.thumbnail_url}`
+                        : allKit.thumbnail_url,
+                    "sku": `all-${allKit.slug}`,
+                    "brand": {
+                        "@type": "Brand",
+                        "name": "SB Acoustics",
+                    },
+                    },
+                }]
+            : []),
+
+            ...uniqueCategories.map((val, index) => ({
+                "@type": "ListItem",
+                "position": index + (allKit ? 2 : 1),
+                "item": {
+                "@type": "Product",
+                "url": `${baseUrl}/kits/${val.slug}`,
+                "name": val.name,
+                "description": `Discover All ${val.name} by SB Acoustics`,
+                "image": val.thumbnail_url.startsWith('/uploads/')
+                    ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.thumbnail_url}`
+                    : val.thumbnail_url,
+                "sku": val.slug,
+                "brand": {
+                    "@type": "Brand",
+                    "name": "SB Acoustics",
+                },
+                },
+            })),
+        ]
+
         const jsonLd = {
             "@context": "https://schema.org",
             "@type": "ItemList",
             "url": `${baseUrl}/kits`,
             "name": "SB Acoustics",
-            "description": `All Kits Products Provided by SB Acoustics`,
-            "itemListElement": [{
-            "@type": "ListItem",
-            "position": 1,
-            "item": {
-                "@type": "Product",
-                "url": `${baseUrl}/kits/sb-acoustics-kits`,
-                "name": "SB Acoustics Kits",
-                "description": "Discover All SB Acoustics Kits by SB Acoustics",
-                "image": `${baseUrl}/images/sbacoustics/kitscover/sbacousticskitscover.jpg`,
-                "sku": "sb-acoustics-kits",
-                "brand": {
-                "@type": "Brand",
-                "name": "SB Acoustics"
-                }
-            }
-            },
-            {
-            "@type": "ListItem",
-            "position": 2,
-            "item": {
-                "@type": "Product",
-                "url": `${baseUrl}/kits/open-source-kits`,
-                "name": "Open Source Kits",
-                "description": "Discover Open Source Kits by SB Acoustics",
-                "image": `${baseUrl}/images/sbacoustics/kitscover/opensourcekitscover.jpg`,
-                "sku": "open-source-kits",
-                "brand": {
-                "@type": "Brand",
-                "name": "SB Acoustics"
-                }
-            }
-            },
-            {
-            "@type": "ListItem",
-            "position": 3,
-            "item": {
-                "@type": "Product",
-                "url": `${baseUrl}/kits/accessories`,
-                "name": "Accessories",
-                "description": "Discover Accessories by SB Acoustics",
-                "image": `${baseUrl}/images/sbacoustics/kitscover/accessoriescover.jpg`,
-                "sku": "accessories",
-                "brand": {
-                "@type": "Brand",
-                "name": "SB Acoustics"
-                }
-            }
-            }]
-        };
+            "description": "All Kits Provided by SB Acoustics",
+            itemListElement,
+        }
 
-        const rows = [
-            createData('SB Acoustics Kits', "/images/sbacoustics/kitscover/sbacousticskitscover.jpg", '/kits/sb-acoustics-kits'),
-            createData('Open Source Kits', "/images/sbacoustics/kitscover/opensourcekitscover.jpg", '/kits/open-source-kits'),
-            createData('Accessories', "/images/sbacoustics/kitscover/accessoriescover.jpg", '/kits/accessories'),
-            // createData('Discontinued', "/images/sbacoustics/kitscover/discontinuedcover.jpg", '/kits/discontinued'),
-        ];
         return(
             <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <h1 className="sr-only">All Kits | SB Acoustics</h1>
-                {rows.map((item, i) => (
-                <div key={i}>
+                 {allKit &&
+                    <div>
                     <Link 
-                    href={`${item.link}`} 
-                    className="group cursor-pointer space-y-4 block"
+                        href='/kits/all'
+                        className=" group cursor-pointer space-y-4 block"
                     >
-                    <div className="relative aspect-square">
+                        <div className="relative aspect-square">
                         <LazyImageClickable
-                        src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
-                        alt={`${item.value} by SB Acoustics`}
-                        width={1000}
-                        height={1000}
+                            src={allKit.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${allKit.thumbnail_url}` : allKit.thumbnail_url} 
+                            alt={`${allKit.name} by SB Acoustics`}
+                            width={1000}
+                            height={1000}
                         />
-                    </div>
-                    <h2 className="font-bold text-xl text-center">{item.value}</h2>
+                        </div>
+                        
+                        <h2 className="font-bold text-xl text-center">All {allKit.name}</h2>
                     </Link>
-                </div>
+                    </div>
+                }
+                 {uniqueCategories.map((item, i) => (
+                    <div key={i}>
+                    <Link 
+                        href={`/kits/${item.slug}`} 
+                        className=" group cursor-pointer space-y-4 block"
+                    >
+                        <div className="relative aspect-square">
+                        <LazyImageClickable
+                            src={item.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}` : item.thumbnail_url} 
+                            alt={`${item.name} by SB Acoustics`}
+                            width={1000}
+                            height={1000}
+                        />
+                        </div>
+                        
+                        <h2 className="font-bold text-xl text-center">{item.name}</h2>
+                    </Link>
+                    </div>
                 ))}
             </div>
             </div>

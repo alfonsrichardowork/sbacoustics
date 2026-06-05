@@ -79,6 +79,8 @@ export const AllProductCategoryForm: React.FC<AllProductCategoryFormProps> = ({
           slug: item.category.slug,
           description: '',
           thumbnail_url: '',
+          priority: '',
+          shown_on_all_drivers_page: false,
           updatedBy: '',
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,

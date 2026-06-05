@@ -300,6 +300,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${process.env.NEXT_PUBLIC_ROOT_URL}/products`,
       lastModified: new Date().toISOString(),
     },
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/drivers/all`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/kits/all`,
+      lastModified: new Date().toISOString(),
+    },
   ];
 
   const staticUrlsSBAudience = [
@@ -333,6 +341,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/products`,
+      lastModified: new Date().toISOString(),
+    },
+    {
+      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/drivers/all`,
       lastModified: new Date().toISOString(),
     },
     {

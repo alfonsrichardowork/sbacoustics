@@ -14,6 +14,7 @@ import { Button } from "@/app/(admin)/admin/components/ui/button"
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,12 +26,14 @@ import { MAX_SIZE } from "@/app/(admin)/admin/model/model"
 import { uploadImage } from "@/app/(admin)/admin/upload-image"
 import Image from "next/image"
 import { Trash } from "lucide-react"
+import { Checkbox } from "@/app/(admin)/admin/components/ui/checkbox"
 
 const formSchema = z.object({
   name: z.string().min(1),
   description: z.string().min(1),
   type: z.string().min(1),
   thumbnail_url: z.string().optional(),
+  shown_on_all_drivers_page: z.boolean().default(false).optional(),
 });
 
 type SubSubCategoryFormValues = z.infer<typeof formSchema>
@@ -61,7 +64,8 @@ export const SubSubCategoryForm: React.FC<SubSubCategoryFormProps> = ({
       name: '',
       description: '',
       type: 'Sub Sub Category',
-      thumbnail_url: ''
+      thumbnail_url: '',
+      shown_on_all_drivers_page: false,
     }
   });
 
@@ -223,6 +227,29 @@ export const SubSubCategoryForm: React.FC<SubSubCategoryFormProps> = ({
                     <Input disabled={loading} placeholder="Sub Sub Category description" {...field} />
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="shown_on_all_drivers_page"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      // @ts-ignore
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Shown on Drivers Page
+                    </FormLabel>
+                    <FormDescription>
+                      Check this if this is wanted to be shown in Drivers Page
+                    </FormDescription>
+                  </div>
                 </FormItem>
               )}
             />

@@ -26,19 +26,19 @@ type Props = {
 
 // export const revalidate = 86400
 
-export async function generateStaticParams(){
-  const products = await prismadb.product.findMany({
-    where: {
-      brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-    },
-    select: {
-      slug: true,
-    },
-  });
-  return products.map((product: { slug: string }) => ({
-    productSlug: product.slug
-  }));
-}
+// export async function generateStaticParams(){
+//   const products = await prismadb.product.findMany({
+//     where: {
+//       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+//     },
+//     select: {
+//       slug: true,
+//     },
+//   });
+//   return products.map((product: { slug: string }) => ({
+//     productSlug: product.slug
+//   }));
+// }
 
 export default async function SingleProductSBAcoustics(props: Props) {
     const { productSlug = '' } = await props.params;

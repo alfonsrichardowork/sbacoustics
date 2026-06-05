@@ -122,7 +122,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
             let tempShowed: AllFilterProductsOnlyType[][] = [];
             if(params.length === 2){
                 if(params[1] === 'all') {
-                    setFinalBreadcrumb([params[0] ?? '', 'All Drivers'])
+                    setFinalBreadcrumb([params[0] ?? '', params[0] === 'kits' ? 'All Kits' : 'All Drivers'])
                 }
                 else{
                     setFinalBreadcrumb([params[0] ?? '', await getSubCatNameBySlug(pathname, params[1] ?? '')])
