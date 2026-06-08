@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation"
 import { Searchbox } from "@/app/(frontend)/types"
 import getProductsForSearchbox from "@/app/(frontend)/actions/get-product-for-searchbox"
 import { Input } from "./ui/input"
-import Image from "next/image"
 import Fuse from "fuse.js";
 import { FC, useEffect, useRef, useState } from "react"
 import { LazyImageCustom } from "./lazyImageCustom"
@@ -31,6 +30,11 @@ type PropType = {
   changeBrand: boolean
 }
 
+interface ExtendedSearchbox extends Searchbox {
+  namenospace: string[];
+  // sizenospace: string;
+}
+
 const SearchBoxNavbar: FC<PropType> = (props) => {
   const { changeBrand } = props
   const [finalProductSearchbox, setFinalProductSearchbox] = useState<Searchbox[]>([]);
@@ -41,31 +45,17 @@ const SearchBoxNavbar: FC<PropType> = (props) => {
   const skipBlurRef = useRef(false);
   const skipUnmountRef = useRef(false);
   
-
-  // Setup Fuse
-  const fuse = new Fuse(finalProductSearchbox, {
-      keys: [
-        { name: "name", weight: 1.0 },
-        { name: "size", weight: 0.8 },
-        { name: "cat", weight: 0.5 },
-        { name: "subcat", weight: 0.7 },
-        { name: "subsubcat", weight: 0.7 },
-        { name: "productInKits", weight: 0.5 },
-      ],
-      threshold: 0.15,         // lower = stricter match, higher = looser
-      minMatchCharLength: 2,  // require at least 2 chars for match
-      ignoreLocation: true,   // ignore location of match
-      includeScore: true,     // gives back match score
-      useExtendedSearch: true
-  });
-  
     useEffect(() => {
       const fetchData = async () => {
           try {
               const data : Searchbox[] = await getProductsForSearchbox(pathname);
               data.sort((a, b) => (a.size[0] || "").localeCompare(b.size[0] || ""))
-              setFinalProductSearchbox(data);
-              setFinalProductSearchbox(data);
+              const extendedData: ExtendedSearchbox[] = data.map((val) => ({
+                ...val,
+                namenospace: val.size.map((oneSize) => `${oneSize}${val.name}`.replace(/\s+/g, '')),
+                // sizenospace: `${val.size[0]}inch`
+              }));
+              setFinalProductSearchbox(extendedData);
           } catch (error) {
               console.error('Error fetching data:', error);
           }
@@ -73,7 +63,27 @@ const SearchBoxNavbar: FC<PropType> = (props) => {
       fetchData();
     }, [pathname, changeBrand]);
 
-  
+    
+    const fuse = new Fuse(finalProductSearchbox, {
+        keys: [
+          { name: "label", weight: 1.0 },
+          { name: "slug", weight: 0.8 },
+          { name: "namenospace", weight: 0.4 },
+          // { name: "sizenospace", weight: 1.0 },
+          { name: "info", weight: 0.3 },
+          { name: "size", weight: 0.9 },
+          { name: "cat", weight: 0.4 },
+          { name: "subcat", weight: 0.3 },
+          { name: "subsubcat", weight: 0.3 },
+          { name: "productInKits", weight: 0.2 },
+        ],
+        threshold: 0.1,        
+        minMatchCharLength: 1,  
+        ignoreLocation: false,   
+        includeScore: true,     
+        useExtendedSearch: true
+    });
+
   function searchData(val: string) {
         let select: Searchbox[] = [];
         let selectOEM: Searchbox[] = [];

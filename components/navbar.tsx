@@ -18,6 +18,7 @@ import { getHref } from '@/app/(frontend)/utils/getHref';
 import getAllNavbarContent from '@/app/(frontend)/actions/get-all-navbar-content';
 import { LazyImageCustom } from './lazyImageCustom';
 import { useScrollDirection } from './hooks/use-scroll-direction';
+import SearchLightbox from './searchligthbox';
 
 const styledDropdown = "text-sm px-1 py-2 text-foreground"
 
@@ -1432,7 +1433,7 @@ useEffect(() => {
           </NavigationMenu>
         </div>
         <div className={`w-1/4 hidden lg:flex justify-end`}>
-          <SearchBox mobile={false} changeBrand/>
+          <SearchBox changeBrand/>
         </div>
 
 
@@ -1445,7 +1446,7 @@ useEffect(() => {
             </SheetTrigger>
             <SheetContent className={`w-screen h-auto p-0 overflow-y-auto ${pathname.includes('sbaudience') ? 'bg-foreground text-background' : 'bg-background text-foreground'}`}>
               <div className='sticky pt-4 pl-6'>
-                <SearchBox mobile={true} changeBrand/>
+                <SearchLightbox changeBrand/>
               </div>
               <SheetTitle/>
               <SheetDescription/>
@@ -1664,8 +1665,8 @@ useEffect(() => {
                 </Accordion>
               {pathname.includes('sbaudience') && 
                 <>
-                  <Button variant={null} asChild className='px-6'>
-                    <Link href={getHref(pathname, 'application')}>
+                  <Button variant={null} asChild className='px-6 py-0'>
+                    <Link href={getHref(pathname, 'application')} className='p-0'>
                       <SheetClose className='w-full text-base text-left hover:text-primary pl-2'>
                         Application
                       </SheetClose>
@@ -1674,23 +1675,23 @@ useEffect(() => {
                 </>
               }
               {!pathname.includes('sbaudience') &&
-                <Button variant={null} asChild className='px-6'>
-                  <Link href={getHref(pathname, 'technical')}>
+                <Button variant={null} asChild className='px-6 py-0'>
+                  <Link href={getHref(pathname, 'technical')} className='p-0'>
                     <SheetClose className='w-full text-base text-left hover:text-primary pl-2'>
                       Technical
                     </SheetClose>
                   </Link>
                 </Button>
               }
-                <Button variant={null} asChild className='px-6'>
-                  <Link href={getHref(pathname, 'distributors')}>
+                <Button variant={null} asChild className='px-6 py-0'>
+                  <Link href={getHref(pathname, 'distributors')} className='p-0'>
                     <SheetClose className='w-full text-base text-left hover:text-primary pl-2'>
                       Distributors
                     </SheetClose>
                   </Link>
                 </Button>
-                <Button variant={null} asChild className='px-6'>
-                  <Link href={getHref(pathname, 'contact')}>
+                <Button variant={null} asChild className='px-6 py-0'>
+                  <Link href={getHref(pathname, 'contact')} className='p-0'>
                     <SheetClose className='w-full text-base text-left hover:text-primary pl-2'>
                       Contact
                     </SheetClose>

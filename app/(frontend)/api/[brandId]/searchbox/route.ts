@@ -26,8 +26,23 @@ export async function GET(req: Request, props: { params: Promise<{ brandId: stri
         brandId: params.brandId,
         isArchived: false,
       },
-      include: {
-        productsUsedInKits: true,
+      select: {
+        isKits: true,
+        searchbox_desc: true,
+        name: true,
+        slug: true,
+        id: true,
+        cover_img_url: true,
+        productsKits: {
+          select: {
+            productUsedInKits: {
+              select: {
+                name: true,
+                slug: true,
+              }
+            }
+          }
+        },
         size: true,
         allCat: {
           select:{
@@ -99,18 +114,18 @@ export async function GET(req: Request, props: { params: Promise<{ brandId: stri
               size.push(product.size.name.concat(" inch"))
               size.push(product.size.value)
             }
-            
-            // allSpecsNeeded.map((val) => {
-            //   product.connectorSpecifications.find((valSpec) -> val.slug === val). && product.specification.rated_power_handling !== '') {
-            //   parts.push(product.specification.rated_power_handling + " W")
-            // })
-            // if (product.specification.sensitivity && product.specification.sensitivity !== '') {
-            //   parts.push(product.specification.sensitivity + " dB");
-            // }   
             product.connectorSpecifications.map((val) => {
               val.value !== '' && parts.push(`${val.value} ${val.dynamicspecification.unit}`)
             })
-            add_info = parts.join(" - ");
+            if(product.searchbox_desc !== ''){
+              add_info = add_info.concat(product.searchbox_desc)
+              if(parts.length > 0){
+                add_info = add_info.concat(" - ", parts.join(" - "))
+              }
+            }
+            else{
+              add_info = parts.join(" - ")
+            }
           }
 
 
@@ -120,8 +135,8 @@ export async function GET(req: Request, props: { params: Promise<{ brandId: stri
           //   tempProductsInKits.push(products.find((val)=> val.id === item.productUsedInKitsId)?.name ?? '')
           // })
           // tempProductsInKits.length > 0 && (tempName = tempName.concat(tempProductsInKits.join(" "), " "))
-          product.productsUsedInKits && product.productsUsedInKits.length > 0 && product.productsUsedInKits.map((item, index) => {
-            productInKits.push(products.find((val)=> val.id === item.productUsedInKitsId)?.name ?? '')
+          product.productsKits && product.productsKits.length > 0 && product.productsKits.map((item, index) => {
+            productInKits.push(item.productUsedInKits.name)
           })
           
           if(tempName.toLowerCase().includes('nrx') || tempName.toLowerCase().includes('norex') || product.name.toLowerCase().includes('nrx') || product.name.toLowerCase().includes('norex')){
