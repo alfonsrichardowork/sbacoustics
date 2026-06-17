@@ -33,14 +33,14 @@ export default async function BrandChoice() {
     <div className="grid grid-cols-1 md:grid-cols-5">
       <Card className="relative overflow-hidden border-none group rounded-none col-span-3">
         <h2 className='sr-only'>Explore Our Brands: SB Audience</h2>
-        <div className="relative w-auto h-screen bg-cover bg-no-repeat flex items-center">
-          <Image
+        <div className="relative w-auto h-[50vh] bg-cover bg-no-repeat flex items-center">
+          <img
             src={brandImagesSBAudience.homepage_brand_choice_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImagesSBAudience.homepage_brand_choice_url}` : brandImagesSBAudience.homepage_brand_choice_url}
             alt="SB Audience"
             width={1000}
             height={1000}
             className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-            priority
+            fetchPriority='high'
           />
           <div className="left-0 absolute bg-linear-to-l from-zinc-900 to-transparent w-full h-full md:block hidden"/>
           <div className="bottom-0 absolute xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 text-white w-full">
@@ -68,7 +68,7 @@ export default async function BrandChoice() {
       </Card>
 
       <Card className="relative overflow-hidden border-none group rounded-none col-span-2 md:block hidden">
-        <div className="relative w-auto h-screen bg-cover bg-no-repeat flex items-center bg-zinc-900">
+        <div className="relative w-auto h-[50vh] bg-cover bg-no-repeat flex items-center bg-zinc-900">
           {/* <Image
             src={brandImagesSBAutomotive.homepage_brand_choice_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImagesSBAutomotive.homepage_brand_choice_url}` : brandImagesSBAutomotive.homepage_brand_choice_url}
             alt="SB Automotive"
@@ -77,9 +77,9 @@ export default async function BrandChoice() {
             className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
             priority
           /> */}
-          <div className="bottom-1/2 absolute xl:px-16 lg:px-12 px-8 text-white w-full">
+          <div className="h-full flex items-center xl:px-16 lg:px-12 px-8 text-white w-full ">
             <div className="sm:w-2/3 w-4/5">
-              <div className="text-left text-sm text-white hidden md:block pb-4">
+              <div className="text-left text-sm text-white hidden md:block">
                 {brandImagesSBAudience.homepage_brand_choice_text}
               </div>
             </div>

@@ -30,10 +30,12 @@ export async function generateStaticParams(){
   const products = await prismadb.product.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+      isArchived: false,
     },
     select: {
       slug: true,
     },
+    // take: 5
   });
   return products.map((product: { slug: string }) => ({
     productSlug: product.slug

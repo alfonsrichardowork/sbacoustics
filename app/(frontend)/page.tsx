@@ -94,7 +94,7 @@ export default async function LandingPageSBAcoustics() {
           </div>
         </div>
 
-       <div className="relative min-h-screen">
+       <div className="relative h=[50vh]">
           <BrandChoice />
         </div>
         {brandImages.homepage_open_source_kits_url !== '' &&
@@ -136,7 +136,7 @@ export default async function LandingPageSBAcoustics() {
                 alt='Sinar Baja Electric Facility'
                 width={1000}
                 height={1000}
-                className="object-cover w-full h-full grayscale-75"
+                className="object-cover w-full h-full"
               />  
               <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 h-fit flex items-end bg-linear-to-t from-black to-transparent w-full">
               <div className="grid gap-0 grid-cols-1 w-fit">

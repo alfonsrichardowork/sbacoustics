@@ -32,32 +32,32 @@ export default async function BrandChoice() {
   }
   return (
     <div className="grid grid-cols-1 md:grid-cols-5">
-      <Card className="relative overflow-hidden border-none group rounded-none hover:cursor-pointer col-span-3">
+      <Card className="relative overflow-hidden border-none group rounded-none hover:cursor-pointer col-span-5">
         <h2 className='sr-only'>Explore Our Brands: SB Acoustics</h2>
-        <div className="relative w-auto h-screen bg-cover bg-no-repeat flex items-center">
-          <Image
+        <div className="relative w-auto h-[50vh] bg-cover bg-no-repeat flex items-center">
+          <img
             src={brandImagesSBAcoustics.homepage_brand_choice_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImagesSBAcoustics.homepage_brand_choice_url}` : brandImagesSBAcoustics.homepage_brand_choice_url}
             alt="SB Acoustics"
             width={1000}
             height={1000}
             className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-            priority
+            fetchPriority='high'
           />
-          <div className="left-0 absolute bg-linear-to-l from-zinc-300 to-transparent w-full h-full md:block hidden"/>
+          {/* <div className="left-0 absolute bg-linear-to-l from-zinc-300 to-transparent w-full h-full md:block hidden"/> */}
           <div className="bottom-0 absolute xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 text-white w-full">
             <div className="sm:w-2/3 w-4/5">
               <div className="w-full h-auto pb-4">
-                <Image
+                <img
                   src="/images/sbacoustics/logo_sbacoustics_black_clean.webp"
                   alt="SB Acoustics Logo"
-                  width={1000}
-                  height={1000}
-                  className="sm:w-1/2 w-full h-full"
-                  priority
+                  width={500}
+                  height={500}
+                  className="sm:w-1/ md:w-1/3 w-full h-full"
+                  fetchPriority='high'
                 />
               </div>
-              <div className="text-left text-sm text-white hidden md:block pb-4">
-                {/* {brandImagesSBAcoustics.homepage_brand_choice_text} */}
+              <div className="text-left text-sm text-black hidden md:block pb-4 md:max-w-2/3 w-full">
+                {brandImagesSBAcoustics.homepage_brand_choice_text}
               </div>
               <div className="items-start pb-4">
                 <Button asChild size={"sm"}>
@@ -69,40 +69,17 @@ export default async function BrandChoice() {
         </div>
       </Card>
 
-      <Card className="relative overflow-hidden border-none group rounded-none hover:cursor-pointer col-span-2 md:block hidden">
+      {/* <Card className="relative overflow-hidden border-none group rounded-none hover:cursor-pointer col-span-2 md:block hidden">
         <div className="relative w-auto h-screen bg-cover bg-no-repeat flex items-center bg-zinc-300">
-          {/* <Image
-            src={brandImagesSBAutomotive.homepage_brand_choice_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImagesSBAutomotive.homepage_brand_choice_url}` : brandImagesSBAutomotive.homepage_brand_choice_url}
-            alt="SB Automotive"
-            width={1000}
-            height={1000}
-            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-            priority
-          /> */}
           <div className="bottom-1/2 absolute xl:px-16 lg:px-12 px-8 text-black w-full">
             <div className="sm:w-2/3 w-4/5">
-              {/* <div className="w-full h-auto pb-4">
-                <Image
-                  src="/images/sbacoustics/logo_sbautomotive_white.webp"
-                  alt="SB Automotive Logo"
-                  width={1000}
-                  height={1000}
-                  className="sm:w-1/2 w-full h-full"
-                  priority
-                />
-              </div> */}
               <div className="text-left text-sm text-black hidden md:block pb-4">
                 {brandImagesSBAcoustics.homepage_brand_choice_text}
               </div>
-              {/* <div className="items-start pb-4">
-                <Button asChild size={"sm"}>
-                  <Link href="/sbautomotive">Learn More</Link>
-                </Button>
-              </div> */}
             </div>
           </div>
         </div>
-      </Card>
+      </Card> */}
     </div>
   );
 }
