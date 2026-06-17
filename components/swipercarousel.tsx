@@ -52,25 +52,26 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
           // navigation={true}
           modules={[Autoplay]}
           className="swiper"
+          data-testid="featured-products-swiper-desktop-overall"
           // style={{
           //   '--swiper-navigation-color': '#e60013',
           // } as CSSProperties}
         >
           {slides.map((item, index) => (
-            <SwiperSlide key={index}>
+            <SwiperSlide key={index} data-testid="featured-products-swiper-desktop-slide">
               <div className="relative w-full h-screen">
-                <img src={item.featuredImgUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.featuredImgUrl}` : item.featuredImgUrl} alt={item.name} className='w-full h-full object-cover' />
+                <img src={item.featuredImgUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.featuredImgUrl}` : item.featuredImgUrl} alt={item.name} className='w-full h-full object-cover' data-testid="featured-products-swiper-desktop-main-image" />
 
                 <div className={`absolute inset-x-0 bottom-0 xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 h-fit flex items-end ${'bg-linear-to-t from-black to-transparent'}`}>
                     <div className="grid gap-0 grid-cols-1 w-fit">
-                      <h3 className="text-left font-bold xl:text-5xl text-3xl text-foreground pb-4 lg:text-white">
+                      <h3 className="text-left font-bold xl:text-5xl text-3xl text-foreground pb-4 lg:text-white" data-testid={`featured-products-swiper-desktop-title-${index + 1}`}>
                         {item.name}
                       </h3>
-                      <div className="text-left text-sm text-foreground pb-4 hidden md:block lg:text-white">
+                      <div className="text-left text-sm text-foreground pb-4 hidden md:block lg:text-white" data-testid="featured-products-swiper-desktop-description">
                         {item.featuredDesc}
                       </div>
                       <div className="items-start pb-4">
-                        <Button asChild size={"sm"}>
+                        <Button asChild size={"sm"} data-testid="featured-products-swiper-desktop-button">
                           <Link href={brand === 'sbaudience' ? `/sbaudience/products/${item.slug}`: `/products/${item.slug}`}>Product Page</Link>
                         </Button>
                       </div>
@@ -93,6 +94,7 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
               realIndex === index ? 'bg-primary scale-125' : 'bg-zinc-700'
             }`}
             aria-label={`Go to slide ${index + 1}`}
+            data-testid={`featured-products-swiper-desktop-pagination-dot-${index + 1}`}
           ></button>
         ))}
       </div>
@@ -119,22 +121,23 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
           style={{
             '--swiper-navigation-color': '#e60013',
           } as CSSProperties}
+          data-testid="featured-products-swiper-mobile-overall"
         >
           {slides.map((item, index) => (
-            <SwiperSlide key={index}>
+            <SwiperSlide key={index} data-testid="featured-products-swiper-mobile-slide">
               <div className="relative w-full h-screen">
-                <img src={item.featuredImgUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.featuredImgUrl}` : item.featuredImgUrl} alt={item.name} className='w-full h-full object-cover' fetchPriority='high'/>
+                <img src={item.featuredImgUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.featuredImgUrl}` : item.featuredImgUrl} alt={item.name} className='w-full h-full object-cover' fetchPriority='high' data-testid="featured-products-swiper-mobile-main-image" />
 
                 <div className={`absolute inset-x-0 bottom-0 xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 h-fit flex items-end ${pathname.includes('sbaudience') ? 'bg-linear-to-t from-black to-transparent': 'bg-linear-to-r from-white/80 to-white/0'}`}>
                     <div className={`grid gap-0 grid-cols-1 w-fit`}>
-                      <h3 className={`text-left font-bold xl:text-5xl text-3xl text-foreground pb-4 lg:text-white ${pathname.includes("sbaudience") && 'text-white'}`}>
+                      <h3 className={`text-left font-bold xl:text-5xl text-3xl text-foreground pb-4 lg:text-white ${pathname.includes("sbaudience") && 'text-white'}`} data-testid={`featured-products-swiper-mobile-title-${index + 1}`}>
                         {item.name}
                       </h3>
-                      <div className={`text-left text-sm text-foreground pb-4 hidden md:block lg:text-white ${pathname.includes("sbaudience") && 'text-white'}`}>
+                      <div className={`text-left text-sm text-foreground pb-4 hidden md:block lg:text-white ${pathname.includes("sbaudience") && 'text-white'}`} data-testid="featured-products-swiper-mobile-description">
                         {item.featuredDesc}
                       </div>
                       <div className="items-start pb-4">
-                        <Button asChild size={"sm"}>
+                        <Button asChild size={"sm"} data-testid="featured-products-swiper-mobile-button">
                           <Link href={brand === 'sbaudience' ? `/sbaudience/products/${item.slug}`: `/products/${item.slug}`}>Product Page</Link>
                         </Button>
                       </div>
@@ -158,7 +161,7 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
                 realIndex === index ? 'bg-primary scale-125' : 'bg-zinc-700'
               }`}
               aria-label={`Go to slide ${index + 1}`}
-            ></button>
+             data-testid={`featured-products-swiper-mobile-pagination-dot-${index + 1}`}></button>
           ))}
         </div>
       </div>
