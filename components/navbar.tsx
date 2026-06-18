@@ -937,6 +937,7 @@ useEffect(() => {
         duration-300
         ease-in-out
         ${
+          !pathname.includes('sbaudience') &&
           selected.includes('2')
             ? scrolled
               ? 'top-0 border-none'
