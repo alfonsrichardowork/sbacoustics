@@ -10,7 +10,6 @@ import ThemeWrapper from './providers/themeWrapper';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Noto_Sans } from 'next/font/google';
 import LoadingWrapper from '@/components/loadingWrapper';
-import CookieSettingsPage from '@/components/cookie-settings-page';
 import { CookieProvider } from '@/lib/cookies-context';
 import CookieBanner from '@/components/cookie-banner';
 

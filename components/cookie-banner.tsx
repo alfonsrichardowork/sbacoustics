@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { CookieIcon, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useCookiePreferences } from '@/lib/cookies-context'
 import CookieSettings from './cookie-settings'
 import { usePathname } from 'next/navigation'
@@ -23,17 +23,18 @@ export default function CookieBanner() {
   }
 
   return (
-    <div className={`z-40 fixed bottom-0 left-0 right-0 shadow-lg`}>
-      <div className={`max-w-6xl w-fit mx-auto bg-white md:p-3 p-2 rounded-t-2xl shadow-[-1px_-4px_6px_-1px_rgba(0,0,0,0.1)]`}>
+    <div className={`z-40 fixed bottom-0 left-0 right-0 shadow-[-1px_-4px_6px_-1px_rgba(0,0,0,0.1)] bg-white`}>
+      <div className="relative">
+        <Button
+          variant="ghost"
+          onClick={acceptAll}
+          className="absolute top-2 right-2 h-fit p-0 hover:text-primary hover:cursor-pointer hover:bg-transparent"
+        >
+          <X size={20}/>
+        </Button>
+      </div>
+      <div className={`max-w-6xl w-fit mx-auto md:p-3 p-2 rounded-t-2xl`}>
         <div className="relative">
-          {/* X button - top right */}
-          <Button
-            variant="ghost"
-            onClick={acceptAll}
-            className="absolute top-0 right-0 h-fit p-0 hover:text-primary hover:cursor-pointer hover:bg-transparent"
-          >
-            <X size={20}/>
-          </Button>
 
           {/* <div className="absolute top-1/2 left-0 h-full p-0">
             <CookieIcon className="w-5 h-5 text-primary flex-shrink-0" />

@@ -1,10 +1,8 @@
-export type CookieCategory = 'essential' | 'analytics' | 'marketing' | 'preferences'
+export type CookieCategory = 'essential' | 'analytics'
 
 export interface CookiePreferences {
   essential: boolean
   analytics: boolean
-  marketing: boolean
-  preferences: boolean
   timestamp: number
 }
 
@@ -48,8 +46,6 @@ export const cookieManager = {
   getDefaultPreferences: (): CookiePreferences => ({
     essential: true, // Always true
     analytics: false,
-    marketing: false,
-    preferences: false,
     timestamp: Date.now(),
   }),
 
@@ -58,8 +54,6 @@ export const cookieManager = {
     const prefs: CookiePreferences = {
       essential: true,
       analytics: true,
-      marketing: true,
-      preferences: true,
       timestamp: Date.now(),
     }
     cookieManager.setPreferences(prefs)

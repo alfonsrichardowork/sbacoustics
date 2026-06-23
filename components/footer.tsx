@@ -240,7 +240,7 @@ export default function Footer() {
             © {new Date().getFullYear()} {!loading && finalData && finalData.name}. All rights reserved.
           </div>
           
-            <div className='space-x-2 text-sm text-gray-400'>
+            <div className='space-x-2 text-sm text-gray-400 md:hidden block'>
               <Link href={'/privacy'} className="hover:text-white transition-colors">Privacy Policy</Link>
               <Button
                 variant="ghost"

@@ -30,18 +30,6 @@ const COOKIE_CATEGORIES: CookieCategory[] = [
     description:
       'These cookies help us understand how visitors interact with our website through aggregated data.',
   },
-  {
-    id: 'marketing',
-    name: 'Marketing Cookies',
-    description:
-      'These cookies are used to deliver personalized advertisements and track marketing campaign performance.',
-  },
-  {
-    id: 'preferences',
-    name: 'Preference Cookies',
-    description:
-      'These cookies remember your choices to provide a personalized experience on future visits.',
-  },
 ]
 
 export default function CookieSettings({ onClose }: CookieSettingsProps) {
@@ -49,8 +37,6 @@ export default function CookieSettings({ onClose }: CookieSettingsProps) {
   const [localPrefs, setLocalPrefs] = useState(preferences || {
     essential: true,
     analytics: false,
-    marketing: false,
-    preferences: false,
     timestamp: Date.now(),
   })
 
