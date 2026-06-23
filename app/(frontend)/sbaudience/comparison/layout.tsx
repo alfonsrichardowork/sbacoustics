@@ -58,7 +58,7 @@ export default function ComparisonLayoutSBAudience({
 }) {
   return (
     <>
-        <div className='pt-16 bg-background'>
+        <div className='pt-24 bg-background'>
             {children}
         </div>
     </>

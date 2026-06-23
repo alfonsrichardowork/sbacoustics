@@ -5,7 +5,7 @@ export default function ProductLayout({
   }) {
 
     return(
-      <div className=" w-full items-end justify-start pt-16 bg-background">
+      <div className="w-full items-end justify-start pt-28 bg-background">
           {children}
       </div>
     )

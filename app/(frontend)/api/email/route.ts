@@ -3,8 +3,13 @@ import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
+const toNoReplyEmail = (email: string) => {
+  const domain = email.split('@')[1];
+  return `noreply@${domain}`;
+};
+
 export async function POST(request: NextRequest) {
-  const { email, name, country, subject, message } = await request.json();
+  const { email, name, country, subject, message, website, fromemail } = await request.json();
 
   const transport = nodemailer.createTransport(new SMTPTransport({
     name: 'myfcloudsg',
@@ -13,19 +18,19 @@ export async function POST(request: NextRequest) {
     port: 465,
     secure: true, // upgrade later with STARTTLS
     auth: {
-      user: process.env.NEXT_PUBLIC_MY_EMAIL,
-      pass: process.env.NEXT_PUBLIC_MY_PASSWORD,
+      user: process.env.MY_EMAIL,
+      pass: process.env.MY_PASSWORD,
     },
     // service: 'gmail',
     // auth: {
-    //   user: process.env.NEXT_PUBLIC_MY_EMAIL,
-    //   pass: process.env.NEXT_PUBLIC_MY_PASSWORD,
+    //   user: process.env.MY_EMAIL,
+    //   pass: process.env.MY_PASSWORD,
     // },
   }));
 
   const mailOptions: Mail.Options = {
-    from: 'SB Acoustics',
-    to: [`${process.env.NEXT_PUBLIC_MY_EMAIL}`, "backup@sbacoustics.com"],
+    from: `${website} <${toNoReplyEmail(fromemail)}>`,
+    to: [`${process.env.MY_EMAIL}`, "backup@sbacoustics.com"],
     replyTo: `${email}`,
     subject: `${subject}`,
     html: `<div><b>Name:</b> ${name}</div>

@@ -52,7 +52,9 @@ const SearchBoxNavbar: FC<PropType> = (props) => {
               data.sort((a, b) => (a.size[0] || "").localeCompare(b.size[0] || ""))
               const extendedData: ExtendedSearchbox[] = data.map((val) => ({
                 ...val,
-                namenospace: val.size.map((oneSize) => `${oneSize}${val.name}`.replace(/\s+/g, '')),
+                namenospace: val.size.map(
+                  (oneSize) => `${oneSize}${val.name}`.replace(/[\s-]+/g, '')
+                ),
                 // sizenospace: `${val.size[0]}inch`
               }));
               setFinalProductSearchbox(extendedData);
@@ -68,7 +70,7 @@ const SearchBoxNavbar: FC<PropType> = (props) => {
         keys: [
           { name: "label", weight: 1.0 },
           { name: "slug", weight: 0.8 },
-          { name: "namenospace", weight: 0.4 },
+          { name: "namenospace", weight: 0.5 },
           // { name: "sizenospace", weight: 1.0 },
           { name: "info", weight: 0.3 },
           { name: "size", weight: 0.9 },
@@ -81,7 +83,8 @@ const SearchBoxNavbar: FC<PropType> = (props) => {
         minMatchCharLength: 1,  
         ignoreLocation: false,   
         includeScore: true,     
-        useExtendedSearch: true
+        useExtendedSearch: true,
+        findAllMatches: true
     });
 
   function searchData(val: string) {

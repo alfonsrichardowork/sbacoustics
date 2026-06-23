@@ -31,7 +31,7 @@ export default async function BrandChoice() {
   }
   return (
     <div className="grid grid-cols-1 md:grid-cols-5">
-      <Card className="relative overflow-hidden border-none group rounded-none col-span-3">
+      <div className="relative overflow-hidden group rounded-none col-span-3">
         <h2 className='sr-only'>Explore Our Brands: SB Audience</h2>
         <div className="relative w-auto h-[50vh] bg-cover bg-no-repeat flex items-center">
           <img
@@ -49,9 +49,10 @@ export default async function BrandChoice() {
                 <Image
                   src="/images/sbacoustics/logo_sbaudience.png"
                   alt="SB Audience Logo"
-                  width={1000}
-                  height={1000}
+                  width={500}
+                  height={500}
                   className="sm:w-1/2 w-full h-full"
+                  fetchPriority='high'
                 />
               </div>
               <div className="text-left text-sm text-white hidden md:block pb-4">
@@ -59,15 +60,15 @@ export default async function BrandChoice() {
               </div>
               <div className="items-start pb-4">
                 <Button asChild size={"sm"}>
-                  <Link href="/sbaudience">Learn More</Link>
+                  <Link href="/sbaudience">Go to pro drivers</Link>
                 </Button>
               </div>
             </div>
           </div>
         </div>
-      </Card>
+      </div>
 
-      <Card className="relative overflow-hidden border-none group rounded-none col-span-2 md:block hidden">
+      <div className="relative overflow-hidden group rounded-none col-span-2 md:block hidden">
         <div className="relative w-auto h-[50vh] bg-cover bg-no-repeat flex items-center bg-zinc-900">
           {/* <Image
             src={brandImagesSBAutomotive.homepage_brand_choice_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImagesSBAutomotive.homepage_brand_choice_url}` : brandImagesSBAutomotive.homepage_brand_choice_url}
@@ -85,7 +86,7 @@ export default async function BrandChoice() {
             </div>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

@@ -57,7 +57,7 @@ export default function DistributorLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className='pt-12 bg-white'>
+    <div className='pt-20 bg-white'>
       {children}
     </div>
   )

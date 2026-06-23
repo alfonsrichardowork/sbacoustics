@@ -28,6 +28,8 @@ const formSchema = z.object({
   country: z.string().min(2, { message: "Please enter a valid country name." }),
   subject: z.string().min(5, { message: "Subject must be at least 5 characters." }),
   message: z.string().min(10, { message: "Message must be at least 10 characters." }),
+  website: z.string().default("SB Acoustics").optional(),
+  fromemail: z.string().default("contact@sbacoustics.com").optional()
 });
 
 type Props = {
@@ -51,6 +53,8 @@ export default function Contact({ oneBrand }: Props) {
       country: "",
       subject: "",
       message: "",
+      website: oneBrand?.name,
+      fromemail: oneBrand?.email
     },
   });
 
@@ -259,6 +263,44 @@ export default function Contact({ oneBrand }: Props) {
                   </FormItem>
                 )}
               />
+              <div className='hidden'>
+              <FormField
+                control={form.control}
+                name="website"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Website</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="Website"
+                        {...field}
+                        value={oneBrand?.name ?? field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="fromemail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>From Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={loading}
+                        placeholder="fromemail"
+                        {...field}
+                        value={oneBrand?.email ?? field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              </div>
             </form>
           </Form>
         </CardContent>
@@ -274,7 +316,7 @@ export default function Contact({ oneBrand }: Props) {
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                 className="mr-2"
               >
-                <Send className="h-4 w-4" />
+                <Loader2 className="h-4 w-4" />
               </motion.div>
             ) : (
               <Send className="mr-2 h-4 w-4" />

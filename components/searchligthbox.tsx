@@ -175,8 +175,12 @@ const SearchLightbox: FC<PropType> = (props) => {
   const handleProductClick = (slug: string) => {
     setActiveSearch('');
     setIsOpen(false);
-    // Replace with your actual navigation logic
-    window.location.href = `/products/${slug}`;
+    if(pathname.includes('sbaudience')){
+      window.location.href = `/sbaudience/products/${slug}`;
+    }
+    else{
+      window.location.href = `/products/${slug}`;
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -225,16 +229,16 @@ const SearchLightbox: FC<PropType> = (props) => {
 
       {/* Lightbox Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] pointer-events-none">
+        <div className="fixed inset-0 z-50 flex items-start justify-center pt-[6vh] pointer-events-none">
           <div
             className="w-full max-w-2xl mx-4 pointer-events-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Container */}
-            <div className="bg-background rounded-lg shadow-2xl border border-border overflow-hidden flex flex-col max-h-[70vh]">
+            <div className="bg-background rounded-lg shadow-2xl border border-border overflow-hidden flex flex-col max-h-[60vh]">
               {/* Header with Close Button */}
-              <div className="flex items-center justify-between p-4 border-b border-border flex-shrink-0">
-                <h2 className="text-lg font-semibold text-foreground">Search Products</h2>
+              <div className={`flex items-center justify-between p-2 border-b border-border flex-shrink-0 ${pathname.includes('sbaudience') && 'bg-black text-white'}`}>
+                <h2 className="text-lg font-semibold">Search Products</h2>
                 <button
                   onClick={() => setIsOpen(false)}
                   className="p-1 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
@@ -245,7 +249,7 @@ const SearchLightbox: FC<PropType> = (props) => {
               </div>
 
               {/* Search Input */}
-              <div className="p-4 border-b border-border flex-shrink-0">
+              <div className={`p-2 border-b border-border flex-shrink-0 ${pathname.includes('sbaudience') && 'bg-black text-white'}`}>
                 <Input
                   ref={inputRef}
                   placeholder="Search products..."
@@ -256,12 +260,12 @@ const SearchLightbox: FC<PropType> = (props) => {
                   onBlur={handleBlur}
                   onKeyDown={handleKeyDown}
                   value={activeSearch}
-                  className="w-full text-base"
+                  className="w-full text-base bg-white text-black"
                 />
               </div>
 
               {/* Results Container */}
-              <div className="flex-1 min-h-0 overflow-y-auto">
+              <div className={`flex-1 min-h-0 overflow-y-auto ${pathname.includes('sbaudience') && 'bg-black text-white'}`}>
                 {activeSearch.trim() !== '' ? (
                   foundProducts.length > 0 ? (
                     <div className="flex flex-col">
@@ -272,20 +276,20 @@ const SearchLightbox: FC<PropType> = (props) => {
                             handleProductClick(product.slug);
                           }}
                           onMouseDown={handleMouseDown}
-                          className="w-full p-4 flex items-center gap-4 border-b border-border hover:bg-secondary transition-colors text-left last:border-b-0"
+                          className="w-full p-1 flex items-center gap-4 border-b border-border hover:bg-secondary transition-colors text-left last:border-b-0"
                         >
                           {/* Product Image */}
                           <div className="flex-shrink-0">
                             <img
                               src={product.url}
                               alt={product.label}
-                              className="w-12 h-12 object-cover rounded"
+                              className="w-14 h-14 object-cover rounded"
                             />
                           </div>
 
                           {/* Product Info */}
                           <div className="flex-1 min-w-0">
-                            <div className="font-semibold text-foreground truncate">
+                            <div className="font-semibold truncate">
                               {product.label}
                             </div>
                             <div className="text-sm text-muted-foreground truncate">

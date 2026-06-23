@@ -57,7 +57,7 @@ export default function CataloguesSBAudienceLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className='bg-background pt-16'>
+    <div className='bg-background pt-24'>
       {children}
     </div>
   )

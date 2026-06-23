@@ -51,7 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function NewsletterLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="pt-16 bg-white">
+    <div className="pt-24 bg-white">
         {children}
     </div>
   );

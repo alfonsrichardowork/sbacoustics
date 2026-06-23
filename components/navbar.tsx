@@ -19,18 +19,9 @@ import getAllNavbarContent from '@/app/(frontend)/actions/get-all-navbar-content
 import { LazyImageCustom } from './lazyImageCustom';
 import { useScrollDirection } from './hooks/use-scroll-direction';
 import SearchLightbox from './searchligthbox';
+import path from 'node:path';
 
 const styledDropdown = "text-sm px-1 py-2 text-foreground"
-
-interface CheckboxItem {
-  id: string
-  label: string
-}
-
-const defaultItems: CheckboxItem[] = [
-  { id: '1', label: 'Option 1' },
-  { id: '2', label: 'Option 2' },
-]
 
 
 function Navbar() {
@@ -902,14 +893,6 @@ const navClasses = useMemo(() => {
   }, []);
 
   const isVisible = useScrollDirection();
-const [isOpen, setIsOpen] = useState(false)
-  const [selected, setSelected] = useState<string[]>([])
-
-  const toggleCheckbox = (id: string) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    )
-  }
 
   const [scrolled, setScrolled] = useState(false);
 
@@ -936,14 +919,7 @@ useEffect(() => {
         transition-all
         duration-300
         ease-in-out
-        ${
-          !pathname.includes('sbaudience') &&
-          selected.includes('2')
-            ? scrolled
-              ? 'top-0 border-none'
-              : 'top-8 border-t'
-            : ''
-        }
+        ${scrolled ? 'top-0 border-none' : 'top-8 border-t'}
       `}
     >
     <nav className={navClasses}>
@@ -1709,92 +1685,41 @@ useEffect(() => {
 
 
 
-    {pathname.includes("sbaudience") &&
-      <div className={`fixed w-fit xl:px-16 lg:px-12 px-8 left-0 top-18 z-10 flex items-start justify-left  transition-transform duration-300 ease-in-out ${
-          isVisible ? 'translate-y-0' : '-translate-y-full'
-        }`}>
-        <div className='w-fit bg-zinc-800 gap-8 flex p-3 rounded-b-lg shadow-xl'>
-          <Link href={'/'}>
-            <Image src={'/images/sbacoustics/logo_sbacoustics_white_clean.webp'} alt='SB Acoustics Logo' width={100} height={100} className='max-h-5 w-full object-cover'/>
-          </Link>
-          <Link href={'/sbautomotive'}>
-            <Image src={'/images/sbacoustics/logo_sbautomotive_white.webp'} alt='SB Automotive Logo' width={100} height={100} className='max-h-5 w-full object-cover'/>
-          </Link>
-        </div>
-      </div>
-    }
-    {pathname === '/' && selected.find((val) => val === '1') &&
-      <div
-        className={`fixed left-0 top-18 z-10 w-screen flex items-center justify-center transition-transform duration-300 ease-in-out ${
-          isVisible ? 'translate-y-0' : '-translate-y-full'
-        } ${selected.includes('2')
-        ? scrolled
-          ? 'top-15'
-          : 'top-26'
-        : '' }`}
-      >
-        <div className='w-fit bg-zinc-100 h-full gap-8 flex px-3 pb-3 pt-5 rounded-b-lg shadow-xl'>
-          {/* Go to Pro Speakers Card */}
-          <Link href={'/sbaudience'}>
-            <div className='group cursor-pointer overflow-hidden rounded-lg transition-transform duration-300 hover:-translate-y-2'>
-              <div className='flex flex-col gap-1'>
-                <Image
-                  src={'/images/admin/logo_sbaudience_black.webp'}
-                  alt='SB Audience Logo'
-                  width={150}
-                  height={150}
-                  className='h-8 w-full object-cover'
-                />
-                <div className='text-sm font-semibold group-hover:underline text-center'>
-                  Go to Pro Speakers
+    
+      <div className={`fixed left-0 top-0 z-35 w-screen flex items-start justify-left`}>
+        <div className={`w-screen xl:px-16 lg:px-12 px-8 ${pathname.includes('sbaudience') ? 'bg-black' : 'bg-white'} h-full gap-8 flex p-1.5 border-b`}>
+          {pathname.includes('sbaudience') ? 
+            <Link href={'/'}>
+              <div className='group cursor-pointer transition-transform duration-300 hover:scale-105'>
+                <div className='flex flex-col gap-1'>
+                  <Image
+                    src={'/images/sbacoustics/logo_sbacoustics_white_clean.webp'}
+                    alt='SB Acoustics Logo'
+                    width={150}
+                    height={150}
+                    className='h-5 w-full object-cover'
+                  />
                 </div>
               </div>
-            </div>
-          </Link>
-
-          {/* Go to Car Speakers Card */}
-          <Link href={'/sbautomotive'}>
-            <div className='group cursor-pointer overflow-hidden rounded-lg transition-transform duration-300 hover:-translate-y-2'>
-              <div className='flex flex-col gap-1'>
-                <Image
-                  src={'/images/admin/logo_sbautomotive_black.webp'}
-                  alt='SB Automotive Logo'
-                  width={150}
-                  height={150}
-                  className='h-8 w-full object-cover'
-                />
-                <div className='text-sm font-semibold group-hover:underline text-center'>
-                  Go to Car Speakers
+            </Link>
+            :
+            <Link href={'/sbaudience'}>
+              <div className='group cursor-pointer transition-transform duration-300 hover:scale-105'>
+                <div className='flex flex-col gap-1'>
+                  <Image
+                    src={'/images/sbaudience/logo_sbaudience_black.webp'}
+                    alt='SB Audience Logo'
+                    width={150}
+                    height={150}
+                    className='h-5 w-full object-cover'
+                  />
                 </div>
               </div>
-            </div>
-          </Link>
-        </div>
-      </div>
-    }
-    {!pathname.includes("sbaudience") && selected.find((val) => val === '2') &&
-      <div className={`fixed left-0 top-0 z-30 w-screen flex items-start justify-left`}>
-        <div className='w-screen xl:px-16 lg:px-12 px-8 bg-white h-full gap-8 flex p-1.5 border-b'>
-          {/* Go to Pro Speakers Card */}
-          <Link href={'/sbaudience'}>
-            <div className='group cursor-pointer transition-transform duration-300 hover:-translate-y-1'>
-              <div className='flex flex-col gap-1'>
-                <Image
-                  src={'/images/admin/logo_sbaudience_black.webp'}
-                  alt='SB Audience Logo'
-                  width={150}
-                  height={150}
-                  className='h-5 w-full object-cover'
-                />
-                {/* <div className='text-sm font-semibold group-hover:underline text-center'>
-                  Go to Pro Speakers
-                </div> */}
-              </div>
-            </div>
-          </Link>
+            </Link>
+          }
 
-          {/* Go to Car Speakers Card */}
-          <Link href={'/sbautomotive'}>
+
+          {/* <Link href={'/sbautomotive'}>
             <div className='group cursor-pointer transition-transform duration-300 hover:-translate-y-1'>
               <div className='flex flex-col gap-1'>
                 <Image
@@ -1804,57 +1729,12 @@ useEffect(() => {
                   height={150}
                   className='h-5 w-full object-cover'
                 />
-                {/* <div className='text-sm font-semibold group-hover:underline text-center'>
-                  Go to Car Speakers
-                </div> */}
               </div>
             </div>
-          </Link>
+          </Link> */}
         </div>
       </div>
-    }
     
-    
-
-
-      {!pathname.includes("sbaudience") && 
-      <>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-8 right-8 flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-black transition-all hover:bg-neutral-100 active:scale-95 shadow-lg z-40"
-      >
-        Brand Selection Options
-        <ChevronDown
-          className={`h-4 w-4 transition-transform duration-300 ${
-            isOpen ? 'rotate-180' : ''
-          }`}
-        />
-      </button>
-
-      {isOpen && (
-        <div className="fixed bottom-20 right-8 z-50 w-56 rounded-lg border border-neutral-700 bg-neutral-900 shadow-lg">
-          <div className="p-4 space-y-3">
-            {defaultItems.map((item) => (
-              <label
-                key={item.id}
-                className="flex items-center gap-3 cursor-pointer group"
-              >
-                <input
-                  type="checkbox"
-                  checked={selected.includes(item.id)}
-                  onChange={() => toggleCheckbox(item.id)}
-                  className="h-4 w-4 rounded border-neutral-500 text-white cursor-pointer accent-white"
-                />
-                <span className="text-sm text-neutral-300 group-hover:text-white transition-colors">
-                  {item.label}
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
-      </>
-      }
     
     </>
   );

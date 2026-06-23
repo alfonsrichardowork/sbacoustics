@@ -381,7 +381,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
                     </DrawerTrigger>
                     <DrawerContent className="px-4">
                         <DrawerHeader>
-                            <DrawerTitle className="text-center">All Comparison</DrawerTitle>
+                            <DrawerTitle className="text-center">All Comparisons</DrawerTitle>
                             <DrawerDescription></DrawerDescription>
                         </DrawerHeader>
 

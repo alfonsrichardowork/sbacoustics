@@ -10,6 +10,9 @@ import ThemeWrapper from './providers/themeWrapper';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Noto_Sans } from 'next/font/google';
 import LoadingWrapper from '@/components/loadingWrapper';
+import CookieSettingsPage from '@/components/cookie-settings-page';
+import { CookieProvider } from '@/lib/cookies-context';
+import CookieBanner from '@/components/cookie-banner';
 
 const font = Noto_Sans({ subsets: ['latin'] })
 
@@ -24,6 +27,7 @@ export default function Layout({
       <body 
         className={font.className.concat(" overflow-x-hidden")}
       >      
+        <CookieProvider>
         <ThemeWrapper>
           <LoadingWrapper>
           <ScrollToTop />
@@ -47,6 +51,8 @@ export default function Layout({
           <Toaster />
           </LoadingWrapper>
         </ThemeWrapper>
+          <CookieBanner />
+        </CookieProvider>
       </body>
       <GoogleAnalytics gaId={GA_ID} />
     </html>

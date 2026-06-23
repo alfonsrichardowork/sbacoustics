@@ -59,7 +59,7 @@ export default function NewProductsPageLayout({
 {
   return(
     <>
-      <div className=" w-full items-end justify-start pt-16 bg-white">
+      <div className=" w-full items-end justify-start pt-24 bg-white">
         {children}
       </div>
     </>

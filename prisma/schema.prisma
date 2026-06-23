@@ -55,10 +55,10 @@ model brand {
   homepage_open_source_kits_url String @default("")
   homepage_about_us_url String @default("")
   homepage_catalogues_url String @default("")
-  homepage_brand_choice_text String @default("")
-  homepage_open_source_kits_text String @default("")
-  homepage_about_us_text String @default("")
-  homepage_catalogues_text String @default("")
+  homepage_brand_choice_text String @db.Text @default("")
+  homepage_open_source_kits_text String @db.Text @default("")
+  homepage_about_us_text String @db.Text @default("")
+  homepage_catalogues_text String @db.Text @default("")
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 }

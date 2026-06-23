@@ -78,13 +78,18 @@ export default async function SingleProductSBAudience(props: Props) {
             },
             similarProducts: {
                 select: {
-                similarProduct: {
-                    select: {
-                        name: true,
-                        slug: true,
-                        cover_img_url: true,
+                    similarProduct: {
+                        select: {
+                            name: true,
+                            slug: true,
+                            cover_img_url: true,
+                        }
                     }
-                }
+                },
+                orderBy: {
+                    similarProduct: {
+                        name: 'asc'
+                    }
                 }
             },
             multipleDatasheetProduct: {
@@ -362,7 +367,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                                 <Link href={product.multipleDatasheetProduct[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
                                                     <div className="pr-2">
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                        <Image src={'/images/sbacoustics/PDF-download.webp'} alt="PDF Download" className="h-8 w-fit" width={100} height={100}/>
+                                                        <Image src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
                                                     </div>
                                                     <h3 className="pl-2">
                                                         {product.multipleDatasheetProduct[0]?.name}
@@ -377,7 +382,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                                                 <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}> 
                                                                 <div className="pr-2">
                                                                 {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                                <Image src={'/images/sbacoustics/PDF-download.webp'} alt="PDF Download" className="h-8 w-fit" width={100} height={100}/>
+                                                                <Image src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
                                                             </div>
                                                             <h3 className="pl-2">
                                                                 {product.multipleDatasheetProduct[index]?.name}
@@ -400,7 +405,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                                 <Link href={product.multipleFRDZMAFiles[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
                                                     <div className="pr-2">
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                        <Image src={'/images/sbacoustics/FRD-ZMA-download.webp'} alt="FRD ZMA Files Download" className="h-8 w-fit" width={100} height={100}/>
+                                                        <Image src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
                                                     </div>
                                                     <h3 className="pl-2">
                                                         {product.multipleFRDZMAFiles[0]?.name}
@@ -415,7 +420,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                                                 <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}> 
                                                                 <div className="pr-2">
                                                                 {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                                <Image src={'/images/sbacoustics/FRD-ZMA-download.webp'} alt="FRD ZMA Files Download" className="h-8 w-fit" width={100} height={100}/>
+                                                                <Image src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
                                                             </div>
                                                             <h3 className="pl-2">
                                                                 {product.multipleFRDZMAFiles[index]?.name}
@@ -438,7 +443,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                                 <Link href={product.multiple3DModels[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
                                                     <div className="pr-2">
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                        <Image src={'/images/sbacoustics/3D-download.webp'} alt="3D Files Download" className="h-8 w-fit" width={100} height={100}/>
+                                                        <Image src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
                                                     </div>
                                                     <h3 className="pl-2">
                                                         {product.multiple3DModels[0]?.name}
@@ -453,7 +458,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                                                 <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}> 
                                                                 <div className="pr-2">
                                                                 {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                                <Image src={'/images/sbacoustics/3D-download.webp'} alt="3D Files Download" className="h-8 w-fit" width={100} height={100}/>
+                                                                <Image src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
                                                             </div>
                                                             <h3 className="pl-2">
                                                                 {product.multiple3DModels[index]?.name}

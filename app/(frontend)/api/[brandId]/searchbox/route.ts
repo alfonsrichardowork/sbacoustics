@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 
 import prismadb from '@/lib/prismadb';
-import { specForSearchbox } from '@/app/(frontend)/utils/filterPageProps';
 
 export async function GET(req: Request, props: { params: Promise<{ brandId: string }> }) {
   const params = await props.params;
@@ -10,10 +9,18 @@ export async function GET(req: Request, props: { params: Promise<{ brandId: stri
       return new NextResponse("Brand id is required", { status: 400 });
     }
 
+    let neededSpecs = []
+    if(params.brandId === process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID) {
+      neededSpecs = ['nominal-impedance', 'fs', 'sensitivity']
+    }
+    else if(params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID){
+      neededSpecs = ['sensitivity', 'maximum-power-handling']
+    }
+
     const allSpecsNeeded = await prismadb.dynamicspecification.findMany({
       where: {
         slug: {
-          in : specForSearchbox.map((val) => val)
+          in : ['nominal-impedance', 'fs', 'sensitivity']
         }
       },
       select: {
@@ -50,6 +57,7 @@ export async function GET(req: Request, props: { params: Promise<{ brandId: stri
               select: {
                 type: true,
                 name: true,
+                shown_on_all_drivers_page: true
               }
             },
             productId: true
@@ -104,28 +112,52 @@ export async function GET(req: Request, props: { params: Promise<{ brandId: stri
             size.push('Kits')
           }
           else{
-            const parts: string[] = [];
-
-            if(product.size){
-              if (product.size.name !== "None") {
-                parts.push(`${product.size.name}"`);
-              }
+            let parts: string[] = [];
+            if(product.size && product.size.value !== 'none'){
               size.push(product.size.name)
               size.push(product.size.name.concat(" inch"))
               size.push(product.size.value)
             }
-            product.connectorSpecifications.map((val) => {
-              val.value !== '' && parts.push(`${val.value} ${val.dynamicspecification.unit}`)
-            })
-            if(product.searchbox_desc !== ''){
-              add_info = add_info.concat(product.searchbox_desc)
-              if(parts.length > 0){
-                add_info = add_info.concat(" - ", parts.join(" - "))
+            if(params.brandId === process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID) {
+              if(product.allCat.length > 0){
+                let temp = product.allCat.find((oneCat) => oneCat.category.shown_on_all_drivers_page && oneCat.category.type === 'Sub Category')?.category.name ?? ''
+                temp !== '' && parts.push(temp)
+              }
+              product.connectorSpecifications.map((val) => {
+                val.value !== '' && parts.push(`${val.value} ${val.dynamicspecification.unit}`)
+              })
+              if(product.searchbox_desc !== ''){
+                add_info = add_info.concat(product.searchbox_desc)
+                if(parts.length > 0){
+                  add_info = add_info.concat(" - ", parts.join(" - "))
+                }
+              }
+              else{
+                add_info = parts.join(" - ")
               }
             }
-            else{
-              add_info = parts.join(" - ")
+            else if (params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID){
+              if(product.size && product.size.value !== 'none'){
+                parts.push(product.size.value)
+              }
+              if(product.allCat.length > 0){
+                let temp = product.allCat.find((oneCat) => oneCat.category.shown_on_all_drivers_page && oneCat.category.type === 'Sub Category')?.category.name ?? ''
+                temp !== '' && parts.push(temp)
+              }
+              product.connectorSpecifications.map((val) => {
+                val.value !== '' && parts.push(`${val.value} ${val.dynamicspecification.unit}`)
+              })
+              if(product.searchbox_desc !== ''){
+                add_info = add_info.concat(product.searchbox_desc)
+                if(parts.length > 0){
+                  add_info = add_info.concat(" - ", parts.join(" - "))
+                }
+              }
+              else{
+                add_info = parts.join(" - ")
+              }
             }
+            
           }
 
 

@@ -44,11 +44,11 @@ const continents = [
     label: "Asia",
   },
   {
-    label: "America",
+    label: "The Americas",
   },
   {
     label: "Africa",
-  },
+  },  
   {
     label: "Antartica",
   },

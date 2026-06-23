@@ -57,7 +57,7 @@ export default function ContactUsLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className='bg-white'>
+    <div className='pt-8 bg-white'>
       {children}
     </div>
   )

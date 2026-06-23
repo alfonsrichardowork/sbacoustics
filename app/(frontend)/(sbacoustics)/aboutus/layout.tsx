@@ -57,7 +57,7 @@ export default function AboutUsLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className='bg-white pt-16'>
+    <div className='bg-white pt-24'>
       {children}
     </div>
   )

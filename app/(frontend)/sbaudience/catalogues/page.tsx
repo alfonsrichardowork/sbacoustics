@@ -60,7 +60,7 @@ export default async function CataloguesSBAudienceJsonLd() {
               <div className="flex md:justify-start justify-center md:pl-20 pl-0">
                 <Link href={`${item.pdf}`} target="_blank" className={`font-bold flex items-center hover:text-primary`}>
                   <div className="pr-2">
-                    <Image src={'/images/sbacoustics/PDF-download.webp'} alt="3D Files Download" className="max-h-8 w-fit" width={100} height={100}/>
+                    <Image src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="3D Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
                   </div>
                   <h2 className="pl-2">
                     {item.pdfname}

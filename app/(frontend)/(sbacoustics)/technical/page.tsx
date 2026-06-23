@@ -73,7 +73,7 @@ export default async function TechnicalJsonLd() {
                           <Link href={`${file.pdf}`} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>         
                               <div className="pr-2 flex items-center">
                                 <Image
-                                  src={'/images/sbacoustics/PDF-download.webp'}
+                                  src={'/images/sbacoustics/PDF-download-ver2.webp'}
                                   alt="3D Files Download"
                                   width={24}
                                   height={24}

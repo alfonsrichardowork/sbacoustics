@@ -146,7 +146,7 @@ export const DistributorMap: React.FC<DistributorProps> = ({
   };
 
   if (!icons) {
-    return null; // Don't render until icons are initialized on client
+    return null;
   }
 
   return (
@@ -172,8 +172,11 @@ export const DistributorMap: React.FC<DistributorProps> = ({
             }
           }}
         >
-          <TileLayer
+          {/* <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          /> */}
+          <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           />
           {allDistributors.map((loc) => (
             <Marker 
@@ -213,13 +216,13 @@ export const DistributorMap: React.FC<DistributorProps> = ({
                     {activeMap.email && (
                       <p className="flex items-center md:text-base text-xs gap-2">
                         <Mail size={14} className='min-w-4' />
-                        <Link href={`mailto:${activeMap.email}`} className="underline">Email</Link>
+                        <Link href={`mailto:${activeMap.email}`} className="underline">{activeMap.email}</Link>
                       </p>
                     )}
                     {activeMap.website && (
                       <p className="flex items-center md:text-base text-xs gap-2">
                         <Globe size={14} className='min-w-4' />
-                        <Link href={activeMap.website} target="_blank" rel="noopener noreferrer" className="underline">Visit Website</Link>
+                        <Link href={activeMap.website} target="_blank" rel="noopener noreferrer" className="underline">{activeMap.website}</Link>
                       </p>
                     )}
                     {activeMap.facebook && (
@@ -295,7 +298,7 @@ export const DistributorMap: React.FC<DistributorProps> = ({
           <Card className="w-full max-h-[500px] shadow-lg justify-self-start rounded-none">
             <CardHeader className='bg-zinc-700 text-white md:py-4 md:px-4 py-2 px-3'>
               <CardTitle>
-                America
+                The Americas
               </CardTitle>
             </CardHeader>
             <CardContent className='md:p-4 p-2'>

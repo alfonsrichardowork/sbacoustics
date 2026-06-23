@@ -13,11 +13,13 @@ import { useEffect, useState } from 'react';
 import getAllSocialMedia from '@/app/(frontend)/actions/get-all-social-media';
 import { SocialIcon } from 'react-social-icons';
 import { Skeleton } from './ui/skeleton';
+import CookieSettings from './cookie-settings';
 
 export default function Footer() {
   const pathname = usePathname()
   const [allSocialMedia, setAllSocialMedia] = useState<socialmedia[]>([])
   const [finalData, setFinalData] = useState<brand>()
+  const [showSettings, setShowSettings] = useState(false)
   const [loading, setLoading] = useState<boolean>(true)
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +36,9 @@ export default function Footer() {
     
   }, [pathname]); 
   
+  if (showSettings) {
+    return <CookieSettings onClose={() => setShowSettings(false)} />
+  }
   return (
     <footer className="bg-black text-white">
       <h2 className='sr-only'>{!loading && finalData && `${finalData.name} Footer Navigation`}</h2>
@@ -52,7 +57,31 @@ export default function Footer() {
                 </div>
                 
 
-              {!pathname.includes('sbaudience') &&
+              {pathname.includes('sbaudience') ?
+                <>
+                  <div className="w-full pt-2 max-w-[100px] h-auto rounded-lg shadow-lg transition-transform hover:scale-105">
+                    <Link href={'/'}>
+                      <LazyImageClickable
+                        src={'/images/sbacoustics/logo_sbacoustics_white_clean.webp'}
+                        alt={"Logo of SB Acoustics"}
+                        width={500}
+                        height={500}
+                      />
+                    </Link>
+                  </div>
+                  {/* <div className="w-full pt-2 max-w-[100px] h-auto rounded-lg shadow-lg transition-transform hover:scale-105">
+                    <Link href={'/sbautomotive'}>
+                      <LazyImageClickable
+                        src={'/images/sbautomotive/logo_sbautomotive_white.webp'}
+                        alt={"Logo of SB Automotive"}
+                        width={500}
+                        height={500}
+                      />
+                    </Link>
+                  </div> */}
+                </>
+                :
+                
                 <>
                   <div className="w-full pt-2 max-w-[100px] h-auto rounded-lg shadow-lg transition-transform hover:scale-105">
                     <Link href={'/sbaudience'}>
@@ -64,7 +93,7 @@ export default function Footer() {
                       />
                     </Link>
                   </div>
-                  <div className="w-full pt-2 max-w-[100px] h-auto rounded-lg shadow-lg transition-transform hover:scale-105">
+                  {/* <div className="w-full pt-2 max-w-[100px] h-auto rounded-lg shadow-lg transition-transform hover:scale-105">
                     <Link href={'/sbautomotive'}>
                       <LazyImageClickable
                         src={'/images/sbautomotive/logo_sbautomotive_white.webp'}
@@ -73,7 +102,7 @@ export default function Footer() {
                         height={500}
                       />
                     </Link>
-                  </div>
+                  </div> */}
                 </>
               }
 
@@ -144,9 +173,9 @@ export default function Footer() {
 
 
           <div className="flex flex-col md:items-end items-center md:pt-0 pt-6">
-            <h3 className="text-lg font-semibold text-primary">Stay Connected</h3>
+            <h3 className="text-lg font-semibold text-primary">Newsletter</h3>
             <p className="text-sm py-4 text-white md:text-right text-center">
-              Subscribe to Our Newsletter for the Latest Updates
+              Subscribe to the newsletter for the latest updates
             </p>
             <Link href={getHref(pathname, 'newsletter')} className="bg-primary rounded-lg text-sm font-semibold w-fit">
               <Button type="submit" className="bg-primary text-white transition-colors flex items-center">
@@ -162,16 +191,29 @@ export default function Footer() {
         <div
           className="flex col-span-3 flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
         >
-          <div className="text-sm text-gray-400 text-center md:text-left w-1/3 md:flex hidden items-center ">
-            © {new Date().getFullYear()}{' '}
-            {loading ?
-              <div className='px-2'>
-                <Skeleton className="h-4 w-18 bg-background/20"/>
-              </div>
-            :
-              finalData && finalData.name
-            }
-            . All rights reserved.
+          <div className='w-1/3 md:block hidden items-center'>
+            <div className="text-sm text-white text-center md:text-left flex">
+              © {new Date().getFullYear()}{' '}
+              {loading ?
+                <div className='px-2'>
+                  <Skeleton className="h-4 w-18 bg-background/20"/>
+                </div>
+              :
+                finalData && finalData.name
+              }
+              . All rights reserved.
+            </div>
+            <div className='lg:space-x-4 space-x-2 text-sm text-gray-400 pt-1'>
+              <Link href={'/privacy'} className="hover:text-white transition-colors">Privacy Policy</Link>
+              <Button
+                variant="ghost"
+                onClick={() => setShowSettings(true)}
+                className="hover:text-white transition-colors hover:bg-transparent p-0 h-fit hover:cursor-pointer"
+              >
+                Cookie Settings
+              </Button>
+              <Link href={'/legal'} className="hover:text-white transition-colors">Terms of Use</Link>
+            </div>
           </div>
           <div className="flex space-x-4 md:w-1/3 w-full justify-center">
             {loading ? 
@@ -194,9 +236,21 @@ export default function Footer() {
             </Link>
           </div>
           
-          <div className="text-sm text-gray-400 text-center w-full md:hidden block">
+          <div className="text-sm text-white text-center w-full md:hidden block">
             © {new Date().getFullYear()} {!loading && finalData && finalData.name}. All rights reserved.
           </div>
+          
+            <div className='space-x-2 text-sm text-gray-400'>
+              <Link href={'/privacy'} className="hover:text-white transition-colors">Privacy Policy</Link>
+              <Button
+                variant="ghost"
+                onClick={() => setShowSettings(true)}
+                className="hover:text-white transition-colors hover:bg-transparent p-0 h-fit hover:cursor-pointer"
+              >
+                Cookie Settings
+              </Button>
+              <Link href={'/legal'} className="hover:text-white transition-colors">Terms of Use</Link>
+            </div>
           </div>
       </div>
     </footer>

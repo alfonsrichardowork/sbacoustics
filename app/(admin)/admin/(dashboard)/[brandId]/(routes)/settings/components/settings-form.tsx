@@ -973,12 +973,6 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
           </Button>
         </form>
       </Form>
-      {/* <Separator />
-      <ApiAlert 
-        title="NEXT_PUBLIC_API_URL" 
-        variant="public" 
-        description={`${origin}${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/api/${params.brandId}`}
-      /> */}
     </>
   );
 };

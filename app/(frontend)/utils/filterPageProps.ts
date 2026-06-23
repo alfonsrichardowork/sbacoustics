@@ -40,12 +40,6 @@ export const allproductssbacoustics = [
   'vas',
 ]
 
-export const specForSearchbox = [
-  'rated-power-handling',
-  'sensitivity',
-  'size'
-]
-
 export const compressiondriversbaudience = [
   'nominal-impedance',
   'maximum-power-handling',
