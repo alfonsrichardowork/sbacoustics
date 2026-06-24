@@ -8,8 +8,10 @@ interface CookieContextType {
   preferences: CookiePreferences | null
   isLoaded: boolean
   setPreferences: (prefs: CookiePreferences) => void
+  setFirstLoad: (firstload: boolean, path: string) => CookiePreferences | null
   acceptAll: () => void
   rejectAll: () => void
+  acceptFirstLoad: (path: string) => void
   updatePreference: (category: keyof CookiePreferences, value: boolean) => void
   isCategoryAllowed: (category: string) => boolean
 }
@@ -30,8 +32,13 @@ export function CookieProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const setPreferences = (prefs: CookiePreferences) => {
-    cookieManager.setPreferences(prefs)
-    setPreferencesState(prefs)
+    const updated: CookiePreferences = {
+      ...prefs,
+      path: '',
+      timestamp: Date.now(),
+    }
+    cookieManager.setPreferences(updated)
+    setPreferencesState(updated)
   }
 
   const acceptAll = () => {
@@ -44,15 +51,38 @@ export function CookieProvider({ children }: { children: React.ReactNode }) {
     setPreferencesState(prefs)
   }
 
+  const acceptFirstLoad = (path: string) => {
+    const prefs = cookieManager.acceptFirstLoad(path)
+    setPreferencesState(prefs)
+  }
+
   const updatePreference = (category: keyof CookiePreferences, value: boolean) => {
     if (!preferences) return
 
     const updated: CookiePreferences = {
       ...preferences,
+      path: '',
       [category]: value,
       timestamp: Date.now(),
     }
     setPreferences(updated)
+  }
+
+  const setFirstLoad = (firstload: boolean, path: string): CookiePreferences | null => {
+    if (!preferences) {
+      const newPrefs = { firstload: firstload, path: path, timestamp: Date.now() } as CookiePreferences
+      setPreferences(newPrefs)
+      return newPrefs
+    }
+
+    const updated: CookiePreferences = {
+      ...preferences,
+      firstload: firstload,
+      path: '',
+      timestamp: Date.now(),
+    }
+    setPreferences(updated)
+    return updated
   }
 
   const isCategoryAllowed = (category: string): boolean => {
@@ -67,8 +97,10 @@ export function CookieProvider({ children }: { children: React.ReactNode }) {
         preferences,
         isLoaded,
         setPreferences,
+        setFirstLoad,
         acceptAll,
         rejectAll,
+        acceptFirstLoad,
         updatePreference,
         isCategoryAllowed,
       },

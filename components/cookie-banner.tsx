@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
 import { useCookiePreferences } from '@/lib/cookies-context'
@@ -9,12 +9,56 @@ import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 export default function CookieBanner() {
-  const { preferences, isLoaded, acceptAll, rejectAll } = useCookiePreferences()
+  const {preferences, isLoaded, acceptAll, rejectAll, acceptFirstLoad, setFirstLoad } = useCookiePreferences()
   const [showSettings, setShowSettings] = useState(false)
   const pathname = usePathname()
+  const [showBanner, setShowBanner] = useState<boolean>(true)
 
-  // Don't show banner if preferences are already set
-  if (!isLoaded || preferences) {
+  // const preferencesRef = useRef(preferences);
+  // useEffect(() => {
+  //   preferencesRef.current = preferences;
+  // }, [preferences]);
+
+
+useEffect(() => {
+  if (!isLoaded) return;
+  // const timer = setTimeout(() => {
+  //   console.log("preferences:", preferences);
+
+    if (preferences) {
+      if (preferences.path === pathname) {
+        // setFirstLoad(false, pathname)
+      } else {
+        setShowBanner(false);
+      }
+    } else {
+      acceptFirstLoad(pathname);
+    }
+  // }, 100);
+
+  // return () => clearTimeout(timer);
+}, [pathname, preferences, isLoaded]);
+// const preferencesRef = useRef(preferences);
+
+// useEffect(() => {
+//   preferencesRef.current = preferences;
+// }, [preferences]);
+
+// useEffect(() => {
+//   const prefs = preferencesRef.current;
+
+//   if (!prefs) {
+//     acceptFirstLoad();
+//     return;
+//   }
+
+//   if (prefs.firstload) {
+//     setShowBanner(false);
+//     setFirstLoad(false)
+//   }
+// }, [pathname]);
+
+  if (!isLoaded || !showBanner) {
     return null
   }
 
@@ -24,7 +68,7 @@ export default function CookieBanner() {
 
   return (
     <div className={`z-40 fixed bottom-0 left-0 right-0 shadow-[-1px_-4px_6px_-1px_rgba(0,0,0,0.1)] bg-white`}>
-      <div className="relative">
+      <div className="relative z-20">
         <Button
           variant="ghost"
           onClick={acceptAll}

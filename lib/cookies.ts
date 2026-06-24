@@ -3,6 +3,8 @@ export type CookieCategory = 'essential' | 'analytics'
 export interface CookiePreferences {
   essential: boolean
   analytics: boolean
+  firstload: boolean
+  path: string
   timestamp: number
 }
 
@@ -42,10 +44,28 @@ export const cookieManager = {
     document.cookie = `${COOKIE_NAME}=${cookieValue}; path=/; expires=${expiryDate.toUTCString()}; SameSite=Lax`
   },
 
+  // Update only firstload
+  setFirstLoad: (firstload: boolean, path: string): CookiePreferences | null => {
+    const currentPrefs = cookieManager.getPreferences()
+
+    if (!currentPrefs) return null
+
+    const updatedPrefs: CookiePreferences = {
+      ...currentPrefs,
+      firstload,
+      path
+    }
+
+    cookieManager.setPreferences(updatedPrefs)
+    return updatedPrefs
+  },
+
   // Get default preferences
   getDefaultPreferences: (): CookiePreferences => ({
     essential: true, // Always true
     analytics: false,
+    firstload: false,
+    path: '',
     timestamp: Date.now(),
   }),
 
@@ -54,6 +74,21 @@ export const cookieManager = {
     const prefs: CookiePreferences = {
       essential: true,
       analytics: true,
+      firstload: false,
+      path: '',
+      timestamp: Date.now(),
+    }
+    cookieManager.setPreferences(prefs)
+    return prefs
+  },
+
+  // Accept all cookies
+  acceptFirstLoad: (path: string): CookiePreferences => {
+    const prefs: CookiePreferences = {
+      essential: true,
+      analytics: true,
+      firstload: true,
+      path: path,
       timestamp: Date.now(),
     }
     cookieManager.setPreferences(prefs)

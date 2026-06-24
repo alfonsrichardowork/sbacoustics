@@ -203,16 +203,16 @@ export default function Footer() {
               }
               . All rights reserved.
             </div>
-            <div className='lg:space-x-4 space-x-2 text-sm text-gray-400 pt-1'>
-              <Link href={'/privacy'} className="hover:text-white transition-colors">Privacy Policy</Link>
+            <div className='lg:space-x-4 space-x-2 text-xs text-gray-400 pt-1'>
+              <Link href={'/privacy'} className="hover:text-white transition-colors">Privacy policy</Link>
               <Button
                 variant="ghost"
                 onClick={() => setShowSettings(true)}
-                className="hover:text-white transition-colors hover:bg-transparent p-0 h-fit hover:cursor-pointer"
+                className="hover:text-white transition-colors hover:bg-transparent p-0 h-fit hover:cursor-pointer text-xs"
               >
-                Cookie Settings
+                Cookie settings
               </Button>
-              <Link href={'/legal'} className="hover:text-white transition-colors">Terms of Use</Link>
+              <Link href={'/legal'} className="hover:text-white transition-colors">Terms of use</Link>
             </div>
           </div>
           <div className="flex space-x-4 md:w-1/3 w-full justify-center">
@@ -230,26 +230,38 @@ export default function Footer() {
                 ))
             }
           </div>
-          <div className="flex space-x-4 text-sm text-gray-400 w-1/3 md:justify-end justify-center  ">
+          <div className="flex space-x-4 text-xs text-gray-400 w-1/3 md:justify-end justify-center  ">
             <Link href={getHref(pathname, 'aboutus')} className="hover:text-white transition-colors">
               About Us
             </Link>
           </div>
           
-          <div className="text-sm text-white text-center w-full md:hidden block">
+          <div className="text-xs text-white text-center w-full md:hidden block">
             © {new Date().getFullYear()} {!loading && finalData && finalData.name}. All rights reserved.
           </div>
           
-            <div className='space-x-2 text-sm text-gray-400 md:hidden block'>
-              <Link href={'/privacy'} className="hover:text-white transition-colors">Privacy Policy</Link>
+            <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-gray-400 md:hidden">
+              <Link
+                href="/privacy"
+                className="whitespace-nowrap hover:text-white transition-colors"
+              >
+                Privacy policy
+              </Link>
+
               <Button
                 variant="ghost"
                 onClick={() => setShowSettings(true)}
-                className="hover:text-white transition-colors hover:bg-transparent p-0 h-fit hover:cursor-pointer"
+                className="whitespace-nowrap hover:text-white transition-colors hover:bg-transparent p-0 h-fit hover:cursor-pointer text-xs"
               >
-                Cookie Settings
+                Cookie settings
               </Button>
-              <Link href={'/legal'} className="hover:text-white transition-colors">Terms of Use</Link>
+
+              <Link
+                href="/legal"
+                className="whitespace-nowrap hover:text-white transition-colors"
+              >
+                Terms of use
+              </Link>
             </div>
           </div>
       </div>
