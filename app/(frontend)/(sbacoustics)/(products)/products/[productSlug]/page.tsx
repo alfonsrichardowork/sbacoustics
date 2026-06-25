@@ -390,12 +390,12 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                     <h2>{product.slug === 'dw50' ? 'Compatible Drivers:' : 'Drivers:'}</h2>
                                 </div>
                                 {product.productsKits.map((value, index) => (
-                                    <Link href={`/products/${value.productUsedInKits.slug}`} key={index} className={`${all_desc_style} font-semibold flex items-center py-0`}>
+                                    <div key={index} className={`${all_desc_style} font-semibold flex items-center py-0`}>
                                         <div className="pr-2">
                                             <Dot size={10} strokeWidth={10} />
                                         </div>
-                                        <div className="hover:text-primary text-primary/80 underline text-sm">{value.productUsedInKits.name}</div>
-                                    </Link>
+                                        <Link href={`/products/${value.productUsedInKits.slug}`} className="hover:text-primary text-primary/80 underline text-sm">{value.productUsedInKits.name}</Link>
+                                    </div>
                                 ))}
                             </>
                         }

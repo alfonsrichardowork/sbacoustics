@@ -42,7 +42,7 @@ export default async function BrandChoice() {
             className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
             fetchPriority='high'
           />
-          <div className="left-0 absolute bg-linear-to-l from-zinc-900 to-transparent w-full h-full md:block hidden"/>
+          <div className="right-0 absolute bg-linear-to-l from-zinc-900 to-transparent w-1/3 h-full md:block hidden"/>
           <div className="bottom-0 absolute xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 text-white w-full">
             <div className="sm:w-2/3 w-4/5">
               <div className="w-full h-auto pb-4">

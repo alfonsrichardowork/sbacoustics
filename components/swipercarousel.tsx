@@ -226,11 +226,11 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
 
   return (
     <>
-      {isLoading && (
-        <div className="w-full h-screen absolute top-0 left-0 flex items-center justify-center bg-white z-50">
+      {/* {isLoading && ( */}
+        <div className={`w-full h-screen absolute top-0 left-0 flex items-center justify-center ${pathname.includes('sbaudience') ? 'bg-black' : pathname.includes('sbautomotive') ? '' : 'bg-white'} z-0`}>
           <Loader2 className="animate-spin text-gray-500" size={40} />
         </div>
-      )}
+      {/* )} */}
       
       <div className="w-full">
         <h2 className='sr-only'>{brand === 'sbaudience' ? 'SB Audience Featured Products' : 'SB Acoustics Featured Products'}</h2>
