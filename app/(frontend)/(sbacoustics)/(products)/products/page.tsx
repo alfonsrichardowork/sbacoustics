@@ -9,6 +9,8 @@ function createData(
   return { url, value, link };
 }
 
+export const revalidate = 3600;
+
 export default function SBAcousticsProductChoices () {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
 

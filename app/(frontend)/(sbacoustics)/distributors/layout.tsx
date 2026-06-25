@@ -7,12 +7,19 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: "Distributors",
-    description: "All SB Acoustics Distributors",
+    description: "Find authorized SB Acoustics distributors around the world. Locate trusted partners in Asia, Europe, the Americas, Oceania, and other regions for genuine SB Acoustics speaker drivers and audio products!",
     applicationName: 'SB Acoustics',
-    keywords: ["SB Acoustics Distributors", "All SB Acoustics Distributors"],
+    keywords: [
+      "SB Acoustics distributors",
+      "SB Acoustics authorized distributor",
+      "SB Acoustics asia distributor",
+      "SB Acoustics europe distributor",
+      "SB Acoustics americas distributor",
+      "SB Acoustics oceania distributor",
+    ],
     openGraph: {
       title: "Distributors | SB Acoustics",
-      description: "All SB Acoustics Distributors",
+      description: "Find authorized SB Acoustics distributors around the world. Locate trusted partners in Asia, Europe, the Americas, Oceania, and other regions for genuine SB Acoustics speaker drivers and audio products!",
       url: `${baseUrl}/distributors`,
       siteName: "SB Acoustics",
       images: [
@@ -35,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: "Distributors | SB Acoustics",
-      description: "All SB Acoustics Distributors",
+      description: "Find authorized SB Acoustics distributors around the world. Locate trusted partners in Asia, Europe, the Americas, Oceania, and other regions for genuine SB Acoustics speaker drivers and audio products!",
       images: [
         {
           url: logo_URL,

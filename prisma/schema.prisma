@@ -138,6 +138,7 @@ model allcategory {
   brand       brand     @relation("BrandToAllCategory", fields: [brandId], references: [id])
   type        String    //Category, Sub Category, Sub Sub Category
   name        String    @db.Text
+  singularname String   @db.Text @default("")
   slug        String    @db.Text
   description String    @db.Text
   priority  String    @default("")

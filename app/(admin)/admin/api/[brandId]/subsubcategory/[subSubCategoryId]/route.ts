@@ -141,7 +141,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { type, name, description, thumbnail_url, shown_on_all_drivers_page } = body;
+    const { type, name, singularname, description, thumbnail_url, shown_on_all_drivers_page } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -162,6 +162,7 @@ export async function PATCH(
       },
       select:{
         name: true,
+        singularname: true,
         thumbnail_url: true
       }
     })
@@ -175,64 +176,64 @@ export async function PATCH(
           console.warn(`Could not delete file ${initial.thumbnail_url}:`, error);
         }
       }
-      if(initial.name ===  name){
-        const updatedSubSubCat = await prismadb.allcategory.update({
-          where: {
-            id: params.subSubCategoryId,
-            brandId: params.brandId
-          },
-          data: {
-            type,
-            name,
-            slug: slugify(name),
-            description,
-            thumbnail_url,
-            shown_on_all_drivers_page,
-            updatedAt: new Date(),
-            updatedBy: session.name,
-          }
-        });
+      const updatedSubSubCat = await prismadb.allcategory.update({
+        where: {
+          id: params.subSubCategoryId,
+          brandId: params.brandId
+        },
+        data: {
+          type,
+          name,
+          singularname,
+          slug: slugify(name),
+          description,
+          thumbnail_url,
+          shown_on_all_drivers_page,
+          updatedAt: new Date(),
+          updatedBy: session.name,
+        }
+      });
 
-        await prismadb.allproductcategory.updateMany({
-          where: {
-            categoryId: params.subSubCategoryId,
-            category: {
-              type: "Sub Sub Category"
-            }
-          },
-          data:{
-            updatedAt: new Date(),
+      await prismadb.allproductcategory.updateMany({
+        where: {
+          categoryId: params.subSubCategoryId,
+          category: {
+            type: "Sub Sub Category"
           }
-        })
+        },
+        data:{
+          updatedAt: new Date(),
+        }
+      })
 
-        const cat = await prismadb.allcategory.findMany({
-          where: {
-            type: 'Category',
-            brandId: params.brandId
-          }
-        })
-        const subcat = await prismadb.allcategory.findMany({
-          where: {
-            type: 'Sub Category',
-            brandId: params.brandId
-          }
-        })
+      const cat = await prismadb.allcategory.findMany({
+        where: {
+          type: 'Category',
+          brandId: params.brandId
+        }
+      })
+      const subcat = await prismadb.allcategory.findMany({
+        where: {
+          type: 'Sub Category',
+          brandId: params.brandId
+        }
+      })
 
-        cat && cat.length > 0 && subcat && subcat.length > 0 && updatedSubSubCat && 
-        (
-          cat.map((val) => 
-            subcat.map((subval) =>
-          revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/${val.slug}/${subval.slug}/${updatedSubSubCat.slug}`)
-          )))
-        revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/drivers`);
-        revalidatePath(`/kits`); 
-        return NextResponse.json("same")
-      }
+      cat && cat.length > 0 && subcat && subcat.length > 0 && updatedSubSubCat && 
+      (
+        cat.map((val) => 
+          subcat.map((subval) =>
+        revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/${val.slug}/${subval.slug}/${updatedSubSubCat.slug}`)
+        )))
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/drivers`);
+      revalidatePath(`/kits`); 
+      return NextResponse.json("same")
     }
 
     const duplicates = await prismadb.allcategory.findFirst({
       where:{
         name,
+        singularname,
         type,
         brandId: params.brandId
       }
@@ -250,6 +251,7 @@ export async function PATCH(
       data: {
         type,
         name,
+        singularname,
         slug: slugify(name),
         description,
         thumbnail_url,

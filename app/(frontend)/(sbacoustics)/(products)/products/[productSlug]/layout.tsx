@@ -36,9 +36,8 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     keywords: [
       product.name,
       product.slug,
-      `${product.size.value}" driver`,
-      `${product.size.value} inch driver`
-    ],
+      product.size.value !== '-' ? `${product.size.value} driver` : undefined
+    ].filter((keyword): keyword is string => Boolean(keyword)),
     openGraph: {
       title: `${product.name} | SB Acoustics`,
       description: `Found out more about ${product.name} from SB Acoustics!`,

@@ -134,7 +134,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { type, name, description, thumbnail_url, shown_on_all_drivers_page } = body;
+    const { type, name, singularname, description, thumbnail_url, shown_on_all_drivers_page } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -155,6 +155,7 @@ export async function PATCH(
       },
       select:{
         name: true,
+        singularname: true,
         thumbnail_url: true
       }
     })
@@ -168,63 +169,63 @@ export async function PATCH(
           console.warn(`Could not delete file ${initial.thumbnail_url}:`, error);
         }
       }
-      if(initial.name ===  name){
-        await prismadb.allcategory.update({
-          where: {
-            id: params.subCategoryId,
-            brandId: params.brandId
-          },
-          data: {
-            type,
-            name,
-            slug: slugify(name),
-            description,
-            thumbnail_url,
-            shown_on_all_drivers_page,
-            updatedAt: new Date(),
-            updatedBy: session.name,
-          }
-        });
+      await prismadb.allcategory.update({
+        where: {
+          id: params.subCategoryId,
+          brandId: params.brandId
+        },
+        data: {
+          type,
+          name,
+          singularname,
+          slug: slugify(name),
+          description,
+          thumbnail_url,
+          shown_on_all_drivers_page,
+          updatedAt: new Date(),
+          updatedBy: session.name,
+        }
+      });
 
-        const cat = await prismadb.allcategory.findMany({
-          where: {
-            type: 'Category',
-            brandId: params.brandId
-          }
-        })
-        const deletedSubCat = await prismadb.allcategory.findFirst({
-          where: {
-            id: params.subCategoryId,
-            brandId: params.brandId
-          }
-        })
+      const cat = await prismadb.allcategory.findMany({
+        where: {
+          type: 'Category',
+          brandId: params.brandId
+        }
+      })
+      const deletedSubCat = await prismadb.allcategory.findFirst({
+        where: {
+          id: params.subCategoryId,
+          brandId: params.brandId
+        }
+      })
 
-        cat && cat.length > 0 && deletedSubCat && 
-        (
-          cat.map((val) => 
-          revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/${val.slug}/${deletedSubCat.slug}`)
-        ))
+      cat && cat.length > 0 && deletedSubCat && 
+      (
+        cat.map((val) => 
+        revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/${val.slug}/${deletedSubCat.slug}`)
+      ))
 
-        await prismadb.allproductcategory.updateMany({
-          where: {
-            categoryId: params.subCategoryId,
-            category: {
-              type
-            }
-          },
-          data:{
-            updatedAt: new Date(),
+      await prismadb.allproductcategory.updateMany({
+        where: {
+          categoryId: params.subCategoryId,
+          category: {
+            type
           }
-        })
-        revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/drivers`);
-        revalidatePath(`/kits`); 
-        return NextResponse.json("same")
-      }
+        },
+        data:{
+          updatedAt: new Date(),
+        }
+      })
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/drivers`);
+      revalidatePath(`/kits`); 
+      return NextResponse.json("same")
     }
 
     const duplicates = await prismadb.allcategory.findFirst({
       where:{
         name,
+        singularname,
         type,
         brandId: params.brandId
       }
@@ -242,6 +243,7 @@ export async function PATCH(
       data: {
         type,
         name,
+        singularname,
         slug: slugify(name),
         description,
         thumbnail_url,

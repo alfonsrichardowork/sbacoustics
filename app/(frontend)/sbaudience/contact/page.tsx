@@ -4,6 +4,8 @@ import { Image } from "lucide-react";
 import Contact from "@/components/contact";
 import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
 
+export const revalidate = 3600;
+
 export function extractIframeSrc(html: string): string | undefined {
   const match = html.match(/<iframe[^>]+src="([^"]+)"/i);
   return match?.[1];

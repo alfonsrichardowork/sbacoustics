@@ -6,6 +6,8 @@ import Link from 'next/link';
 import SwiperCarousel from '@/components/swipercarousel';
 import { SocialIcon } from 'react-social-icons'
 
+export const revalidate = 3600;
+
 export default async function LandingPageSBAcoustics() {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
   

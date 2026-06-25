@@ -6,6 +6,8 @@ import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-
 import { LazyImageClickableSBAudience } from "@/components/lazyImageclickablesbaudience";
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
 
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
     const connectors = await prismadb.allproductcategory.findMany({
         where: {

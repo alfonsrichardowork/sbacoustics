@@ -31,6 +31,7 @@ import { Checkbox } from "@/app/(admin)/admin/components/ui/checkbox"
 
 const formSchema = z.object({
   name: z.string().min(1),
+  singularname: z.string().min(1),
   description: z.string().min(1),
   type: z.string().min(1),
   thumbnail_url: z.string().optional(),
@@ -63,6 +64,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: '',
+      singularname: '',
       description: '',
       type: 'Category',
       thumbnail_url: '',
@@ -213,6 +215,19 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
                   <FormLabel className="font-bold">Name</FormLabel>
                   <FormControl>
                     <Input disabled={loading} placeholder="Category name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="singularname"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold">Singular Name</FormLabel>
+                  <FormControl>
+                    <Input disabled={loading} placeholder="Category singular name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

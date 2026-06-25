@@ -16,28 +16,26 @@ import { AllCategory, ChildSpecificationProp, SpecificationProp } from "@/app/(f
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-foreground p-0 py-1"
 const all_sub_title_style = "text-left font-bold xl:text-2xl lg:text-xl md:text-lg sm:text-md text-foreground"
 
+export const revalidate = 3600;
+
 type Props = {
   params: Promise<{ productSlug?: string }>
 }
 
-// export const revalidate = 86400
-
-
-// export async function generateStaticParams(){
-//   const products = await prismadb.product.findMany({
-//     where: {
-//       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-//       isArchived: false
-//     },
-//     select: {
-//       slug: true,
-//     },
-//     // take: 5
-//   });
-//   return products.map((product: { slug: string }) => ({
-//     productSlug: product.slug
-//   }));
-// }
+export async function generateStaticParams(){
+  const products = await prismadb.product.findMany({
+    where: {
+      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+      isArchived: false
+    },
+    select: {
+      slug: true,
+    },
+  });
+  return products.map((product: { slug: string }) => ({
+    productSlug: product.slug
+  }));
+}
 
 export default async function SingleProductSBAudience(props: Props) {
     const { productSlug = '' } = await props.params;
@@ -63,7 +61,7 @@ export default async function SingleProductSBAudience(props: Props) {
                     id: true,
                     category: {
                         select: {
-                            name: true,
+                            singularname: true,
                             slug: true,
                             type: true
                         }
@@ -231,7 +229,7 @@ export default async function SingleProductSBAudience(props: Props) {
         for (let i = 0; i < product.allCat.length; i++) {
         let temp: AllCategory = {
             id: product.allCat[i]?.id ?? '',
-            name: product.allCat[i]?.category.name ?? '',
+            name: product.allCat[i]?.category.singularname ?? '',
             slug: product.allCat[i]?.category.slug ?? ''
         }
         if(product.allCat[i]?.category.type === "Category"){
@@ -313,7 +311,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                         prod_sub_cat.map((subcategory, index) => (
                                         <React.Fragment key={index}>
                                             <Link
-                                            href={`/sbaudience/${prod_cat[0]?.name.toLowerCase().replace(/\s+/g, '-')}/${subcategory.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                            href={`/sbaudience/${prod_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${subcategory.slug.toLowerCase().replace(/\s+/g, '-')}`}
                                             className="hover:text-primary"
                                             >
                                             <u>{subcategory.name}</u>
@@ -325,7 +323,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                         prod_sub_sub_cat.map((subsubcategory, index) => (
                                         <React.Fragment key={index}>
                                             <Link
-                                            href={`/sbaudience/${prod_cat[0]?.name.toLowerCase().replace(/\s+/g, '-')}/${prod_sub_cat[0]?.name.toLowerCase().replace(/\s+/g, '-')}/${subsubcategory.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                            href={`/sbaudience/${prod_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${prod_sub_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${subsubcategory.slug.toLowerCase().replace(/\s+/g, '-')}`}
                                             className="hover:text-primary"
                                             >
                                             <u><h3>{subsubcategory.name}</h3></u>

@@ -2,6 +2,8 @@
 import { DistributorMapWrapper } from "@/components/distributorMapWrapper";
 import prismadb from "@/lib/prismadb";
 
+export const revalidate = 3600;
+
 export default async function DistributorPage() {
   const asianDistributors = await prismadb.distributors.findMany({
   where: {

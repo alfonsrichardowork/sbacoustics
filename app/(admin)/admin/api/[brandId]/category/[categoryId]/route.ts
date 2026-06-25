@@ -124,7 +124,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { type, name, description, thumbnail_url, shown_on_all_drivers_page } = body;
+    const { type, name, singularname, description, thumbnail_url, shown_on_all_drivers_page } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -145,6 +145,7 @@ export async function PATCH(
       },
       select:{
         name: true,
+        singularname: true,
         thumbnail_url: true
       }
     })
@@ -158,44 +159,44 @@ export async function PATCH(
           console.warn(`Could not delete file ${initial.thumbnail_url}:`, error);
         }
       }
-      if(initial.name ===  name){
-        await prismadb.allcategory.update({
-          where: {
-            id: params.categoryId,
-            brandId: params.brandId
-          },
-          data: {
-            type,
-            name,
-            slug: slugify(name),
-            description,
-            shown_on_all_drivers_page,
-            thumbnail_url,
-            updatedAt: new Date(),
-            updatedBy: session.name,
-          }
-        });
+      await prismadb.allcategory.update({
+        where: {
+          id: params.categoryId,
+          brandId: params.brandId
+        },
+        data: {
+          type,
+          name,
+          singularname,
+          slug: slugify(name),
+          description,
+          shown_on_all_drivers_page,
+          thumbnail_url,
+          updatedAt: new Date(),
+          updatedBy: session.name,
+        }
+      });
 
-        await prismadb.allproductcategory.updateMany({
-          where: {
-            categoryId: params.categoryId,
-            category: {
-              type
-            }
-          },
-          data:{
-            updatedAt: new Date(),
+      await prismadb.allproductcategory.updateMany({
+        where: {
+          categoryId: params.categoryId,
+          category: {
+            type
           }
-        })
-        revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/drivers`);
-        revalidatePath(`/kits`); 
-        return NextResponse.json("same")
-      }
+        },
+        data:{
+          updatedAt: new Date(),
+        }
+      })
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/drivers`);
+      revalidatePath(`/kits`); 
+      return NextResponse.json("same")
     }
 
     const duplicates = await prismadb.allcategory.findFirst({
       where:{
         name,
+        singularname,
         type,
         brandId: params.brandId
       }
@@ -213,6 +214,7 @@ export async function PATCH(
       data: {
         type,
         name,
+        singularname,
         slug: slugify(name),
         description,
         shown_on_all_drivers_page,

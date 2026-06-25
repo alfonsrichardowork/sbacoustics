@@ -39,6 +39,7 @@ export interface Searchbox {
 
 export interface AllCategory {
     id: string;
+    singularname?: string;
     name: string;
     slug: string;
 }

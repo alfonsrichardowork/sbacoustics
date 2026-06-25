@@ -3,6 +3,8 @@ import Image from "next/image";
 import prismadb from "@/lib/prismadb";
 import Link from "next/link";
 
+export const revalidate = 3600;
+
 export default async function CataloguesPage() {
   const pdfFiles = await prismadb.catalogues.findMany({
     where: {

@@ -7,9 +7,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: "Distributors",
-    description: "All SB Audience Distributors",
+    description: "Find authorized SB Audience distributors around the world. Locate trusted partners in Asia, Europe, the Americas, Oceania, and other regions for genuine SB Audience speaker drivers and audio products!",
     applicationName: 'SB Audience',
-    keywords: ["SB Audience Distributors", "All SB Audience Distributors"],
+       keywords: [
+      "SB Audience distributors",
+      "SB Audience authorized distributor",
+      "SB Audience asia distributor",
+      "SB Audience europe distributor",
+      "SB Audience americas distributor",
+      "SB Audience oceania distributor",
+    ],
     openGraph: {
       title: "Distributors | SB Audience",
       description: "All SB Audience Distributors",

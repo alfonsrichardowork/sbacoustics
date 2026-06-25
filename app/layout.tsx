@@ -15,11 +15,33 @@ export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
   return {
     title: 'SB Acoustics | Building Your Sound',
-    description: 'Check out the newest products from the SB Acoustics range! Pro Speakers, Open Source Kits, Full catalogue flipbook and downloadable. Build your dream speakers!',
-    keywords: ["SB Acoustics", "SB Acoustics Official Website", "Welcome to SB Acoustics"],
+    description: 'Explore premium speaker drivers, tweeters, woofers, subwoofers, and open-source DIY speaker kits from SB Acoustics. Browse our full catalogue and build exceptional sound systems!',
+    keywords: [
+      "SB Acoustics",
+      "speaker drivers",
+      "diy speaker kits",
+      "hifi drivers",
+      "widebanders",
+      "full ranges",
+      "midranges",
+      "midwoofers",
+      "shallow subwoofers",
+      "tweeters",
+      "woofers",
+      "subwoofers",
+      "passive radiators",
+      "coaxials",
+      "oem drivers",
+      "speaker components",
+      "diy speakers",
+      "audio drivers",
+      "speaker catalogue",
+      "premium speaker drivers",
+      "building your sound"
+    ],
     openGraph: {
       title: 'SB Acoustics | Building Your Sound',
-      description: 'Check out the newest products from the SB Acoustics range! Pro Speakers, Open Source Kits, Full catalogue flipbook and downloadable. Build your dream speakers!',
+      description: 'Explore premium speaker drivers, tweeters, woofers, subwoofers, and open-source DIY speaker kits from SB Acoustics. Browse our full catalogue and build exceptional sound systems!',
       url: `${baseUrl}`,
       siteName: 'SB Acoustics',
       images: [
@@ -42,7 +64,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: 'summary_large_image',
       title: 'SB Acoustics | Building Your Sound',
-      description: 'Check out the newest products from the SB Acoustics range! Pro Speakers, Open Source Kits, Full catalogue flipbook and downloadable. Build your dream speakers!',
+      description: 'Explore premium speaker drivers, tweeters, woofers, subwoofers, and open-source DIY speaker kits from SB Acoustics. Browse our full catalogue and build exceptional sound systems!',
       images: [
         {
           url: `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`,

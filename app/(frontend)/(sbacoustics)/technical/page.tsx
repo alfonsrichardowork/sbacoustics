@@ -3,6 +3,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import Link from 'next/link';
 import Image from 'next/image';
 
+export const revalidate = 3600;
+
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-black p-0 py-1"
 
 export default async function TechnicalJsonLd() {

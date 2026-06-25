@@ -1686,7 +1686,7 @@ useEffect(() => {
 
 
     
-      <div className={`fixed left-0 top-0 z-35 w-screen flex items-start justify-left`}>
+      <div className={`${height > 600 ? 'fixed' : 'absolute'} left-0 top-0 z-35 w-screen flex items-start justify-left`}>
         <div className={`w-screen xl:px-16 lg:px-12 px-8 ${pathname.includes('sbaudience') ? 'bg-black' : 'bg-white'} h-full gap-8 flex p-1.5 border-b`}>
           {pathname.includes('sbaudience') ? 
             <Link href={'/'}>
@@ -1717,21 +1717,6 @@ useEffect(() => {
               </div>
             </Link>
           }
-
-
-          {/* <Link href={'/sbautomotive'}>
-            <div className='group cursor-pointer transition-transform duration-300 hover:-translate-y-1'>
-              <div className='flex flex-col gap-1'>
-                <Image
-                  src={'/images/admin/logo_sbautomotive_black.webp'}
-                  alt='SB Automotive Logo'
-                  width={150}
-                  height={150}
-                  className='h-5 w-full object-cover'
-                />
-              </div>
-            </div>
-          </Link> */}
         </div>
       </div>
     

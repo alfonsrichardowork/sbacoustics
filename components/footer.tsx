@@ -177,12 +177,12 @@ export default function Footer() {
             <p className="text-sm py-4 text-white md:text-right text-center">
               Subscribe to the newsletter for the latest updates
             </p>
-            <Link href={getHref(pathname, 'newsletter')} className="bg-primary rounded-lg text-sm font-semibold w-fit">
-              <Button type="submit" className="bg-primary text-white transition-colors flex items-center">
-                Subscribe
-                <Mail className="ml-2 h-4 w-4" />
+              <Button type="submit" className="bg-primary text-white transition-colors flex items-center" asChild>
+                <Link href={getHref(pathname, 'newsletter')} className="bg-primary rounded-lg text-sm font-semibold w-fit">
+                  Subscribe
+                  <Mail className="ml-2 h-4 w-4" />
+                </Link>
               </Button>
-            </Link>
             </div>
         </div>
 

@@ -76,6 +76,7 @@ export const AllProductCategoryForm: React.FC<AllProductCategoryFormProps> = ({
           brandId: myproduct.brandId,
           type: item.category.type,
           name: item.category.name,
+          singularname: item.category.singularname,
           slug: item.category.slug,
           description: '',
           thumbnail_url: '',

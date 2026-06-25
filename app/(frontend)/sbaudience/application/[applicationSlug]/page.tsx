@@ -10,7 +10,7 @@ type Props = {
   params: Promise<{ applicationSlug?: string }>
 }
 
-// export const revalidate = 86400
+export const revalidate = 3600;
 
 export async function generateStaticParams(){
   const app = await prismadb.sbaudienceapplication.findMany({

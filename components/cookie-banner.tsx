@@ -14,49 +14,23 @@ export default function CookieBanner() {
   const pathname = usePathname()
   const [showBanner, setShowBanner] = useState<boolean>(true)
 
-  // const preferencesRef = useRef(preferences);
-  // useEffect(() => {
-  //   preferencesRef.current = preferences;
-  // }, [preferences]);
+  useEffect(() => {
+    
+  }, [pathname]);
 
 
 useEffect(() => {
   if (!isLoaded) return;
-  // const timer = setTimeout(() => {
-  //   console.log("preferences:", preferences);
-
     if (preferences) {
       if (preferences.path === pathname) {
-        // setFirstLoad(false, pathname)
+        
       } else {
         setShowBanner(false);
       }
     } else {
       acceptFirstLoad(pathname);
     }
-  // }, 100);
-
-  // return () => clearTimeout(timer);
 }, [pathname, preferences, isLoaded]);
-// const preferencesRef = useRef(preferences);
-
-// useEffect(() => {
-//   preferencesRef.current = preferences;
-// }, [preferences]);
-
-// useEffect(() => {
-//   const prefs = preferencesRef.current;
-
-//   if (!prefs) {
-//     acceptFirstLoad();
-//     return;
-//   }
-
-//   if (prefs.firstload) {
-//     setShowBanner(false);
-//     setFirstLoad(false)
-//   }
-// }, [pathname]);
 
   if (!isLoaded || !showBanner) {
     return null

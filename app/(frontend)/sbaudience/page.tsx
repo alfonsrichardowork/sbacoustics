@@ -6,13 +6,15 @@ import prismadb from "@/lib/prismadb";
 import { FeaturedProducts } from "../types";
 import { SocialIcon } from 'react-social-icons';
 
+export const revalidate = 3600;
+
 export default async function LandingPageSBAudience() {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
   
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "SB Audience | Official SB Audience Website",
+    "name": "SB Audience | Pro Speakers",
     "url": `${baseUrl}/sbaudience`,
     "logo": `${baseUrl}/images/sbaudience/logo_sbaudience.webp`,
   };

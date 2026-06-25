@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Empty, EmptyContent, EmptyDescription, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { FileText } from "lucide-react";
 
+export const revalidate = 3600;
+
 export default async function CataloguesSBAudienceJsonLd() {
   const pdfFiles = await prismadb.catalogues.findMany({
     where: {

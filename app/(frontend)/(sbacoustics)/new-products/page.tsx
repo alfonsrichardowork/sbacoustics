@@ -2,6 +2,8 @@ import prismadb from '@/lib/prismadb';
 import Link from "next/link";
 import { LazyImageClickable } from "@/components/lazyImageclickable";
 
+export const revalidate = 3600;
+
 function shortenMaterial(name: string): string {
   return name
     .replace(/Polypropylene/gi, "Poly")

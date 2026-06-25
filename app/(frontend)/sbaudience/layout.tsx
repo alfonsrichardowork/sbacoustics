@@ -6,13 +6,24 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       template: '%s | SB Audience',
-      default: 'SB Audience | Official SB Audience Website',
+      default: 'SB Audience | Pro Speakers',
     },
-    description: 'Check out the newest products from the SB Audience range!',
-    keywords: ["SB Audience", "SB Audience Official Website", "Welcome to SB Audience"],
+    description: 'Explore SB Audience range of professional loudspeaker drivers engineered for sound reinforcement applications. Delivering high performance, reliability, and exceptional audio quality!',
+    keywords: [
+      "SB Audience", 
+      "pro speakers",
+      "pro drivers",
+      "compression drivers",
+      "woofers",
+      "subwoofers",
+      "open baffle drivers",
+      "coaxials",
+      "horn",
+      "speaker applications",
+    ],
     openGraph: {
-      title: 'SB Audience | Official SB Audience Website',
-      description: 'Check out the newest products from the SB Audience range!',
+      title: 'SB Audience | Pro Speakers',
+      description: 'Explore SB Audience range of professional loudspeaker drivers engineered for sound reinforcement applications. Delivering high performance, reliability, and exceptional audio quality!',
       url: `${baseUrl}/sbaudience`,
       siteName: 'SB Audience',
       images: [
@@ -34,8 +45,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'SB Audience | Official SB Audience Website',
-      description: 'Check out the newest products from the SB Audience range!',
+      title: 'SB Audience | Pro Speakers',
+      description: 'Explore SB Audience range of professional loudspeaker drivers engineered for sound reinforcement applications. Delivering high performance, reliability, and exceptional audio quality!',
       images: [
         {
           url: `${baseUrl}/images/sbaudience/logo_sbaudience.webp`,

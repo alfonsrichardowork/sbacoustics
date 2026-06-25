@@ -26,7 +26,7 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
     
     const body = await req.json();
 
-    const { name, description, type, thumbnail_url, shown_on_all_drivers_page } = body;
+    const { name, singularname, description, type, thumbnail_url, shown_on_all_drivers_page } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -44,6 +44,7 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
       where:{
         brandId: params.brandId,
         name,
+        singularname,
         type
       }
     })
@@ -55,6 +56,7 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
     const createdSubCat = await prismadb.allcategory.create({
       data: {
         name,
+        singularname,
         description,
         brandId: params.brandId,
         type,

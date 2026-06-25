@@ -2,6 +2,8 @@ import prismadb from "@/lib/prismadb";
 import { LazyImageClickableSBAudience } from "@/components/lazyImageclickablesbaudience";
 import Link from "next/link";
 
+export const revalidate = 3600;
+
 export default async function AllApplicationJsonLd() {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
   const app = await prismadb.sbaudienceapplication.findMany({

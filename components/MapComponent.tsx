@@ -200,29 +200,38 @@ export const DistributorMap: React.FC<DistributorProps> = ({
               {activeMap &&
                 <CardContent className="p-0 text-black">
                   <div className="md:text-xl text-base font-bold md:mb-4 mb-2 w-full text-center">{activeMap.name}</div>
-                  <div className="grid grid-cols-2 space-y-2 text-sm">
+                  <div className="grid md:grid-cols-2 grid-cols-1 md:space-y-2 space-y-1 text-sm">
                     {activeMap.country && (
                       <p className="flex items-center md:text-base text-xs gap-2">
                         <MapPin size={14} className='min-w-4' />
-                        {activeMap.country}
+                          <p className='line-clamp-1'>{activeMap.country}</p>
                       </p>
                     )}
                     {activeMap.phone && (
                       <p className="flex items-center md:text-base text-xs gap-2">
                         <Phone size={14} className='min-w-4' />
-                        {activeMap.phone}
+                          <p className='line-clamp-1'>{activeMap.phone}</p>
                       </p>
                     )}
                     {activeMap.email && (
                       <p className="flex items-center md:text-base text-xs gap-2">
                         <Mail size={14} className='min-w-4' />
-                        <Link href={`mailto:${activeMap.email}`} className="underline">{activeMap.email}</Link>
+                        <Link href={`mailto:${activeMap.email}`} className="underline line-clamp-1">
+                          {activeMap.email}
+                        </Link>
                       </p>
                     )}
                     {activeMap.website && (
                       <p className="flex items-center md:text-base text-xs gap-2">
                         <Globe size={14} className='min-w-4' />
-                        <Link href={activeMap.website} target="_blank" rel="noopener noreferrer" className="underline">{activeMap.website}</Link>
+                        <Link
+                          href={activeMap.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline line-clamp-1"
+                        >
+                          {activeMap.website}
+                        </Link>
                       </p>
                     )}
                     {activeMap.facebook && (
