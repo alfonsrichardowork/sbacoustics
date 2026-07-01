@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/hooks/use-toast";
-import { Send } from "lucide-react";
+import { Loader2, Send } from "lucide-react";
 import { motion } from 'framer-motion';
 import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
 
@@ -30,51 +30,96 @@ export default function NewsletterClient() {
 
   async function handleSubscribe(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    
+    // Validation
+    if (!email.trim()) {
+      setStatus("error");
+      setResponseMsg("Please enter an email address");
+      toast({
+        variant: "destructive",
+        title: "Email Required",
+        description: "Please enter a valid email address.",
+      });
+      return;
+    }
+
+    if (!sbacousticsinterest && !sbaudienceinterest) {
+      setStatus("error");
+      setResponseMsg("Please select at least one newsletter");
+      toast({
+        variant: "destructive",
+        title: "Newsletter Selection Required",
+        description: "Please select at least one newsletter to subscribe to.",
+      });
+      return;
+    }
+
     setStatus("loading");
     try {
-      if (!executeRecaptcha){
-        console.log("Recaptcha Token not Available!")
-        return;
-      }
-      const gRecaptchaToken = await executeRecaptcha('newsletterSubmit')
+      let gRecaptchaToken = null;
 
-      const response_reCaptcha = await axios({
-        method: "POST",
-        url: "/api/recaptcha",
-        data: {
-          gRecaptchaToken,
-        },
-        headers: {
-          Accept: "application/json, text/plain, */*",
-          "Content-Type": "application/json",
-        },
+      // Get reCAPTCHA token if available
+      if (executeRecaptcha) {
+        try {
+          gRecaptchaToken = await executeRecaptcha('newsletterSubmit');
+        } catch (recaptchaErr) {
+          console.warn("[v0] reCAPTCHA token generation failed:", recaptchaErr);
+        }
+      }
+
+      // Verify reCAPTCHA token if we have one
+      if (gRecaptchaToken) {
+        const response_reCaptcha = await axios({
+          method: "POST",
+          url: "/api/recaptcha",
+          data: {
+            gRecaptchaToken,
+          },
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+          },
+        });
+    
+        if (response_reCaptcha?.data?.success !== true) {
+          setStatus("error");
+          setResponseMsg("reCAPTCHA verification failed");
+          toast({
+            variant: "destructive",
+            title: "Verification Failed",
+            description: "reCAPTCHA verification failed. Please try again.",
+          });
+          return;
+        }
+      }
+
+      // Subscribe to newsletter
+      const response = await axios.post("/api/newsletter", { 
+        email, 
+        fname, 
+        lname, 
+        country, 
+        sbacousticsinterest, 
+        sbaudienceinterest 
       });
-  
-      if (response_reCaptcha?.data?.success === true) {
 
-        const response = await axios.post("/api/newsletter", { email, fname, lname, country, sbacousticsinterest, sbaudienceinterest });
-
-        setStatus("success");
-        setEmail("");
-        setFName("");
-        setLName("");
-        setCountry("");
-        setSBAcoustics(false);
-        setSBAudience(false);
-        setResponseMsg(response.data.message);
-      } else {
-        setStatus("error");
-        return
-      }
+      setStatus("success");
+      setEmail("");
+      setFName("");
+      setLName("");
+      setCountry("");
+      setSBAcoustics(false);
+      setSBAudience(false);
+      setResponseMsg(response.data.message);
+      setRun(true);
     } catch (err) {
-      
       setStatus("error");
       if (axios.isAxiosError(err)) {
-        setStatus("error");
-        setResponseMsg(err.response?.data.error);
+        setResponseMsg(err.response?.data.error || "An error occurred");
+      } else {
+        setResponseMsg("An unexpected error occurred");
       }
-    } finally{
-      setRun(true)
+      setRun(true);
     }
   }
 
@@ -82,8 +127,8 @@ export default function NewsletterClient() {
     {run && status === "success" ? responseMsg === 'success'?
         toast({
           variant: "default",
-          title: "Email Sent Successfully!",
-          description: "Thank you for reaching out. We will get back to you.",
+          title: "You have subscribed!",
+          description: "Thank you for subscribing! We'll keep you updated with our latest news and promotions.",
           className: "bg-green-400 border-none"
         })
       : 
@@ -113,7 +158,7 @@ export default function NewsletterClient() {
 
         <form onSubmit={handleSubscribe} className="p-4 border rounded-md shadow-lg">
           <div className="pb-2">
-            <Label htmlFor="email" className="font-semibold">Email:</Label>
+            <Label htmlFor="email" className="font-semibold">Email: <span className="text-red-500">*</span></Label>
             <Input
               type="email"
               name="email"
@@ -122,6 +167,7 @@ export default function NewsletterClient() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={status == "loading"}
+              required
             />
           </div>
           <div className="pb-2">
@@ -161,17 +207,27 @@ export default function NewsletterClient() {
             />
           </div>
           <div className="pb-2">
-            <Label className="font-semibold">Select Newsletter:</Label>
+            <Label className="font-semibold">Select Newsletter: <span className="text-red-500">*</span></Label>
           </div>
             <div className="flex items-center space-x-2 pb-1">
-              <Checkbox id="sbacoustics" onClick={() => (sbacousticsinterest? setSBAcoustics(false): setSBAcoustics(true))}/>
-              <Label className={`${sbacousticsinterest ? 'font-semibold': ''}`}>
+              <Checkbox 
+                id="sbacoustics" 
+                checked={sbacousticsinterest}
+                onCheckedChange={(checked) => setSBAcoustics(checked === true)}
+                disabled={status == "loading"}
+              />
+              <Label className={`${sbacousticsinterest ? 'font-semibold': ''} cursor-pointer`} htmlFor="sbacoustics">
                 SB Acoustics
               </Label>
             </div>
             <div className="flex items-center space-x-2 pb-1">
-              <Checkbox id="sbaudience" onClick={() => (sbaudienceinterest? setSBAudience(false): setSBAudience(true))}/>
-              <Label className={`${sbaudienceinterest ? 'font-semibold': ''}`}>
+              <Checkbox 
+                id="sbaudience" 
+                checked={sbaudienceinterest}
+                onCheckedChange={(checked) => setSBAudience(checked === true)}
+                disabled={status == "loading"}
+              />
+              <Label className={`${sbaudienceinterest ? 'font-semibold': ''} cursor-pointer`} htmlFor="sbaudience">
                 SB Audience
               </Label>
             </div>
@@ -186,7 +242,7 @@ export default function NewsletterClient() {
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                   className="mr-2"
                 >
-                  <Send className="h-4 w-4" />
+                  <Loader2 className="h-4 w-4" />
                 </motion.div>
               ) : (
                 <Send className="mr-2 h-4 w-4" />

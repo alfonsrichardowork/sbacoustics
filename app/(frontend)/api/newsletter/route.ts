@@ -3,11 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     const { email, fname, lname, country, sbacousticsinterest, sbaudienceinterest } = await req.json();
-
   // 2. Retrieve Mailchimp credentials from environment variables
-  const API_KEY = process.env.NEXT_PUBLIC_MAILCHIMP_API_KEY;
-  const API_SERVER = process.env.NEXT_PUBLIC_MAILCHIMP_API_SERVER;
-  const AUDIENCE_ID = process.env.NEXT_PUBLIC_MAILCHIMP_AUDIENCE_ID;
+  const API_KEY = process.env.MAILCHIMP_API_KEY;
+  const API_SERVER = process.env.MAILCHIMP_API_SERVER;
+  const AUDIENCE_ID = process.env.MAILCHIMP_AUDIENCE_ID;
 
   // 3. Construct Mailchimp API request URL
   const url = `https://${API_SERVER}.api.mailchimp.com/3.0/lists/${AUDIENCE_ID}/members`;

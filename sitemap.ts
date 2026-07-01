@@ -324,10 +324,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date().toISOString(),
     },
     {
-      url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/newsletter`,
-      lastModified: new Date().toISOString(),
-    },
-    {
       url: `${process.env.NEXT_PUBLIC_ROOT_URL}/sbaudience/contact`,
       lastModified: new Date().toISOString(),
     },

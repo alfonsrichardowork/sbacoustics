@@ -178,7 +178,7 @@ export default function Footer() {
               Subscribe to the newsletter for the latest updates
             </p>
               <Button type="submit" className="bg-primary text-white transition-colors flex items-center" asChild>
-                <Link href={getHref(pathname, 'newsletter')} className="bg-primary rounded-lg text-sm font-semibold w-fit">
+                <Link href={'/newsletter'} className="bg-primary rounded-lg text-sm font-semibold w-fit">
                   Subscribe
                   <Mail className="ml-2 h-4 w-4" />
                 </Link>

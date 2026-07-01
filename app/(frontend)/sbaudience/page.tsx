@@ -85,7 +85,7 @@ export default async function LandingPageSBAudience() {
       <div className="relative">
         <h1 className='sr-only'>Welcome to SB Audience Official Website!</h1>
         
-        <div className="sticky top-0 left-0 w-full h-screen flex items-center justify-center">
+        <div className="sticky top-0 left-0 w-full min-h-dvh flex items-center justify-center">
           <div className="top-0 left-0 w-full z-10">
             <SwiperCarousel slides={allFeaturedProducts}  brand='sbaudience'/>
           </div>
