@@ -38,6 +38,7 @@ const FrequencyResponseSection: React.FC<PropType> = (props) => {
                 height={1000}
                 classname={`object-contain px-10 transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
                 lazy={false}
+                testid='frequency-response-image-single-product-page'
               />
             </div>
           </div>

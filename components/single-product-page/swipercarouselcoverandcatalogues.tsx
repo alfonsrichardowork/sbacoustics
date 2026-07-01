@@ -33,7 +33,6 @@ import 'yet-another-react-lightbox/plugins/thumbnails.css'
 //@ts-ignore
 import "yet-another-react-lightbox/plugins/captions.css";
 import { LazyImageCustom } from '@/components/lazyImageCustom';
-import { FilesProp } from '@/app/(frontend)/types';
 
 
 type PropType = {
@@ -132,6 +131,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                           height={500}
                           classname={`object-cover h-full w-fit transition-transform duration-300 z-10 ${hoverImage ? 'scale-110' : ''}`}
                           lazy={false}
+                          testid="cover-image-single-product-page"
                         />
                         </div>
                       </div>
@@ -161,6 +161,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                             height={500}
                             classname={`object-cover h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
                             lazy={true}
+                            testid={`image-catalogues-${index}-single-product-page`}
                           />
                           </div>
                         </div>

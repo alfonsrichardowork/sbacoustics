@@ -80,7 +80,7 @@ const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar, brand }) =>
       >
         {similar.map((sim, index) => (
           <SwiperSlide key={index}>
-            <Link href={brand === 'sbaudience' ? `/sbaudience/products/${sim.similarProduct.slug}` : `/products/${sim.similarProduct.slug}`}>
+            <Link href={brand === 'sbaudience' ? `/sbaudience/products/${sim.similarProduct.slug}` : `/products/${sim.similarProduct.slug}`} data-testid={`similar-product-${index}-single-product-page`}>
               <Card className="w-full h-[250px] flex flex-col border-2 hover:border-primary">
                 <CardHeader className="p-2 h-[200px]">
                   <LazyImageCustom

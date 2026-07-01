@@ -9,11 +9,12 @@ import { LazyImageClickableSBAudience } from "@/components/lazyImageclickablesba
 interface ReviewCard {
   data: AllFilterProductsOnlyType | null;
   hovered: boolean;
+  index?: number
 }
 
 const ProductCard: React.FC<ReviewCard> = React.memo(
-  ({ data, hovered }) => {
-
+  ({ data, hovered , index}) => {
+    let finalIndex = index ?? 0
     if (!data) {
       return (
         <div className="bg-white group cursor-pointer">
@@ -30,7 +31,7 @@ const ProductCard: React.FC<ReviewCard> = React.memo(
     return (
       <Link
         href={`/sbaudience/products/${data.products.slug}`}
-        className="bg-white group cursor-pointer"
+        className="bg-white group cursor-pointer" data-testid={`all-drivers-page-product-href-${finalIndex}`}
       >  
 
         <div className="flex flex-col items-center justify-center text-center relative p-4" style={{ aspectRatio: "1/1" }}>
@@ -41,11 +42,12 @@ const ProductCard: React.FC<ReviewCard> = React.memo(
             width={500}
             height={500}
             classname={'w-fit h-full object-contain'}
+            testid={`all-drivers-page-product-alt-${finalIndex}`}
           />
         </div>
 
         <div className="flex flex-col items-center">
-          <h2 className="text-lg lg:text-xl font-bold text-center pb-2 z-10">
+          <h2 className="text-lg lg:text-xl font-bold text-center pb-2 z-10"  data-testid={`all-drivers-page-product-name-${finalIndex}`}>
             {data.products.name}
           </h2>
         </div>

@@ -4,7 +4,7 @@ import { Loader } from "lucide-react";
 import { lazy, useState } from "react";
 import Image from "next/image";
 
-export const LazyImageCustom = ({ src, alt, width, height, classname, lazy }: { src: string; alt: string; width: number; height: number; classname: string; lazy: boolean }) => {
+export const LazyImageCustom = ({ src, alt, width, height, classname, lazy, testid }: { src: string; alt: string; width: number; height: number; classname: string; lazy: boolean, testid?: string }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
@@ -25,6 +25,7 @@ export const LazyImageCustom = ({ src, alt, width, height, classname, lazy }: { 
         onLoad={() => setIsLoading(false)}
         loading={lazy ? 'lazy' : 'eager'}
         priority={lazy ? false : true}
+        data-testid={testid}
       />
     </div>
   );

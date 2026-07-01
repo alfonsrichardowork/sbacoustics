@@ -134,6 +134,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                             height={200}
                             classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
                             lazy={false}
+                            testid="cover-image-single-product-page"
                           />
                         </div>
                     </div>
@@ -163,6 +164,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                           height={200}
                           classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
                           lazy={true}
+                          testid={`image-catalogues-${index}-single-product-page`}
                         />
                         </div>
                       </div>
@@ -192,6 +194,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                       height={200}
                       classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
                       lazy={true}
+                      testid='drawing-image-single-product-page'
                     />
                     </div>
                   </div>
@@ -221,6 +224,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                       height={200}
                       classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
                       lazy={true}
+                      testid='frequency-response-image-single-product-page'
                     />
                     </div>
                   </div>

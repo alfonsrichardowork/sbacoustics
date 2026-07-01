@@ -103,6 +103,6 @@ export async function GET() {
     });
     
     return NextResponse.json(uniqueSortedPaths.map(path => ({
-        slug: path.split('/').slice(1),
-    })))    
+        slug: path.split('/'),
+    })));
 }

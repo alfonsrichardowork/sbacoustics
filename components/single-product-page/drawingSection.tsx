@@ -39,6 +39,7 @@ const DrawingSection: React.FC<PropType> = (props) => {
       height={500}
       classname={`object-contain px-10 transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
       lazy={false}
+      testid='drawing-image-single-product-page'
     />
   </div>
 </div>

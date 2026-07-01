@@ -26,20 +26,20 @@ type Props = {
 
 export const revalidate = 3600
 
-export async function generateStaticParams(){
-  const products = await prismadb.product.findMany({
-    where: {
-      brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-      isArchived: false,
-    },
-    select: {
-      slug: true,
-    },
-  });
-  return products.map((product: { slug: string }) => ({
-    productSlug: product.slug
-  }));
-}
+// export async function generateStaticParams(){
+//   const products = await prismadb.product.findMany({
+//     where: {
+//       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+//       isArchived: false,
+//     },
+//     select: {
+//       slug: true,
+//     },
+//   });
+//   return products.map((product: { slug: string }) => ({
+//     productSlug: product.slug
+//   }));
+// }
 
 export default async function SingleProductSBAcoustics(props: Props) {
     const { productSlug = '' } = await props.params;
@@ -77,6 +77,9 @@ export default async function SingleProductSBAcoustics(props: Props) {
                 select: {
                     name: true,
                     url: true
+                },
+                orderBy: {
+                    name: 'asc'
                 }
             },
             kitsFinishing: {
@@ -89,6 +92,9 @@ export default async function SingleProductSBAcoustics(props: Props) {
                             url: true,
                         }
                     }
+                },
+                orderBy: {
+                    order: 'asc'
                 }
             },
             similarProducts: {
@@ -126,18 +132,27 @@ export default async function SingleProductSBAcoustics(props: Props) {
                 select: {
                     url: true,
                     name: true,
+                },
+                orderBy: {
+                    name: 'asc'
                 }
             },
             multipleFRDZMAFiles: {
                 select: {
                     url: true,
                     name: true,
+                },
+                orderBy: {
+                    name: 'asc'
                 }
             },
             multiple3DModels: {
                 select: {
                     url: true,
                     name: true,
+                },
+                orderBy: {
+                    name: 'asc'
                 }
             },
             size: {
@@ -314,7 +329,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                         }          
 
                         {product.kitsFinishing && product.kitsFinishing.length > 0 &&
-                            <SwiperCarouselKitsFinishing kits_finishing={product.kitsFinishing}/>
+                            <SwiperCarouselKitsFinishing name={product.name} kits_finishing={product.kitsFinishing}/>
                         }             
                     </div>
                     <div className="w-full h-full md:hidden pb-4">
@@ -327,7 +342,9 @@ export default async function SingleProductSBAcoustics(props: Props) {
                 {/* Right Column for Typography */}
                 <div className="md:flex md:w-1/2 justify-center md:h-1/2 block w-full h-full">
                     <div className="flex flex-col w-full">
-                        <h1 className={all_sub_title_style}>
+                        <h1 className={all_sub_title_style}
+                        data-testid="main-title-single-product-page"
+                        >
                             {(
                                 prod_cat.some((c) => c.name.toLowerCase().includes("satori")) ||
                                 prod_sub_cat.some((s) => s.name.toLowerCase().includes("satori")) ||
@@ -394,7 +411,13 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                         <div className="pr-2">
                                             <Dot size={10} strokeWidth={10} />
                                         </div>
-                                        <Link href={`/products/${value.productUsedInKits.slug}`} className="hover:text-primary text-primary/80 underline text-sm">{value.productUsedInKits.name}</Link>
+                                        <Link
+                                            data-testid={`product-in-kits-${index}-single-product-page`}
+                                            href={`/products/${value.productUsedInKits.slug}`}
+                                            className="hover:text-primary text-primary/80 underline text-sm"
+                                        >
+                                            {value.productUsedInKits.name}
+                                        </Link>
                                     </div>
                                 ))}
                             </>
@@ -407,7 +430,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                 <h2 className="sr-only">Datasheet:</h2>
                                 {product.multipleDatasheetProduct.length===1 && product.multipleDatasheetProduct[0]?.url!=''?
                                     <div className="flex justify-start pt-8">
-                                        <Link href={product.multipleDatasheetProduct[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
+                                        <Link href={product.multipleDatasheetProduct[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-0-single-product-page`}>
                                             <div className="pr-2">
                                                 {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                 <Image src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
@@ -422,7 +445,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                         {product.multipleDatasheetProduct && product.multipleDatasheetProduct.map((value, index) => (
                                             value.url!=''&&
                                                 <div key={index} className={`${index !== 0 && 'pt-4'}`}>
-                                                        <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}> 
+                                                        <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-${index}-single-product-page`}> 
                                                         <div className="pr-2">
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                         <Image src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
@@ -445,7 +468,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                 {
                                 product.multipleFRDZMAFiles.length===1 && product.multipleFRDZMAFiles[0]?.url!=''?
                                     <div className="flex justify-start pt-4">
-                                        <Link href={product.multipleFRDZMAFiles[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
+                                        <Link href={product.multipleFRDZMAFiles[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-0-single-product-page`}>
                                             <div className="pr-2">
                                                 {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                 <Image src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
@@ -460,7 +483,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                         {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.map((value, index) => (
                                             value.url!=''&&
                                                 <div key={index} className={`${index !== 0 && 'pt-4'}`}>
-                                                        <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}> 
+                                                        <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-${index}-single-product-page`}> 
                                                         <div className="pr-2">
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                         <Image src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
@@ -483,7 +506,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                 <h2 className="sr-only">3D Models:</h2>
                                 {product.multiple3DModels.length===1 && product.multiple3DModels[0]?.url!=''?
                                     <div className="flex justify-start pt-4">
-                                        <Link href={product.multiple3DModels[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>
+                                        <Link href={product.multiple3DModels[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-0-single-product-page`}>
                                             <div className="pr-2">
                                                 {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                 <Image src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
@@ -498,7 +521,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                         {product.multiple3DModels && product.multiple3DModels.map((value, index) => (
                                             value.url!=''&&
                                                 <div key={index} className={`${index !== 0 && 'pt-4'}`}>
-                                                        <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}> 
+                                                        <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-${index}-single-product-page`}> 
                                                         <div className="pr-2">
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                         <Image src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
@@ -527,7 +550,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
 
             <div className="w-full h-full md:hidden pb-4">
                 {product.kitsFinishing && product.kitsFinishing.length > 1 &&
-                    <SwiperCarouselKitsFinishing kits_finishing={product.kitsFinishing}/>
+                    <SwiperCarouselKitsFinishing name={product.name} kits_finishing={product.kitsFinishing}/>
                 }    
             </div>
 

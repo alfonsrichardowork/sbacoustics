@@ -5,7 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import clsx from "clsx"; // Optional: for conditional classes
 
-export const LazyImageClickable = ({ src, alt, width, height }: { src: string; alt: string; width: number; height: number }) => {
+export const LazyImageClickable = ({ src, alt, width, height, testid }: { src: string; alt: string; width: number; height: number; testid?: string }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
@@ -26,6 +26,7 @@ export const LazyImageClickable = ({ src, alt, width, height }: { src: string; a
         className={clsx("w-full h-full object-cover transition-transform duration-300 hover:scale-110 ", { "opacity-0": isLoading })} // Fade in effect
         onLoad={() => setIsLoading(false)}
         priority
+        data-testid={testid}
       />
     </div>
   );

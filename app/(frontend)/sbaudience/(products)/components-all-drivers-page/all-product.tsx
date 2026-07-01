@@ -615,7 +615,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
                                     <Check size={25} />
                                 </div>
                             } */}
-                            <ProductCard key={item.products.id} data={item} hovered={hoveredDriver[item.products.id] ?? false}/>
+                            <ProductCard key={item.products.id} data={item} hovered={hoveredDriver[item.products.id] ?? false} index={i}/>
                         </div>
                     ))}
                 </div>

@@ -30,6 +30,7 @@ interface CombinedFilesProp {
 }
 
 type PropType = {
+  name: string
   kits_finishing: {url: string, order: number, finishing: {name: string, url: string}}[]
 }
 
@@ -37,7 +38,7 @@ const SwiperCarouselKitsFinishing: React.FC<PropType> = (props) => {
   const [combinedFinishing, setCombinedFinishing] = useState<CombinedFilesProp[]>([])
   const [activeKitsPreview, setActiveKitsPreview] = useState<string>('')
   const [activeKitsPreviewName, setActiveKitsPreviewName] = useState<string>('')
-  const { kits_finishing } = props
+  const { name, kits_finishing } = props
 
   useEffect(() => {
     const initializeData = () => {
@@ -78,19 +79,20 @@ const SwiperCarouselKitsFinishing: React.FC<PropType> = (props) => {
                 ? `${process.env.NEXT_PUBLIC_ROOT_URL}${activeKitsPreview}`
                   : activeKitsPreview
             }
-            alt={`${activeKitsPreviewName} Finishing`}
+            alt={`${name} - ${activeKitsPreviewName} Finishing`}
             width={1000}
             height={1000}
             className={`h-full max-w-full w-auto object-cover transition-transform duration-300`}
             // loading='lazy'
             loading='lazy'
+            data-testid='kits-finishing-image-single-product-page'
           />
         </div>
         
         <div className='w-full justify-center text-center pb-6 font-bold'>Finish: {activeKitsPreviewName}</div>
         <div className='flex gap-2 w-full justify-center items-center'>
         {combinedFinishing && combinedFinishing.length > 0 && combinedFinishing.map((val, index) => 
-          <div className={`flex items-center gap-2 lg:pb-2 pb-1 hover:cursor-pointer transition-all duration-200`} onClick={() => changeImagePreview(val.urlPreview, val.name)} key={index}>
+          <div className={`flex items-center gap-2 lg:pb-2 pb-1 hover:cursor-pointer transition-all duration-200`} data-testid={`kits-finishing-thumbnail-${index}`} onClick={() => changeImagePreview(val.urlPreview, val.name)} key={index}>
             <div className={`h-[30px] flex items-center ${activeKitsPreviewName === val.name && 'border-red-500 border-2'}`}>
               <LazyImageCustom
                 src={val.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.url}` : val.url} 
