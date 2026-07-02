@@ -212,7 +212,7 @@ const SearchLightbox: FC<PropType> = (props) => {
       {/* Search Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="p-2 rounded-lg hover:bg-secondary transition-colors"
+        className="p-2 rounded-lg hover:bg-transparent hover:text-primary transition-colors"
         aria-label="Search products"
       >
         <Search size={20} />

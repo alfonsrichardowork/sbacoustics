@@ -1422,12 +1422,12 @@ useEffect(() => {
               </Button>
             </SheetTrigger>
             <SheetContent className={`w-screen h-auto p-0 overflow-y-auto ${pathname.includes('sbaudience') ? 'bg-foreground text-background' : 'bg-background text-foreground'}`}>
-              <div className='sticky pt-4 pl-6'>
+              <div className='absolute pt-4 pl-6'>
                 <SearchLightbox changeBrand/>
               </div>
               <SheetTitle/>
               <SheetDescription/>
-              <div className="grid pt-0"> 
+              <div className="grid pt-14"> 
                 <Accordion type="single" collapsible className="w-full px-6">
                   <AccordionItem value="item-1">
                     <AccordionTrigger onClick={() =>{

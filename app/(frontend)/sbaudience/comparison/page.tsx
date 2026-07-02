@@ -183,7 +183,7 @@ const ComparisonPageSBAudience = () => {
             <Button 
               onClick={() => router.back()}
               variant="ghost"
-              className='absolute top-20 xl:right-16 lg:right-12 right-8 text-primary opacity-70 hover:opacity-100 text-right hover:cursor-pointer hover:bg-transparent'
+              className='absolute top-28 xl:right-16 lg:right-12 right-8 text-primary opacity-70 hover:opacity-100 text-right hover:cursor-pointer hover:bg-transparent'
               aria-label="Go back to previous page"
             >
               <X width={30} height={30} />

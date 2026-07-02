@@ -114,7 +114,7 @@ export default function CookieSettings({ onClose }: CookieSettingsProps) {
         </div>
 
         {/* Footer */}
-        <div className="sticky bottom-0 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 p-4 flex gap-2 justify-end">
+        <div className="sticky bottom-0 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 p-4 flex flex-wrap gap-2 justify-center sm:justify-end">
           <Button
             variant="outline"
             onClick={() => [rejectAll(), onClose()]}

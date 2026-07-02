@@ -37,11 +37,9 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
 
   return (
     <>
-      {/* {isLoading && ( */}
         <div className={`w-full h-screen absolute top-0 left-0 flex items-center justify-center ${pathname.includes('sbaudience') ? 'bg-black' : pathname.includes('sbautomotive') ? '' : 'bg-white'} z-0`}>
           <Loader2 className="animate-spin text-gray-500" size={40} />
         </div>
-      {/* )} */}
       
       <div className="w-full">
         <h2 className='sr-only'>{brand === 'sbaudience' ? 'SB Audience Featured Products' : 'SB Acoustics Featured Products'}</h2>
@@ -122,8 +120,8 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
               </div>
             </div>
 
-            {/* Mobile View - with safe area padding for Android */}
-            <div className="lg:hidden block pb-[env(safe-area-inset-bottom)]">
+            {/* Mobile View */}
+            <div className="lg:hidden block shrink">
               <Swiper
                 autoplay={{
                   delay: 5000,
@@ -138,13 +136,14 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
                 }}
                 slidesPerView={1}
                 modules={[Autoplay]}
-                className="swiper"
+                className="swiper shrink"
                 data-testid="featured-products-swiper-mobile-overall"
               >
                 {slides.map((item, index) => (
                   <SwiperSlide
                     key={index}
                     data-testid={`featured-products-swiper-mobile-slide-${index + 1}`}
+                    className='shrink'
                   >
                     <div className="relative w-full h-screen">
                       <img 
@@ -154,7 +153,7 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
                         data-testid="featured-products-swiper-mobile-main-image" 
                       />
 
-                      <div className={`absolute inset-x-0 bottom-0 px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] h-fit flex items-end bg-gradient-to-t from-black to-transparent`}>
+                      <div className={`absolute inset-x-0 bottom-0 px-4 py-4 h-fit flex items-end bg-gradient-to-t from-black to-transparent`}>
                         <div className="grid gap-0 grid-cols-1 w-fit">
                           <h3 className="text-left font-bold text-2xl text-white pb-4" data-testid={`featured-products-swiper-mobile-title-${index + 1}`}>
                             {item.name}
@@ -175,7 +174,7 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
               </Swiper>
 
               {/* Pagination Dots - with safe area padding */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 flex justify-center gap-2 pb-[env(safe-area-inset-bottom)]">
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 flex justify-center gap-2">
                 {slides.map((_, index) => (
                   <button
                     key={index}
