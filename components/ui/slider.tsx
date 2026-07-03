@@ -75,8 +75,8 @@ const Slider = React.forwardRef<React.ElementRef<typeof SliderPrimitive.Root>, S
           </React.Fragment>
         ))}
       </SliderPrimitive.Root>
-      <div className={`w-full text-center text-black text-sm`}>{unit === '"' || unit === '°' ? <>{minVal?.toString() === '' ? 0 : minVal}{unit} - {maxVal?.toString() === '' ? 0 : maxVal}{unit}</> : <>{minVal?.toString() === '' ? 0 : minVal} {unit} - {maxVal?.toString() === '' ? 0 : maxVal} {unit}</>}</div>
-    </>
+      <div className={`w-full text-center ${pathname.includes('sbaudience') ? 'md:text-white text-black' : 'text-black'} text-sm`}>{unit === '"' || unit === '\u00B0' ? <>{minVal?.toString() === '' ? 0 : minVal}{unit} - {maxVal?.toString() === '' ? 0 : maxVal}{unit}</> : <>{minVal?.toString() === '' ? 0 : minVal} {unit} - {maxVal?.toString() === '' ? 0 : maxVal} {unit}</>}</div>
+      </>
   );
 });
 Slider.displayName = SliderPrimitive.Root.displayName;
