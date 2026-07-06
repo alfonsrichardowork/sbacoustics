@@ -136,16 +136,16 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
                 }}
                 slidesPerView={1}
                 modules={[Autoplay]}
-                className="swiper shrink"
+                className="swiper h-full"
                 data-testid="featured-products-swiper-mobile-overall"
               >
                 {slides.map((item, index) => (
                   <SwiperSlide
                     key={index}
                     data-testid={`featured-products-swiper-mobile-slide-${index + 1}`}
-                    className='shrink'
+                    className='h-full'
                   >
-                    <div className="relative w-full h-screen">
+                    <div className="relative w-full min-h-dvh h-dvh">
                       <img 
                         src={item.featuredImgUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.featuredImgUrl}` : item.featuredImgUrl} 
                         alt={item.name} 
@@ -161,7 +161,7 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
                           <div className="text-left text-xs text-white pb-4" data-testid="featured-products-swiper-mobile-description">
                             {item.featuredDesc}
                           </div>
-                          <div className="items-start pb-4">
+                          <div className="items-start pb-5">
                             <Button asChild size={"sm"} data-testid="featured-products-swiper-mobile-button">
                               <Link href={brand === 'sbaudience' ? `/sbaudience/products/${item.slug}`: `/products/${item.slug}`}>Product Page</Link>
                             </Button>
@@ -174,7 +174,12 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
               </Swiper>
 
               {/* Pagination Dots - with safe area padding */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50 flex justify-center gap-2">
+              <div
+                className="absolute left-1/2 -translate-x-1/2 z-50 flex gap-2"
+                style={{
+                    bottom: "max(1rem, env(safe-area-inset-bottom))",
+                }}
+              >
                 {slides.map((_, index) => (
                   <button
                     key={index}
@@ -183,7 +188,7 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
                         swiperRefMobile.current.slideToLoop(index);
                       }
                     }}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 cursor-pointer hover:scale-110 ${
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer hover:scale-110 ${
                       realIndex === index ? 'bg-primary scale-125' : 'bg-zinc-700'
                     }`}
                     aria-label={`Go to slide ${index + 1}`}

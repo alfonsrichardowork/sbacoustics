@@ -71,7 +71,7 @@ export default async function SingleAppJsonLd(props: Props) {
     };
 
     return (
-        <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
+        <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-10 lg:px-12 px-8 py-8">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
