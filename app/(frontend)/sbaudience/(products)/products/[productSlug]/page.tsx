@@ -413,7 +413,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                         {
                                         product.multipleFRDZMAFiles.length===1 && product.multipleFRDZMAFiles[0]?.url!=''?
                                             <div className="flex justify-start pt-4">
-                                                <Link href={product.multipleFRDZMAFiles[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-0-single-product-page`}>
+                                                <a download href={product.multipleFRDZMAFiles[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-0-single-product-page`}>
                                                     <div className="pr-2">
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                         <Image src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
@@ -421,14 +421,14 @@ export default async function SingleProductSBAudience(props: Props) {
                                                     <h3 className="pl-2">
                                                         {product.multipleFRDZMAFiles[0]?.name}
                                                     </h3>
-                                                </Link>
+                                                </a>
                                             </div>
                                         : product.multipleFRDZMAFiles[0]?.url!='' &&
                                             <div className="justify-start pt-4">
                                                 {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.map((value, index) => (
                                                     value.url!=''&&
                                                         <div key={index} className={`${index !== 0 && 'pt-4'}`}>
-                                                                <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-${index}-single-product-page`}> 
+                                                                <a download href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-${index}-single-product-page`}> 
                                                                 <div className="pr-2">
                                                                 {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                                 <Image src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
@@ -436,7 +436,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                                             <h3 className="pl-2">
                                                                 {product.multipleFRDZMAFiles[index]?.name}
                                                             </h3>
-                                                            </Link>
+                                                            </a>
                                                         </div>
                                                 ))}
                                             </div>    
@@ -451,7 +451,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                         <h2 className="sr-only">3D Models:</h2>
                                         {product.multiple3DModels.length===1 && product.multiple3DModels[0]?.url!=''?
                                             <div className="flex justify-start pt-4">
-                                                <Link href={product.multiple3DModels[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-0-single-product-page`}>
+                                                <a download href={product.multiple3DModels[0]?.url ?? '/sbaudience'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-0-single-product-page`}>
                                                     <div className="pr-2">
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                         <Image src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
@@ -459,14 +459,14 @@ export default async function SingleProductSBAudience(props: Props) {
                                                     <h3 className="pl-2">
                                                         {product.multiple3DModels[0]?.name}
                                                     </h3>
-                                                </Link>
+                                                </a>
                                             </div>
                                         : product.multiple3DModels[0]?.url!='' &&
                                             <div className="justify-start pt-4">
                                                 {product.multiple3DModels && product.multiple3DModels.map((value, index) => (
                                                     value.url!=''&&
                                                         <div key={index} className={`${index !== 0 && 'pt-4'}`}>
-                                                                <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-${index}-single-product-page`}> 
+                                                                <a download href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-${index}-single-product-page`}> 
                                                                 <div className="pr-2">
                                                                 {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
                                                                 <Image src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
@@ -474,7 +474,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                                             <h3 className="pl-2">
                                                                 {product.multiple3DModels[index]?.name}
                                                             </h3>
-                                                            </Link>
+                                                            </a>
                                                         </div>
                                                 ))}
                                             </div>                
