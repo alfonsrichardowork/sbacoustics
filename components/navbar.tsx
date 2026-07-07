@@ -1692,13 +1692,15 @@ useEffect(() => {
             <Link href={'/'}>
               <div className='group cursor-pointer transition-transform duration-300 hover:scale-105'>
                 <div className='flex flex-col gap-1'>
-                  <Image
-                    src={'/images/sbacoustics/logo_sbacoustics_white_clean.webp'}
-                    alt='SB Acoustics Logo'
-                    width={150}
-                    height={150}
-                    className='h-5 w-full object-cover'
-                  />
+                  <div className="h-5">
+                    <Image
+                      src={'/images/sbacoustics/logo_sbacoustics_white_clean.webp'}
+                      alt='SB Acoustics Logo'
+                      width={150}
+                      height={40}
+                      className="h-full w-auto"
+                    />
+                    </div>
                 </div>
               </div>
             </Link>
@@ -1706,13 +1708,15 @@ useEffect(() => {
             <Link href={'/sbaudience'}>
               <div className='group cursor-pointer transition-transform duration-300 hover:scale-105'>
                 <div className='flex flex-col gap-1'>
-                  <Image
-                    src={'/images/sbaudience/logo_sbaudience_black.webp'}
-                    alt='SB Audience Logo'
-                    width={150}
-                    height={150}
-                    className='h-5 w-full object-cover'
-                  />
+                  <div className="h-5">
+                    <Image
+                      src={'/images/sbaudience/logo_sbaudience_black.webp'}
+                      alt='SB Audience Logo'
+                      width={150}
+                      height={40}
+                      className="h-full w-auto"
+                    />
+                    </div>
                 </div>
               </div>
             </Link>

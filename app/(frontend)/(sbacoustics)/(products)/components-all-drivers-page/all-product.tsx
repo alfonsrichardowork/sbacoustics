@@ -368,9 +368,13 @@ const AllDriversProducts: React.FC<MainProps> = ({
                     <DrawerTrigger asChild>
                     <Button
                         variant="default"
-                        className={`rounded-b-none shadow-2xl bottom-0 fixed left-1/2 -translate-x-1/2 transform transition-transform duration-300 ease-in-out z-40 hover:bg-primary hover:translate-y-0 h-20 ${isButtonVisible ? 'translate-y-8' : 'translate-y-20'}`}
+                        className={`rounded-b-none shadow-2xl bottom-0 fixed left-1/2 -translate-x-1/2 transform transition-all duration-300 ease-in-out z-40 md:hover:bg-primary md:hover:translate-y-42 h-60 ${
+                            isButtonVisible 
+                                ? 'md:translate-y-50 translate-y-42 opacity-100 pointer-events-auto' 
+                                : 'translate-y-100 opacity-0 pointer-events-none'
+                        }`}
                     >
-                        <div className="flex flex-col items-center gap-3">
+                        <div className="flex flex-col h-full items-center gap-3">
                             <div>Compare</div>
                             <div>
                                 <ChevronUp size={20} />
@@ -407,7 +411,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
                                 <div className="h-[250px] w-fit">
                                     <Card className="relative p-4 min-h-[250px] flex items-center justify-center transform duration-200 hover:shadow-lg">
                                         <Button
-                                            className="absolute top-2 right-2 hover:text-primary"
+                                            className="z-30 absolute top-2 right-2 hover:text-primary"
                                             variant="ghost"
                                             size="sm"
                                             onClick={() => deleteComparison(value)}
@@ -417,7 +421,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
                                         </Button>
                                         <CardContent className="flex items-center justify-center text-center p-2">
                                             <div className="flex flex-col items-center justify-center text-center relative">
-                                                <LazyImageCustom src={activeImgUrlCompare[index]?.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${activeImgUrlCompare[index]}` : activeImgUrlCompare[index] ?? ''} alt={activeNameCompare[index] ?? ''} width={150} height={150} lazy classname=""/>
+                                                <LazyImageCustom src={activeImgUrlCompare[index]?.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${activeImgUrlCompare[index]}` : activeImgUrlCompare[index] ?? ''} alt={activeNameCompare[index] ?? ''} width={150} height={150} lazy classname="h-44 w-fit object-contain"/>
                                                 <div className="text-black text-base font-bold mt-4">
                                                     {activeNameCompare[index]}
                                                 </div>
