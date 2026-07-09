@@ -71,8 +71,8 @@ const isSBAudience = pathname.includes('sbaudience');
 
 // Memoize the handler to prevent recreation
 const handleScroll = useCallback(() => {
-  // setNavbarBg(window.scrollY > 0  || (isSBAudience && pathname !== '/sbaudience'));
-  setNavbarBg(true);
+  setNavbarBg(window.scrollY > 0  || (isSBAudience && pathname !== '/sbaudience'));
+  // setNavbarBg(true);
 }, [isSBAudience, pathname]);
 
 // Debounce scroll events (fires max once per 100ms instead of 60+ times/sec)
@@ -816,7 +816,7 @@ const navClasses = useMemo(() => {
 
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+    const mediaQuery = window.matchMedia('(min-width: 1280px)');
     const handleResize = (e: MediaQueryListEvent) => {
       setIsLgScreen(e.matches);
     };
@@ -942,7 +942,7 @@ useEffect(() => {
             </div>
           </Link>
         </div>
-        <div className="w-1/2 hidden lg:flex justify-center relative z-100">
+        <div className="w-1/2 hidden xl:flex justify-center relative z-100">
           <NavigationMenu>
             <NavigationMenuList className="flex items-center">
               <NavigationMenuItem>
@@ -1409,12 +1409,12 @@ useEffect(() => {
             </NavigationMenuList>
           </NavigationMenu>
         </div>
-        <div className={`w-1/4 hidden lg:flex justify-end`}>
+        <div className={`w-1/4 hidden xl:flex justify-end`}>
           <SearchBox changeBrand/>
         </div>
 
 
-        <div className='flex lg:hidden'>
+        <div className='flex xl:hidden'>
           <Sheet open={isLgScreen?false:undefined}>
             <SheetTrigger asChild>
               <Button variant={null} className='w-fit p-0' aria-label='Mobile Menu'>
@@ -1686,7 +1686,8 @@ useEffect(() => {
 
 
     
-      <div className={`${height > 600 ? 'fixed' : 'absolute'} left-0 top-0 z-35 w-screen flex items-start justify-left`}>
+      <div className={`${height > 600 ? 'fixed' : 'absolute'} 
+        ${scrolled ? '-top-8' : 'top-0'} transition-all duration-300 ease-in-out left-0 z-35 w-screen flex items-start justify-left`}>
         <div className={`w-screen xl:px-16 lg:px-12 px-8 ${pathname.includes('sbaudience') ? 'bg-black' : 'bg-white'} h-full gap-8 flex p-1.5 border-b`}>
           {pathname.includes('sbaudience') ? 
             <Link href={'/'}>

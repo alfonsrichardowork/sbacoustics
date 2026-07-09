@@ -28,7 +28,7 @@ export default function Layout({
       >      
         <CookieProvider>
         <ThemeWrapper>
-          <LoadingWrapper>
+          {/* <LoadingWrapper> */}
           <ScrollToTop />
             <NextTopLoader color="#e60013" showSpinner={false} />
             {/* PLACEHOLDER BACKGROUND IMAGE PALING BELAKANG */}
@@ -48,7 +48,7 @@ export default function Layout({
             <div className="contents">{children}</div>
             <Footer />
           <Toaster />
-          </LoadingWrapper>
+          {/* </LoadingWrapper> */}
         </ThemeWrapper>
           <CookieBanner />
         </CookieProvider>

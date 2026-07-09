@@ -203,7 +203,7 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({
                     <div className="text-lg lg:text-xl font-bold text-center bg-zinc-700 text-white py-2 rounded-t-md">
                         FILTERS
                     </div>
-                    <div className="p-4 overflow-auto max-h-[calc(100vh-10.5rem)]">
+                    <div className="p-4 overflow-auto max-h-[calc(100dvh-12rem)]">
                         {checkbox.map((valueCheckbox, index) =>
                         valueCheckbox.value.length > 1 && (
                             <div key={index} className="grid gap-2 w-full max-w-80 pt-2">

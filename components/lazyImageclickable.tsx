@@ -23,7 +23,7 @@ export const LazyImageClickable = ({ src, alt, width, height, testid }: { src: s
         alt={alt}
         width={width}
         height={height}
-        className={clsx("w-full h-full object-cover transition-transform duration-300 hover:scale-110 ", { "opacity-0": isLoading })} // Fade in effect
+        className={clsx("w-full h-full object-contain transition-transform duration-300 hover:scale-110 ", { "opacity-0": isLoading })} // Fade in effect
         onLoad={() => setIsLoading(false)}
         priority
         data-testid={testid}
