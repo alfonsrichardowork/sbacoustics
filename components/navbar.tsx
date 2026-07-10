@@ -71,8 +71,8 @@ const isSBAudience = pathname.includes('sbaudience');
 
 // Memoize the handler to prevent recreation
 const handleScroll = useCallback(() => {
-  setNavbarBg(window.scrollY > 0  || (isSBAudience && pathname !== '/sbaudience'));
-  // setNavbarBg(true);
+  // setNavbarBg(window.scrollY > 0  || (isSBAudience && pathname !== '/sbaudience'));
+  setNavbarBg(true);
 }, [isSBAudience, pathname]);
 
 // Debounce scroll events (fires max once per 100ms instead of 60+ times/sec)
@@ -1421,13 +1421,13 @@ useEffect(() => {
                 <Menu size={30} />
               </Button>
             </SheetTrigger>
-            <SheetContent className={`w-screen h-auto p-0 overflow-y-auto ${pathname.includes('sbaudience') ? 'bg-foreground text-background' : 'bg-background text-foreground'}`}>
-              <div className='absolute pt-4 pl-6'>
+            <SheetContent className={`w-full h-auto p-0 z-50 overflow-y-auto ${pathname.includes('sbaudience') ? 'bg-foreground text-background' : 'bg-background text-foreground'}`}>
+              <div className='pt-4 pl-6'>
                 <SearchLightbox changeBrand/>
               </div>
               <SheetTitle/>
               <SheetDescription/>
-              <div className="grid pt-14"> 
+              <div className="grid pt-2"> 
                 <Accordion type="single" collapsible className="w-full px-6">
                   <AccordionItem value="item-1">
                     <AccordionTrigger onClick={() =>{

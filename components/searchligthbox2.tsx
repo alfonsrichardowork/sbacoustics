@@ -27,15 +27,16 @@ function normalizeSearch(text: string) {
 
 type PropType = {
   changeBrand: boolean
+  open: boolean
 }
 interface ExtendedSearchbox extends Searchbox {
   namenospace: string[];
   // sizenospace: string;
 }
 
-const SearchLightbox: FC<PropType> = (props) => {
-  const { changeBrand } = props
-  const [isOpen, setIsOpen] = useState(false);
+const SearchLightbox2: FC<PropType> = (props) => {
+  const { changeBrand, open } = props
+  const [isOpen, setIsOpen] = useState(open);
     const [finalProductSearchbox, setFinalProductSearchbox] = useState<ExtendedSearchbox[]>([]);
   const [activeSearch, setActiveSearch] = useState('');
   const [foundProducts, setfoundProducts] = useState<Searchbox[]>([]);
@@ -208,18 +209,7 @@ const SearchLightbox: FC<PropType> = (props) => {
   };
 
   return (
-    <>
-      {/* Search Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="p-2 rounded-lg hover:bg-transparent hover:text-primary transition-colors"
-        aria-label="Search products"
-      >
-        <Search size={20} />
-      </button>
-
-      {/* Lightbox Overlay */}
-      {isOpen && (
+      isOpen && 
         <>
         <div
           className="fixed inset-0 z-56 bg-black/50 backdrop-blur-sm"
@@ -311,9 +301,7 @@ const SearchLightbox: FC<PropType> = (props) => {
           </div>
         </div>
         </>
-      )}
-    </>
   );
 }
 
-export default SearchLightbox;
+export default SearchLightbox2;

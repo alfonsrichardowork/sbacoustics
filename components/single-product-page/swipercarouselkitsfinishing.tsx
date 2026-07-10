@@ -69,9 +69,9 @@ const SwiperCarouselKitsFinishing: React.FC<PropType> = (props) => {
   }
 
   return (
-    <div className='block justify-center items-center object-center h-full pt-8'>
+    <div className='block justify-center items-center object-center h-full w-full pt-8'>
       {activeKitsPreview && activeKitsPreview != '' &&
-      <div className="z-10 h-full w-fit">
+      <div className="z-10 h-fit w-full">
         <div className="flex items-center justify-center overflow-hidden">
           <img
             src={
@@ -82,7 +82,7 @@ const SwiperCarouselKitsFinishing: React.FC<PropType> = (props) => {
             alt={`${name} - ${activeKitsPreviewName} Finishing`}
             width={1000}
             height={1000}
-            className={`h-full max-w-full w-auto object-cover transition-transform duration-300`}
+            className={`h-full max-w-full w-auto object-contain transition-transform duration-300`}
             // loading='lazy'
             loading='lazy'
             data-testid='kits-finishing-image-single-product-page'
