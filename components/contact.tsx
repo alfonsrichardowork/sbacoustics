@@ -139,10 +139,10 @@ export default function Contact({ oneBrand }: Props) {
                 <div className="aspect-w-16 aspect-h-9 rounded-lg pt-1">
                 {mounted && oneBrand.maps !== '' && oneBrand.maps !== null ?
                   <div className="relative flex items-center justify-center w-full h-96 z-10">
-                    {isLoadingLoader && (
-                    <Skeleton className="w-full h-full" />
-                    )}
-                    <iframe src={oneBrand.maps} className='w-full h-full' onLoad={() => setIsLoadingLoader(false)} ></iframe>
+                    {isLoadingLoader &&
+                      <Skeleton className="w-full h-full" />
+                    }
+                    <iframe src={oneBrand.maps} className='absolute w-full h-full' onLoad={() => setIsLoadingLoader(false)} ></iframe>
                   </div>
                   :
                   <Empty className='w-full min-h-96 z-10 bg-foreground/20'>

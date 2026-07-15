@@ -96,7 +96,7 @@ useEffect(() => {
 // Memoize className computation
 const navClasses = useMemo(() => {
   const isFixed = height > 600;
-  const baseClasses = `${isFixed ? 'fixed w-full' : 'w-screen'} xl:px-16 lg:px-12 px-8 py-4 h-fit transition-all duration-200 ease-in-out`;
+  const baseClasses = `${isFixed ? 'fixed' : ''} w-dvw xl:px-16 lg:px-12 px-8 py-4 h-fit transition-all duration-200 ease-in-out`;
     
   if (!navbarBg) {
     if (isSBAudience) {
@@ -1421,163 +1421,195 @@ useEffect(() => {
                 <Menu size={30} />
               </Button>
             </SheetTrigger>
-            <SheetContent className={`w-full h-auto p-0 z-50 overflow-y-auto ${pathname.includes('sbaudience') ? 'bg-foreground text-background' : 'bg-background text-foreground'}`}>
-              <div className='pt-4 pl-6'>
-                <SearchLightbox changeBrand/>
-              </div>
-              <SheetTitle/>
-              <SheetDescription/>
-              <div className="grid pt-2"> 
-                <Accordion type="single" collapsible className="w-full px-6">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger onClick={() =>{
-                      setDriversMenu(DriversMenu)
-                    }} 
-                    className='hover:text-primary px-2'>
-                      Drivers
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      {/* <Button asChild variant={"default"} className='w-full '> */}
-                      <Link href={getHref(pathname, 'drivers')} className='w-full'>
-                        <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
-                          Show All Drivers
-                        </SheetClose>
-                      </Link>
-                      {/* </Button> */}
-                      <Accordion type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-800' : 'bg-zinc-50'} w-full pl-2 rounded-lg`}>
-                        {firstMenu.map((menu, indexdriver) => 
-                          <AccordionItem key={menu.title} value={"item-".concat(indexdriver.toString())}>
-                            {menu.parent===""? 
-                              <Link href={getHref(pathname, menu.href)} key={menu.title}>
-                                <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                <Image src={menu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${menu.url}` : menu.url} alt={menu.title} width={100} height={100} className='object-contain max-h-14 w-fit col-span-1'/>
-                                {menu.newProd ? <div className="col-span-5">{menu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{menu.title}</div>}
-                                </SheetClose>
-                              </Link>
-                            :
-                              <AccordionTrigger value={menu.title} onClick={() =>{
-                                searchSubMenu(menu.title, menu.parent)
-                              }} className='hover:text-primary px-2'>
-                                {menu.title}
-                              </AccordionTrigger>
-                            }
-                            <AccordionContent>
-                              <Link href={getHref(pathname, menu.href)} className='w-full'>
-                                <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
-                                  Show All {menu.title === 'Widebanders / Full Ranges' ? 'Widebanders' : menu.title}
-                                </SheetClose>
-                              </Link>
-                              <Accordion type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-700' : 'bg-zinc-100'} w-full pl-2 rounded-lg`}>
-                                {driversubMenu.map((submenu) => 
-                                  <AccordionItem key={submenu.title} value={submenu.title}>
-                                    {submenu.parent===""? 
-                                      <Link key={submenu.title} href={getHref(pathname, submenu.href)}>
-                                        <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                          <Image src={submenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${submenu.url}` : submenu.url} alt={submenu.title} width={100} height={100} className='object-contain max-h-14 w-fit col-span-1'/>
-                                          {submenu.newProd ? <div className="col-span-5">{submenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{submenu.title}</div>}
-                                        </SheetClose>
-                                      </Link>
-                                    :
-                                      <AccordionTrigger value={submenu.title} onClick={() =>{
-                                        searchSubSubMenu(submenu.title, submenu.parent)
-                                      }} className='hover:text-primary px-2'>
-                                        {submenu.title}
-                                      </AccordionTrigger>
-                                    }
-                                    <AccordionContent>
-                                      <Link href={getHref(pathname, submenu.href)} className='w-full'>
-                                        <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
-                                          Show All {submenu.title}
-                                        </SheetClose>
-                                      </Link>
-                                      <Accordion type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-600' : 'bg-zinc-200'} w-full pl-2 rounded-lg`}> 
-                                        {driversubsubMenu.map((subsubmenu) =>
-                                          <AccordionItem key={subsubmenu.title} value={subsubmenu.title}>
-                                            {subsubmenu.parent===""? 
-                                              <Link key={subsubmenu.title} href={getHref(pathname, subsubmenu.href)}>
-                                                <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                                <Image src={subsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${subsubmenu.url}` : subsubmenu.url} alt={subsubmenu.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                                  {subsubmenu.newProd ? <div className="col-span-5">{subsubmenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{subsubmenu.title}</div>}
-                                                </SheetClose>
-                                              </Link>
-                                            :
-                                              <AccordionTrigger value={subsubmenu.title} onClick={() =>{
-                                                searchSubSubSubMenu(subsubmenu.title, subsubmenu.parent)
-                                              }} className='hover:text-primary px-2'>
-                                                {subsubmenu.title}
-                                              </AccordionTrigger>
-                                            }
-                                            <AccordionContent className={`${pathname.includes('sbaudience') ? 'bg-zinc-500' : 'bg-zinc-300'} rounded-lg`}>
-                                              <Link href={getHref(pathname, subsubmenu.href)} className='w-full'>
-                                                <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
-                                                  Show All {subsubmenu.title}
-                                                </SheetClose>
-                                              </Link>
-                                              {driversubsubsubMenu.map((subsubsubmenu) => 
-                                                <Link key={subsubsubmenu.title} href={getHref(pathname, subsubsubmenu.href)}>
+            {/* <SheetContent className={`w-full h-auto p-0 z-50 overflow-y-auto ${pathname.includes('sbaudience') ? 'bg-foreground text-background' : 'bg-background text-foreground'}`}> */}
+            <SheetContent className={`w-full h-auto p-0 z-50 ${pathname.includes('sbaudience') ? 'bg-foreground text-background' : 'bg-background text-foreground'}`}>
+              <div className="overflow-y-auto max-h-screen">
+                <div className='pt-4 pl-6'>
+                  <SearchLightbox changeBrand/>
+                </div>
+                <SheetTitle/>
+                <SheetDescription/>
+                <div className="grid pt-2"> 
+                  <Accordion type="single" collapsible className="w-full px-6">
+                    <AccordionItem value="item-1">
+                      <AccordionTrigger onClick={() =>{
+                        setDriversMenu(DriversMenu)
+                      }} 
+                      className='hover:text-primary px-2'>
+                        Drivers
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        {/* <Button asChild variant={"default"} className='w-full '> */}
+                        <Link href={getHref(pathname, 'drivers')} className='w-full'>
+                          <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
+                            Show All Drivers
+                          </SheetClose>
+                        </Link>
+                        {/* </Button> */}
+                        <Accordion type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-800' : 'bg-zinc-50'} w-full pl-2 rounded-lg`}>
+                          {firstMenu.map((menu, indexdriver) => 
+                            <AccordionItem key={menu.title} value={"item-".concat(indexdriver.toString())}>
+                              {menu.parent===""? 
+                                <Link href={getHref(pathname, menu.href)} key={menu.title}>
+                                  <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
+                                  <Image src={menu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${menu.url}` : menu.url} alt={menu.title} width={100} height={100} className='object-contain max-h-14 w-fit col-span-1'/>
+                                  {menu.newProd ? <div className="col-span-5">{menu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{menu.title}</div>}
+                                  </SheetClose>
+                                </Link>
+                              :
+                                <AccordionTrigger value={menu.title} onClick={() =>{
+                                  searchSubMenu(menu.title, menu.parent)
+                                }} className='hover:text-primary px-2'>
+                                  {menu.title}
+                                </AccordionTrigger>
+                              }
+                              <AccordionContent>
+                                <Link href={getHref(pathname, menu.href)} className='w-full'>
+                                  <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
+                                    Show All {menu.title === 'Widebanders / Full Ranges' ? 'Widebanders' : menu.title}
+                                  </SheetClose>
+                                </Link>
+                                <Accordion type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-700' : 'bg-zinc-100'} w-full pl-2 rounded-lg`}>
+                                  {driversubMenu.map((submenu) => 
+                                    <AccordionItem key={submenu.title} value={submenu.title}>
+                                      {submenu.parent===""? 
+                                        <Link key={submenu.title} href={getHref(pathname, submenu.href)}>
+                                          <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
+                                            <Image src={submenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${submenu.url}` : submenu.url} alt={submenu.title} width={100} height={100} className='object-contain max-h-14 w-fit col-span-1'/>
+                                            {submenu.newProd ? <div className="col-span-5">{submenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{submenu.title}</div>}
+                                          </SheetClose>
+                                        </Link>
+                                      :
+                                        <AccordionTrigger value={submenu.title} onClick={() =>{
+                                          searchSubSubMenu(submenu.title, submenu.parent)
+                                        }} className='hover:text-primary px-2'>
+                                          {submenu.title}
+                                        </AccordionTrigger>
+                                      }
+                                      <AccordionContent>
+                                        <Link href={getHref(pathname, submenu.href)} className='w-full'>
+                                          <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
+                                            Show All {submenu.title}
+                                          </SheetClose>
+                                        </Link>
+                                        <Accordion type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-600' : 'bg-zinc-200'} w-full pl-2 rounded-lg`}> 
+                                          {driversubsubMenu.map((subsubmenu) =>
+                                            <AccordionItem key={subsubmenu.title} value={subsubmenu.title}>
+                                              {subsubmenu.parent===""? 
+                                                <Link key={subsubmenu.title} href={getHref(pathname, subsubmenu.href)}>
                                                   <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                                    <Image src={subsubsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${subsubsubmenu.url}` : subsubsubmenu.url} alt={subsubsubmenu.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                                    {subsubsubmenu.newProd ? <div className="col-span-5">{subsubsubmenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{subsubsubmenu.title}</div>}
+                                                  <Image src={subsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${subsubmenu.url}` : subsubmenu.url} alt={subsubmenu.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
+                                                    {subsubmenu.newProd ? <div className="col-span-5">{subsubmenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{subsubmenu.title}</div>}
                                                   </SheetClose>
                                                 </Link>
-                                              )}
-                                            </AccordionContent>
-                                          </AccordionItem>
-                                        )}
-                                      </Accordion>
-                                    </AccordionContent>
-                                  </AccordionItem>
+                                              :
+                                                <AccordionTrigger value={subsubmenu.title} onClick={() =>{
+                                                  searchSubSubSubMenu(subsubmenu.title, subsubmenu.parent)
+                                                }} className='hover:text-primary px-2'>
+                                                  {subsubmenu.title}
+                                                </AccordionTrigger>
+                                              }
+                                              <AccordionContent className={`${pathname.includes('sbaudience') ? 'bg-zinc-500' : 'bg-zinc-300'} rounded-lg`}>
+                                                <Link href={getHref(pathname, subsubmenu.href)} className='w-full'>
+                                                  <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
+                                                    Show All {subsubmenu.title}
+                                                  </SheetClose>
+                                                </Link>
+                                                {driversubsubsubMenu.map((subsubsubmenu) => 
+                                                  <Link key={subsubsubmenu.title} href={getHref(pathname, subsubsubmenu.href)}>
+                                                    <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
+                                                      <Image src={subsubsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${subsubsubmenu.url}` : subsubsubmenu.url} alt={subsubsubmenu.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
+                                                      {subsubsubmenu.newProd ? <div className="col-span-5">{subsubsubmenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{subsubsubmenu.title}</div>}
+                                                    </SheetClose>
+                                                  </Link>
+                                                )}
+                                              </AccordionContent>
+                                            </AccordionItem>
+                                          )}
+                                        </Accordion>
+                                      </AccordionContent>
+                                    </AccordionItem>
+                                  )}
+                                </Accordion>
+                              </AccordionContent>
+                            </AccordionItem>
+                          )}
+                        </Accordion>
+                      </AccordionContent>
+                    </AccordionItem>
+                    {pathname.includes('sbaudience') || pathname.includes('sbautomotive') ? null :
+                    <AccordionItem value="item-2">
+                      <AccordionTrigger onClick={() =>{
+                        setKitMenu(KitsMenu)
+                      }} className='hover:text-primary px-2'>
+                        Kits
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <Link href={getHref(pathname, 'kits')} className='w-full'>
+                          <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
+                            Show All Kits
+                          </SheetClose>
+                        </Link>
+                        <Accordion type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-800' : 'bg-zinc-50'} w-full pl-2 rounded-lg`}>
+                          {kitMenu.map((kits) => 
+                            <AccordionItem key={kits.title} value={kits.title}>
+                              {kits.parent===""? 
+                                <Link href={getHref(pathname, kits.href)} key={kits.title}>
+                                  <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
+                                    <Image src={kits.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${kits.url}` : kits.url} alt={kits.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
+                                    {kits.newProd ? <div className="col-span-5">{kits.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{kits.title}</div>}
+                                  </SheetClose>
+                                </Link>
+                              :
+                                <AccordionTrigger onClick={() =>{
+                                  searchKitsMenu(kits.title, kits.parent)
+                                }} className='hover:text-primary px-2'>
+                                  {kits.title}
+                                </AccordionTrigger>
+                              }
+                              <AccordionContent>
+                                <Link href={getHref(pathname, kits.href)} className='w-full'>
+                                  <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
+                                    Show All {kits.title}
+                                  </SheetClose>
+                                </Link>
+                                {kitssubMenu.map((kitsubmenu, index) => 
+                                  <Accordion key={kitsubmenu.title} type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-700' : 'bg-zinc-100'} w-full pl-2 ${index === 0 ? 'rounded-t-lg' : index === kitssubMenu.length -1 ? 'rounded-b-lg' : 'rounded-none'}`}>
+                                    <AccordionItem key={kitsubmenu.title} value={kitsubmenu.title.concat(index.toString())}> 
+                                      <Link key={kitsubmenu.title} href={getHref(pathname, kitsubmenu.href)}>
+                                        <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
+                                          <Image src={kitsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${kitsubmenu.url}` : kitsubmenu.url} alt={kitsubmenu.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
+                                          {kitsubmenu.newProd ? <div className="col-span-5">{kitsubmenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{kitsubmenu.title}</div>}
+                                        </SheetClose>
+                                      </Link>
+                                    </AccordionItem>
+                                  </Accordion>
                                 )}
-                              </Accordion>
-                            </AccordionContent>
-                          </AccordionItem>
-                        )}
-                      </Accordion>
-                    </AccordionContent>
-                  </AccordionItem>
-                  {pathname.includes('sbaudience') || pathname.includes('sbautomotive') ? null :
-                  <AccordionItem value="item-2">
-                    <AccordionTrigger onClick={() =>{
-                      setKitMenu(KitsMenu)
-                    }} className='hover:text-primary px-2'>
-                      Kits
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <Link href={getHref(pathname, 'kits')} className='w-full'>
-                        <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
-                          Show All Kits
-                        </SheetClose>
-                      </Link>
-                      <Accordion type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-800' : 'bg-zinc-50'} w-full pl-2 rounded-lg`}>
-                        {kitMenu.map((kits) => 
-                          <AccordionItem key={kits.title} value={kits.title}>
-                            {kits.parent===""? 
-                              <Link href={getHref(pathname, kits.href)} key={kits.title}>
-                                <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                  <Image src={kits.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${kits.url}` : kits.url} alt={kits.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                  {kits.newProd ? <div className="col-span-5">{kits.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{kits.title}</div>}
-                                </SheetClose>
-                              </Link>
-                            :
-                              <AccordionTrigger onClick={() =>{
-                                searchKitsMenu(kits.title, kits.parent)
-                              }} className='hover:text-primary px-2'>
-                                {kits.title}
-                              </AccordionTrigger>
-                            }
+                              </AccordionContent>
+                            </AccordionItem>
+                          )}
+                        </Accordion>
+                      </AccordionContent>
+                    </AccordionItem>
+                    }
+                    <AccordionItem value="item-3">
+                      <AccordionTrigger className='hover:text-primary px-2'>
+                        New Products
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <Accordion type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-800' : 'bg-zinc-50'} w-full pl-2 rounded-lg`}>
+                          <AccordionItem key={'New Drivers'} value={'New Drivers'}>
+                            <AccordionTrigger className='hover:text-primary px-2'>
+                              Drivers
+                            </AccordionTrigger>
                             <AccordionContent>
-                              <Link href={getHref(pathname, kits.href)} className='w-full'>
-                                <SheetClose className='w-full flex text-center justify-center p-1 bg-primary text-white rounded-xl'>
-                                  Show All {kits.title}
-                                </SheetClose>
-                              </Link>
-                              {kitssubMenu.map((kitsubmenu, index) => 
-                                <Accordion key={kitsubmenu.title} type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-700' : 'bg-zinc-100'} w-full pl-2 ${index === 0 ? 'rounded-t-lg' : index === kitssubMenu.length -1 ? 'rounded-b-lg' : 'rounded-none'}`}>
-                                  <AccordionItem key={kitsubmenu.title} value={kitsubmenu.title.concat(index.toString())}> 
-                                    <Link key={kitsubmenu.title} href={getHref(pathname, kitsubmenu.href)}>
+                              {newProductsMenu.map((newsubmenu, index) => 
+                                <Accordion key={newsubmenu.name} type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-700' : 'bg-zinc-100'} w-full pl-2 ${index === 0 ? 'rounded-t-lg' : index === newProductsMenu.length -1 ? 'rounded-b-lg' : 'rounded-none'}`}>
+                                  <AccordionItem key={newsubmenu.name} value={newsubmenu.name.concat(index.toString())}> 
+                                    <Link key={newsubmenu.name} href={getHref(pathname, newsubmenu.href)}>
                                       <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                        <Image src={kitsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${kitsubmenu.url}` : kitsubmenu.url} alt={kitsubmenu.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                        {kitsubmenu.newProd ? <div className="col-span-5">{kitsubmenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{kitsubmenu.title}</div>}
+                                          <Image src={newsubmenu.image_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${newsubmenu.image_url}` : newsubmenu.image_url} alt={newsubmenu.name} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
+                                        <div className="col-span-5">{newsubmenu.name} <div className="inline-flex text-primary">NEW</div></div>
                                       </SheetClose>
                                     </Link>
                                   </AccordionItem>
@@ -1585,95 +1617,66 @@ useEffect(() => {
                               )}
                             </AccordionContent>
                           </AccordionItem>
-                        )}
-                      </Accordion>
-                    </AccordionContent>
-                  </AccordionItem>
-                  }
-                  <AccordionItem value="item-3">
-                    <AccordionTrigger className='hover:text-primary px-2'>
-                      New Products
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <Accordion type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-800' : 'bg-zinc-50'} w-full pl-2 rounded-lg`}>
-                        <AccordionItem key={'New Drivers'} value={'New Drivers'}>
-                          <AccordionTrigger className='hover:text-primary px-2'>
-                            Drivers
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            {newProductsMenu.map((newsubmenu, index) => 
-                              <Accordion key={newsubmenu.name} type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-700' : 'bg-zinc-100'} w-full pl-2 ${index === 0 ? 'rounded-t-lg' : index === newProductsMenu.length -1 ? 'rounded-b-lg' : 'rounded-none'}`}>
-                                <AccordionItem key={newsubmenu.name} value={newsubmenu.name.concat(index.toString())}> 
-                                  <Link key={newsubmenu.name} href={getHref(pathname, newsubmenu.href)}>
-                                    <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                        <Image src={newsubmenu.image_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${newsubmenu.image_url}` : newsubmenu.image_url} alt={newsubmenu.name} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                      <div className="col-span-5">{newsubmenu.name} <div className="inline-flex text-primary">NEW</div></div>
-                                    </SheetClose>
-                                  </Link>
-                                </AccordionItem>
-                              </Accordion>
-                            )}
-                          </AccordionContent>
-                        </AccordionItem>
-                        {pathname.includes('sbaudience') || pathname.includes('sbautomotive') ? null :
-                        <AccordionItem key={'New Kits'} value={'New Kits'}>
-                          <AccordionTrigger className='hover:text-primary px-2'>
-                            Kits
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            {newKitsMenu.map((newsubmenu, index) => 
-                              <Accordion key={newsubmenu.name} type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-700' : 'bg-zinc-100'} w-full pl-2 ${index === 0 ? 'rounded-t-lg' : index === newKitsMenu.length -1 ? 'rounded-b-lg' : 'rounded-none'}`}>
-                                <AccordionItem key={newsubmenu.name} value={newsubmenu.name.concat(index.toString())}> 
-                                  <Link key={newsubmenu.name} href={getHref(pathname, newsubmenu.href)}>
-                                    <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                        <Image src={newsubmenu.image_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${newsubmenu.image_url}` : newsubmenu.image_url} alt={newsubmenu.name} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                      <div className="col-span-5">{newsubmenu.name} <div className="inline-flex text-primary">NEW</div></div>
-                                    </SheetClose>
-                                  </Link>
-                                </AccordionItem>
-                              </Accordion>
-                            )}
-                          </AccordionContent>
-                        </AccordionItem>
-                        }
-                      </Accordion>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              {pathname.includes('sbaudience') && 
-                <>
+                          {pathname.includes('sbaudience') || pathname.includes('sbautomotive') ? null :
+                          <AccordionItem key={'New Kits'} value={'New Kits'}>
+                            <AccordionTrigger className='hover:text-primary px-2'>
+                              Kits
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              {newKitsMenu.map((newsubmenu, index) => 
+                                <Accordion key={newsubmenu.name} type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-700' : 'bg-zinc-100'} w-full pl-2 ${index === 0 ? 'rounded-t-lg' : index === newKitsMenu.length -1 ? 'rounded-b-lg' : 'rounded-none'}`}>
+                                  <AccordionItem key={newsubmenu.name} value={newsubmenu.name.concat(index.toString())}> 
+                                    <Link key={newsubmenu.name} href={getHref(pathname, newsubmenu.href)}>
+                                      <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
+                                          <Image src={newsubmenu.image_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${newsubmenu.image_url}` : newsubmenu.image_url} alt={newsubmenu.name} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
+                                        <div className="col-span-5">{newsubmenu.name} <div className="inline-flex text-primary">NEW</div></div>
+                                      </SheetClose>
+                                    </Link>
+                                  </AccordionItem>
+                                </Accordion>
+                              )}
+                            </AccordionContent>
+                          </AccordionItem>
+                          }
+                        </Accordion>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                {pathname.includes('sbaudience') && 
+                  <>
+                    <Button variant={null} asChild className='px-6 py-0'>
+                      <Link href={getHref(pathname, 'application')} className='p-0'>
+                        <SheetClose className='w-full text-base text-left hover:text-primary pl-2'>
+                          Application
+                        </SheetClose>
+                      </Link>
+                    </Button>
+                  </>
+                }
+                {!pathname.includes('sbaudience') &&
                   <Button variant={null} asChild className='px-6 py-0'>
-                    <Link href={getHref(pathname, 'application')} className='p-0'>
+                    <Link href={getHref(pathname, 'technical')} className='p-0'>
                       <SheetClose className='w-full text-base text-left hover:text-primary pl-2'>
-                        Application
+                        Technical
                       </SheetClose>
                     </Link>
                   </Button>
-                </>
-              }
-              {!pathname.includes('sbaudience') &&
-                <Button variant={null} asChild className='px-6 py-0'>
-                  <Link href={getHref(pathname, 'technical')} className='p-0'>
-                    <SheetClose className='w-full text-base text-left hover:text-primary pl-2'>
-                      Technical
-                    </SheetClose>
-                  </Link>
-                </Button>
-              }
-                <Button variant={null} asChild className='px-6 py-0'>
-                  <Link href={getHref(pathname, 'distributors')} className='p-0'>
-                    <SheetClose className='w-full text-base text-left hover:text-primary pl-2'>
-                      Distributors
-                    </SheetClose>
-                  </Link>
-                </Button>
-                <Button variant={null} asChild className='px-6 py-0'>
-                  <Link href={getHref(pathname, 'contact')} className='p-0'>
-                    <SheetClose className='w-full text-base text-left hover:text-primary pl-2'>
-                      Contact
-                    </SheetClose>
-                  </Link>
-                </Button>
+                }
+                  <Button variant={null} asChild className='px-6 py-0'>
+                    <Link href={getHref(pathname, 'distributors')} className='p-0'>
+                      <SheetClose className='w-full text-base text-left hover:text-primary pl-2'>
+                        Distributors
+                      </SheetClose>
+                    </Link>
+                  </Button>
+                  <Button variant={null} asChild className='px-6 py-0'>
+                    <Link href={getHref(pathname, 'contact')} className='p-0'>
+                      <SheetClose className='w-full text-base text-left hover:text-primary pl-2'>
+                        Contact
+                      </SheetClose>
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </SheetContent>
           </Sheet>

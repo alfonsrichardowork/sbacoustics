@@ -1,54 +1,61 @@
+import { EmailConfirmation, EmailTemplate } from '@/components/resendemail';
 import { type NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
-import Mail from 'nodemailer/lib/mailer';
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
+import { Resend } from 'resend';
 
 const toNoReplyEmail = (email: string) => {
   const domain = email.split('@')[1];
-  return `noreply@${domain}`;
+  // return `noreply@${domain}`;
+  return `noreply@webdemosbe.xyz`;
 };
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   const { email, name, country, subject, message, website, fromemail } = await request.json();
 
-  const transport = nodemailer.createTransport(new SMTPTransport({
-    name: 'myfcloudsg',
-    host: "node120.myfcloudsg.com",
-    // service: 'gmail',
-    port: 465,
-    secure: true, // upgrade later with STARTTLS
-    auth: {
-      user: process.env.MY_EMAIL,
-      pass: process.env.MY_PASSWORD,
-    },
-    // service: 'gmail',
-    // auth: {
-    //   user: process.env.MY_EMAIL,
-    //   pass: process.env.MY_PASSWORD,
-    // },
-  }));
+  // const { data, error } = await resend.batch.send([
+  //   // Email to user
+  //   {
+  //     from: `${website} <${toNoReplyEmail(fromemail)}>`,
+  //     to: [email],
+  //     subject: "We received your message!",
+  //     react: EmailConfirmation({ name, website }),
+  //   },
+  //   // Email to team
+  //   {
+  //     from: `${website} <${toNoReplyEmail(fromemail)}>`,
+  //     to: [`${process.env.MY_EMAIL}`, "backup@sbacoustics.com"],
+  //     subject: subject,
+  //     react: EmailTemplate({ name, email, country, subject, message, website }),
+  //   },
+  // ]);
 
-  const mailOptions: Mail.Options = {
-    from: `${website} <${toNoReplyEmail(fromemail)}>`,
-    to: [`${process.env.MY_EMAIL}`, "backup@sbacoustics.com"],
-    replyTo: `${email}`,
-    subject: `${subject}`,
-    html: `<div><b>Name:</b> ${name}</div>
-    <div><b>Email:</b> ${email}</div>
-    <div><b>Country:</b> ${country}</div>
-    <div><b>Subject:</b> ${subject}</div>
-    <div><b>Message:</b> ${message}</div>`,
-  };
+   const { data, error } = await resend.emails.send(
+    // // Email to user
+    // {
+    //   from: `${website} <${toNoReplyEmail(fromemail)}>`,
+    //   to: [email],
+    //   subject: "We received your message!",
+    //   react: EmailConfirmation({ name, website }),
+    // },
+    // Email to team
+    {
+      from: `${website} <${toNoReplyEmail(fromemail)}>`,
+      to: [
+        `${process.env.MY_EMAIL}`, 
+        // "alfonskerja@gmail.com"
+      ],
+      subject: subject,
+      react: EmailTemplate({ name, email, country, subject, message, website }),
+    },
+  );
 
   const sendMailPromise = () =>
     new Promise<string>((resolve, reject) => {
-      transport.sendMail(mailOptions, function (err) {
-        if (!err) {
+        if (!error) {
           resolve('Email sent');
         } else {
-          reject(err.message);
+          reject(error.message);
         }
-      });
     });
 
   try {

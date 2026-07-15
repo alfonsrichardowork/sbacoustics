@@ -28,11 +28,11 @@ export default function Layout({
       >      
         <CookieProvider>
         <ThemeWrapper>
-          {/* <LoadingWrapper> */}
+          <LoadingWrapper>
           <ScrollToTop />
             <NextTopLoader color="#e60013" showSpinner={false} />
             {/* PLACEHOLDER BACKGROUND IMAGE PALING BELAKANG */}
-            <div className="fixed inset-0 w-screen h-screen bg-black z-[-1]">
+            <div className="fixed inset-0 w-dvw h-dvh bg-black z-[-1]">
               <div className='flex items-center justify-center h-full w-full'>   
                 <Image
                   src='/images/sbacoustics/logo_sbacoustics_white_catchphrase.webp'
@@ -48,7 +48,7 @@ export default function Layout({
             <div className="contents">{children}</div>
             <Footer />
           <Toaster />
-          {/* </LoadingWrapper> */}
+          </LoadingWrapper>
         </ThemeWrapper>
           <CookieBanner />
         </CookieProvider>

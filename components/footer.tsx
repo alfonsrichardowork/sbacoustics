@@ -42,7 +42,7 @@ export default function Footer() {
   return (
     <footer className="bg-black text-white">
       <h2 className='sr-only'>{!loading && finalData && `${finalData.name} Footer Navigation`}</h2>
-      <div className="w-full xl:px-16 lg:px-12 px-8 py-12">
+      <div className="w-dvw xl:px-16 lg:px-12 px-8 py-12">
       <div className="md:grid-cols-2 grid pb-6 items-center justify-center">
             <div className="md:order-2 order-1 flex flex-col items-center md:items-end">
                 <div className="w-full max-w-[200px] h-auto rounded-lg shadow-lg transition-transform hover:scale-105">

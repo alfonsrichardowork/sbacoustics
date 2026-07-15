@@ -222,7 +222,7 @@ const SearchLightbox: FC<PropType> = (props) => {
       {isOpen && (
         <>
         <div
-          className="fixed inset-0 z-56 bg-black/50 backdrop-blur-sm"
+          className="fixed inset-0 z-999 bg-black/50 backdrop-blur-sm"
           onClick={() => setIsOpen(false)}
           aria-hidden="true"
         />
