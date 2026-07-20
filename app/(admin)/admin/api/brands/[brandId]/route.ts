@@ -171,6 +171,8 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
       revalidatePath('/');
       revalidatePath('/sbaudience');
       revalidatePath('/sbaudience/contact');
+      revalidatePath('/sbautomotive');
+      revalidatePath('/sbautomotive/contact');
 
     }
     else{
@@ -226,6 +228,8 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
       revalidatePath('/');
       revalidatePath('/sbaudience');
       revalidatePath('/sbaudience/contact');
+      revalidatePath('/sbautomotive');
+      revalidatePath('/sbautomotive/contact');
 
     }
 

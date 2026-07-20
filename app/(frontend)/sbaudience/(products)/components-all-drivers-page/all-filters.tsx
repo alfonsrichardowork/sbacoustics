@@ -206,7 +206,7 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({
                     <div className="p-4 overflow-auto max-h-[calc(100dvh-12rem)] bg-foreground/70 scrollbar-thin scrollbar-thumb-background/30 scrollbar-track-zinc-700 rounded-b-md">
                         {checkbox.map((valueCheckbox, index) =>
                         valueCheckbox.value.length > 1 && (
-                            <div key={index} className="grid gap-2 w-full max-w-80 pt-2">
+                            <div key={index} className="grid gap-2 w-full pt-2">
                             <div className="text-center font-bold text-sm text-background">{valueCheckbox.name}</div>
                             {valueCheckbox.value.map((choicesVal, indexChoices) => (
                              <div key={indexChoices} className="flex items-center">
@@ -236,7 +236,7 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({
                         )}
                         {sliderValue.map((sliderValue1, index)=> 
                             sliderValue1.value.length > 1 &&
-                            <div key={index} className="grid gap-2 w-full max-w-80 pt-2">
+                            <div key={index} className="grid gap-2 w-full pt-2">
                                 <div className="text-center font-bold text-sm text-background">
                                     {sliderValue1.name}
                                 </div>

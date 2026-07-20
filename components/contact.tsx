@@ -37,8 +37,8 @@ type Props = {
 };
 
 export default function Contact({ oneBrand }: Props) {
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
+  // const [success, setSuccess] = useState(false);
+  // const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isLoadingLoader, setIsLoadingLoader] = useState(true);
   const [mounted, setMounted] = useState(false)
@@ -60,62 +60,90 @@ export default function Contact({ oneBrand }: Props) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
-    setSuccess(false);
-    setError(false);
+    // setSuccess(false);
+    // setError(false);
 
     try {
-      if (!executeRecaptcha) {
-        throw new Error("reCAPTCHA not available");
-      }
+  if (!executeRecaptcha) {
+    throw new Error("reCAPTCHA not available");
+  }
 
-      const gRecaptchaToken = await executeRecaptcha('contactFormSubmit');
+  const gRecaptchaToken = await executeRecaptcha("contactFormSubmit");
 
-      const recaptchaResponse = await axios.post("/api/recaptcha", { gRecaptchaToken });
+  const recaptchaResponse = await axios.post("/api/recaptcha", {
+    gRecaptchaToken,
+  });
 
-      if (recaptchaResponse.data.success) {
-        const response = await fetch('/api/email', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(values),
-        });
+  if (!recaptchaResponse.data.success) {
+    throw new Error(
+      recaptchaResponse.data.error ||
+      recaptchaResponse.data.message ||
+      "reCAPTCHA verification failed"
+    );
+  }
 
-        if (response.ok) {
-          setSuccess(true);
-          form.reset();
-        } else {
-          throw new Error('Message failed to send');
+  const response = await fetch("/api/email", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(values),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Message failed to send");
+  }
+
+  form.reset();
+
+  toast({
+    variant: "default",
+    title: "Message Sent Successfully!",
+    description: "Thank you for reaching out. We will get back to you.",
+    className: "bg-green-400 border-none",
+  });
+    } catch (err) {
+        let message = "An unexpected error occurred.";
+
+        if (axios.isAxiosError(err)) {
+          message =
+            err.response?.data?.error ||
+            err.response?.data?.message ||
+            err.message;
+        } else if (err instanceof Error) {
+          message = err.message;
         }
-      } else {
-        throw new Error('reCAPTCHA verification failed');
-      }
-    } catch (error) {
-      setError(true);
-      // toast.error("Failed to send email. Please try again.");
+
+        toast({
+          variant: "destructive",
+          title: "Message failed to send!",
+          description: message,
+        });
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if(success || error) {
-      if (success) {
-        toast({
-          variant: "default",
-          title: "Message Sent Successfully!",
-          description: "Thank you for reaching out. We will get back to you.",
-          className: "bg-green-400 border-none"
-        })
-      } else if (error) {
-        toast({
-          variant: "destructive",
-          title: "Message failed to send!",
-          description: "Please try again or contact us directly at info@sbacoustics.com or +6231 748 00 11.",
-        })
-      }
-    }
-    setSuccess(false)
-    setError(false)
-  }, [success, error, toast])
+  // useEffect(() => {
+  //   if(success || error) {
+  //     if (success) {
+  //       toast({
+  //         variant: "default",
+  //         title: "Message Sent Successfully!",
+  //         description: "Thank you for reaching out. We will get back to you.",
+  //         className: "bg-green-400 border-none"
+  //       })
+  //     } else if (error) {
+  //       toast({
+  //         variant: "destructive",
+  //         title: "Message failed to send!",
+  //         description: "Please try again or contact us directly at info@sbacoustics.com or +6231 748 00 11.",
+  //       })
+  //     }
+  //   }
+  //   setSuccess(false)
+  //   setError(false)
+  // }, [success, error, toast])
 
   useEffect(() => {
     setMounted(true)

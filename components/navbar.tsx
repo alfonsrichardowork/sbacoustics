@@ -24,7 +24,11 @@ import path from 'node:path';
 const styledDropdown = "text-sm px-1 py-2 text-foreground"
 
 
-function Navbar() {
+function Navbar({
+  unsupported
+}: {
+  unsupported: boolean;
+}) {
   const [driverMenu, setDriversMenu] = useState<NavbarComponents[]>(EmptyMenu)
   const [driversubMenu, setDriversSubMenu] = useState<NavbarComponents[]>(EmptyMenu)
   const [driversubsubMenu, setDriversSubSubMenu] = useState<NavbarComponents[]>(EmptyMenu)
@@ -932,9 +936,9 @@ useEffect(() => {
             <div className="relative overflow-hidden flex items-center justify-center h-full max-w-[150px]">
               <Image
                 src={pathname.includes('sbaudience') ? 
-                    '/images/sbaudience/logo_sbaudience.webp' : pathname.includes('sbautomotive') ? '/images/sbautomotive/logo_sbautomotive_white.webp' : '/images/sbacoustics/logo_sbacoustics_black_clean.webp'}
+                    '/images/sbaudience/logo_sbaudience.webp' : pathname.includes('sbautomotive') ? '/images/sbautomotive/logo_sbautomotive_black.webp' : '/images/sbacoustics/logo_sbacoustics_black_clean.webp'}
                 className="cursor-pointer max-w-[150px] h-8 z-101 object-contain"
-                alt={pathname.includes('sbaudience') ? "Logo of SB Audience" : pathname.includes('sbautomotive') ? "Logo of SB Automotive" : "Logo of SB Acoustics"}
+                alt={pathname.includes('sbaudience') ? "SB Audience Logo" : pathname.includes('sbautomotive') ? "SB Automotive Logo" : "SB Acoustics Logo"}
                 width={200}
                 height={50}
                 priority
@@ -988,7 +992,7 @@ useEffect(() => {
                 </Link>
 
                 <NavigationMenuContent
-                  className={`relative z-50 ${pathname.includes('sbaudience') ? 'bg-foreground' : 'bg-background'}`} // Lower z-index
+                  className={`relative z-40 ${pathname.includes('sbaudience') ? 'bg-foreground' : 'bg-background'}`} // Lower z-index
                   onMouseLeave={() => setOpenedContentForBg(false)}
                   onMouseEnter={() => setOpenedContentForBg(true)}
                 >
@@ -1261,6 +1265,8 @@ useEffect(() => {
                 </NavigationMenuItem>
               }
 
+
+              {!pathname.includes('sbautomotive') &&
               <NavigationMenuItem>
                   <NavigationMenuLink href={getHref(pathname, 'new-products')}>
                     <div className="p-0 relative z-101">
@@ -1353,7 +1359,7 @@ useEffect(() => {
                     </div>
                   </NavigationMenuContent>
               </NavigationMenuItem>
-
+              }
               {pathname.includes('sbaudience') &&
               <NavigationMenuItem>
                   <NavigationMenuLink href={getHref(pathname, 'application')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
@@ -1364,7 +1370,7 @@ useEffect(() => {
               </NavigationMenuItem>
               }
 
-              {!pathname.includes('sbaudience') &&
+              {(!pathname.includes('sbaudience') && !pathname.includes('sbautomotive')) &&
               <NavigationMenuItem>
                   <NavigationMenuLink href={getHref(pathname, 'technical')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
                     <div className="p-0 relative z-101">
@@ -1374,17 +1380,18 @@ useEffect(() => {
               </NavigationMenuItem>
               }
 
+              {!pathname.includes('sbautomotive') &&
+                <NavigationMenuItem>
+                  {/* <Link href="/distributors" passHref> */}
+                    <NavigationMenuLink href={getHref(pathname, 'distributors')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                      <div className="p-0 relative z-101">
+                        Distributors
+                      </div>
+                    </NavigationMenuLink>
+                </NavigationMenuItem>
+              }
 
-              <NavigationMenuItem>
-                {/* <Link href="/distributors" passHref> */}
-                  <NavigationMenuLink href={getHref(pathname, 'distributors')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
-                    <div className="p-0 relative z-101">
-                      Distributors
-                    </div>
-                  </NavigationMenuLink>
-              </NavigationMenuItem>
-
-
+              {!pathname.includes('sbautomotive') &&
               <NavigationMenuItem>
                 {/* <Link href="/contact" passHref> */}
                   <NavigationMenuLink href={getHref(pathname, 'contact')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
@@ -1394,6 +1401,7 @@ useEffect(() => {
                   </NavigationMenuLink>
                 {/* </Link> */}
               </NavigationMenuItem>
+              }
 
               {pathname.includes('sbautomotive') &&
                 <NavigationMenuItem>
@@ -1690,7 +1698,7 @@ useEffect(() => {
 
     
       <div className={`${height > 600 ? 'fixed' : 'absolute'} 
-        ${scrolled ? '-top-8' : 'top-0'} transition-all duration-300 ease-in-out left-0 z-35 w-screen flex items-start justify-left`}>
+        ${scrolled ? '-top-8' : 'top-0'} transition-all duration-300 ease-in-out left-0 z-50 w-screen flex items-start justify-left`}>
         <div className={`w-screen xl:px-16 lg:px-12 px-8 ${pathname.includes('sbaudience') ? 'bg-black' : 'bg-white'} h-full gap-8 flex p-1.5 border-b`}>
           {pathname.includes('sbaudience') ? 
             <Link href={'/'}>
@@ -1708,6 +1716,40 @@ useEffect(() => {
                 </div>
               </div>
             </Link>
+            :
+            pathname.includes('sbautomotive') ? 
+            <>
+              <Link href={'/'}>
+                <div className='group cursor-pointer transition-transform duration-300 hover:scale-105'>
+                  <div className='flex flex-col gap-1'>
+                    <div className="h-5">
+                      <Image
+                        src={'/images/sbacoustics/logo_sbacoustics_black_clean.webp'}
+                        alt='SB Acoustics Logo'
+                        width={150}
+                        height={40}
+                        className="h-full w-auto"
+                      />
+                      </div>
+                  </div>
+                </div>
+              </Link>
+              <Link href={'/sbaudience'}>
+                <div className='group cursor-pointer transition-transform duration-300 hover:scale-105'>
+                  <div className='flex flex-col gap-1'>
+                    <div className="h-5">
+                      <Image
+                        src={'/images/sbaudience/logo_sbaudience_black.webp'}
+                        alt='SB Audience Logo'
+                        width={150}
+                        height={40}
+                        className="h-full w-auto"
+                      />
+                      </div>
+                  </div>
+                </div>
+              </Link>
+            </>
             :
             <Link href={'/sbaudience'}>
               <div className='group cursor-pointer transition-transform duration-300 hover:scale-105'>

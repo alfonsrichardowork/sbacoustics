@@ -25,13 +25,33 @@ export async function POST(request: Request) {
         return NextResponse.json({ success: false })
     }
 
-    if (res && res.data?.success && res.data?.score > 0.5) {
+    //DEVELOPMENT ONLY
+    if (res && res.data?.success && res.data?.score > 0.05) {
 
         return NextResponse.json({
             success: true,
             score: res.data.score,
         });
     } else {
-        return NextResponse.json({ success: false });
+        // return NextResponse.json(
+        //     {
+        //         success: false,
+        //         error:
+        //         res.data?.["error-codes"]?.join(", ") ||
+        //         `Low reCAPTCHA score (${res.data?.score ?? "unknown"})`,
+        //         google: res.data,
+        //     },
+        //     { status: 400 }
+        // );
+        return NextResponse.json(
+            {
+                success: false,
+                error: `${
+                res.data?.["error-codes"]?.join(", ") ||
+                `Low reCAPTCHA score (${res.data?.score ?? "unknown"})`
+                } | success=${res.data?.success}, action=${res.data?.action ?? "unknown"}, hostname=${res.data?.hostname ?? "unknown"}`,
+            },
+            { status: 400 }
+        );
     }
 }

@@ -108,6 +108,7 @@
     "tailwindcss": "^4.1.11",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.8.3",
+    "ua-parser-js": "^2.0.10",
     "vaul": "^1.1.1",
     "yet-another-react-lightbox": "^3.21.7",
     "zod": "^3.21.4",

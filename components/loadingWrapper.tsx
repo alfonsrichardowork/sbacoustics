@@ -1,24 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { LoadingScreen } from './loadingScreen';
 
-export default function LoadingWrapper({ 
-  children 
-}: { 
-  children: React.ReactNode 
+export default function LoadingWrapper({
+  children,
+  unsupported
+}: {
+  children: React.ReactNode;
+  unsupported: boolean;
 }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Brief delay for smooth visual transition
     const timer = setTimeout(() => setIsLoading(false), 0);
+
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <>
-      <LoadingScreen isLoading={isLoading} />
+      {!unsupported && <LoadingScreen isLoading={isLoading} />}
       {children}
     </>
   );

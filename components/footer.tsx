@@ -49,7 +49,7 @@ export default function Footer() {
                   <Link href={pathname.includes('sbaudience') ? '/sbaudience' : pathname.includes('sbautomotive') ? '/sbautomotive' : '/'}>
                     <LazyImageClickable
                       src={pathname.includes('sbaudience') ? '/images/sbaudience/logo_sbaudience.webp' : pathname.includes('sbautomotive') ? '/images/sbautomotive/logo_sbautomotive_white.webp' : '/images/sbacoustics/logo_sbacoustics_white_clean.webp'}
-                      alt={pathname.includes('sbaudience') ? "Logo of SB Audience" : pathname.includes('sbautomotive') ? "Logo of SB Automotive" : "Logo of SB Acoustics"}
+                      alt={pathname.includes('sbaudience') ? "SB Audience Logo" : pathname.includes('sbautomotive') ? "SB Automotive Logo" : "SB Acoustics Logo"}
                       width={500}
                       height={500}
                     />
@@ -63,7 +63,7 @@ export default function Footer() {
                     <Link href={'/'}>
                       <LazyImageClickable
                         src={'/images/sbacoustics/logo_sbacoustics_white_clean.webp'}
-                        alt={"Logo of SB Acoustics"}
+                        alt={"SB Acoustics Logo"}
                         width={500}
                         height={500}
                       />
@@ -73,7 +73,7 @@ export default function Footer() {
                     <Link href={'/sbautomotive'}>
                       <LazyImageClickable
                         src={'/images/sbautomotive/logo_sbautomotive_white.webp'}
-                        alt={"Logo of SB Automotive"}
+                        alt={"SB Automotive Logo"}
                         width={500}
                         height={500}
                       />
@@ -81,13 +81,36 @@ export default function Footer() {
                   </div> */}
                 </>
                 :
-                
+                pathname.includes('sbautomotive') ?
+                <>
+                  <div className="w-full pt-2 max-w-[100px] h-auto rounded-lg shadow-lg transition-transform hover:scale-105">
+                    <Link href={'/'}>
+                      <LazyImageClickable
+                        src={'/images/sbacoustics/logo_sbacoustics_white_clean.webp'}
+                        alt={"SB Acoustics Logo"}
+                        width={500}
+                        height={500}
+                      />
+                    </Link>
+                  </div>
+                  <div className="w-full pt-2 max-w-[100px] h-auto rounded-lg shadow-lg transition-transform hover:scale-105">
+                    <Link href={'/sbaudience'}>
+                      <LazyImageClickable
+                        src={'/images/sbaudience/logo_sbaudience.webp'}
+                        alt={"SB Audience Logo"}
+                        width={500}
+                        height={500}
+                      />
+                    </Link>
+                  </div>
+                </>
+                :
                 <>
                   <div className="w-full pt-2 max-w-[100px] h-auto rounded-lg shadow-lg transition-transform hover:scale-105">
                     <Link href={'/sbaudience'}>
                       <LazyImageClickable
                         src={'/images/sbaudience/logo_sbaudience.webp'}
-                        alt={"Logo of SB Audience"}
+                        alt={"SB Audience Logo"}
                         width={500}
                         height={500}
                       />
@@ -97,7 +120,7 @@ export default function Footer() {
                     <Link href={'/sbautomotive'}>
                       <LazyImageClickable
                         src={'/images/sbautomotive/logo_sbautomotive_white.webp'}
-                        alt={"Logo of SB Automotive"}
+                        alt={"SB Automotive Logo"}
                         width={500}
                         height={500}
                       />
@@ -114,7 +137,7 @@ export default function Footer() {
                 <Link href={'https://sinarbajaelectric.com/'} target='_blank'>
                   <LazyImageClickable
                     src={'/images/sbacoustics/logo SBE-white.webp'}
-                    alt={"Sinar Baja Electric"}
+                    alt={"Sinar Baja Electric Logo"}
                     width={500}
                     height={500}
                   />

@@ -23,7 +23,7 @@ export const LazyImageClickableSBAudience = ({ src, alt, width, height, classnam
         alt={alt}
         width={width}
         height={height}
-        className={`${classname} ${clsx("transition-transform duration-300 hover:scale-110 ", { "opacity-0": isLoading })}`} // Fade in effect
+        className={`${classname} ${clsx("transition-transform duration-300 2xl:hover:scale-105 hover:scale-110 ", { "opacity-0": isLoading })}`} // Fade in effect
         onLoad={() => setIsLoading(false)}
         priority
         data-testid={testid}

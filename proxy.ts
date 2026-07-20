@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, userAgent } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getSession } from './lib/actions';
 
@@ -14,15 +14,30 @@ function isSuperAdminOnlyRoute(url: string): boolean {
 
 export async function proxy(req: NextRequest) {
   const url = req.nextUrl.pathname;
+
+  const ua = userAgent(req);
+
+  const requestHeaders = new Headers(req.headers);
+
+  requestHeaders.set('x-os-name', ua.os.name ?? '');
+  requestHeaders.set('x-os-version', ua.os.version ?? '');
   
   if(!isAdminRoute(url)){
-    return NextResponse.next()
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   }
 
   const session = await getSession();
   if(url === '/admin/sign-in' || url === '/admin/api/user/login'){
     if(!session.isLoggedIn){
-      return NextResponse.next()
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
     }
     else{
       return NextResponse.redirect(new URL('/admin/', req.url));
@@ -35,14 +50,22 @@ export async function proxy(req: NextRequest) {
 
   if(isSuperAdminOnlyRoute(url) ){
     if(session.isAdmin){
-      return NextResponse.next();
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
     }
     else{
       return NextResponse.redirect(new URL('/admin/', req.url));
     }
   }
   
-  return NextResponse.next();
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 

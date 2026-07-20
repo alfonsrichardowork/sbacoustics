@@ -89,9 +89,15 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
                             {item.featuredDesc}
                           </div>
                           <div className="items-start pb-5">
-                            <Button asChild size={"sm"} data-testid="featured-products-swiper-desktop-button">
-                              <Link href={brand === 'sbaudience' ? `/sbaudience/products/${item.slug}`: `/products/${item.slug}`}>Product Page</Link>
-                            </Button>
+                            {pathname.includes('sbautomotive') ? 
+                              <Button size="sm" disabled>
+                                Product Page  
+                              </Button> 
+                            :
+                              <Button asChild size={"sm"} data-testid="featured-products-swiper-desktop-button">
+                                <Link href={brand === 'sbaudience' ? `/sbaudience/products/${item.slug}`: `/products/${item.slug}`}>Product Page</Link>
+                              </Button>
+                            }
                           </div>
                         </div>
                       </div>
@@ -168,9 +174,15 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
                             {item.featuredDesc}
                           </div>
                           <div className="items-start pb-5">
-                            <Button asChild size={"sm"} data-testid="featured-products-swiper-mobile-button">
-                              <Link href={brand === 'sbaudience' ? `/sbaudience/products/${item.slug}`: `/products/${item.slug}`}>Product Page</Link>
-                            </Button>
+                            {pathname.includes('sbautomotive') ? 
+                              <Button size="sm" disabled>
+                                Product Page  
+                              </Button> 
+                            :
+                              <Button asChild size={"sm"} data-testid="featured-products-swiper-mobile-button">
+                                <Link href={brand === 'sbaudience' ? `/sbaudience/products/${item.slug}`: `/products/${item.slug}`}>Product Page</Link>
+                              </Button>
+                            }
                           </div>
                         </div>
                       </div>

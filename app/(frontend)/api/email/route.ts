@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
   //   },
   // ]);
 
+    //DEVELOPMENT ONLY
    const { data, error } = await resend.emails.send(
     // // Email to user
     // {
@@ -41,28 +42,25 @@ export async function POST(request: NextRequest) {
     {
       from: `${website} <${toNoReplyEmail(fromemail)}>`,
       to: [
-        `${process.env.MY_EMAIL}`, 
-        // "alfonskerja@gmail.com"
+        // `${process.env.MY_EMAIL}`, 
+        "alfonskerja@gmail.com",
+        // "it.04@sinarbajaelectric.com",
       ],
       subject: subject,
       react: EmailTemplate({ name, email, country, subject, message, website }),
     },
   );
 
-  const sendMailPromise = () =>
-    new Promise<string>((resolve, reject) => {
-        if (!error) {
-          resolve('Email sent');
-        } else {
-          reject(error.message);
-        }
-    });
-
-  try {
-    await sendMailPromise();
-    return NextResponse.json({ message: 'Email sent' });
-  } catch (err) {
-    return NextResponse.json({ error: err }, { status: 500 });
+  if (error) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
   }
+
+  return NextResponse.json({
+    message: "Email sent",
+    data,
+  });
 }
 

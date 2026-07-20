@@ -6,12 +6,12 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       template: '%s | SB Automotive',
-      default: 'SB Automotive | Official SB Automotive Website',
+      default: 'SB Automotive | Beyond Sound',
     },
     description: 'Check out the newest products from the SB Automotive range!',
     keywords: ["SB Automotive", "SB Automotive Official Website", "Welcome to SB Automotive"],
     openGraph: {
-      title: 'SB Automotive | Official SB Automotive Website',
+      title: 'SB Automotive | Beyond Sound',
       description: 'Check out the newest products from the SB Automotive range!',
       url: `${baseUrl}/sbautomotive`,
       siteName: 'SB Automotive',
@@ -34,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'SB Automotive | Official SB Automotive Website',
+      title: 'SB Automotive | Beyond Sound',
       description: 'Check out the newest products from the SB Automotive range!',
       images: [
         {

@@ -60,7 +60,7 @@ export default async function AllApplicationJsonLd() {
             <div key={i}>
             <Link
                 href={`/sbaudience/application/${item.slug}`} 
-                className=" group cursor-pointer space-y-4 block"
+                className=" group cursor-pointer 2xl:space-y-8 xl:space-y-6 space-y-4 block"
             >
                 <div className="relative">
                 <LazyImageClickableSBAudience

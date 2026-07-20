@@ -290,6 +290,19 @@ export default async function SingleProductSBAcoustics(props: Props) {
         }
         }
     }
+
+    product.productsKits.sort((a, b) => {
+        // Extract the leading number from the name
+        const numA = parseInt(a.productUsedInKits.name.match(/^\d+/)?.[0] || "100", 10);
+        const numB = parseInt(b.productUsedInKits.name.match(/^\d+/)?.[0] || "100", 10);
+    
+        if (numA !== numB) {
+        return numA - numB; // Sort numerically first
+        }
+    
+        return a.productUsedInKits.name.localeCompare(b.productUsedInKits.name); // Sort alphabetically if numbers are the same
+    });
+
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Product",

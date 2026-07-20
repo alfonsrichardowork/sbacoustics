@@ -31,7 +31,7 @@ export function LoadingScreen({ isLoading, onLoadingComplete }: LoadingScreenPro
           initial={{ y: 0, opacity: 1 }}
           exit={{ y: '-100%', opacity: 0 }}
           transition={{ duration: 0.9, ease: 'easeInOut' }}
-          className="fixed inset-0 bg-black flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black flex items-center justify-center z-102"
         >
           <div className="flex flex-col items-center gap-8">
             <motion.div
