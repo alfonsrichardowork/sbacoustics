@@ -133,7 +133,7 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
             </div>
 
             {/* Mobile View */}
-            <div className="lg:hidden block shrink">
+            <div className="lg:hidden block">
               <Swiper
                 autoplay={{
                   delay: 5000,
@@ -166,7 +166,8 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
                       />
 
                       <div className={`absolute inset-x-0 bottom-0 px-4 py-4 h-fit flex items-end bg-gradient-to-t from-black to-transparent`}>
-                        <div className="grid gap-0 grid-cols-1 w-fit">
+                        <div className="grid gap-0 grid-cols-1 w-fit"
+                        >
                           <h3 className="text-left font-bold text-2xl text-white pb-4" data-testid={`featured-products-swiper-mobile-title-${index + 1}`}>
                             {item.name}
                           </h3>
@@ -193,10 +194,10 @@ const SwiperCarousel: React.FC<PropType> = (props) => {
 
               {/* Pagination Dots - with safe area padding */}
               <div
-                className="absolute left-1/2 -translate-x-1/2 z-50 flex gap-2"
-                style={{
-                    bottom: "max(1rem, env(safe-area-inset-bottom))",
-                }}
+                className="absolute left-1/2 -translate-x-1/2 z-50 flex gap-2 bottom-4"
+                // style={{
+                //     bottom: "max(1rem, env(safe-area-inset-bottom))",
+                // }}
               >
                 {slides.map((_, index) => (
                   <button
