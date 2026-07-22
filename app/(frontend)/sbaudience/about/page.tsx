@@ -3,15 +3,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import SwiperCarouselAboutUs from "@/components/single-product-page/swipercarouselaboutus";
 
-export default function AboutUsPage() {
+export default function AboutUsSBAudience() {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": `About Us | SB Acoustics`,
-    "url": `${baseUrl}/aboutus`,
-    "logo": `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`,
+    "name": `About Us | SB Audience`,
+    "url": `${baseUrl}/sbaudience/about`,
+    "logo": `${baseUrl}/images/sbaudience/logo_sbaudience.webp`,
   };
   return (
     <>
@@ -19,23 +19,24 @@ export default function AboutUsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      
       <div className="bg-white">
-        <h1 className="sr-only">About Us | SB Acoustics</h1>
+        <h1 className="sr-only">About Us | SB Audience</h1>
       {/* Hero Section */}
 
-      {/* SB Acoustics Section */}
+      {/* SB Audience Section */}
       <section className="md:py-20 py-10 bg-white">
         <div>
           <div className="container mx-auto max-w-6xl">
             <div className="grid md:grid-cols-2 grid-cols-1 md:gap-16 gap-8 items-center">
               <div className="md:order-1 order-2">
                 <div className="md:flex hidden items-center mb-6">
-                  <h2 className="text-3xl md:text-4xl font-bold text-black">SB Acoustics</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold text-black">SB Audience</h2>
                 </div>
                 <div className="space-y-6 text-slate-600">
                   <h3>
                     Built from the foundation of a company with decades of manufacturing experience and partnered with
-                    Danish audio design engineers touted for their revolutionary designs. SB Acoustics was formed to bring
+                    Danish audio design engineers touted for their revolutionary designs. SB Audience was formed to bring
                     an alternative to the high-end transducer market.
                   </h3>
                   <h3>
@@ -49,28 +50,28 @@ export default function AboutUsPage() {
               </div>
               <div className="relative md:order-2 order-1">
                 <div className="md:hidden flex items-start mb-6">
-                  <div className="text-3xl md:text-4xl font-bold text-black">SB Acoustics</div>
+                  <div className="text-3xl md:text-4xl font-bold text-black">SB Audience</div>
                 </div>
                 <SwiperCarouselAboutUs images={[
                   {
                     src: "/images/sbacoustics/aboutus/SB_Acoustics_1.jpg",
-                    alt: "SB Acoustics About Us 1"
+                    alt: "SB Audience About Us 1"
                   },
                   {
                     src:"/images/sbacoustics/aboutus/SB_Acoustics_2.jpg",
-                    alt:"SB Acoustics About Us 2"
+                    alt:"SB Audience About Us 2"
                   },
                   {
                     src:"/images/sbacoustics/aboutus/SB_Acoustics_3.jpg",
-                    alt:"SB Acoustics About Us 3"
+                    alt:"SB Audience About Us 3"
                   },
                   {
                     src:"/images/sbacoustics/aboutus/SB_Acoustics_4.jpg",
-                    alt:"SB Acoustics About Us 4"
+                    alt:"SB Audience About Us 4"
                   },
                   {
                     src:"/images/sbacoustics/aboutus/SB_Acoustics_5.jpg",
-                    alt:"SB Acoustics About Us 5"
+                    alt:"SB Audience About Us 5"
                   }
                 ]} />
               </div>
@@ -118,7 +119,7 @@ export default function AboutUsPage() {
                 <div className="space-y-6 text-slate-600">
                   <h3>
                     Established in 1981 and extensively expanded ever since to become the largest loudspeaker manufacturer
-                    in Indonesia and is the company behind SB Acoustics. With a population of more than 250 million
+                    in Indonesia and is the company behind SB Audience. With a population of more than 250 million
                     people, Indonesia is a significant contributor to global manufacturing.
                   </h3>
                   <h3>
@@ -166,7 +167,7 @@ export default function AboutUsPage() {
               <Card className="border-none shadow-none">
                 <img
                   src="/images/sbacoustics/aboutus/Acoustics_excellence.jpg"
-                  alt="SB Acoustics About Us Mission 1"
+                  alt="SB Audience About Us Mission 1"
                   width={500}
                   height={400}
                   className="w-full h-fit object-cover"
@@ -183,7 +184,7 @@ export default function AboutUsPage() {
               <Card className="border-none shadow-none">
                 <img
                   src="/images/sbacoustics/aboutus/Innovation.jpg"
-                  alt="SB Acoustics About Us Mission 2"
+                  alt="SB Audience About Us Mission 2"
                   width={500}
                   height={400}
                   className="w-full h-fit object-cover"
@@ -200,7 +201,7 @@ export default function AboutUsPage() {
               <Card className="border-none shadow-none">
                 <img
                   src="/images/sbacoustics/aboutus/global_reach.jpg"
-                  alt="SB Acoustics About Us Mission 3"
+                  alt="SB Audience About Us Mission 3"
                   width={500}
                   height={400}
                   className="w-full h-fit object-cover"
@@ -219,39 +220,6 @@ export default function AboutUsPage() {
         </div>
       </section>
 
-      {/*
-      <section className="md:py-20 py-10 bg-zinc-100">
-        <div
-          className={`transform transition-all duration-700 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-        >
-          <div className="container mx-auto max-w-4xl text-center">
-            <div className="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mx-auto mb-6">
-              <Volume2 className="w-8 h-8 text-white" />
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-black">Explore Our Audio Excellence</h2>
-            <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Discover how our Danish-Indonesian partnership creates transducers that set new standards in the high-end
-              audio market.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant={"default"} asChild>
-                <Link href={'/products'}>
-                  <h3>Explore Our Products</h3>
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                asChild
-              >
-                <Link href={'/contact'}>
-                  <h3>Contact</h3>
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section> */}
     </div>
     </>
   );

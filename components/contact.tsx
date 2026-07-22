@@ -20,6 +20,8 @@ import Link from 'next/link';
 import { brand } from '@prisma/client';
 import { Skeleton } from './ui/skeleton';
 import { Empty, EmptyContent, EmptyDescription, EmptyMedia, EmptyTitle } from './ui/empty';
+import { getHref } from '@/app/(frontend)/utils/getHref';
+import { usePathname } from 'next/navigation';
 // import { sendEmail } from './testresend';
 
 const formSchema = z.object({
@@ -44,7 +46,7 @@ export default function Contact({ oneBrand }: Props) {
   const [mounted, setMounted] = useState(false)
   const { toast } = useToast()
   const { executeRecaptcha } = useGoogleReCaptcha();
-
+  const pathname = usePathname()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -204,7 +206,7 @@ export default function Contact({ oneBrand }: Props) {
           }
             <div className='flex justify-center pt-4'>
               <Button asChild>
-                <Link href="/aboutus">
+                <Link href={getHref(pathname, 'about')}>
                   Find Out More About Us!
                 </Link>
               </Button>

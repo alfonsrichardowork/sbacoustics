@@ -949,6 +949,24 @@ useEffect(() => {
         <div className="w-1/2 hidden xl:flex justify-center relative z-100">
           <NavigationMenu>
             <NavigationMenuList className="flex items-center">
+              {pathname.includes('sbautomotive') &&
+                <>
+                  <NavigationMenuItem>
+                    <NavigationMenuLink href={getHref(pathname, 'about')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                      <div className="p-0 relative z-101">
+                        About Us
+                      </div>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <NavigationMenuLink href={getHref(pathname, 'technology')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                      <div className="p-0 relative z-101">
+                        Technology
+                      </div>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                </>
+              }
               <NavigationMenuItem>
                 <Link href={getHref(pathname, 'drivers')} passHref>
                   <div className="p-0 relative z-101">
@@ -986,7 +1004,7 @@ useEffect(() => {
                         setOpenedContentForBg(true);
                       }}
                     >
-                      Drivers
+                      {pathname.includes('sbautomotive') ? 'Products' : 'Drivers'}
                     </NavigationMenuTrigger>
                   </div>
                 </Link>
@@ -1003,10 +1021,6 @@ useEffect(() => {
                     <div className={`overflow-y-auto overflow-x-hidden border-r-2 z-40 ${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'}`}>
                       <ul className="gap-1 p-1">
 
-
-
-                        
-                        
                         {firstMenu.map((driver, index) => (
                           <NavigationMenuLink href={getHref(pathname, driver.href)} key={index}>
                             <div
@@ -1404,15 +1418,29 @@ useEffect(() => {
               }
 
               {pathname.includes('sbautomotive') &&
-                <NavigationMenuItem>
-                  {/* <Link href="/contact" passHref> */}
-                    <NavigationMenuLink href={getHref(pathname, 'certificate')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                <>
+                  <NavigationMenuItem>
+                    <NavigationMenuLink href={getHref(pathname, 'blog')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
                       <div className="p-0 relative z-101">
-                        Certificate
+                        Blog
                       </div>
                     </NavigationMenuLink>
-                  {/* </Link> */}
-                </NavigationMenuItem>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <NavigationMenuLink href={getHref(pathname, 'projects')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                      <div className="p-0 relative z-101">
+                        Projects
+                      </div>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <NavigationMenuLink href={getHref(pathname, 'dealer')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                      <div className="p-0 relative z-101">
+                        Dealer
+                      </div>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                </>
               }
             </NavigationMenuList>
           </NavigationMenu>

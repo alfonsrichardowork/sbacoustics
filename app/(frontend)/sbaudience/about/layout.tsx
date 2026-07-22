@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: "About Us | SB Audience",
       description: "Learn more about SB Audience, our history, and our commitment to quality in speaker.",
-      url: `${baseUrl}/sbaudience/aboutus`,
+      url: `${baseUrl}/sbaudience/about`,
       siteName: "SB Audience",
       images: [
         // {
@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ],
     },
     alternates: {
-      canonical: `${baseUrl}/sbaudience/aboutus`,
+      canonical: `${baseUrl}/sbaudience/about`,
     },
   }
 }

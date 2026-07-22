@@ -195,7 +195,7 @@ export default async function LandingPageSBAutomotive() {
                       </div>
                       <div className="items-start pb-4">
                         {/* <Button size={"sm"} asChild>
-                          <Link href={'/aboutus'}>
+                          <Link href={'/about'}>
                             Learn More
                           </Link>
                         </Button> */}
@@ -227,7 +227,7 @@ export default async function LandingPageSBAutomotive() {
                       </div>
                       <div className="items-start pb-4">
                         {/* <Button size={"sm"} asChild>
-                          <Link href={'/aboutus'}>
+                          <Link href={'/about'}>
                             Learn More
                           </Link>
                         </Button> */}
@@ -449,7 +449,7 @@ export default async function LandingPageSBAutomotive() {
 //                       </div>
 //                       <div className="items-start pb-4">
 //                         {/* <Button size={"sm"} asChild>
-//                           <Link href={'/aboutus'}>
+//                           <Link href={'/about'}>
 //                             Learn More
 //                           </Link>
 //                         </Button> */}

@@ -114,7 +114,7 @@ export default async function LandingPageSBAudience() {
                     </div>
                     <div className="items-start pb-4">
                       <Button size={"sm"} asChild>
-                        <Link href={'/sbaudience/aboutus'}>
+                        <Link href={'/sbaudience/about'}>
                           Learn More
                         </Link>
                       </Button>

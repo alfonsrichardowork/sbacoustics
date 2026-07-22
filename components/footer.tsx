@@ -254,7 +254,7 @@ export default function Footer() {
             }
           </div>
           <div className="flex space-x-4 text-xs text-gray-400 w-1/3 md:justify-end justify-center  ">
-            <Link href={getHref(pathname, 'aboutus')} className="hover:text-white transition-colors">
+            <Link href={getHref(pathname, 'about')} className="hover:text-white transition-colors">
               About Us
             </Link>
           </div>

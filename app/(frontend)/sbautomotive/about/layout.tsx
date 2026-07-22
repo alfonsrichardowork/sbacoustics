@@ -3,18 +3,18 @@ import React from 'react'
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-  const logo_URL = `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`
+  const logo_URL = `${baseUrl}/images/sbautomotive/logo_sbautomotive_white.webp`
 
   return {
     title: "About Us",
-    description: "Learn more about SB Acoustics, our history, and our commitment to quality in speaker.",
-    applicationName: 'SB Acoustics',
-    keywords: ["SB Acoustics About Us", "Get to Know SB Acoustics", "SB Acoustics Company History", "SB Acoustics Quality Commitment"],
+    description: "Learn more about SB Automotive, our history, and our commitment to quality in speaker.",
+    applicationName: 'SB Automotive',
+    keywords: ["SB Automotive About Us", "Get to Know SB Automotive", "SB Automotive Company History", "SB Automotive Quality Commitment"],
     openGraph: {
-      title: "About Us | SB Acoustics",
-      description: "Learn more about SB Acoustics, our history, and our commitment to quality in speaker.",
-      url: `${baseUrl}/aboutus`,
-      siteName: "SB Acoustics",
+      title: "About Us | SB Automotive",
+      description: "Learn more about SB Automotive, our history, and our commitment to quality in speaker.",
+      url: `${baseUrl}/sbautomotive/about`,
+      siteName: "SB Automotive",
       images: [
         // {
         //   url: logo_URL,
@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: logo_URL,
           width: 800,
           height: 800,
-          alt: `SB Acoustics Logo`,
+          alt: `SB Automotive Logo`,
         },
       ],
       locale: 'id_ID',
@@ -34,19 +34,19 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: "About Us | SB Acoustics",
-      description: "Learn more about SB Acoustics, our history, and our commitment to quality in speaker.",
+      title: "About Us | SB Automotive",
+      description: "Learn more about SB Automotive, our history, and our commitment to quality in speaker.",
       images: [
         {
           url: logo_URL,
           width: 800,
           height: 800,
-          alt: `SB Acoustics Logo`,
+          alt: `SB Automotive Logo`,
         },
       ],
     },
     alternates: {
-      canonical: `${baseUrl}/aboutus`,
+      canonical: `${baseUrl}/sbautomotive/about`,
     },
   }
 }

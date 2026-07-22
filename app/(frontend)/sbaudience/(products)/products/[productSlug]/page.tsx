@@ -22,20 +22,20 @@ type Props = {
   params: Promise<{ productSlug?: string }>
 }
 
-// export async function generateStaticParams(){
-//   const products = await prismadb.product.findMany({
-//     where: {
-//       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-//       isArchived: false
-//     },
-//     select: {
-//       slug: true,
-//     },
-//   });
-//   return products.map((product: { slug: string }) => ({
-//     productSlug: product.slug
-//   }));
-// }
+export async function generateStaticParams(){
+  const products = await prismadb.product.findMany({
+    where: {
+      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+      isArchived: false
+    },
+    select: {
+      slug: true,
+    },
+  });
+  return products.map((product: { slug: string }) => ({
+    productSlug: product.slug
+  }));
+}
 
 export default async function SingleProductSBAudience(props: Props) {
     const { productSlug = '' } = await props.params;
