@@ -1,14 +1,8 @@
-
-import Image from "next/image";
 import Link from "next/link";
-import SwiperCarouselOneProduct from "@/components/single-product-page/swipercarouseloneproduct";
-import SwiperCarouselCoverandCatalogues from "@/components/single-product-page/swipercarouselcoverandcatalogues";
-//@ts-ignore
+
 import "@/app/css/styles.scss";
 import DOMPurify from 'isomorphic-dompurify'; 
  
-
-import SwiperCarouselSimilarProduct from "@/components/single-product-page/swipercarouselsimilarproduct";
 import SpecificationTable from "@/components/single-product-page/spec-table";
 import SwiperCarouselKitsFinishing from "@/components/single-product-page/swipercarouselkitsfinishing";
 import { Dot } from "lucide-react";
@@ -16,6 +10,10 @@ import { LightboxOneProduct } from "@/components/drawingOneProduct";
 import React from "react";
 import prismadb from "@/lib/prismadb";
 import { AllCategory, ChildSpecificationProp, SpecificationProp } from "@/app/(frontend)/types";
+import SwiperCarouselOneProductSkeleton from "@/components/single-product-page/swipercarouselcoverandcataloguesskeleton";
+import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
+import SwiperCarouselSimilarProductLoading from "@/components/single-product-page/swipercarouselsimilarproductloading";
+import SwiperCarouselOneProductLoading from "@/components/single-product-page/swipercarouseloneproductloading";
 
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-black p-0 py-1"
 const all_sub_title_style = "text-left font-bold xl:text-2xl lg:text-xl md:text-lg sm:text-md text-black"
@@ -332,7 +330,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                 <div className="md:flex md:w-1/2 justify-center md:h-1/2 block w-full h-full">
                     <div className="flex-col w-full md:flex hidden pr-10">
                         <div className="w-full h-full pb-4">
-                            <SwiperCarouselCoverandCatalogues name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues}/>
+                            <SwiperCarouselOneProductSkeleton name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues}/>
                         </div>
                         {product.drawing_img_url !== '' &&
                             <LightboxOneProduct name={product.name} url={product.drawing_img_url} type={"drawing"}/>
@@ -346,7 +344,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                         }             
                     </div>
                     <div className="w-full h-full md:hidden pb-4">
-                        <SwiperCarouselOneProduct name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>        
+                        <SwiperCarouselOneProductLoading name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>        
                     </div>
 
                     
@@ -444,10 +442,9 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                 {product.multipleDatasheetProduct.length===1 && product.multipleDatasheetProduct[0]?.url!=''?
                                     <div className="flex justify-start pt-8">
                                         <Link href={product.multipleDatasheetProduct[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-0-single-product-page`}>
-                                            <div className="pr-2">
-                                                {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                <Image src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
-                                            </div>
+                                            {/* <div className="pr-2"> */}
+                                                <LazyImageCustomNavbar src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                            {/* </div> */}
                                             <h3 className="pl-2">
                                                 {product.multipleDatasheetProduct[0]?.name}
                                             </h3>
@@ -459,10 +456,9 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                             value.url!=''&&
                                                 <div key={index} className={`${index !== 0 && 'pt-4'}`}>
                                                         <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-${index}-single-product-page`}> 
-                                                        <div className="pr-2">
-                                                        {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                        <Image src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
-                                                    </div>
+                                                        {/* <div className="pr-2"> */}
+                                                        <LazyImageCustomNavbar src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                                    {/* </div> */}
                                                     <h3 className="pl-2">
                                                         {product.multipleDatasheetProduct[index]?.name}
                                                     </h3>
@@ -482,10 +478,10 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                 product.multipleFRDZMAFiles.length===1 && product.multipleFRDZMAFiles[0]?.url!=''?
                                     <div className="flex justify-start pt-4">
                                         <a download href={product.multipleFRDZMAFiles[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-0-single-product-page`}>
-                                            <div className="pr-2">
+                                            {/* <div className="pr-2"> */}
                                                 {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                <Image src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
-                                            </div>
+                                                <LazyImageCustomNavbar src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                            {/* </div> */}
                                             <h3 className="pl-2">
                                                 {product.multipleFRDZMAFiles[0]?.name}
                                             </h3>
@@ -497,10 +493,10 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                             value.url!=''&&
                                                 <div key={index} className={`${index !== 0 && 'pt-4'}`}>
                                                         <a download href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-${index}-single-product-page`}> 
-                                                        <div className="pr-2">
+                                                        {/* <div className="pr-2"> */}
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                        <Image src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
-                                                    </div>
+                                                        <LazyImageCustomNavbar src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                                    {/* </div> */}
                                                     <h3 className="pl-2">
                                                         {product.multipleFRDZMAFiles[index]?.name}
                                                     </h3>
@@ -520,10 +516,10 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                 {product.multiple3DModels.length===1 && product.multiple3DModels[0]?.url!=''?
                                     <div className="flex justify-start pt-4">
                                         <a download href={product.multiple3DModels[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-0-single-product-page`}>
-                                            <div className="pr-2">
+                                            {/* <div className="pr-2"> */}
                                                 {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                <Image src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
-                                            </div>
+                                                <LazyImageCustomNavbar src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                            {/* </div> */}
                                             <h3 className="pl-2">
                                                 {product.multiple3DModels[0]?.name}
                                             </h3>
@@ -535,10 +531,10 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                             value.url!=''&&
                                                 <div key={index} className={`${index !== 0 && 'pt-4'}`}>
                                                         <a download href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-${index}-single-product-page`}> 
-                                                        <div className="pr-2">
+                                                        {/* <div className="pr-2"> */}
                                                         {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                        <Image src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
-                                                    </div>
+                                                        <LazyImageCustomNavbar src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                                    {/* </div> */}
                                                     <h3 className="pl-2">
                                                         {product.multiple3DModels[index]?.name}
                                                     </h3>
@@ -573,7 +569,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                         Similar Products
                     </h2>
                     <div className='border-2 rounded-lg p-4'>
-                        <SwiperCarouselSimilarProduct similar={product.similarProducts} brand={'sbacoustics'}/>
+                        <SwiperCarouselSimilarProductLoading similar={product.similarProducts} brand={'sbacoustics'}/>
                     </div>
                 </div>
             }

@@ -118,18 +118,13 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                       onMouseLeave={() => setHoverImage(false)}
                     >
                       <div className="relative flex items-center justify-center h-full w-full">
-                        {/* <div
-                          className={`text-foreground absolute top-0 right-0 transform transition-all duration-300 ease-in-out ${hoverImage ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'} z-20`}
-                        >
-                          <Eye size={25} />
-                        </div> */}
                         <div className='z-10 w-full h-fit'>
                         <LazyImageCustom 
                           src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
                           alt={name} 
                           width={500}
                           height={500}
-                          classname={`object-cover h-full w-fit transition-transform duration-300 z-10 ${hoverImage ? 'scale-110' : ''}`}
+                          classname={`object-contain h-full w-fit transition-transform duration-300 z-10 ${hoverImage ? 'scale-105' : ''}`}
                           lazy={false}
                           testid="cover-image-single-product-page"
                         />
@@ -139,37 +134,32 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                   </Card>
                 </div>
           </SwiperSlide>
-          )}
-          {multipleslides && sortedImages.map((item, index) => (
-            <SwiperSlide key={`${item.name} - ${index.toString()}`}>
-                <div className="h-full flex justify-center items-center cursor-zoom-in" onClick={() => openLightbox(index+1)}>
-                  <Card className="border-none h-full w-full flex items-center justify-center">
-                    <CardContent className="p-6 flex items-center justify-center w-full h-full bg-background"
-                      onMouseEnter={() => setHoverImage(true)}
-                      onMouseLeave={() => setHoverImage(false)}>
-                      <div className="relative flex items-center justify-center h-full w-full">
-                      {/* <div
-                          className={`text-foreground absolute top-0 right-0 transform transition-all duration-300 ease-in-out ${hoverImage ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'} z-20`}
-                        >
-                          <Eye size={25} />
-                        </div> */}
-                        <div className='z-10 w-full h-fit'>
-                          <LazyImageCustom 
-                            src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
-                            alt={item.name} 
-                            width={500}
-                            height={500}
-                            classname={`object-cover h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
-                            lazy={true}
-                            testid={`image-catalogues-${index}-single-product-page`}
-                          />
-                          </div>
+        )}
+        {multipleslides && sortedImages.map((item, index) => (
+          <SwiperSlide key={`${item.name} - ${index.toString()}`}>
+              <div className="h-full flex justify-center items-center cursor-zoom-in" onClick={() => openLightbox(index+1)}>
+                <Card className="border-none h-full w-full flex items-center justify-center">
+                  <CardContent className="p-6 flex items-center justify-center w-full h-full bg-background"
+                    onMouseEnter={() => setHoverImage(true)}
+                    onMouseLeave={() => setHoverImage(false)}>
+                    <div className="relative flex items-center justify-center h-full w-full">
+                      <div className='z-10 w-full h-fit'>
+                        <LazyImageCustom 
+                          src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
+                          alt={item.name} 
+                          width={500}
+                          height={500}
+                          classname={`object-cover h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
+                          lazy={true}
+                          testid={`image-catalogues-${index}-single-product-page`}
+                        />
                         </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-            </SwiperSlide>
-          ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
       </div>
       

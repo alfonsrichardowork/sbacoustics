@@ -20,6 +20,7 @@ import { LazyImageCustom } from './lazyImageCustom';
 import { useScrollDirection } from './hooks/use-scroll-direction';
 import SearchLightbox from './searchligthbox';
 import path from 'node:path';
+import { LazyImageCustomNavbar } from './lazyImageCustomNavbar';
 
 const styledDropdown = "text-sm px-1 py-2 text-foreground"
 
@@ -1107,7 +1108,16 @@ useEffect(() => {
                                   driversubMenuUrl != '' &&
                                       <NavigationMenuLink href={getHref(pathname, pictureSlugUrl)} className={`${pathname.includes("sbaudience") ? 'text-white' : ''}`}>
                                         <div className="relative overflow-hidden flex items-center justify-center h-full w-50" onMouseEnter={() => (setactivedriverhovered(nameForHoveredPicture))}>
-                                          <LazyImageCustom src={driversubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubMenuUrl}` : driversubMenuUrl} alt={activedriverhovered} classname='w-50 h-fit z-10' width={500} height={500} lazy/>
+                                          <LazyImageCustomNavbar 
+                                          src={driversubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubMenuUrl}` : driversubMenuUrl} 
+                                          alt={activedriverhovered}
+                                          classname="object-contain max-h-40 w-auto" 
+                                          width={500} 
+                                          height={500} 
+                                          lazy
+                                          containerheight='h-40'
+                                          containerwidth='w-40'
+                                          pathname={pathname}/>
                                         </div>
                                         <div className='flex justify-center items-center text-center h-full'>
                                           {pictureDesc}
@@ -1141,7 +1151,17 @@ useEffect(() => {
                                 driversubsubMenuUrl != '' &&
                                     <NavigationMenuLink href={getHref(pathname, pictureSlugUrl)} key={products.title} className={`${pathname.includes("sbaudience") ? 'text-white' : ''}`}>
                                       <div className="relative overflow-hidden flex items-center justify-center h-full w-50" onMouseEnter={() => (setactivedriverhovered(nameForHoveredPicture))}>
-                                        <LazyImageCustom key={products.title} src={driversubsubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubsubMenuUrl}` : driversubsubMenuUrl} alt={activedriverhovered} classname='w-50 h-fit z-10' width={500} height={500} lazy/>
+                                        <LazyImageCustomNavbar 
+                                          key={products.title}
+                                          src={driversubsubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubsubMenuUrl}` : driversubsubMenuUrl}
+                                          alt={activedriverhovered}
+                                          classname="object-contain max-h-40 w-auto" 
+                                          width={500} 
+                                          height={500} 
+                                          lazy
+                                          containerheight='h-40'
+                                          containerwidth='w-40'
+                                          pathname={pathname}/>
                                       </div>
                                       <div className='flex justify-center items-center text-center h-full'>
                                         {pictureDesc}
@@ -1164,8 +1184,16 @@ useEffect(() => {
                         {driversubsubsubMenuUrl != '' &&
                             <NavigationMenuLink href={getHref(pathname, pictureSlugUrl)} className={`${pathname.includes("sbaudience") ? 'text-white' : ''}`}>
                               <div className="relative overflow-hidden flex items-center justify-center h-full w-50" onMouseEnter={() => (setactivedriverhovered(nameForHoveredPicture))}>
-
-                                <LazyImageCustom src={driversubsubsubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubsubsubMenuUrl}` : driversubsubsubMenuUrl } alt={activedriverhovered} classname='w-50 h-fit z-10' width={500} height={500} lazy/>
+                                <LazyImageCustomNavbar 
+                                  src={driversubsubsubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubsubsubMenuUrl}` : driversubsubsubMenuUrl }
+                                  alt={activedriverhovered}
+                                  classname="object-contain max-h-40 w-auto" 
+                                  width={500} 
+                                  height={500} 
+                                  lazy
+                                  containerheight='h-40'
+                                  containerwidth='w-40'
+                                  pathname={pathname}/>
                                 </div>
                               <div className='flex justify-center items-center text-center h-full'>
                                 {pictureDesc}
@@ -1264,8 +1292,16 @@ useEffect(() => {
                             {driversubMenuUrl != '' &&
                                 <NavigationMenuLink href={getHref(pathname, pictureSlugUrl)}>
                                   <div className="relative overflow-hidden flex items-center justify-center h-full w-50" onMouseEnter={() => (setactivedriverhovered(nameForHoveredPicture))}>
-                                    
-                                    <LazyImageCustom src={driversubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubMenuUrl}` : driversubMenuUrl} alt={activedriverhovered} classname='w-50 h-fit z-10' width={500} height={500} lazy/>
+                                    <LazyImageCustomNavbar 
+                                      src={driversubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubMenuUrl}` : driversubMenuUrl}
+                                      alt={activedriverhovered}
+                                      classname="object-contain max-h-40 w-auto" 
+                                      width={500} 
+                                      height={500} 
+                                      lazy
+                                      containerheight='h-40'
+                                      containerwidth='w-40'
+                                      pathname={pathname}/>
                                   </div>
                                   <div className='flex justify-center items-center text-center h-full'>
                                     {pictureDesc}
@@ -1355,7 +1391,16 @@ useEffect(() => {
                           {driversubMenuUrl != '' &&   
                               <NavigationMenuLink href={getHref(pathname, pictureSlugUrl)} className={`${pathname.includes("sbaudience") ? 'text-white' : ''}`}>
                                 <div className="relative overflow-hidden flex items-center justify-center h-full w-50" onMouseEnter={() => (setactivedriverhovered(nameForHoveredPicture))}>
-                                  <LazyImageCustom src={driversubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubMenuUrl}` : driversubMenuUrl} alt={activedriverhovered} classname='w-50 h-fit z-10' width={500} height={500} lazy/>
+                                  <LazyImageCustomNavbar 
+                                    src={driversubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubMenuUrl}` : driversubMenuUrl}
+                                    alt={activedriverhovered}
+                                    classname="object-contain max-h-40 w-auto" 
+                                    width={500} 
+                                    height={500} 
+                                    lazy
+                                    containerheight='h-40'
+                                    containerwidth='w-40'
+                                    pathname={pathname}/>
                                 </div>
                                 <div className='flex justify-center items-center text-center h-full'>
                                   {pictureDesc}
@@ -1487,9 +1532,30 @@ useEffect(() => {
                             <AccordionItem key={menu.title} value={"item-".concat(indexdriver.toString())}>
                               {menu.parent===""? 
                                 <Link href={getHref(pathname, menu.href)} key={menu.title}>
-                                  <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                  <Image src={menu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${menu.url}` : menu.url} alt={menu.title} width={100} height={100} className='object-contain max-h-14 w-fit col-span-1'/>
-                                  {menu.newProd ? <div className="col-span-5">{menu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{menu.title}</div>}
+                                  <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 flex'>
+                                    <LazyImageCustomNavbar
+                                      src={menu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${menu.url}` : menu.url}
+                                      alt={menu.title}
+                                      width={100}
+                                      height={100}
+                                      classname="object-contain max-h-14 w-auto"
+                                      lazy
+                                      containerheight='h-14'
+                                      containerwidth='w-14'
+                                      pathname={pathname}
+                                    />
+                                    {menu.newProd ?
+                                      <div>
+                                        {menu.title.split(" / ")[0]} 
+                                        <div className="inline-flex text-primary pl-2">
+                                          NEW
+                                        </div>
+                                      </div> 
+                                    : 
+                                      <div>
+                                        {menu.title}
+                                      </div>
+                                    }
                                   </SheetClose>
                                 </Link>
                               :
@@ -1510,9 +1576,30 @@ useEffect(() => {
                                     <AccordionItem key={submenu.title} value={submenu.title}>
                                       {submenu.parent===""? 
                                         <Link key={submenu.title} href={getHref(pathname, submenu.href)}>
-                                          <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                            <Image src={submenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${submenu.url}` : submenu.url} alt={submenu.title} width={100} height={100} className='object-contain max-h-14 w-fit col-span-1'/>
-                                            {submenu.newProd ? <div className="col-span-5">{submenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{submenu.title}</div>}
+                                          <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 flex'>
+                                            <LazyImageCustomNavbar
+                                              src={submenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${submenu.url}` : submenu.url}
+                                              alt={submenu.title}
+                                              width={100}
+                                              height={100}
+                                              classname="object-contain max-h-14 w-auto"
+                                              lazy
+                                              containerheight='h-14'
+                                              containerwidth='w-14'
+                                              pathname={pathname}
+                                            />
+                                            {submenu.newProd ? 
+                                              <div>
+                                                {submenu.title.split(" / ")[0]} 
+                                                <div className="inline-flex text-primary pl-2">
+                                                  NEW
+                                                </div>
+                                              </div> 
+                                              : 
+                                              <div>
+                                                {submenu.title}
+                                              </div>
+                                            }
                                           </SheetClose>
                                         </Link>
                                       :
@@ -1533,9 +1620,30 @@ useEffect(() => {
                                             <AccordionItem key={subsubmenu.title} value={subsubmenu.title}>
                                               {subsubmenu.parent===""? 
                                                 <Link key={subsubmenu.title} href={getHref(pathname, subsubmenu.href)}>
-                                                  <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                                  <Image src={subsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${subsubmenu.url}` : subsubmenu.url} alt={subsubmenu.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                                    {subsubmenu.newProd ? <div className="col-span-5">{subsubmenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{subsubmenu.title}</div>}
+                                                  <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 flex'>
+                                                    <LazyImageCustomNavbar
+                                                      src={subsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${subsubmenu.url}` : subsubmenu.url}
+                                                      alt={subsubmenu.title}
+                                                      width={100}
+                                                      height={100}
+                                                      classname="object-contain max-h-14 w-auto"
+                                                      lazy
+                                                      containerheight='h-14'
+                                                      containerwidth='w-14'
+                                                      pathname={pathname}
+                                                    />
+                                                    {subsubmenu.newProd ? 
+                                                      <div>
+                                                        {subsubmenu.title.split(" / ")[0]} 
+                                                        <div className="inline-flex text-primary pl-2">
+                                                          NEW
+                                                        </div>
+                                                      </div> 
+                                                      : 
+                                                      <div>
+                                                        {subsubmenu.title}
+                                                      </div>
+                                                    }
                                                   </SheetClose>
                                                 </Link>
                                               :
@@ -1553,9 +1661,30 @@ useEffect(() => {
                                                 </Link>
                                                 {driversubsubsubMenu.map((subsubsubmenu) => 
                                                   <Link key={subsubsubmenu.title} href={getHref(pathname, subsubsubmenu.href)}>
-                                                    <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                                      <Image src={subsubsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${subsubsubmenu.url}` : subsubsubmenu.url} alt={subsubsubmenu.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                                      {subsubsubmenu.newProd ? <div className="col-span-5">{subsubsubmenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{subsubsubmenu.title}</div>}
+                                                    <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 flex'>
+                                                      <LazyImageCustomNavbar
+                                                        src={subsubsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${subsubsubmenu.url}` : subsubsubmenu.url}
+                                                        alt={subsubsubmenu.title}
+                                                        width={100}
+                                                        height={100}
+                                                        classname="object-contain max-h-14 w-auto"
+                                                        lazy
+                                                        containerheight='h-14'
+                                                        containerwidth='w-14'
+                                                        pathname={pathname}
+                                                      />
+                                                      {subsubsubmenu.newProd ? 
+                                                        <div>
+                                                          {subsubsubmenu.title.split(" / ")[0]} 
+                                                          <div className="inline-flex text-primary pl-2">
+                                                            NEW
+                                                          </div>
+                                                        </div> 
+                                                        : 
+                                                        <div>
+                                                          {subsubsubmenu.title}
+                                                        </div>
+                                                      }
                                                     </SheetClose>
                                                   </Link>
                                                 )}
@@ -1591,9 +1720,30 @@ useEffect(() => {
                             <AccordionItem key={kits.title} value={kits.title}>
                               {kits.parent===""? 
                                 <Link href={getHref(pathname, kits.href)} key={kits.title}>
-                                  <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                    <Image src={kits.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${kits.url}` : kits.url} alt={kits.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                    {kits.newProd ? <div className="col-span-5">{kits.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{kits.title}</div>}
+                                  <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 flex'>
+                                    <LazyImageCustomNavbar
+                                      src={kits.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${kits.url}` : kits.url}
+                                      alt={kits.title}
+                                      width={100}
+                                      height={100}
+                                      classname="object-contain max-h-12 w-auto"
+                                      lazy
+                                      containerheight='h-12'
+                                      containerwidth='w-12'
+                                      pathname={pathname}
+                                    />
+                                    {kits.newProd ? 
+                                      <div>
+                                        {kits.title.split(" / ")[0]} 
+                                        <div className="inline-flex text-primary pl-2">
+                                          NEW
+                                        </div>
+                                      </div> 
+                                      : 
+                                      <div>
+                                        {kits.title}
+                                      </div>
+                                    }
                                   </SheetClose>
                                 </Link>
                               :
@@ -1613,9 +1763,30 @@ useEffect(() => {
                                   <Accordion key={kitsubmenu.title} type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-700' : 'bg-zinc-100'} w-full pl-2 ${index === 0 ? 'rounded-t-lg' : index === kitssubMenu.length -1 ? 'rounded-b-lg' : 'rounded-none'}`}>
                                     <AccordionItem key={kitsubmenu.title} value={kitsubmenu.title.concat(index.toString())}> 
                                       <Link key={kitsubmenu.title} href={getHref(pathname, kitsubmenu.href)}>
-                                        <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                          <Image src={kitsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${kitsubmenu.url}` : kitsubmenu.url} alt={kitsubmenu.title} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                          {kitsubmenu.newProd ? <div className="col-span-5">{kitsubmenu.title.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div></div> : <div className="col-span-5">{kitsubmenu.title}</div>}
+                                        <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 flex'>
+                                          <LazyImageCustomNavbar
+                                            src={kitsubmenu.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${kitsubmenu.url}` : kitsubmenu.url}
+                                            alt={kitsubmenu.title}
+                                            width={100}
+                                            height={100}
+                                            classname="object-contain max-h-14 w-auto"
+                                            lazy
+                                            containerheight='h-14'
+                                            containerwidth='w-14'
+                                            pathname={pathname}
+                                          />
+                                          {kitsubmenu.newProd ? 
+                                            <div>
+                                              {kitsubmenu.title.split(" / ")[0]} 
+                                              <div className="inline-flex text-primary pl-2">
+                                                NEW
+                                              </div>
+                                            </div> 
+                                          : 
+                                            <div>
+                                              {kitsubmenu.title}
+                                            </div>
+                                          }
                                         </SheetClose>
                                       </Link>
                                     </AccordionItem>
@@ -1643,9 +1814,24 @@ useEffect(() => {
                                 <Accordion key={newsubmenu.name} type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-700' : 'bg-zinc-100'} w-full pl-2 ${index === 0 ? 'rounded-t-lg' : index === newProductsMenu.length -1 ? 'rounded-b-lg' : 'rounded-none'}`}>
                                   <AccordionItem key={newsubmenu.name} value={newsubmenu.name.concat(index.toString())}> 
                                     <Link key={newsubmenu.name} href={getHref(pathname, newsubmenu.href)}>
-                                      <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                          <Image src={newsubmenu.image_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${newsubmenu.image_url}` : newsubmenu.image_url} alt={newsubmenu.name} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                        <div className="col-span-5">{newsubmenu.name} <div className="inline-flex text-primary">NEW</div></div>
+                                      <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 flex'>
+                                        <LazyImageCustomNavbar
+                                          src={newsubmenu.image_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${newsubmenu.image_url}` : newsubmenu.image_url}
+                                          alt={newsubmenu.name}
+                                          width={100}
+                                          height={100}
+                                          classname="object-contain max-h-14 w-auto"
+                                          lazy
+                                          containerheight='h-14'
+                                          containerwidth='w-14'
+                                          pathname={pathname}
+                                        />
+                                        <div>
+                                          {newsubmenu.name} 
+                                          <div className="inline-flex text-primary pl-2">
+                                            NEW
+                                          </div>
+                                        </div>
                                       </SheetClose>
                                     </Link>
                                   </AccordionItem>
@@ -1663,9 +1849,24 @@ useEffect(() => {
                                 <Accordion key={newsubmenu.name} type="single" collapsible className={`${pathname.includes('sbaudience') ? 'bg-zinc-700' : 'bg-zinc-100'} w-full pl-2 ${index === 0 ? 'rounded-t-lg' : index === newKitsMenu.length -1 ? 'rounded-b-lg' : 'rounded-none'}`}>
                                   <AccordionItem key={newsubmenu.name} value={newsubmenu.name.concat(index.toString())}> 
                                     <Link key={newsubmenu.name} href={getHref(pathname, newsubmenu.href)}>
-                                      <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 grid grid-cols-6'>
-                                          <Image src={newsubmenu.image_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${newsubmenu.image_url}` : newsubmenu.image_url} alt={newsubmenu.name} width={100} height={100} className='object-cover max-h-14 w-fit col-span-1'/>
-                                        <div className="col-span-5">{newsubmenu.name} <div className="inline-flex text-primary">NEW</div></div>
+                                      <SheetClose className='p-2 w-full hover:text-primary text-left items-center gap-2 flex'>
+                                        <LazyImageCustomNavbar
+                                          src={newsubmenu.image_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${newsubmenu.image_url}` : newsubmenu.image_url}
+                                          alt={newsubmenu.name}
+                                          width={100}
+                                          height={100}
+                                          classname="object-contain max-h-14 w-auto"
+                                          lazy
+                                          containerheight='h-14'
+                                          containerwidth='w-14'
+                                          pathname={pathname}
+                                        />
+                                        <div>
+                                          {newsubmenu.name}
+                                          <div className="inline-flex text-primary pl-2">
+                                            NEW
+                                          </div>
+                                        </div>
                                       </SheetClose>
                                     </Link>
                                   </AccordionItem>

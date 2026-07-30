@@ -2,6 +2,8 @@ import { LazyImage } from "@/components/lazyImage";
 import Image from "next/image";
 import prismadb from "@/lib/prismadb";
 import Link from "next/link";
+import { LazyImageCustom } from "@/components/lazyImageCustom";
+import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
 
 export const revalidate = 3600;
 
@@ -48,17 +50,19 @@ export default async function CataloguesPage() {
       {pdfFiles.map((item, index) => (
         <div className="md:grid md:grid-cols-2 block gap-4 pt-8" key={index}>
           <div>
-            <LazyImage
+            <LazyImageCustom
               src={item.cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.cover}` : item.cover}
               alt={item.pdfname}
               width={500}
               height={500}
+              classname="h-fit w-full object-contain"
+              lazy
             />
           </div>
           <div className="flex md:justify-start justify-center md:pl-20 pl-0">
             <Link href={`${item.pdf}`} target="_blank" className={`font-bold flex items-center hover:text-primary`}>
               <div className="pr-2">
-                <Image src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="3D Files Download" className="max-h-8 w-auto flex-shrink-0" width={100} height={100}/>
+                <LazyImageCustomNavbar src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="3D Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
               </div>
               <h2 className="pl-2">
                 {item.pdfname}

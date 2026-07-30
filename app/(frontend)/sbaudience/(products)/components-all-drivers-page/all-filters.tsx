@@ -196,7 +196,7 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({
         <>
             {showFilters?
             
-                !loadingSlider && Array.isArray(sliderValue) &&
+                !loadingSlider && Array.isArray(sliderValue) ?
                 <div key={'1'} className="hidden md:block pr-4">
                     {/* <div className="pt-28"></div> */}
                     <div className="sticky top-24 rounded-lg text-black shadow-2xl bg-zinc-100 shadow-foreground/10">
@@ -262,6 +262,10 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({
                         </div>
                     </div>
                 </div>
+                </div>
+                :
+                <div key={'1'} className="hidden md:block pr-4">
+                    {/* <Skeleton className="H-full w-full rounded-md" /> */}
                 </div>
             :
                 // <div className="hidden md:block pr-16"></div>

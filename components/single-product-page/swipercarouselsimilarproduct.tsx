@@ -93,7 +93,7 @@ const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar, brand }) =>
                   />
                 </CardHeader>
                 <CardContent className="flex flex-col flex-1 h-full p-2">
-                  <CardTitle className="text-center justify-center items-center font-bold text-base text-black whitespace-normal break-words pb-2">
+                  <CardTitle className="text-center justify-center items-center font-bold text-base text-black whitespace-normal break-words line-clamp-1">
                     {sim.similarProduct.name}
                   </CardTitle>
                 </CardContent>

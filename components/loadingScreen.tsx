@@ -19,7 +19,7 @@ export function LoadingScreen({ isLoading, onLoadingComplete }: LoadingScreenPro
       // Small delay to ensure smooth transition
       const timer = setTimeout(() => {
         setDisplayLoading(false)
-      }, 500)
+      }, 0)
       return () => clearTimeout(timer)
     }
   }, [isLoading])
@@ -33,18 +33,95 @@ export function LoadingScreen({ isLoading, onLoadingComplete }: LoadingScreenPro
           transition={{ duration: 0.9, ease: 'easeInOut' }}
           className="fixed inset-0 bg-black flex items-center justify-center z-102"
         >
-          <div className="flex flex-col items-center gap-8">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex items-center justify-center"
-            >
-                <Loader />
-            </motion.div>
-          </div>
+          {/* <svg
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 176 153"
+            width={176}
+            height={153}
+            className="w-8 h-8 animate-pulse"
+          >
+            <path
+              d="M0 0 C58.08 0 116.16 0 176 0 C168.04306743 14.58770971 159.99399553 29.07907684 151.59350586 43.4152832 C147.03272745 51.20663842 142.53343546 59.03186559 138.0625 66.875 C132.29101034 76.99812268 126.48716181 87.10190394 120.65576172 97.19067383 C116.32013536 104.69727619 112.014559 112.2205074 107.72076416 119.75106812 C104.81951661 124.83729148 101.9112006 129.91946751 99 135 C98.45843262 135.94520508 97.91686523 136.89041016 97.35888672 137.86425781 C95.95401119 140.30912959 94.54152237 142.74936291 93.125 145.1875 C92.72627686 145.88238525 92.32755371 146.57727051 91.91674805 147.29321289 C89.23180774 151.88409613 89.23180774 151.88409613 87 153 C86.39079712 151.93193115 86.39079712 151.93193115 85.76928711 150.84228516 C75.89422891 133.53359871 65.97099316 116.25365115 56 99 C48.30415865 85.68323608 40.62381775 72.3581331 33 59 C27.7262406 49.76046075 22.43863536 40.52919052 17.125 31.3125 C16.50810303 30.24193359 15.89120605 29.17136719 15.25561523 28.06835938 C12.4756489 23.25289353 9.68175485 18.44717755 6.83984375 13.66796875 C6.36595215 12.87028076 5.89206055 12.07259277 5.40380859 11.25073242 C4.5372144 9.79657664 3.66671296 8.34473906 2.79150391 6.89575195 C0 2.2181456 0 2.2181456 0 0 Z"
+              fill="#E52028"
+            />
+          </svg> */}
+          <Loader />
         </motion.div>
       )}
     </AnimatePresence>
   )
 }
+
+
+
+
+
+
+
+
+
+
+// 'use client'
+
+// import { useEffect, useState } from 'react'
+// import { motion, AnimatePresence } from 'framer-motion'
+
+// interface LoadingScreenProps {
+//   isLoading: boolean
+//   onLoadingComplete?: () => void
+// }
+
+// export function LoadingScreen({ isLoading, onLoadingComplete }: LoadingScreenProps) {
+//   const [displayLoading, setDisplayLoading] = useState(isLoading)
+
+//   useEffect(() => {
+//     if (isLoading) {
+//       setDisplayLoading(true)
+//     } else {
+//       // Small delay to ensure smooth transition
+//       const timer = setTimeout(() => {
+//         setDisplayLoading(false)
+//       }, 500)
+//       return () => clearTimeout(timer)
+//     }
+//   }, [isLoading])
+
+//   return (
+//     <AnimatePresence>
+//       {displayLoading && (
+//         <motion.div
+//           initial={{ y: 0, opacity: 1 }}
+//           exit={{ y: '-100%', opacity: 0 }}
+//           transition={{ duration: 0.9, ease: 'easeInOut' }}
+//           className="fixed inset-0 bg-white flex items-center justify-center z-102"
+//         >
+//           <div className="flex flex-col items-center gap-8">
+//             <motion.div
+//               initial={{ scale: 0.8, opacity: 0 }}
+//               animate={{ scale: 1, opacity: 1 }}
+//               transition={{ duration: 0.6, delay: 0.1 }}
+//               className="flex items-center justify-center"
+//             >
+//               <svg
+//                 version="1.1"
+//                 xmlns="http://www.w3.org/2000/svg"
+//                 viewBox="0 0 176 153"
+//                 width={176}
+//                 height={153}
+//                 className="w-4 h-4"
+//                 style={{ animation: 'spin 1s linear infinite' }}
+//               >
+//                 <path
+//                   d="M0 0 C58.08 0 116.16 0 176 0 C168.04306743 14.58770971 159.99399553 29.07907684 151.59350586 43.4152832 C147.03272745 51.20663842 142.53343546 59.03186559 138.0625 66.875 C132.29101034 76.99812268 126.48716181 87.10190394 120.65576172 97.19067383 C116.32013536 104.69727619 112.014559 112.2205074 107.72076416 119.75106812 C104.81951661 124.83729148 101.9112006 129.91946751 99 135 C98.45843262 135.94520508 97.91686523 136.89041016 97.35888672 137.86425781 C95.95401119 140.30912959 94.54152237 142.74936291 93.125 145.1875 C92.72627686 145.88238525 92.32755371 146.57727051 91.91674805 147.29321289 C89.23180774 151.88409613 89.23180774 151.88409613 87 153 C86.39079712 151.93193115 86.39079712 151.93193115 85.76928711 150.84228516 C75.89422891 133.53359871 65.97099316 116.25365115 56 99 C48.30415865 85.68323608 40.62381775 72.3581331 33 59 C27.7262406 49.76046075 22.43863536 40.52919052 17.125 31.3125 C16.50810303 30.24193359 15.89120605 29.17136719 15.25561523 28.06835938 C12.4756489 23.25289353 9.68175485 18.44717755 6.83984375 13.66796875 C6.36595215 12.87028076 5.89206055 12.07259277 5.40380859 11.25073242 C4.5372144 9.79657664 3.66671296 8.34473906 2.79150391 6.89575195 C0 2.2181456 0 2.2181456 0 0 Z"
+//                   fill="#E52028"
+//                 />
+//               </svg>
+//             </motion.div>
+//           </div>
+//         </motion.div>
+//       )}
+//     </AnimatePresence>
+//   )
+// }
+

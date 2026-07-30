@@ -1,6 +1,6 @@
 import prismadb from "@/lib/prismadb";
-import { LazyImageClickableSBAudience } from "@/components/lazyImageclickablesbaudience";
 import Link from "next/link";
+import { LazyImageClickable } from "@/components/lazyImageclickable";
 
 export const revalidate = 3600;
 
@@ -63,12 +63,11 @@ export default async function AllApplicationJsonLd() {
                 className=" group cursor-pointer 2xl:space-y-8 xl:space-y-6 space-y-4 block"
             >
                 <div className="relative">
-                <LazyImageClickableSBAudience
+                <LazyImageClickable
                     src={item.cover_img_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.cover_img_url}` : item.cover_img_url ?? '/images/sbaudience/logo_sbaudience.webp'} 
                     alt={`${item.name} by SB Audience`}
-                    width={500}
-                    height={500}
-                    classname={'w-4/5 h-full object-contain'}
+                    width={1000}
+                    height={1000}
                 />
                 </div>
                 

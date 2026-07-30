@@ -252,12 +252,11 @@ export default async function SBAudienceDriversPage({
                         className=" group cursor-pointer space-y-4 block"
                     >
                         <div className="relative aspect-square">
-                        <LazyImageClickableSBAudience
+                        <LazyImageClickable
                             src={allDriver.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${allDriver.thumbnail_url}` : allDriver.thumbnail_url} 
                             alt={`${allDriver.name} by SB Audience`}
-                            width={500}
-                            height={500}
-                            classname={'w-fit h-full object-contain'}
+                            width={1000}
+                            height={1000}
                         />
                         </div>
                         
@@ -272,12 +271,11 @@ export default async function SBAudienceDriversPage({
                         className=" group cursor-pointer space-y-4 block"
                     >
                         <div className="relative aspect-square">
-                        <LazyImageClickableSBAudience
+                        <LazyImageClickable
                             src={item.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}` : item.thumbnail_url} 
                             alt={`${item.name} by SB Audience`}
-                            width={500}
-                            height={500}
-                            classname={'w-fit h-full object-contain'}
+                            width={1000}
+                            height={1000}
                         />
                         </div>
                         

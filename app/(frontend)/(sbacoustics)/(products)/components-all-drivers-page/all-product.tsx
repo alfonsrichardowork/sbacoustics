@@ -31,6 +31,7 @@ import { Navigation, Thumbs, Scrollbar } from 'swiper/modules';
 import getAllPriorityBySubCategory from "@/app/(frontend)/actions/get-all-priority-by-category";
 import ProductCard from "./product-card";
 import { LazyImageCustom } from "@/components/lazyImageCustom";
+import { Skeleton } from "@/components/ui/skeleton";
 
 
 interface MainProps {
@@ -509,10 +510,10 @@ const AllDriversProducts: React.FC<MainProps> = ({
                 :
                 <></>}
                 {!loadFinished && 
-                    <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        {Array.from({ length: 8 }).map((_, index) => (
-                            <div key={index} className="px-2 pt-12 relative">
-                            <ProductCard data={null} hovered={false}/>
+                    <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-8">
+                        {Array.from({ length: 12 }).map((_, index) => (
+                            <div key={index} className="px-2 pt-4">
+                                <ProductCard data={null} hovered={false}/>
                             </div>
                         ))}
                     </div>

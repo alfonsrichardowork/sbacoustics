@@ -2,6 +2,7 @@ import prismadb from '@/lib/prismadb';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordiontechnicals';
 import Link from 'next/link';
 import Image from 'next/image';
+import { LazyImageCustomNavbar } from '@/components/lazyImageCustomNavbar';
 
 export const revalidate = 3600;
 
@@ -74,12 +75,15 @@ export default async function TechnicalJsonLd() {
                         <div className="flex justify-start md:pt-6 pt-4">
                           <Link href={`${file.pdf}`} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`}>         
                               <div className="pr-2 flex items-center">
-                                <Image
+                                <LazyImageCustomNavbar
                                   src={'/images/sbacoustics/PDF-download-ver2.webp'}
                                   alt="3D Files Download"
                                   width={24}
                                   height={24}
-                                  className="object-contain"
+                                  classname="object-contain max-h-8 w-auto"
+                                  lazy 
+                                  containerheight="h-8" 
+                                  containerwidth="w-8"
                                 />
                               </div>
                               <div className="pl-2 text-sm">

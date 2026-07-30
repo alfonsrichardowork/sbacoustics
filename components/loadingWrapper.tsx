@@ -1,27 +1,36 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { LoadingScreen } from './loadingScreen';
+import React, { useEffect } from 'react'
+import { LoadingScreen } from './loadingScreen'
 
-export default function LoadingWrapper({
-  children,
-  unsupported
-}: {
-  children: React.ReactNode;
-  unsupported: boolean;
-}) {
-  const [isLoading, setIsLoading] = useState(true);
+interface LoadingWrapperProps {
+  children: React.ReactNode
+  unsupported?: boolean
+}
+
+export default function LoadingWrapper({ 
+  children, 
+  unsupported = false 
+}: LoadingWrapperProps) {
+  const [isLoading, setIsLoading] = React.useState(true)
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 0);
+    // Give the page a moment to settle, then hide the initial loader
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+      // Call the function exposed in layout.tsx to hide the HTML-level loader
+      if (typeof window !== 'undefined' && (window as any).hideInitialLoader) {
+        (window as any).hideInitialLoader()
+      }
+    }, 500)
 
-    return () => clearTimeout(timer);
-  }, []);
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
     <>
-      {!unsupported && <LoadingScreen isLoading={isLoading} />}
+      <LoadingScreen isLoading={isLoading} />
       {children}
     </>
-  );
+  )
 }

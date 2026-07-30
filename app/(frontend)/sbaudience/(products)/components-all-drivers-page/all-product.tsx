@@ -417,7 +417,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
                                         </Button>
                                         <CardContent className="flex items-center justify-center text-center p-2">
                                             <div className="flex flex-col items-center justify-center text-center relative">
-                                                <LazyImageCustom src={activeImgUrlCompare[index]?.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${activeImgUrlCompare[index]}` : activeImgUrlCompare[index] ?? '' } alt={activeNameCompare[index] ?? ''} width={150} height={50} classname="h-44 w-fit object-contain" lazy/>
+                                                <LazyImageCustom src={activeImgUrlCompare[index]?.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${activeImgUrlCompare[index]}` : activeImgUrlCompare[index] ?? '' } alt={activeNameCompare[index] ?? ''} width={150} height={150} classname="h-44 w-fit object-contain" lazy/>
                                                 <div className="text-foreground text-base font-bold mt-4">
                                                     {activeNameCompare[index]}
                                                 </div>
@@ -499,9 +499,9 @@ const AllDriversProducts: React.FC<MainProps> = ({
                 :
                 <></>}
                 {!loadFinished && 
-                    <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        {Array.from({ length: 8 }).map((_, index) => (
-                            <div key={index} className="px-2 pt-12 relative">
+                    <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-8">
+                        {Array.from({ length: 12 }).map((_, index) => (
+                            <div key={index} className="px-2 pt-4">
                             <ProductCard data={null} hovered={false}/>
                             </div>
                         ))}

@@ -7,6 +7,7 @@ import { Searchbox } from '@/app/(frontend)/types';
 import { usePathname } from 'next/navigation';
 import getProductsForSearchbox from '@/app/(frontend)/actions/get-product-for-searchbox';
 import Fuse from 'fuse.js';
+import { LazyImageCustomNavbar } from './lazyImageCustomNavbar';
 function normalizeFractions(text: string): string {
   return text
     // normalize Unicode fractions
@@ -277,13 +278,23 @@ const SearchLightbox: FC<PropType> = (props) => {
                           className="w-full p-1 flex items-center gap-4 border-b border-border hover:bg-secondary transition-colors text-left last:border-b-0"
                         >
                           {/* Product Image */}
-                          <div className="flex-shrink-0">
+                          {/* <div className="flex-shrink-0">
                             <img
                               src={product.url}
                               alt={product.label}
                               className="w-14 h-14 object-cover rounded"
                             />
-                          </div>
+                          </div> */}
+                          <LazyImageCustomNavbar 
+                            src={product.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${product.url}` : product.url}
+                            alt={product.label}
+                            classname="object-contain rounded max-h-14 w-auto" 
+                            width={100} 
+                            height={100} 
+                            lazy
+                            containerheight='h-14'
+                            containerwidth='w-14'
+                            pathname={pathname}/>
 
                           {/* Product Info */}
                           <div className="flex-1 min-w-0">

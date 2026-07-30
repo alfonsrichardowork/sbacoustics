@@ -6,7 +6,7 @@ import getProductsForSearchbox from "@/app/(frontend)/actions/get-product-for-se
 import { Input } from "./ui/input"
 import Fuse from "fuse.js";
 import { FC, useEffect, useRef, useState } from "react"
-import { LazyImageCustom } from "./lazyImageCustom"
+import { LazyImageCustomNavbar } from "./lazyImageCustomNavbar"
 
 function normalizeFractions(text: string): string {
   return text
@@ -201,17 +201,16 @@ const SearchBox: FC<PropType> = (props) => {
                   // href={`${pathname.includes('sbaudience') ? '/sbaudience' : pathname.includes('sbautomotive') ? '/sbautomotive' : ''}/products/${value.slug}`}
                 >                          
                   <div className={`p-2 flex border-b-2 border-gray-100 hover:bg-black hover:text-red-500 hover:font-bold hover:rounded-md transfom duration-200 ${pathname.includes("sbaudience") && 'text-foreground'}`}>
-                  <div className="relative pr-4">
-                    <LazyImageCustom
-                        src={value.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${value.url}` : value.url}
-                        alt={value.label}
-                        width={100}
-                        height={100}
-                        classname="w-10 h-auto"
-                        lazy
-                      />
-                  </div>
-                    <div className="flex flex-col justify-center text-sm">
+                    <LazyImageCustomNavbar
+                      src={value.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${value.url}` : value.url}
+                      alt={value.label}
+                      classname="object-contain rounded max-h-14 w-auto" 
+                      width={100} 
+                      height={100} 
+                      lazy
+                      containerheight='h-14'
+                      containerwidth='w-14'/>
+                    <div className="pl-4 flex flex-col justify-center text-sm">
                       <div className="font-bold">{value.label}</div>
                       <div>{value.info}</div>
                     </div>

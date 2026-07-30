@@ -37,7 +37,7 @@ const DrawingSection: React.FC<PropType> = (props) => {
       alt={`${name} - Drawing Image`}
       width={500}
       height={500}
-      classname={`object-contain px-10 transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
+      classname={`object-contain px-10 transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
       lazy={false}
       testid='drawing-image-single-product-page'
     />

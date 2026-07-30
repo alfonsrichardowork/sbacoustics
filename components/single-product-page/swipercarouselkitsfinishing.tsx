@@ -21,6 +21,7 @@ import "yet-another-react-lightbox/plugins/captions.css";
 import { LazyImageCustom } from '@/components/lazyImageCustom';
 import { FilesProp, FilesWithOrder } from '@/app/(frontend)/types';
 import Image from 'next/image';
+import { Skeleton } from '../ui/skeleton';
 
 interface CombinedFilesProp {
     name: string
@@ -38,6 +39,7 @@ const SwiperCarouselKitsFinishing: React.FC<PropType> = (props) => {
   const [combinedFinishing, setCombinedFinishing] = useState<CombinedFilesProp[]>([])
   const [activeKitsPreview, setActiveKitsPreview] = useState<string>('')
   const [activeKitsPreviewName, setActiveKitsPreviewName] = useState<string>('')
+  const [finishLoad, setFinishLoad] = useState(false)
   const { name, kits_finishing } = props
 
   useEffect(() => {
@@ -70,6 +72,12 @@ const SwiperCarouselKitsFinishing: React.FC<PropType> = (props) => {
 
   return (
     <div className='block justify-center items-center object-center h-full w-full pt-8'>
+      {!finishLoad && 
+        <>
+          <Skeleton className="min-w-full aspect-square max-h-[400px] animate-pulse bg-zinc-200 rounded-lg" />
+          <Skeleton className="mt-4 min-w-full aspect-[1/2] max-h-[70px] animate-pulse bg-zinc-200 rounded-lg" />
+        </>
+      }
       {activeKitsPreview && activeKitsPreview != '' &&
       <div className="z-10 h-fit w-full">
         <div className="flex items-center justify-center overflow-hidden">
@@ -86,6 +94,7 @@ const SwiperCarouselKitsFinishing: React.FC<PropType> = (props) => {
             // loading='lazy'
             loading='lazy'
             data-testid='kits-finishing-image-single-product-page'
+            onLoad={() => setFinishLoad(true)}
           />
         </div>
         
@@ -100,7 +109,7 @@ const SwiperCarouselKitsFinishing: React.FC<PropType> = (props) => {
                 width={100}
                 height={100}
                 classname="object-contain h-full w-fit"
-                lazy={false}
+                lazy
               />
             </div>
           </div>

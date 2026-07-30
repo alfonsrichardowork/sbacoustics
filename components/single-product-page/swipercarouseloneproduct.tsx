@@ -132,7 +132,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                             alt={name} 
                             width={200}
                             height={200}
-                            classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
+                            classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
                             lazy={false}
                             testid="cover-image-single-product-page"
                           />
@@ -162,7 +162,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                           alt={`${item.name} - ${index.toString()}`} 
                           width={200}
                           height={200}
-                          classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
+                          classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
                           lazy={true}
                           testid={`image-catalogues-${index}-single-product-page`}
                         />
@@ -192,7 +192,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                       alt={`${name} - Drawing`} 
                       width={200}
                       height={200}
-                      classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
+                      classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
                       lazy={true}
                       testid='drawing-image-single-product-page'
                     />
@@ -222,7 +222,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                       alt={`${name} - Frequency Response`} 
                       width={200}
                       height={200}
-                      classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-110' : ''}`}
+                      classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
                       lazy={true}
                       testid='frequency-response-image-single-product-page'
                     />

@@ -5,6 +5,8 @@ import "@/app/css/styles.scss";
 import DOMPurify from 'isomorphic-dompurify'; 
 import Link from "next/link";
 import Image from "next/image";
+import { LazyImageCustom } from "@/components/lazyImageCustom";
+import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
 
 type Props = {
   params: Promise<{ applicationSlug?: string }>
@@ -106,11 +108,11 @@ export default async function SingleAppJsonLd(props: Props) {
 
                 <div className="gap-4">
                     {data.cover_img_url !== '' && 
-                    <Image src={data.cover_img_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${data.cover_img_url}` : data.cover_img_url ?? '/images/sbaudience/logo_sbaudience.webp'} alt={`${data.name} - Cover`} width={500} height={500} className="w-4/5 h-fit py-2" />
+                    <LazyImageCustomNavbar src={data.cover_img_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${data.cover_img_url}` : data.cover_img_url ?? '/images/sbaudience/logo_sbaudience.webp'} alt={`${data.name} - Cover`} width={500} height={500} classname="py-2 h-fit max-w-full object-contain aspect-square" lazy containerheight="h-fit" containerwidth="max-w-full"/>
                     }
                     <div className="grid grid-cols-2 w-4/5">
                         {data.images_catalogues && data.images_catalogues.length > 0 && data.images_catalogues.map((cat) => 
-                        <Image src={cat.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cat.url}` : cat.url} alt={`${data.name} - ${cat.name}`} width={500} height={500} className="h-fit py-2" key={`${data.name} - ${cat.name}`} />
+                        <LazyImageCustom src={cat.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cat.url}` : cat.url} alt={`${data.name} - ${cat.name}`} width={500} height={500} classname="h-fit py-2" key={`${data.name} - ${cat.name}`} lazy />
                         )}
                     </div>
                     {/* {data.images_catalogues && data.images_catalogues.length > 0 && 

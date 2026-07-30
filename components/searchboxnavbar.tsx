@@ -7,6 +7,7 @@ import { Input } from "./ui/input"
 import Fuse from "fuse.js";
 import { FC, useEffect, useRef, useState } from "react"
 import { LazyImageCustom } from "./lazyImageCustom"
+import { LazyImageCustomNavbar } from "./lazyImageCustomNavbar"
 
 function normalizeFractions(text: string): string {
   return text
@@ -216,17 +217,16 @@ const SearchBoxNavbar: FC<PropType> = (props) => {
                       }}
                     >                          
                       <div className={`p-2 flex border-b-2 border-gray-100 hover:bg-black hover:text-primary hover:font-bold hover:rounded-md transfom duration-200 ${pathname.includes("sbaudience") && 'text-foreground'}`}>
-                      <div className="relative pr-4">
-                        <LazyImageCustom
+                        <LazyImageCustomNavbar 
                           src={value.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${value.url}` : value.url}
                           alt={value.label}
-                          width={100}
-                          height={100}
-                          classname="w-10 h-auto z-0"
+                          classname="object-contain rounded max-h-14 w-auto" 
+                          width={100} 
+                          height={100} 
                           lazy
-                        />
-                      </div>
-                        <div className="flex flex-col justify-center text-sm">
+                          containerheight='h-14'
+                          containerwidth="w-14"/>
+                        <div className="pl-4 flex flex-col justify-center text-sm">
                           <div className="font-bold">{value.label}</div>
                           <div>{value.info}</div>
                         </div>

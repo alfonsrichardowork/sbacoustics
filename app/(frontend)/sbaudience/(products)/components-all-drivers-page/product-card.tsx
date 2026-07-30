@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AllFilterProductsOnlyType } from "@/app/(frontend)/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LazyImageClickableSBAudience } from "@/components/lazyImageclickablesbaudience";
+import { LazyImageClickable } from "@/components/lazyImageclickable";
 
 interface ReviewCard {
   data: AllFilterProductsOnlyType | null;
@@ -36,12 +37,11 @@ const ProductCard: React.FC<ReviewCard> = React.memo(
 
         <div className="flex flex-col items-center justify-center text-center relative p-4" style={{ aspectRatio: "1/1" }}>
       
-          <LazyImageClickableSBAudience
+          <LazyImageClickable
             src={data.products.cover_img.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${data.products.cover_img}` : data.products.cover_img}
             alt={data.products.name}
             width={500}
             height={500}
-            classname={'w-fit h-full object-contain'}
             testid={`all-drivers-page-product-alt-${finalIndex}`}
           />
         </div>

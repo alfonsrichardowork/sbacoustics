@@ -102,7 +102,7 @@ export default function SpecificationTable({ spec, styling, stylingTitle }: Prop
                 {/* Data Rows */}
                 {allChildren.map((childName, rowIdx) => (
                   <TableRow key={rowIdx}>
-                    <TableCell className={`${styling}`}>
+                    <TableCell className={`${styling} pl-2`}>
                       {childName}
                       {allNotes[rowIdx] && allNotes[rowIdx] !== '' && (
                         <sup className="text-xs ml-1">({counter++})</sup>
@@ -117,7 +117,7 @@ export default function SpecificationTable({ spec, styling, stylingTitle }: Prop
                       return (
                         <TableCell
                           key={subIdx}
-                          className={`${styling} text-right`}
+                          className={`${styling} text-right pr-2`}
                         >
                           {value}
                         </TableCell>

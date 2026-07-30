@@ -177,7 +177,7 @@ const ComparisonPageSBAudience = () => {
         <div className="xl:px-16 lg:px-12 pt-14 pb-6 px-8">
         {loading ? 
             
-          <ComparisonTableSkeleton productCount={4} specRows={12} />
+          <ComparisonTableSkeleton productCount={5} specRows={12} />
           :
           <>
             <Button 

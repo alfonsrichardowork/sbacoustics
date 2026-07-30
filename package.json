@@ -121,7 +121,8 @@
   "browserslist": [
     "defaults",
     "not dead",
-    "not op_mini all"
+    "not op_mini all",
+    "safari >= 13"
   ],
   "devDependencies": {
     "@playwright/test": "^1.61.0",
