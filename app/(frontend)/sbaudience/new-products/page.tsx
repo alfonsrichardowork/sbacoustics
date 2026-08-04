@@ -2,7 +2,7 @@ import prismadb from '@/lib/prismadb';
 import Link from "next/link";
 import { LazyImageClickable } from "@/components/lazyImageclickable";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function NewProductsSBAudiencePage() {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';

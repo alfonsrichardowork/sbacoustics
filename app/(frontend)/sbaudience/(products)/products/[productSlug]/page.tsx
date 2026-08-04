@@ -20,7 +20,7 @@ import SwiperCarouselSimilarProductLoading from "@/components/single-product-pag
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-foreground p-0 py-1"
 const all_sub_title_style = "text-left font-bold xl:text-2xl lg:text-xl md:text-lg sm:text-md text-foreground"
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 type Props = {
   params: Promise<{ productSlug?: string }>

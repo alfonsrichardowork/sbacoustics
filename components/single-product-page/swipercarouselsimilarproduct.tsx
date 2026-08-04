@@ -28,16 +28,10 @@ const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar, brand }) =>
       const width = window.innerWidth;
 
       if (width > 1280) {
-        if (similar.length < 3) {
-          setSlidesPerView(1);
-        } else if (similar.length < 4) {
-          setSlidesPerView(2);
-        } else {
-          setSlidesPerView(3);
-        }
+        setSlidesPerView(Math.min(similar.length, 3));
         setSpaceBetween(20);
       } else if (width > 768) {
-        if (similar.length < 4) {
+        if (similar.length < 3) {
           setSlidesPerView(1);
         } else {
           setSlidesPerView(2);
@@ -58,8 +52,9 @@ const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar, brand }) =>
 
   if (!initialized) return null; // wait until loop/slidesPerView is set correctly
 
+  const shouldShowControls = similar.length > slidesPerView;
   return (
-    <>
+    <div className={`border-2 rounded-lg ${shouldShowControls ? 'p-4' : 'px-4 pt-4 pb-0'}`}>
       <Swiper
         slidesPerView={slidesPerView}
         spaceBetween={spaceBetween}
@@ -79,7 +74,7 @@ const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar, brand }) =>
         } as CSSProperties}
       >
         {similar.map((sim, index) => (
-          <SwiperSlide key={index}>
+          <SwiperSlide key={index} className={`${!shouldShowControls && 'p-0'}`}>
             <Link href={brand === 'sbaudience' ? `/sbaudience/products/${sim.similarProduct.slug}` : `/products/${sim.similarProduct.slug}`} data-testid={`similar-product-${index}-single-product-page`}>
               <Card className="w-full h-[250px] flex flex-col border-2 hover:border-primary">
                 <CardHeader className="p-2 h-[200px]">
@@ -103,18 +98,20 @@ const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar, brand }) =>
         ))}
       </Swiper>
 
-      <div className="flex justify-center gap-2">
-        {similar.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => swiperRef.current?.slideToLoop(index)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              realIndex === index ? 'bg-primary scale-125' : 'bg-zinc-700'
-            }`}
-          ></button>
-        ))}
-      </div>
-    </>
+      {shouldShowControls &&
+        <div className="flex justify-center gap-2">
+          {similar.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => swiperRef.current?.slideToLoop(index)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 hover:cursor-pointer hover:scale-110 ${
+                realIndex === index ? 'bg-primary scale-125' : 'bg-zinc-700'
+              }`}
+            ></button>
+          ))}
+        </div>
+      }
+    </div>
   );
 };
 

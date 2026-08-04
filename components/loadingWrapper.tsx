@@ -1,17 +1,22 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { LoadingScreen } from './loadingScreen'
+import { DeviceContext } from '@/app/(frontend)/providers/device-provider';
 
 interface LoadingWrapperProps {
   children: React.ReactNode
-  unsupported?: boolean
 }
 
 export default function LoadingWrapper({ 
   children, 
-  unsupported = false 
 }: LoadingWrapperProps) {
+
+  const { isLegacyIOS } = useContext(DeviceContext);
+
+  if (isLegacyIOS) {
+    return null;
+  }
   const [isLoading, setIsLoading] = React.useState(true)
 
   useEffect(() => {

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Jul 30, 2026 at 08:59 AM
--- Server version: 8.0.46
--- PHP Version: 8.4.23
+-- Host: 127.0.0.1
+-- Generation Time: Aug 04, 2026 at 11:21 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sbacoust_new_sbacoustics`
+-- Database: `sbacoustics`
 --
 
 -- --------------------------------------------------------
@@ -28,19 +28,19 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `allcategory` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `thumbnail_url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `type` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `slug` text NOT NULL,
+  `description` text NOT NULL,
+  `thumbnail_url` text NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `updatedBy` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `priority` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `shown_on_all_drivers_page` tinyint(1) NOT NULL DEFAULT '0',
-  `singularname` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `updatedBy` varchar(191) NOT NULL DEFAULT '',
+  `priority` varchar(191) NOT NULL DEFAULT '',
+  `shown_on_all_drivers_page` tinyint(1) NOT NULL DEFAULT 0,
+  `singularname` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -120,13 +120,13 @@ INSERT INTO `allcategory` (`id`, `brandId`, `type`, `name`, `slug`, `description
 --
 
 CREATE TABLE `allfinishing` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '680c5eee-7ed7-41bc-b14b-4185f8a1c379',
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `updatedAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `url` text NOT NULL,
+  `brandId` varchar(191) NOT NULL DEFAULT '680c5eee-7ed7-41bc-b14b-4185f8a1c379',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `updatedAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `updatedBy` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -151,10 +151,10 @@ INSERT INTO `allfinishing` (`id`, `name`, `url`, `brandId`, `createdAt`, `update
 --
 
 CREATE TABLE `allproductcategory` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `categoryId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `categoryId` varchar(191) NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1094,24 +1094,24 @@ INSERT INTO `allproductcategory` (`id`, `productId`, `categoryId`, `createdAt`, 
 --
 
 CREATE TABLE `brand` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `userId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `userId` varchar(191) NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `address` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `telephone` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `maps` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cover` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `homepage_about_us_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `homepage_brand_choice_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `homepage_catalogues_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `homepage_open_source_kits_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `homepage_about_us_text` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `homepage_brand_choice_text` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `homepage_catalogues_text` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `homepage_open_source_kits_text` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `address` text NOT NULL DEFAULT '',
+  `email` text NOT NULL DEFAULT '',
+  `telephone` text NOT NULL DEFAULT '',
+  `maps` text NOT NULL DEFAULT '',
+  `cover` text NOT NULL DEFAULT '',
+  `homepage_about_us_url` varchar(191) NOT NULL DEFAULT '',
+  `homepage_brand_choice_url` varchar(191) NOT NULL DEFAULT '',
+  `homepage_catalogues_url` varchar(191) NOT NULL DEFAULT '',
+  `homepage_open_source_kits_url` varchar(191) NOT NULL DEFAULT '',
+  `homepage_about_us_text` text NOT NULL DEFAULT '',
+  `homepage_brand_choice_text` text NOT NULL DEFAULT '',
+  `homepage_catalogues_text` text NOT NULL DEFAULT '',
+  `homepage_open_source_kits_text` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1130,14 +1130,14 @@ INSERT INTO `brand` (`id`, `name`, `userId`, `createdAt`, `updatedAt`, `address`
 --
 
 CREATE TABLE `catalogues` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pdf` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cover` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `pdf` text NOT NULL,
+  `cover` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `pdfname` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `pdfname` text NOT NULL,
+  `brandId` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1155,12 +1155,12 @@ INSERT INTO `catalogues` (`id`, `pdf`, `cover`, `updatedBy`, `createdAt`, `updat
 --
 
 CREATE TABLE `certificate` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `keyId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `packingDate` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `itemNumber` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `keyId` varchar(191) NOT NULL,
+  `packingDate` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `itemNumber` varchar(191) NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1171,22 +1171,22 @@ CREATE TABLE `certificate` (
 --
 
 CREATE TABLE `distributors` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `country` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `website` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `facebook` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `instagram` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lat` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lng` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `continent` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `updatedAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `address` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `id` varchar(191) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `country` varchar(191) NOT NULL,
+  `phone` varchar(191) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `website` varchar(191) NOT NULL,
+  `facebook` varchar(191) NOT NULL,
+  `instagram` varchar(191) NOT NULL,
+  `lat` varchar(191) NOT NULL,
+  `lng` varchar(191) NOT NULL,
+  `continent` varchar(191) NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `updatedAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `updatedBy` text NOT NULL DEFAULT '',
+  `address` varchar(191) NOT NULL DEFAULT '',
+  `brandId` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1255,14 +1255,14 @@ INSERT INTO `distributors` (`id`, `name`, `country`, `phone`, `email`, `website`
 --
 
 CREATE TABLE `dynamicspecification` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `unit` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `slug` text NOT NULL,
+  `unit` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `priority` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `priority` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1373,13 +1373,13 @@ INSERT INTO `dynamicspecification` (`id`, `name`, `slug`, `unit`, `updatedBy`, `
 --
 
 CREATE TABLE `dynamicspecificationparent` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `priority` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `slug` text NOT NULL,
+  `priority` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1400,13 +1400,13 @@ INSERT INTO `dynamicspecificationparent` (`id`, `name`, `updatedBy`, `createdAt`
 --
 
 CREATE TABLE `dynamicspecificationsubparent` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `slug` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `priority` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `priority` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1428,13 +1428,13 @@ INSERT INTO `dynamicspecificationsubparent` (`id`, `name`, `slug`, `updatedBy`, 
 --
 
 CREATE TABLE `image_catalogues` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `url` text NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `applicationId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `name` text NOT NULL DEFAULT '',
+  `applicationId` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2359,11 +2359,11 @@ INSERT INTO `image_catalogues` (`id`, `productId`, `url`, `createdAt`, `updatedA
 --
 
 CREATE TABLE `kitsfinishing` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `finishingId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `order` int NOT NULL DEFAULT '0'
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `finishingId` varchar(191) NOT NULL DEFAULT '',
+  `url` text NOT NULL DEFAULT '',
+  `order` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2457,12 +2457,12 @@ INSERT INTO `kitsfinishing` (`id`, `productId`, `finishingId`, `url`, `order`) V
 --
 
 CREATE TABLE `menupriority` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `priorityNumber` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `productId` text NOT NULL,
+  `priorityNumber` text NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `categoryId` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `categoryId` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2775,10 +2775,10 @@ INSERT INTO `menupriority` (`id`, `productId`, `priorityNumber`, `createdAt`, `u
 --
 
 CREATE TABLE `multiple3dmodels` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `url` text NOT NULL DEFAULT '',
+  `name` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3038,11 +3038,11 @@ INSERT INTO `multiple3dmodels` (`id`, `productId`, `url`, `name`) VALUES
 --
 
 CREATE TABLE `multipledatasheetproduct` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `applicationId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `url` text NOT NULL DEFAULT '',
+  `name` text NOT NULL DEFAULT '',
+  `applicationId` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3371,10 +3371,10 @@ INSERT INTO `multipledatasheetproduct` (`id`, `productId`, `url`, `name`, `appli
 --
 
 CREATE TABLE `multiplefrdzmafiles` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `url` text NOT NULL DEFAULT '',
+  `name` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3491,28 +3491,28 @@ INSERT INTO `multiplefrdzmafiles` (`id`, `productId`, `url`, `name`) VALUES
 --
 
 CREATE TABLE `product` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `isFeatured` tinyint(1) NOT NULL DEFAULT '0',
-  `isArchived` tinyint(1) NOT NULL DEFAULT '0',
-  `sizeId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `isFeatured` tinyint(1) NOT NULL DEFAULT 0,
+  `isArchived` tinyint(1) NOT NULL DEFAULT 0,
+  `sizeId` varchar(191) NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `isNewProduct` tinyint(1) NOT NULL DEFAULT '0',
-  `featuredDesc` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `isKits` tinyint(1) NOT NULL DEFAULT '0',
-  `navbarNotes` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `priority` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `searchbox_desc` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tempAllFinished` tinyint(1) NOT NULL DEFAULT '0',
-  `cover_img_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `drawing_img_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `graph_img_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `featured_img_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `description` text NOT NULL,
+  `slug` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `isNewProduct` tinyint(1) NOT NULL DEFAULT 0,
+  `featuredDesc` text NOT NULL DEFAULT '',
+  `isKits` tinyint(1) NOT NULL DEFAULT 0,
+  `navbarNotes` text NOT NULL DEFAULT '',
+  `priority` varchar(191) NOT NULL DEFAULT '',
+  `searchbox_desc` text NOT NULL DEFAULT '',
+  `tempAllFinished` tinyint(1) NOT NULL DEFAULT 0,
+  `cover_img_url` varchar(191) NOT NULL DEFAULT '',
+  `drawing_img_url` varchar(191) NOT NULL DEFAULT '',
+  `graph_img_url` varchar(191) NOT NULL DEFAULT '',
+  `featured_img_url` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3829,9 +3829,9 @@ INSERT INTO `product` (`id`, `brandId`, `name`, `isFeatured`, `isArchived`, `siz
 --
 
 CREATE TABLE `productsusedinkits` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productUsedInKitsId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `productUsedInKitsId` varchar(191) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3956,10 +3956,10 @@ INSERT INTO `productsusedinkits` (`id`, `productId`, `productUsedInKitsId`) VALU
 --
 
 CREATE TABLE `roles` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `userId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandName` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `userId` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `brandName` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3985,16 +3985,16 @@ INSERT INTO `roles` (`id`, `userId`, `brandId`, `brandName`) VALUES
 --
 
 CREATE TABLE `sbaudienceapplication` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `slug` text NOT NULL,
+  `description` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `author` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cover_img_url` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `author` text NOT NULL,
+  `cover_img_url` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -4013,9 +4013,9 @@ INSERT INTO `sbaudienceapplication` (`id`, `brandId`, `name`, `slug`, `descripti
 --
 
 CREATE TABLE `similarproducts` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `similarProductId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `similarProductId` varchar(191) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -5007,13 +5007,13 @@ INSERT INTO `similarproducts` (`id`, `productId`, `similarProductId`) VALUES
 --
 
 CREATE TABLE `size` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `value` text NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `updatedBy` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `updatedBy` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -5054,13 +5054,13 @@ INSERT INTO `size` (`id`, `brandId`, `name`, `value`, `createdAt`, `updatedAt`, 
 --
 
 CREATE TABLE `socialmedia` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `type` text NOT NULL,
+  `value` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
+  `brandId` varchar(191) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -5083,14 +5083,14 @@ INSERT INTO `socialmedia` (`id`, `type`, `value`, `updatedBy`, `createdAt`, `upd
 --
 
 CREATE TABLE `specificationconnector` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `productId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `dynamicspecificationParentId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `dynamicspecificationId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `notes` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `dynamicspecificationSubParentId` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `value` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `productId` varchar(191) NOT NULL,
+  `dynamicspecificationParentId` varchar(191) NOT NULL,
+  `dynamicspecificationId` varchar(191) NOT NULL,
+  `notes` text NOT NULL,
+  `dynamicspecificationSubParentId` varchar(191) DEFAULT NULL,
+  `value` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -12336,15 +12336,15 @@ INSERT INTO `specificationconnector` (`id`, `brandId`, `productId`, `dynamicspec
 --
 
 CREATE TABLE `technicals` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `desc` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pdf` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pdfname` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `updatedBy` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `desc` text NOT NULL,
+  `pdf` text NOT NULL,
+  `pdfname` text NOT NULL,
+  `updatedBy` text NOT NULL DEFAULT '',
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `brandId` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `brandId` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -12367,14 +12367,14 @@ INSERT INTO `technicals` (`id`, `name`, `desc`, `pdf`, `pdfname`, `updatedBy`, `
 --
 
 CREATE TABLE `users` (
-  `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `refresh_token` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `createdAt` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `id` varchar(191) NOT NULL,
+  `name` text NOT NULL,
+  `email` text NOT NULL,
+  `password` text NOT NULL,
+  `refresh_token` text NOT NULL,
+  `createdAt` datetime(3) NOT NULL DEFAULT current_timestamp(3),
   `updatedAt` datetime(3) NOT NULL,
-  `expiredAt` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ''
+  `expiredAt` varchar(191) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --

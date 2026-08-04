@@ -90,7 +90,8 @@ import { Noto_Sans } from 'next/font/google';
 import LoadingWrapper from '@/components/loadingWrapper';
 import { CookieProvider } from '@/lib/cookies-context';
 import CookieBanner from '@/components/cookie-banner';
-import { headers } from 'next/headers';
+import { DeviceProvider } from './providers/device-provider';
+// import { headers } from 'next/headers';
 
 const font = Noto_Sans({ subsets: ['latin'] })
 
@@ -100,15 +101,15 @@ export default async function Layout({
   children: React.ReactNode
 }) {
   const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? 'G-XYZ'
-  const h = await headers();
+  // const h = await headers();
 
-  const osName = h.get('x-os-name');
-  const osVersion = h.get('x-os-version');
+  // const osName = h.get('x-os-name');
+  // const osVersion = h.get('x-os-version');
   
-  const unsupported =
-    osName === 'iOS' && osVersion
-      ? parseFloat(osVersion) < 16.4
-      : false
+  // const unsupported =
+  //   osName === 'iOS' && osVersion
+  //     ? parseFloat(osVersion) < 16.4
+  //     : false
   return (
     <html lang="en">
       {/* <head>
@@ -123,6 +124,7 @@ export default async function Layout({
       <body 
         className={font.className.concat(" overflow-x-hidden")}
       >
+        <DeviceProvider>
         {/* <div id="loader-container" style={{
           position: 'fixed',
           inset: 0,
@@ -163,9 +165,7 @@ export default async function Layout({
         `}} />       */}
         <CookieProvider>
           <ThemeWrapper>
-            <LoadingWrapper
-              unsupported={unsupported}
-            >
+            <LoadingWrapper>
               <ScrollToTop />
               <NextTopLoader color="#e60013" showSpinner={false} />
               {/* PLACEHOLDER BACKGROUND IMAGE PALING BELAKANG */}
@@ -182,7 +182,7 @@ export default async function Layout({
                 </div> 
               </div>
               <Navbar
-                unsupported={unsupported}
+                unsupported={false}
               />
               <div className="contents">
                 {children}
@@ -193,6 +193,7 @@ export default async function Layout({
           </ThemeWrapper>
           <CookieBanner />
         </CookieProvider>
+        </DeviceProvider>
       </body>
       <GoogleAnalytics gaId={GA_ID} />
     </html>

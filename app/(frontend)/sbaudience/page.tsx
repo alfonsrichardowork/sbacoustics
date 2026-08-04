@@ -6,7 +6,7 @@ import prismadb from "@/lib/prismadb";
 import { FeaturedProducts } from "../types";
 import { SocialIcon } from 'react-social-icons';
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function LandingPageSBAudience() {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';

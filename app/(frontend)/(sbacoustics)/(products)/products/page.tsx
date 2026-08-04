@@ -9,7 +9,7 @@
 //   return { url, value, link };
 // }
 
-// export const revalidate = 3600;
+// export const revalidate = 60;
 
 // export default function SBAcousticsProductChoices () {
 //   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
@@ -102,7 +102,7 @@ import { LazyImageClickable } from '@/components/lazyImageclickable';
 import prismadb from '@/lib/prismadb';
 import Link from "next/link";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function SBAcousticsProductPage() {
     const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';

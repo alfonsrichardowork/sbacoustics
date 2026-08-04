@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { LazyImageCustomNavbar } from '@/components/lazyImageCustomNavbar';
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-black p-0 py-1"
 

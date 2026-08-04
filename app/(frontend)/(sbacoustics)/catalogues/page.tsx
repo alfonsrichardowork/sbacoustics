@@ -5,7 +5,7 @@ import Link from "next/link";
 import { LazyImageCustom } from "@/components/lazyImageCustom";
 import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function CataloguesPage() {
   const pdfFiles = await prismadb.catalogues.findMany({

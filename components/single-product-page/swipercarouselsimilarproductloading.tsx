@@ -9,7 +9,9 @@ const SwiperCarouselSimilarProduct = dynamic(
     {
         ssr: false,
         loading: () => (
-        <Skeleton className="min-w-full aspect-square max-h-[250px] animate-pulse bg-zinc-200 rounded-lg" />
+          <div className='border-2 rounded-lg p-4'>
+            <Skeleton className="min-w-full aspect-square max-h-[250px] animate-pulse bg-zinc-200 rounded-lg" />
+          </div>
         ),
     }
 );

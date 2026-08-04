@@ -7,7 +7,7 @@ import { FeaturedProducts } from '../types';
 import BrandChoice from './components-homescreen/BrandChoice';
 import SwiperCarouselSBAutomotive from '@/components/swipercarouselsbautomotive';
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function LandingPageSBAutomotive() {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
@@ -275,7 +275,7 @@ export default async function LandingPageSBAutomotive() {
 // import { FeaturedProducts } from '../types';
 // import BrandChoice from './components-homescreen/BrandChoice';
 
-// export const revalidate = 3600;
+// export const revalidate = 60;
 
 // export default async function LandingPageSBAutomotive() {
 //   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';

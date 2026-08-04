@@ -22,22 +22,22 @@ type Props = {
   params: Promise<{ productSlug?: string }>
 }
 
-export const revalidate = 3600
+export const revalidate = 60
 
-export async function generateStaticParams(){
-  const products = await prismadb.product.findMany({
-    where: {
-      brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-      isArchived: false,
-    },
-    select: {
-      slug: true,
-    },
-  });
-  return products.map((product: { slug: string }) => ({
-    productSlug: product.slug
-  }));
-}
+// export async function generateStaticParams(){
+//   const products = await prismadb.product.findMany({
+//     where: {
+//       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+//       isArchived: false,
+//     },
+//     select: {
+//       slug: true,
+//     },
+//   });
+//   return products.map((product: { slug: string }) => ({
+//     productSlug: product.slug
+//   }));
+// }
 
 export default async function SingleProductSBAcoustics(props: Props) {
     const { productSlug = '' } = await props.params;
@@ -568,9 +568,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                     <h2 className="pb-4">
                         Similar Products
                     </h2>
-                    <div className='border-2 rounded-lg p-4'>
-                        <SwiperCarouselSimilarProductLoading similar={product.similarProducts} brand={'sbacoustics'}/>
-                    </div>
+                    <SwiperCarouselSimilarProductLoading similar={product.similarProducts} brand={'sbacoustics'}/>
                 </div>
             }
     
