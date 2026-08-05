@@ -15,29 +15,69 @@ function isSuperAdminOnlyRoute(url: string): boolean {
 export async function proxy(req: NextRequest) {
   const url = req.nextUrl.pathname;
 
-  const ua = userAgent(req);
+  const ua = req.headers.get("user-agent") ?? "";
 
-  const requestHeaders = new Headers(req.headers);
+  const iosMatch = ua.match(/OS (\d+)[._](\d+)/i);
+  const safariMatch = ua.match(/Version\/(\d+)(?:\.(\d+))?/i);
 
-  requestHeaders.set('x-os-name', ua.os.name ?? '');
-  requestHeaders.set('x-os-version', ua.os.version ?? '');
-  
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+  const isIOSSafari =
+    isIOS &&
+    /Safari/i.test(ua) &&
+    !/CriOS|FxiOS|EdgiOS|OPiOS|GSA/i.test(ua);
+
+  const isMacSafari =
+    /Macintosh/i.test(ua) &&
+    /Safari/i.test(ua) &&
+    /Version\/\d+/i.test(ua) &&
+    !/Chrome|CriOS|Firefox|FxiOS|Edg|OPR/i.test(ua);
+
+  const safariMajor = Number(safariMatch?.[1] ?? 0);
+  const safariMinor = Number(safariMatch?.[2] ?? 0);
+
+  const legacySafari =
+    safariMatch !== null &&
+    (
+      safariMajor < 16 ||
+      (safariMajor === 16 && safariMinor <= 4)
+    );
+
+  const legacyIOS =
+    isIOSSafari &&
+    iosMatch !== null &&
+    (
+      Number(iosMatch[1]) < 16 ||
+      (
+        Number(iosMatch[1]) === 16 &&
+        Number(iosMatch[2]) <= 4
+      )
+    );
+
+  const shouldRedirect =
+    legacyIOS ||
+    (isMacSafari && legacySafari);
+
+  if (
+    shouldRedirect &&
+    !["sbacoustics.com", "www.sbacoustics.com"].includes(
+      req.nextUrl.hostname
+    )
+  ) {
+    return NextResponse.redirect(
+      new URL("https://sbacoustics.com/"),
+      307
+    );
+  }
+
   if(!isAdminRoute(url)){
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
+    return NextResponse.next();
   }
 
   const session = await getSession();
   if(url === '/admin/sign-in' || url === '/admin/api/user/login'){
     if(!session.isLoggedIn){
-      return NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      });
+      return NextResponse.next();
     }
     else{
       return NextResponse.redirect(new URL('/admin/', req.url));
@@ -50,22 +90,14 @@ export async function proxy(req: NextRequest) {
 
   if(isSuperAdminOnlyRoute(url) ){
     if(session.isAdmin){
-      return NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      });
+      return NextResponse.next();
     }
     else{
       return NextResponse.redirect(new URL('/admin/', req.url));
     }
   }
   
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  return NextResponse.next();
 }
 
 

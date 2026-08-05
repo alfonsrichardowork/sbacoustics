@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LoadingScreen } from './loadingScreen'
-import { DeviceContext } from '@/app/(frontend)/providers/device-provider';
+// import { IOSAwareContent } from './uselegacyios'
 
 interface LoadingWrapperProps {
   children: React.ReactNode
@@ -12,11 +12,10 @@ export default function LoadingWrapper({
   children, 
 }: LoadingWrapperProps) {
 
-  const { isLegacyIOS } = useContext(DeviceContext);
-
-  if (isLegacyIOS) {
-    return null;
-  }
+  // const legacyIOS = IOSAwareContent()
+  // if (legacyIOS) {
+  //   return <div className="bg-black h-dvh w-dvw flex items-center justify-center text-white text-xl">This site is not fully supported on your device. Please consider using a modern browser for the best experience.</div>;
+  // }
   const [isLoading, setIsLoading] = React.useState(true)
 
   useEffect(() => {
@@ -35,6 +34,7 @@ export default function LoadingWrapper({
   return (
     <>
       <LoadingScreen isLoading={isLoading} />
+      {/* <div className={`bg-red-500 w-dvw h-fit text-white text-lg z-1000 flex items-center justify-center absolute`}>legacyiOS: {legacyiOS.toString()}</div> */}
       {children}
     </>
   )
