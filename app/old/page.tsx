@@ -1,9 +1,11 @@
-import Link from "next/link";
+import HomeOld from "./components/home";
+import ClientComp from "./components/clientcomp";
 
-export default function TermsOfUsePage() {
+export default function oldPage() {
   return (
-    <main className="h-dvh w-dvw flex items-center justify-center bg-white text-center text-black">
-        Old page
-    </main>
+    <>
+      <ClientComp text="Hello, World!"/>
+      <HomeOld/>
+    </>
   )
 }

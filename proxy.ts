@@ -58,16 +58,25 @@ export async function proxy(req: NextRequest) {
     legacyIOS ||
     (isMacSafari && legacySafari);
 
+  const isOldRoute =
+    req.nextUrl.pathname === "/old" ||
+    req.nextUrl.pathname.startsWith("/old/");
+
+  const isStaticAsset =
+    req.nextUrl.pathname.startsWith("/uploads/") ||
+    req.nextUrl.pathname.startsWith("/images/") ||
+    req.nextUrl.pathname.startsWith("/public/");
+  
   if (
     shouldRedirect &&
-    !["sbacoustics.com", "www.sbacoustics.com"].includes(
-      req.nextUrl.hostname
-    )
+    !isOldRoute &&
+    !isStaticAsset
   ) {
-    return NextResponse.redirect(
-      new URL("https://sbacoustics.com/"),
-      307
-    );
+    const url = req.nextUrl.clone();
+
+    url.pathname = `/old${url.pathname}`;
+
+    return NextResponse.redirect(url, 307);
   }
 
   if(!isAdminRoute(url)){

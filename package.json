@@ -121,7 +121,9 @@
   "browserslist": [
     "defaults",
     "not dead",
-    "not op_mini all"
+    "not op_mini all",
+    "safari >= 10.15",
+    "ios >= 10.15"
   ],
   "devDependencies": {
     "@playwright/test": "^1.61.0",
