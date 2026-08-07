@@ -1,8 +1,5 @@
 import prismadb from "@/lib/prismadb";
-import { Empty, EmptyContent, EmptyDescription, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
-import { Image } from "lucide-react";
 import Contact from "../components/contact";
-import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
 
 export const revalidate = 60;
 
@@ -70,9 +67,7 @@ export default async function ContactUsJsonLd() {
           }
         </div>
         <div className="relative z-10 top-96"> */}
-          <GoogleCaptchaWrapper>
             <Contact oneBrand={brand}/>
-          </GoogleCaptchaWrapper>
         {/* </div>
       </div> */}
     </>

@@ -10,8 +10,34 @@ const toNoReplyEmail = (email: string) => {
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
-  const { email, name, country, subject, message, website, fromemail } = await request.json();
+  const body = await request.json();
 
+  const {
+    email,
+    name,
+    country,
+    subject,
+    message,
+    website,
+    fromemail,
+    hp_company,
+    elapsedMs,
+    old = false
+  } = body;   
+  if(old){
+    if (typeof hp_company === 'string' && hp_company.trim() !== '') {
+      return NextResponse.json(
+        { error: "Invalid submission company" },
+        { status: 500 }
+      );
+    }
+    if (typeof elapsedMs !== 'number' || elapsedMs < 3000) {
+      return NextResponse.json(
+        { error: "Invalid submission time" },
+        { status: 500 }
+      );
+    }
+  }
   // const { data, error } = await resend.batch.send([
   //   // Email to user
   //   {

@@ -65,7 +65,8 @@ export async function proxy(req: NextRequest) {
   const isStaticAsset =
     req.nextUrl.pathname.startsWith("/uploads/") ||
     req.nextUrl.pathname.startsWith("/images/") ||
-    req.nextUrl.pathname.startsWith("/public/");
+    req.nextUrl.pathname.startsWith("/public/") ||
+    req.nextUrl.pathname.startsWith("/api/");
   
   if (
     shouldRedirect &&
