@@ -1,25 +1,24 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react'
-//@ts-ignore
-import 'mapbox-gl/dist/mapbox-gl.css'
-import { Facebook, Globe, Instagram, Loader2, Mail, MapPin, Phone } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import Link from 'next/link'
-
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React, { useEffect, useMemo, useRef, useState } from "react"
+import {
+  Facebook,
+  Globe,
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+} from "lucide-react"
+import Link from "next/link"
+import { distributors } from "@prisma/client"
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 //@ts-ignore
 import "leaflet/dist/leaflet.css";
 import { LatLngExpression } from "leaflet";
 import L from "leaflet";
-import { distributors } from '@prisma/client'
-import { usePathname } from 'next/navigation'
 //@ts-ignore
-import '@/app/css/styles.scss'
-//@ts-ignore
-import '@/app/globals.css'
-// import { CustomScrollbar } from './always-visible-scrollbar-distributor'
+import 'mapbox-gl/dist/mapbox-gl.css'
+import { usePathname } from "next/navigation"
 
 interface DistributorProps {
   asianDistributors: distributors[]
@@ -30,327 +29,682 @@ interface DistributorProps {
   antarticaDistributors: distributors[]
 }
 
-// Function to create icons lazily (only on client)
-const getIcons = () => {
-  const defaultIcon = new L.Icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png",
-    iconSize: [20, 35],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    shadowSize: [30, 30],
-  });
+// const getIcons = () => {
+//   const defaultIcon = new L.Icon({
+//     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png",
+//     iconSize: [20, 35],
+//     iconAnchor: [12, 41],
+//     popupAnchor: [1, -34],
+//     shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+//     shadowSize: [30, 30],
+//   });
 
-  const activeIcon = new L.Icon({
-    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-    iconSize: [30, 50],
-    iconAnchor: [15, 50],
-    popupAnchor: [1, -34],
-    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    shadowSize: [41, 41],
-  });
+//   const activeIcon = new L.Icon({
+//     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+//     iconSize: [30, 50],
+//     iconAnchor: [15, 50],
+//     popupAnchor: [1, -34],
+//     shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+//     shadowSize: [41, 41],
+//   });
 
-  return { defaultIcon, activeIcon };
-};
+//   return { defaultIcon, activeIcon };
+// };
+
+function createPinIcon(active: boolean) {
+  const color = active ? "#dc2626" : "#2563eb"
+
+  return L.divIcon({
+    className: "",
+    iconSize: [28, 36],
+    iconAnchor: [14, 36],
+    popupAnchor: [0, -36],
+    html: `
+      <div style="
+        width: 24px;
+        height: 24px;
+        background: ${color};
+        border: 3px solid #ffffff;
+        border-radius: 50% 50% 50% 0;
+        box-shadow: 0 2px 6px rgba(0,0,0,.35);
+        transform: rotate(-45deg);
+      ">
+        <div style="
+          width: 8px;
+          height: 8px;
+          margin: 5px;
+          background: #ffffff;
+          border-radius: 50%;
+        "></div>
+      </div>
+    `,
+  })
+}
+
+function FocusMap({ distributor }: { distributor?: distributors }) {
+  const map = useMap()
+
+  React.useEffect(() => {
+    if (!distributor) return
+
+    const position: [number, number] = [
+      Number(distributor.lat),
+      Number(distributor.lng),
+    ]
+
+    if (Number.isFinite(position[0]) && Number.isFinite(position[1])) {
+      map.setView(position, 4, { animate: false })
+    }
+  }, [distributor, map])
+
+  return null
+}
+
+const styles: Record<string, React.CSSProperties> = {
+  page: {
+    width: "100%",
+    color: "#18181b",
+    fontFamily: "Arial, sans-serif",
+  },
+  hiddenTitle: {
+    position: "absolute",
+    width: "1px",
+    height: "1px",
+    padding: 0,
+    margin: "-1px",
+    overflow: "hidden",
+    clip: "rect(0, 0, 0, 0)",
+    whiteSpace: "nowrap",
+    border: 0,
+  },
+  mapSection: {
+    position: "relative",
+    width: "100%",
+    minHeight: "400px",
+  },
+  activePanelWrapper: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    width: "100%",
+    padding: "0 32px",
+    boxSizing: "border-box",
+  },
+  activePanel: {
+    width: "100%",
+    padding: "20px",
+    backgroundColor: "rgba(255, 255, 255, 0.85)",
+    backdropFilter: "blur(4px)",
+    boxSizing: "border-box",
+  },
+  activeTitle: {
+    marginBottom: "16px",
+    textAlign: "center",
+    fontSize: "20px",
+    fontWeight: 700,
+  },
+  detailsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "10px 20px",
+    fontSize: "15px",
+  },
+  detail: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    minWidth: 0,
+  },
+  detailText: {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
+  link: {
+    color: "inherit",
+    textDecoration: "underline",
+  },
+  distributorsSection: {
+    padding: "64px 32px",
+    boxSizing: "border-box",
+  },
+  heading: {
+    margin: "0 0 24px",
+    textAlign: "center",
+    fontSize: "30px",
+    fontWeight: 700,
+  },
+  cardsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+    gap: "16px",
+  },
+  card: {
+    width: "100%",
+    maxHeight: "500px",
+    overflowY: "auto",
+    border: "1px solid #e4e4e7",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+  },
+  cardHeader: {
+    padding: "16px",
+    backgroundColor: "#3f3f46",
+    color: "#ffffff",
+    fontSize: "18px",
+    fontWeight: 700,
+  },
+  cardContent: {
+    padding: "12px",
+  },
+  distributorButton: {
+    display: "block",
+    width: "100%",
+    padding: "12px",
+    marginBottom: "8px",
+    border: 0,
+    backgroundColor: "transparent",
+    color: "#18181b",
+    textAlign: "left",
+    cursor: "pointer",
+  },
+  country: {
+    margin: 0,
+    fontSize: "18px",
+    fontWeight: 400,
+  },
+  name: {
+    margin: "4px 0 0",
+    fontSize: "15px",
+    fontWeight: 600,
+  },
+}
 
 export const DistributorMap: React.FC<DistributorProps> = ({
-  asianDistributors, europeDistributors, americaDistributors, oceaniaDistributors, africaDistributors, antarticaDistributors
+  asianDistributors,
+  europeDistributors,
+  americaDistributors,
+  oceaniaDistributors,
+  africaDistributors,
+  antarticaDistributors,
 }) => {
-  const [activeMap, setActiveMap] = useState<distributors | undefined>(asianDistributors[0])
+  // const [activeMap, setActiveMap] = useState<distributors | undefined>(
+  //   asianDistributors[0]
+  // )
+  //   // const [isScrolling, setIsScrolling] = useState(false);
+  //   // const [center, setCenter]= useState<LatLngExpression>([Number(asianDistributors[1]?.lat ?? 0), Number(asianDistributors[1]?.lng ?? 0)]);
+  //   // const [icons, setIcons] = useState<{ defaultIcon: L.Icon; activeIcon: L.Icon } | null>(null);
+  //   // const mapRef = useRef<L.Map | null>(null);
+  //   // const pathname = usePathname();
+  //   // const allDistributors = [
+  //   //   ...asianDistributors,
+  //   //   ...europeDistributors,
+  //   //   ...americaDistributors,
+  //   //   ...oceaniaDistributors,
+  //   //   ...africaDistributors,
+  //   //   ...antarticaDistributors
+  //   // ]
   
+  //   // // Initialize icons on client only
+  //   // useEffect(() => {
+  //   //   setIcons(getIcons());
+  //   // }, []);
+  
+  //   // useEffect(() => {
+  //   //   const fetchIpAndSetMap = async () => {
+  //   //     try {
+  //   //       const res = await fetch('/api/ip');
+  //   //       const data = await res.json();
+  //   //       const res_2 = await fetch(`https://ipapi.co/${data.ip}/json/`);
+  //   //       const data_2 = await res_2.json();
+  
+    
+          
+  //   //       const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  //   //         const toRad = (value: number) => (value * Math.PI) / 180;
+  //   //         const R = 6371; // Earth radius in km
+          
+  //   //         const dLat = toRad(lat2 - lat1);
+  //   //         const dLon = toRad(lon2 - lon1);
+  //   //         const a =
+  //   //           Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+  //   //           Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+  //   //           Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  //   //         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          
+  //   //         return R * c;
+  //   //       };
+          
+  //   //       const closestDistributor = allDistributors.reduce((closest, distributor) => {
+  //   //         const distributorDistance = getDistance(data_2.latitude, data_2.longitude, Number(distributor.lat), Number(distributor.lng));
+  //   //         const closestDistance = getDistance(data_2.latitude, data_2.longitude, Number(closest?.lat ?? 0), Number(closest?.lng ?? 0));
+          
+  //   //         return distributorDistance < closestDistance ? distributor : closest;
+  //   //       }, asianDistributors[0]);
+          
+  //   //       setActiveMap(closestDistributor);
+  //   //       setCenter([Number(closestDistributor?.lat ?? 0), Number(closestDistributor?.lng ?? 0)]);
+  //   //     } catch (error) {
+  //   //       console.error('Error fetching IP:', error);
+  //   //     }
+  //   //   };
+    
+  //   //   fetchIpAndSetMap();
+  //   // }, []);
+    
+    
+  //   // useEffect(() => {
+  //   //       if (mapRef.current) {
+  //   //           mapRef.current.flyTo(center, 3, { duration: 1.5 });
+  //   //       }
+  //   //   }, [center])
+    
+  
+  //   // const handleScrollToTop = () => {
+  //   //   if (typeof window === 'undefined') return;
+    
+  //   //   setIsScrolling(true);
+  
+  //   //   window.scrollTo({
+  //   //     top: 0,
+  //   //     behavior: 'smooth',
+  //   //   });
+  
+  //   //   const scrollCheck = setInterval(() => {
+  //   //     if (window.scrollY === 0) {
+  //   //       clearInterval(scrollCheck);
+  //   //       setIsScrolling(false);
+  //   //     }
+  //   //   }, 100);
+  //   // };
+  
+  //   // if (!icons) {
+  //   //   return null;
+  //   // }
+
+  // const regions = [
+  //   { name: "Asia", distributors: asianDistributors },
+  //   { name: "The Americas", distributors: americaDistributors },
+  //   { name: "Europe", distributors: europeDistributors },
+  //   { name: "Oceania", distributors: oceaniaDistributors },
+  //   { name: "Africa", distributors: africaDistributors },
+  //   { name: "Antarctica", distributors: antarticaDistributors },
+  // ]
+
+  // return (
+  //   <div style={styles.page}>
+  //     <h1 style={styles.hiddenTitle}>Distributors | SB Acoustics</h1>
+        
+  //       {/* <div 
+  //         style={{ 
+  //           position: "relative", 
+  //           display: "flex",
+  //           alignItems: "center",
+  //           justifyContent: "center",
+  //           zIndex: 0,
+  //           width: "100%", 
+  //           height: "100%" 
+  //         }}
+  //       >
+  //       <MapContainer
+  //         center={center}
+  //         zoom={3}
+  //         attributionControl={false}
+  //         className='z-10 mt-12 md:h-[500px] h-[400px] w-full'
+  //         ref={(mapInstance) => {
+  //           if (mapInstance && !mapRef.current) {
+  //             mapRef.current = mapInstance;
+  //           }
+  //         }}
+  //       >
+  //         <TileLayer
+  //           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+  //         />
+  //         {allDistributors.map((loc) => (
+  //           <Marker 
+  //             key={loc.name} 
+  //             position={[Number(loc.lat), Number(loc.lng)]}
+  //             icon={activeMap?.name === loc.name ? icons.activeIcon : icons.defaultIcon}
+  //             eventHandlers={{
+  //               click: () => {
+  //                 setActiveMap(loc), 
+  //                 mapRef.current?.flyTo([Number(loc.lat), Number(loc.lng)], 3, { duration: 1.5 });
+  //               }
+  //             }}>
+  //             <Popup>{loc.name}</Popup>
+  //           </Marker>
+  //         ))}
+  //       </MapContainer>
+  //       </div> */}
+  //     <div style={styles.mapSection}>
+  //       {activeMap && (
+  //         <div style={styles.activePanelWrapper}>
+  //           <div style={styles.activePanel}>
+  //             <div style={styles.activeTitle}>{activeMap.name}</div>
+
+  //             <div style={styles.detailsGrid}>
+  //               {activeMap.country && (
+  //                 <div style={styles.detail}>
+  //                   {/* <MapPin size={16} /> */}
+  //                   <span style={styles.detailText}>{activeMap.country}</span>
+  //                 </div>
+  //               )}
+
+  //               {activeMap.phone && (
+  //                 <div style={styles.detail}>
+  //                   {/* <Phone size={16} /> */}
+  //                   <span style={styles.detailText}>{activeMap.phone}</span>
+  //                 </div>
+  //               )}
+
+  //               {activeMap.email && (
+  //                 <div style={styles.detail}>
+  //                   {/* <Mail size={16} /> */}
+  //                   <Link
+  //                     href={`mailto:${activeMap.email}`}
+  //                     style={{ ...styles.link, ...styles.detailText }}
+  //                   >
+  //                     {activeMap.email}
+  //                   </Link>
+  //                 </div>
+  //               )}
+
+  //               {activeMap.website && (
+  //                 <div style={styles.detail}>
+  //                   {/* <Globe size={16} /> */}
+  //                   <Link
+  //                     href={activeMap.website}
+  //                     target="_blank"
+  //                     rel="noopener noreferrer"
+  //                     style={{ ...styles.link, ...styles.detailText }}
+  //                   >
+  //                     {activeMap.website}
+  //                   </Link>
+  //                 </div>
+  //               )}
+
+  //               {activeMap.facebook && (
+  //                 <div style={styles.detail}>
+  //                   {/* <Facebook size={16} /> */}
+  //                   <Link
+  //                     href={activeMap.facebook}
+  //                     target="_blank"
+  //                     rel="noopener noreferrer"
+  //                     style={styles.link}
+  //                   >
+  //                     Visit Facebook
+  //                   </Link>
+  //                 </div>
+  //               )}
+
+  //               {activeMap.instagram && (
+  //                 <div style={styles.detail}>
+  //                   {/* <Instagram size={16} /> */}
+  //                   <Link
+  //                     href={activeMap.instagram}
+  //                     target="_blank"
+  //                     rel="noopener noreferrer"
+  //                     style={styles.link}
+  //                   >
+  //                     Visit Instagram
+  //                   </Link>
+  //                 </div>
+  //               )}
+
+  //               {activeMap.address && (
+  //                 <div style={styles.detail}>
+  //                   {/* <MapPin size={16} /> */}
+  //                   <Link
+  //                     href={activeMap.address}
+  //                     target="_blank"
+  //                     rel="noopener noreferrer"
+  //                     style={styles.link}
+  //                   >
+  //                     Location
+  //                   </Link>
+  //                 </div>
+  //               )}
+  //             </div>
+  //           </div>
+  //         </div>
+  //       )}
+  //     </div>
+
+  //     <div style={styles.distributorsSection}>
+  //       <h2 style={styles.heading}>Our Distributors</h2>
+
+  //       <div style={styles.cardsGrid}>
+  //         {regions.map(
+  //           (region) =>
+  //             region.distributors?.length > 0 && (
+  //               <div key={region.name} style={styles.card}>
+  //                 <div style={styles.cardHeader}>{region.name}</div>
+
+  //                 <div style={styles.cardContent}>
+  //                   {region.distributors.map((distributor) => (
+  //                     <button
+  //                       key={distributor.id}
+  //                       type="button"
+  //                       style={styles.distributorButton}
+  //                       onClick={() => setActiveMap(distributor)}
+  //                       onMouseEnter={(event) => {
+  //                         event.currentTarget.style.backgroundColor = "#f4f4f5"
+  //                       }}
+  //                       onMouseLeave={(event) => {
+  //                         event.currentTarget.style.backgroundColor =
+  //                           "transparent"
+  //                       }}
+  //                     >
+  //                       <p style={styles.country}>{distributor.country}</p>
+  //                       <p style={styles.name}>{distributor.name}</p>
+  //                     </button>
+  //                   ))}
+  //                 </div>
+  //               </div>
+  //             )
+  //         )}
+  //       </div>
+  //     </div>
+  //   </div>
+  // )
+
+
+
+  const allDistributors = useMemo(
+    () => [
+      ...asianDistributors,
+      ...europeDistributors,
+      ...americaDistributors,
+      ...oceaniaDistributors,
+      ...africaDistributors,
+      ...antarticaDistributors,
+    ],
+    [
+      asianDistributors,
+      europeDistributors,
+      americaDistributors,
+      oceaniaDistributors,
+      africaDistributors,
+      antarticaDistributors,
+    ]
+  )
+
+  const [activeDistributor, setActiveDistributor] = useState<
+    distributors | undefined
+  >(allDistributors[0])
+
+  const regions = [
+    { name: "Asia", distributors: asianDistributors },
+    { name: "The Americas", distributors: americaDistributors },
+    { name: "Europe", distributors: europeDistributors },
+    { name: "Oceania", distributors: oceaniaDistributors },
+    { name: "Africa", distributors: africaDistributors },
+    { name: "Antarctica", distributors: antarticaDistributors },
+  ]
+
+  const initialCenter: [number, number] = [
+    Number(activeDistributor?.lat ?? 20),
+    Number(activeDistributor?.lng ?? 0),
+  ]
 
   return (
-      <>
-      <h1 className='sr-only'>Distributors | SB Acoustics</h1>
-      {/* <ScrollableData /> */}
-      <div className="w-screen h-[400px] md:h-[500px] relative">
-        <div className='absolute w-screen 2xl:px-96 xl:px-72 lg:px-12 px-8 bottom-0'>
-          <div className="grid md:grid-cols-1 gap-4">
-            <Card className="w-full justify-self-start md:p-4 p-2 md:max-h-full h-full bg-background/70 backdrop-blur-xs z-30 rounded-none border-none">
-              {activeMap &&
-                <CardContent className="p-0 text-black">
-                  <div className="md:text-xl text-base font-bold md:mb-4 mb-2 w-full text-center">{activeMap.name}</div>
-                  <div className="grid md:grid-cols-2 grid-cols-1 md:space-y-2 space-y-1 text-sm">
-                    {activeMap.country && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
-                        <MapPin size={14} className='min-w-4' />
-                          <p className='line-clamp-1'>{activeMap.country}</p>
-                      </p>
-                    )}
-                    {activeMap.phone && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
-                        <Phone size={14} className='min-w-4' />
-                          <p className='line-clamp-1'>{activeMap.phone}</p>
-                      </p>
-                    )}
-                    {activeMap.email && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
-                        <Mail size={14} className='min-w-4' />
-                        <Link href={`mailto:${activeMap.email}`} className="underline line-clamp-1">
-                          {activeMap.email}
-                        </Link>
-                      </p>
-                    )}
-                    {activeMap.website && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
-                        <Globe size={14} className='min-w-4' />
-                        <Link
-                          href={activeMap.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="underline line-clamp-1"
-                        >
-                          {activeMap.website}
-                        </Link>
-                      </p>
-                    )}
-                    {activeMap.facebook && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
-                        <Facebook size={14} className='min-w-4'/>
-                        <Link href={`${activeMap.facebook}`} target="_blank" rel="noopener noreferrer" className="underline">Visit Facebook</Link>
-                      </p>
-                    )}
-                    {activeMap.instagram && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
-                        <Instagram size={14} className='min-w-4' />
-                        <Link href={`${activeMap.instagram}`} target="_blank" rel="noopener noreferrer" className="underline">Visit Instagram</Link>
-                      </p>
-                    )}
-                    {activeMap.address && (
-                      <p className="flex items-start md:text-base text-xs gap-2">
-                        <MapPin size={14} className="min-w-4 mt-1" />
-                        <Link href={activeMap.address} target='blank' className="block underline">
-                          Location
-                        </Link>
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              }
-            </Card>
+    <div
+      style={{
+        width: "100%",
+        color: "#18181b",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          height: "500px",
+          marginTop: "48px",
+        }}
+      >
+
+
+        
+        {/* <MapContainer
+          center={initialCenter}
+          zoom={2}
+          style={{ width: "100%", height: "100%" }}
+          attributionControl={false}
+          scrollWheelZoom={false}
+        >
+          <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
+
+          <FocusMap distributor={activeDistributor} />
+
+          {allDistributors.map((distributor) => {
+            const position: [number, number] = [
+              Number(distributor.lat),
+              Number(distributor.lng),
+            ]
+
+            return (
+              <Marker
+                key={distributor.id}
+                position={position}
+                icon={createPinIcon(
+                  activeDistributor?.id === distributor.id
+                )}
+                eventHandlers={{
+                  click: () => setActiveDistributor(distributor),
+                }}
+              >
+                <Popup>{distributor.name}</Popup>
+              </Marker>
+            )
+          })}
+        </MapContainer> */}
+
+
+
+      </div>
+
+      {activeDistributor && (
+        <div
+          style={{
+            padding: "20px",
+            border: "1px solid #e4e4e7",
+            backgroundColor: "#ffffff",
+          }}
+        >
+          <h2 style={{ margin: "0 0 16px", fontSize: "20px" }}>
+            {activeDistributor.name}
+          </h2>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: "10px 20px",
+            }}
+          >
+            <span>{activeDistributor.country}</span>
+            {activeDistributor.phone && <span>{activeDistributor.phone}</span>}
+
+            {activeDistributor.email && (
+              <Link href={`mailto:${activeDistributor.email}`}>
+                {activeDistributor.email}
+              </Link>
+            )}
+
+            {activeDistributor.website && (
+              <Link
+                href={activeDistributor.website}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {activeDistributor.website}
+              </Link>
+            )}
           </div>
         </div>
-      </div>
-      
-    <div className="py-16 2xl:px-96 xl:px-72 lg:px-12 px-8">
-      <div className='text-3xl font-bold mb-6 text-center'>
-        Our Distributors
-      </div>
-      <div className="grid md:grid-cols-2 gap-4">
-        {asianDistributors && asianDistributors.length > 0 &&
-          <Card className="w-full max-h-[500px] shadow-lg justify-self-end rounded-none">
-            <CardHeader className='bg-zinc-700 text-white md:py-4 md:px-4 py-2 px-3'>
-              <CardTitle>
-                Asia
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='md:p-4 p-2'>
-              {/* <ScrollArea className="max-h-[400px] overflow-y-auto w-full"> */}
-              {/* <CustomScrollbar containerHeight="400px"> */}
-                {asianDistributors.map((distributor, index) => (
-                  <TooltipProvider key={index}>
-                  <Tooltip>
-                    <TooltipTrigger className='w-full text-left'>
-                      <div
-                        className={`md:mb-4 mb-2 md:p-4 p-2 `}
-                        onClick={() => {setActiveMap(distributor)}}
+      )}
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+          gap: "16px",
+          padding: "48px 0",
+        }}
+      >
+        {regions.map(
+          (region) =>
+            region.distributors.length > 0 && (
+              <div
+                key={region.name}
+                style={{
+                  border: "1px solid #e4e4e7",
+                  backgroundColor: "#ffffff",
+                }}
+              >
+                <h3
+                  style={{
+                    margin: 0,
+                    padding: "16px",
+                    backgroundColor: "#3f3f46",
+                    color: "#ffffff",
+                  }}
+                >
+                  {region.name}
+                </h3>
+
+                <div style={{ padding: "12px" }}>
+                  {region.distributors.map((distributor) => {
+                    const active =
+                      distributor.id === activeDistributor?.id
+
+                    return (
+                      <button
+                        key={distributor.id}
+                        type="button"
+                        onClick={() => setActiveDistributor(distributor)}
+                        style={{
+                          display: "block",
+                          width: "100%",
+                          padding: "12px",
+                          border: 0,
+                          borderBottom: "1px solid #e4e4e7",
+                          backgroundColor: active ? "#fee2e2" : "#ffffff",
+                          color: "#18181b",
+                          textAlign: "left",
+                          cursor: "pointer",
+                        }}
                       >
-                        <h4 className={`flex items-center md:text-xl text-base`}>
-                        {distributor.country}
-                        </h4>
-                        <h5 className="md:text-lg text-sm font-semibold md:mb-2 mb-0">{distributor.name}</h5>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Click for more info</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                ))}
-              {/* </CustomScrollbar> */}
-              {/* </ScrollArea> */}
-            </CardContent>
-          </Card>
-        }
-        {americaDistributors && americaDistributors.length > 0 &&
-          <Card className="w-full max-h-[500px] shadow-lg justify-self-start rounded-none">
-            <CardHeader className='bg-zinc-700 text-white md:py-4 md:px-4 py-2 px-3'>
-              <CardTitle>
-                The Americas
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='md:p-4 p-2'>
-              {/* <ScrollArea className="max-h-[400px] overflow-y-auto w-full"> */}
-              {/* <CustomScrollbar containerHeight="400px"> */}
-                {americaDistributors.map((distributor, index) => (
-                  <TooltipProvider key={index}>
-                  <Tooltip>
-                    <TooltipTrigger className='w-full text-left'>
-                      <div
-                        className={`md:mb-4 mb-2 md:p-4 p-2`}
-                        onClick={() => {setActiveMap(distributor)}}
-                      >
-                        <h4 className={`flex items-center md:text-xl text-base`}>
-                        {distributor.country}
-                        </h4>
-                        <h5 className="md:text-lg text-sm font-semibold md:mb-2 mb-0">{distributor.name}</h5>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Click for more info</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                ))}
-                {/* </CustomScrollbar> */}
-              {/* </ScrollArea> */}
-            </CardContent>
-          </Card>
-        }
-        {europeDistributors && europeDistributors.length > 0 &&
-          <Card className="w-full max-h-[500px] shadow-lg justify-self-end rounded-none">
-            <CardHeader className='bg-zinc-700 text-white md:py-4 md:px-4 py-2 px-3'>
-              <CardTitle>
-                Europe
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='md:p-4 p-2'>
-              {/* <ScrollArea className="max-h-[400px] overflow-y-auto w-full"> */}
-              {/* <CustomScrollbar containerHeight="400px"> */}
-                {europeDistributors.map((distributor, index) => (
-                  <TooltipProvider key={index}>
-                  <Tooltip>
-                    <TooltipTrigger className='w-full text-left'>
-                      <div
-                        className={`md:mb-4 mb-2 md:p-4 p-2`}
-                        onClick={() => {setActiveMap(distributor)}}
-                      >
-                        <h4 className={`flex items-center md:text-xl text-base`}>
-                        {distributor.country}
-                        </h4>
-                        <h5 className="md:text-lg text-sm font-semibold md:mb-2 mb-0">{distributor.name}</h5>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Click for more info</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                ))}
-                {/* </CustomScrollbar> */}
-              {/* </ScrollArea> */}
-            </CardContent>
-          </Card>
-        }
-        {oceaniaDistributors && oceaniaDistributors.length > 0 &&
-          <Card className="w-full max-h-[500px] shadow-lg justify-self-start rounded-none">
-            <CardHeader className='bg-zinc-700 text-white md:py-4 md:px-4 py-2 px-3'>
-              <CardTitle>
-                Oceania
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='md:p-4 p-2'>
-              {/* <ScrollArea className="max-h-[400px] overflow-y-auto w-full"> */}
-              {/* <CustomScrollbar containerHeight="400px"> */}
-                {oceaniaDistributors.map((distributor, index) => (
-                  <TooltipProvider key={index}>
-                  <Tooltip>
-                    <TooltipTrigger className='w-full text-left'>
-                      <div
-                        className={`md:mb-4 mb-2 md:p-4 p-2`}
-                        onClick={() => { setActiveMap(distributor)}}
-                      >
-                        <h4 className={`flex items-center md:text-xl text-base`}>
-                        {distributor.country}
-                        </h4>
-                        <h5 className="md:text-lg text-sm font-semibold md:mb-2 mb-0">{distributor.name}</h5>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Click for more info</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                ))}
-                {/* </CustomScrollbar> */}
-              {/* </ScrollArea> */}
-            </CardContent>
-          </Card>
-        }
-        {africaDistributors && africaDistributors.length > 0 &&
-          <Card className="w-full max-h-[500px] shadow-lg justify-self-end rounded-none">
-            <CardHeader className='bg-zinc-700 text-white md:py-4 md:px-4 py-2 px-3'>
-              <CardTitle>
-                Africa
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='md:p-4 p-2'>
-              {/* <ScrollArea className="max-h-[400px] overflow-y-auto w-full"> */}
-              
-              {/* <CustomScrollbar containerHeight="400px"> */}
-                {africaDistributors.map((distributor, index) => (
-                  <TooltipProvider key={index}>
-                  <Tooltip>
-                    <TooltipTrigger className='w-full text-left'>
-                      <div
-                        className={`md:mb-4 mb-2 md:p-4 p-2`}
-                        onClick={() => { setActiveMap(distributor)}}
-                      >
-                        <h4 className={`flex items-center md:text-xl text-base`}>
-                        {distributor.country}
-                        </h4>
-                        <h5 className="md:text-lg text-sm font-semibold md:mb-2 mb-0">{distributor.name}</h5>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Click for more info</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                ))}
-                {/* </CustomScrollbar> */}
-              {/* </ScrollArea> */}
-            </CardContent>
-          </Card>
-        }
-        {antarticaDistributors && antarticaDistributors.length > 0 &&
-          <Card className="w-full max-h-[500px] shadow-lg justify-self-start rounded-none">
-            <CardHeader className='bg-zinc-700 text-white md:py-4 md:px-4 py-2 px-3'>
-              <CardTitle>
-                Antartica
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='md:p-4 p-2'>
-              {/* <ScrollArea className="max-h-[400px] overflow-y-auto w-full"> */}
-              
-              {/* <CustomScrollbar containerHeight="400px"> */}
-                {antarticaDistributors.map((distributor, index) => (
-                  <TooltipProvider key={index}>
-                  <Tooltip>
-                    <TooltipTrigger className='w-full text-left'>
-                      <div
-                        className={`md:mb-4 mb-2 md:p-4 p-2`}
-                        onClick={() => {setActiveMap(distributor)}}
-                      >
-                        <h4 className={`flex items-center md:text-xl text-base`}>
-                        {distributor.country}
-                        </h4>
-                        <h5 className="md:text-lg text-sm font-semibold md:mb-2 mb-0">{distributor.name}</h5>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Click for more info</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                ))}
-                {/* </CustomScrollbar> */}
-              {/* </ScrollArea> */}
-            </CardContent>
-          </Card>
-        }
+                        <strong>{distributor.country}</strong>
+                        <br />
+                        <span>{distributor.name}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+        )}
       </div>
     </div>
-    </>
   )
 }

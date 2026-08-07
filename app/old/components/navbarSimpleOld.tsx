@@ -33,10 +33,10 @@ function filterList(event: React.KeyboardEvent<HTMLInputElement>) {
   }
 }
 
-function MenuItem({ label, first, children }: { label: string; first?: boolean; children?: React.ReactNode }) {
+function MenuItem({ label, first, href, children }: { label: string; first?: boolean; href?: string; children?: React.ReactNode }) {
   return (
     <li className="legacy-menu-item">
-      <a href="#" className="legacy-menu-link">
+      <a href={href} className="legacy-menu-link">
         {label}
         {children ? <span className="legacy-arrow" aria-hidden="true">{first ? 'v' : '>'}</span> : null}
       </a>
@@ -78,34 +78,34 @@ export default function NavbarSimpleOld() {
             </a>
 
             <ul className="legacy-menu">
-                <MenuItem label="Drivers" first>
-                <MenuItem label="Woofer">
-                    <MenuItem label="4 inch Woofer" />
-                    <MenuItem label="6 inch Woofer" />
-                    <MenuItem label="8 inch Woofer" />
-                </MenuItem>
-                <MenuItem label="Midrange">
-                    <MenuItem label="4 inch Midrange" />
-                    <MenuItem label="6 inch Midrange" />
-                </MenuItem>
-                <MenuItem label="Tweeter">
-                    <MenuItem label="Dome Tweeters" />
-                    <MenuItem label="Horn Tweeters" />
-                </MenuItem>
-                <MenuItem label="Subwoofer" />
-                </MenuItem>
-                <MenuItem label="Kits" first>
-                <MenuItem label="2-Way Kits" />
-                <MenuItem label="3-Way Kits" />
-                <MenuItem label="DIY Kits">
+                <MenuItem label="Drivers" href="/old/drivers" first>
+                  <MenuItem label="Woofer">
+                      <MenuItem label="4 inch Woofer" />
+                      <MenuItem label="6 inch Woofer" />
+                      <MenuItem label="8 inch Woofer" />
+                  </MenuItem>
+                  <MenuItem label="Midrange">
+                      <MenuItem label="4 inch Midrange" />
+                      <MenuItem label="6 inch Midrange" />
+                  </MenuItem>
+                  <MenuItem label="Tweeter">
+                      <MenuItem label="Dome Tweeters" />
+                      <MenuItem label="Horn Tweeters" />
+                  </MenuItem>
+                  <MenuItem label="Subwoofer" />
+                  </MenuItem>
+                <MenuItem label="Kits" href="/old/kits" first>
+                  <MenuItem label="2-Way Kits" />
+                  <MenuItem label="3-Way Kits" />
+                  <MenuItem label="DIY Kits">
                     <MenuItem label="Bookshelf Kits" />
                     <MenuItem label="Floorstanding Kits" />
+                  </MenuItem>
                 </MenuItem>
-                </MenuItem>
-                <MenuItem label="New Products" first>
-                <MenuItem label="Latest Drivers" />
-                <MenuItem label="Latest Kits" />
-                <MenuItem label="Coming Soon" />
+                <MenuItem label="New Products" href="/old/new-products" first>
+                  <MenuItem label="Latest Drivers" />
+                  <MenuItem label="Latest Kits" />
+                  <MenuItem label="Coming Soon" />
                 </MenuItem>
                 <li className="legacy-menu-item"><a className="legacy-menu-link" href="/old/technical">Technical</a></li>
                 <li className="legacy-menu-item"><a     className="legacy-menu-link" href="/old/distributors">Distributors</a></li>
