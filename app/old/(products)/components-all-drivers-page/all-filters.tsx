@@ -2,6 +2,7 @@
 
 import { activeCheckbox, activeSlider, AllFilterProductsOnlyType, CheckBoxData, SliderData } from "@/app/(frontend)/types";
 import { useEffect, useState } from "react";
+import '@/app/old/(products)/drivers/driverpage.css'
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import AllDriversProducts from "./all-product";
@@ -195,11 +196,10 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({
     
     return ( 
         <>
-            {showFilters?
+            {/* {showFilters?
             
                 !loadingSlider && Array.isArray(sliderValue) ?
                 <div key={'1'} className="hidden md:block pr-4">
-                    {/* <div className="pt-28"></div> */}
                     <div className="sticky top-24 rounded-md text-black shadow-2xl bg-zinc-100">
                     <div className="text-lg lg:text-xl font-bold text-center bg-zinc-700 text-white py-2 rounded-t-md">
                         FILTERS
@@ -266,10 +266,8 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({
                 </div>
                 :
                 <div key={'1'} className="hidden md:block pr-4">
-                    {/* <Skeleton className="H-full w-full rounded-md" /> */}
                 </div>
             :
-                // <div className="hidden md:block pr-16"></div>
                 <></>
             }
             <div className='block md:hidden text-center pb-4'>
@@ -335,11 +333,9 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({
                         )}
                     <SheetFooter>
                     <div className="flex justify-center py-4 w-full">
-                        {/* <div className="w-" > */}
                             <Button onClick={() => setReseted('true')} className="items-center">
                                 RESET
                             </Button>
-                        {/* </div> */}
                     </div>
                     </SheetFooter>
                     </ScrollArea>
@@ -349,7 +345,22 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({
                 </div>
               
             </div>
-            <AllDriversProducts allActiveSliderVal={allActiveSlider} allActiveCheckboxVal={allActiveCheckbox} products={data}/>
+            <AllDriversProducts allActiveSliderVal={allActiveSlider} allActiveCheckboxVal={allActiveCheckbox} products={data}/> */}
+            {data.map((value, index) => (
+                <a key={index} className="product-item" href={`/old/products/${value.products.slug}`}>
+                    <img
+                        src={value.products.cover_img}
+                        alt={value.products.name}
+                        className="product-image"
+                    />
+
+                    <div className="product-name">
+                        {value.products.name}
+                    </div>
+
+                    <hr className="product-divider" />
+                </a>
+            ))}
         </>
     );
 };

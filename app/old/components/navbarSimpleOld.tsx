@@ -115,16 +115,16 @@ export default function NavbarSimpleOld() {
             <div className="legacy-search-wrap">
                 <input id="site-search" className="legacy-search" type="text" placeholder="Search products" onKeyUp={filterList} />
                 <div id="search-results" className="legacy-results" aria-live="polite">
-                <a className="search-item" href="#">Woofer</a>
-                <a className="search-item" href="#">Midrange</a>
-                <a className="search-item" href="#">Tweeter</a>
-                <a className="search-item" href="#">Subwoofer</a>
-                <a className="search-item" href="#">2-Way Kits</a>
-                <a className="search-item" href="#">3-Way Kits</a>
-                <a className="search-item" href="#">DIY Kits</a>
-                <a className="search-item" href="#">Latest Drivers</a>
-                <a className="search-item" href="#">Latest Kits</a>
-                <a className="search-item" href="#">Coming Soon</a>
+                <a className="search-item" href="/old/drivers/woofer">Woofer</a>
+                <a className="search-item" href="/old/drivers/midrange">Midrange</a>
+                <a className="search-item" href="/old/drivers/tweeter">Tweeter</a>
+                <a className="search-item" href="/old/drivers/subwoofer">Subwoofer</a>
+                <a className="search-item" href="/old/kits/2-way-kits">2-Way Kits</a>
+                <a className="search-item" href="/old/kits/3-way-kits">3-Way Kits</a>
+                <a className="search-item" href="/old/kits/diy-kits">DIY Kits</a>
+                <a className="search-item" href="/old/new-products/latest-drivers">Latest Drivers</a>
+                <a className="search-item" href="/old/new-products/latest-kits">Latest Kits</a>
+                <a className="search-item" href="/old/new-products/coming-soon">Coming Soon</a>
                 </div>
             </div>
             </div>

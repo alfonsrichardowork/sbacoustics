@@ -1,10 +1,8 @@
 import { AllFilterProductsOnlyType, CheckBoxData, ChildSpecificationProp, SliderData } from '@/app/(frontend)/types';
-import { LazyImageClickable } from '@/components/lazyImageclickable';
 import prismadb from '@/lib/prismadb';
-import Link from "next/link";
 import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-filters';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
-import LazyImageClickableOld from '@/app/old/components/lazyimageclickableold';
+import '@/app/old/(products)/drivers/driverpage.css'
 
 export const revalidate = 60;
 
@@ -123,9 +121,7 @@ export default async function DriversPage({
 }: {
   params: Promise<{ slug?: string[] }>;
 }) {
-    const { slug = [] } = await params;
-    const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-  
+    const { slug = [] } = await params;  
     const subslug = slug[0] || null;
     const subsubslug = slug[1] || null;
 
@@ -162,75 +158,36 @@ export default async function DriversPage({
                 },
             }
         })
+        const allDriverImage = await prismadb.allproductcategory.findFirst({
+            where: {
+                category: {
+                    shown_on_all_drivers_page: true,
+                    brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+                    type: 'Category',
+                    slug: 'drivers'
+                },
+            },
+            select: {
+                category: {
+                    select: {
+                        name: true,
+                        thumbnail_url: true,
+                        slug: true,
+                        priority: true,
+                    },
+                },
+            }
+        })
+        const allDriverImageCategories = allDriverImage ? [allDriverImage.category] : []
         const uniqueCategories = [
+            ...new Map(
+                allDriverImageCategories.map(item => [item.slug, item])
+            ).values(),
             ...new Map(
                 Drivers.map(item => [item.category.slug, item.category])
             ).values()
         ].sort((a, b) => Number(a.priority) - Number(b.priority))
 
-        const allDriver = await prismadb.allcategory.findFirst({
-        where: {
-            slug: 'drivers',
-            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-            shown_on_all_drivers_page: true,
-        },
-        select: {
-            name: true,
-            slug: true,
-            thumbnail_url: true,
-        },
-        })
-
-        const itemListElement = [
-            ...(allDriver
-                ? [{
-                    "@type": "ListItem",
-                    "position": 1,
-                    "item": {
-                    "@type": "Product",
-                    "url": `${baseUrl}/drivers/all`,
-                    "name": `All ${allDriver.name}`,
-                    "description": `Discover All ${allDriver.name} by SB Acoustics`,
-                    "image": allDriver.thumbnail_url.startsWith('/uploads/')
-                        ? `${process.env.NEXT_PUBLIC_ROOT_URL}${allDriver.thumbnail_url}`
-                        : allDriver.thumbnail_url,
-                    "sku": `all-${allDriver.slug}`,
-                    "brand": {
-                        "@type": "Brand",
-                        "name": "SB Acoustics",
-                    },
-                    },
-                }]
-            : []),
-
-            ...uniqueCategories.map((val, index) => ({
-                "@type": "ListItem",
-                "position": index + (allDriver ? 2 : 1),
-                "item": {
-                "@type": "Product",
-                "url": `${baseUrl}/drivers/${val.slug}`,
-                "name": val.name,
-                "description": `Discover All ${val.name} by SB Acoustics`,
-                "image": val.thumbnail_url.startsWith('/uploads/')
-                    ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.thumbnail_url}`
-                    : val.thumbnail_url,
-                "sku": val.slug,
-                "brand": {
-                    "@type": "Brand",
-                    "name": "SB Acoustics",
-                },
-                },
-            })),
-        ]
-
-        const jsonLd = {
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            "url": `${baseUrl}/drivers`,
-            "name": "SB Acoustics",
-            "description": "All Drivers Provided by SB Acoustics",
-            itemListElement,
-        }
         return(
             // <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4"> 
             //     <script
@@ -302,7 +259,7 @@ export default async function DriversPage({
                         }}
                     >
                         <a
-                        href={`/drivers/${item.slug}`}
+                        href={`/old/drivers/${item.slug === 'drivers' ? 'all' : item.slug}`}
                         style={{
                             display: "block",
                             textDecoration: "none",
@@ -450,50 +407,20 @@ export default async function DriversPage({
         }
     }
 
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        "url": !subslug ? `${baseUrl}/drivers` : subslug === 'all' ? `${baseUrl}/drivers/all` : subslug && !subsubslug ? `${baseUrl}/drivers/${subslug}` : subslug && subsubslug ? `${baseUrl}/drivers/${subslug}/${subsubslug}` : `${baseUrl}/drivers`, 
-        "name": `${!subslug || subslug === 'all' ? `All Drivers` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All Drivers`} | SB Acoustics`,
-        "description": `Found out more about ${!subslug || subslug === 'all' ? `All` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All`} Drivers from SB Acoustics!`,
-        "itemListElement": tempData?.map((driver: AllFilterProductsOnlyType, index: number) => ({
-         "@type": "ListItem",
-          "position": index + 1,
-          "item": {
-            "@type": "Product",
-            "url": `${baseUrl}/products/${driver.products.slug}`,
-            "name": driver.products.name,
-            "description": driver.products.name,
-            "image": `${baseUrl}${driver.products.cover_img}`,
-            "sku": driver.products.slug || driver.products.id,
-            "brand": {
-              "@type": "Brand",
-              "name": "SB Acoustics"
-            }
-          }
-        }))
-    };
-
+   
   return( 
-    <>
-      {/* <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      
-      <h1 className='sr-only'>{!subslug || subslug === 'all' ? `All Drivers` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All Drivers`} | SB Acoustics</h1>
-      
-      {tempData &&
-        <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
-            <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
-                <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
-            </div>
+    tempData &&
+    <div className="drivers-container">
+        <div className="drivers-grid">
+            <AllDriversandFiltersProducts
+                data={tempData}
+                slider={sliderRows}
+                checkbox={checkboxRows}
+                showFilters={counterShow !== 0}
+            />
         </div>
-      } */}
-    </>
+    </div>
+    
   );
 }
 

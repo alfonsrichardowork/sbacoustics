@@ -1,10 +1,10 @@
 
 import { AllFilterProductsOnlyType, CheckBoxData, ChildSpecificationProp, SliderData } from '@/app/(frontend)/types';
-import { LazyImageClickable } from '@/components/lazyImageclickable';
 import prismadb from '@/lib/prismadb';
-import Link from "next/link";
 import AllDriversProducts from '../../components-all-drivers-page/all-product';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
+import '@/app/old/(products)/drivers/driverpage.css'
+import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-filters';
 
 export const revalidate = 60;
 
@@ -163,123 +163,106 @@ export default async function KitsPage({
                 },
             }
         })
+        const allKitsImage = await prismadb.allproductcategory.findFirst({
+            where: {
+                category: {
+                    shown_on_all_drivers_page: true,
+                    brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+                    type: 'Category',
+                    slug: 'kits'
+                },
+            },
+            select: {
+                category: {
+                    select: {
+                        name: true,
+                        thumbnail_url: true,
+                        slug: true,
+                        priority: true,
+                    },
+                },
+            }
+        })
+        const allKitsImageCategories = allKitsImage ? [allKitsImage.category] : []
         const uniqueCategories = [
+            ...new Map(
+                allKitsImageCategories.map(item => [item.slug, item])
+            ).values(),
             ...new Map(
                 Kits.map(item => [item.category.slug, item.category])
             ).values()
         ].sort((a, b) => Number(a.priority) - Number(b.priority))
 
-        const allKit = await prismadb.allcategory.findFirst({
-        where: {
-            slug: 'kits',
-            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-            shown_on_all_drivers_page: true,
-        },
-        select: {
-            name: true,
-            slug: true,
-            thumbnail_url: true,
-        },
-        })
-
-        const itemListElement = [
-            ...(allKit
-                ? [{
-                    "@type": "ListItem",
-                    "position": 1,
-                    "item": {
-                    "@type": "Product",
-                    "url": `${baseUrl}/kits/all`,
-                    "name": `All ${allKit.name}`,
-                    "description": `Discover All ${allKit.name} by SB Acoustics`,
-                    "image": allKit.thumbnail_url.startsWith('/uploads/')
-                        ? `${process.env.NEXT_PUBLIC_ROOT_URL}${allKit.thumbnail_url}`
-                        : allKit.thumbnail_url,
-                    "sku": `all-${allKit.slug}`,
-                    "brand": {
-                        "@type": "Brand",
-                        "name": "SB Acoustics",
-                    },
-                    },
-                }]
-            : []),
-
-            ...uniqueCategories.map((val, index) => ({
-                "@type": "ListItem",
-                "position": index + (allKit ? 2 : 1),
-                "item": {
-                "@type": "Product",
-                "url": `${baseUrl}/kits/${val.slug}`,
-                "name": val.name,
-                "description": `Discover All ${val.name} by SB Acoustics`,
-                "image": val.thumbnail_url.startsWith('/uploads/')
-                    ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.thumbnail_url}`
-                    : val.thumbnail_url,
-                "sku": val.slug,
-                "brand": {
-                    "@type": "Brand",
-                    "name": "SB Acoustics",
-                },
-                },
-            })),
-        ]
-
-        const jsonLd = {
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            "url": `${baseUrl}/kits`,
-            "name": "SB Acoustics",
-            "description": "All Kits Provided by SB Acoustics",
-            itemListElement,
-        }
-
         return(
-            <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <h1 className="sr-only">All Kits | SB Acoustics</h1>
-                 {allKit &&
-                    <div>
-                    <Link 
-                        href='/kits/all'
-                        className=" group cursor-pointer space-y-4 block"
+            <div
+                style={{
+                    padding: "16px",
+                }}
+                >
+                <div
+                    style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    }}
+                >
+                    {uniqueCategories.map((item, i) => (
+                    <div
+                        key={i}
+                        style={{
+                        width: "25%",
+                        padding: "8px",
+                        boxSizing: "border-box",
+                        }}
                     >
-                        <div className="relative aspect-square">
-                        <LazyImageClickable
-                            src={allKit.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${allKit.thumbnail_url}` : allKit.thumbnail_url} 
-                            alt={`${allKit.name} by SB Acoustics`}
-                            width={1000}
-                            height={1000}
-                        />
+                        <a
+                        href={`/old/kits/${item.slug === 'kits' ? 'all' : item.slug}`}
+                        style={{
+                            display: "block",
+                            textDecoration: "none",
+                            color: "inherit",
+                        }}
+                        >
+                        <div
+                            style={{
+                            position: "relative",
+                            width: "100%",
+                            }}
+                        >
+
+                                <img
+                                    src={
+                                        item.thumbnail_url.startsWith("/uploads/")
+                                        ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}`
+                                        : item.thumbnail_url
+                                    }
+                                    alt={`${item.name} by SB Acoustics`}
+                                    width={1000}
+                                    height={1000}
+                                    loading="eager"
+                                    style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "contain",
+                                    transition: "opacity 0.3s ease",
+                                    }}
+                                />
+                                {/* </div> */}
                         </div>
-                        
-                        <h2 className="font-bold text-xl text-center">All {allKit.name}</h2>
-                    </Link>
+
+                        <h2
+                            style={{
+                            fontWeight: "bold",
+                            fontSize: "20px",
+                            textAlign: "center",
+                            marginTop: "16px",
+                            }}
+                        >
+                            {item.name}
+                        </h2>
+                        </a>
                     </div>
-                }
-                 {uniqueCategories.map((item, i) => (
-                    <div key={i}>
-                    <Link 
-                        href={`/kits/${item.slug}`} 
-                        className=" group cursor-pointer space-y-4 block"
-                    >
-                        <div className="relative aspect-square">
-                        <LazyImageClickable
-                            src={item.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}` : item.thumbnail_url} 
-                            alt={`${item.name} by SB Acoustics`}
-                            width={1000}
-                            height={1000}
-                        />
-                        </div>
-                        
-                        <h2 className="font-bold text-xl text-center">{item.name}</h2>
-                    </Link>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
             </div>
         )
     }
@@ -362,51 +345,19 @@ export default async function KitsPage({
         }
     }
 
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        "url": !subslug ? `${baseUrl}/kits` : subslug === 'all' ? `${baseUrl}/kits/all` : subslug && !subsubslug ? `${baseUrl}/kits/${subslug}` : subslug && subsubslug ? `${baseUrl}/kits/${subslug}/${subsubslug}` : `${baseUrl}/kits`, 
-        "name": `${!subslug || subslug === 'all' ? `All Kits` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All Kits`} | SB Acoustics`,
-        "description": `Found out more about ${!subslug || subslug === 'all' ? `All Kits` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All Kits`} from SB Acoustics!`,
-        "itemListElement": tempData?.map((kits: AllFilterProductsOnlyType, index: number) => ({
-         "@type": "ListItem",
-          "position": index + 1,
-          "item": {
-            "@type": "Product",
-            "url": `${baseUrl}/products/${kits.products.slug}`,
-            "name": kits.products.name,
-            "description": kits.products.name,
-            "image": `${baseUrl}${kits.products.cover_img}`,
-            "sku": kits.products.slug || kits.products.id,
-            "brand": {
-              "@type": "Brand",
-              "name": "SB Acoustics"
-            }
-          }
-        }))
-    };
 
-
-  return( 
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      
-      <h1 className='sr-only'>{!subslug || subslug === 'all' ? `All Kits` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All Kits`} | SB Acoustics</h1>
-      
-      {tempData &&
-        <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
-            <div className="md:grid lg:grid-cols-4 md:grid-cols-3">
-                <AllDriversProducts allActiveSliderVal={[]} allActiveCheckboxVal={[]} products={tempData}/>
-            </div>
+    return( 
+    tempData &&
+    <div className="drivers-container">
+        <div className="drivers-grid">
+            <AllDriversandFiltersProducts
+                data={tempData}
+                slider={sliderRows}
+                checkbox={checkboxRows}
+                showFilters={counterShow !== 0}
+            />
         </div>
-      }
-    </>
-  );
+    </div>
+    );
 }
 
