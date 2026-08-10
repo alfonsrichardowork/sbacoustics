@@ -134,7 +134,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { type, name, singularname, description, thumbnail_url, shown_on_all_drivers_page } = body;
+    const { type, name, singularname, description, thumbnail_url, shown_on_all_drivers_page, under_categoryId, combine_name, show_products } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -184,6 +184,9 @@ export async function PATCH(
           shown_on_all_drivers_page,
           updatedAt: new Date(),
           updatedBy: session.name,
+          under_categoryId,
+          combine_name,
+          show_products
         }
       });
 
@@ -248,8 +251,11 @@ export async function PATCH(
         description,
         thumbnail_url,
         shown_on_all_drivers_page,
+        under_categoryId,
         updatedAt: new Date(),
         updatedBy: session.name,
+        combine_name,
+        show_products
       }
     });
     await prismadb.allproductcategory.updateMany({

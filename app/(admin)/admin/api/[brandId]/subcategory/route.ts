@@ -26,7 +26,7 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
     
     const body = await req.json();
 
-    const { name, singularname, description, type, thumbnail_url, shown_on_all_drivers_page } = body;
+    const { name, singularname, description, type, thumbnail_url, shown_on_all_drivers_page, under_categoryId, combine_name, show_products } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -66,6 +66,9 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
         createdAt: new Date(),
         updatedAt: new Date(),
         updatedBy: session.name,
+        under_categoryId,
+        combine_name,
+        show_products
       }
     });
 

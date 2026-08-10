@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { Trash } from "lucide-react"
+import { ChevronsUpDown, Trash } from "lucide-react"
 import { allcategory } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
 
@@ -27,6 +27,9 @@ import { MAX_SIZE } from "@/app/(admin)/admin/model/model"
 import { uploadImage } from "@/app/(admin)/admin/upload-image"
 import Image from "next/image"
 import { Checkbox } from "@/app/(admin)/admin/components/ui/checkbox"
+import { Popover, PopoverContent, PopoverTrigger } from "@/app/(admin)/admin/components/ui/popover"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/app/(admin)/admin/components/ui/command"
+import { cn } from "@/lib/utils"
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -35,24 +38,29 @@ const formSchema = z.object({
   type: z.string().min(1),
   thumbnail_url: z.string().optional(),
   shown_on_all_drivers_page: z.boolean().default(false).optional(),
+  under_categoryId: z.string().optional(),
+  combine_name: z.boolean().default(false).optional(),
+  show_products: z.boolean().default(false).optional(),
 });
 
 type SubCategoryFormValues = z.infer<typeof formSchema>
 
 interface SubCategoryFormProps {
   initialData: allcategory | null;
+  categories: allcategory[];
 };
 
 export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
-  initialData
+  initialData, categories
 }) => {
   const params = useParams();
   const router = useRouter();
 
   const [coverImgUrl, setCoverImgUrl] = useState<string>();
   const [coverImg, setCoverImg] = useState<File>();
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [openCat, setOpenCat] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<{label: string, value: string}>();
 
   const title = initialData ? 'Edit Sub Category' : 'Create Sub Category';
   const description = initialData ? 'Edit a Sub Category.' : 'Add a new Sub Category';
@@ -67,7 +75,10 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
       description: '',
       type: 'Sub Category',
       thumbnail_url: '',
-      shown_on_all_drivers_page: false
+      shown_on_all_drivers_page: false,
+      under_categoryId: '',
+      combine_name: false,
+      show_products: false
     }
   });
 
@@ -80,6 +91,12 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
       else{
         setCoverImgUrl('')
       }
+      initialData?.under_categoryId && setSelectedCategories(
+        {
+          label: categories.find(cat => cat.id === initialData.under_categoryId)?.name || '',
+          value: initialData.under_categoryId
+        }
+      );
     };
     
     fetchData().catch((error) => {
@@ -131,6 +148,13 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
       else{
         data.thumbnail_url = coverImgUrl
       }
+            
+      if (selectedCategories) {
+        data.under_categoryId = selectedCategories.value;
+      }
+      else{
+        data.under_categoryId = ''
+      }
 
       let response: AxiosResponse;
       if (initialData) {
@@ -167,6 +191,11 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
       setLoading(false);
     }
   };
+  
+  const formattedCat = categories.map((item) => ({
+    label: item.name,
+    value: item.id
+  }));
 
   return (
     <>
@@ -269,6 +298,110 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
                 </FormItem>
               )}
             />
+
+            <div>
+              <div className="font-bold mb-2">Selected Categories</div>
+              <Popover open={openCat} onOpenChange={setOpenCat}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  role="combobox"
+                  aria-expanded={openCat}
+                  aria-label="Select a Brand"
+                  className={cn("w-full justify-between")}
+                >
+                  Select
+                  <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0">
+                <Command>
+                  <CommandList>
+                    <CommandInput placeholder="Search Category..." />
+                    <CommandEmpty>No Category found.</CommandEmpty>
+                    <CommandGroup>
+                      {formattedCat.map((cat) => (
+                        <CommandItem
+                          key={cat.value}
+                          onSelect={() => {
+                            setSelectedCategories(cat);
+                            setOpenCat(false);
+                          }}
+                          className="text-sm"
+                        >
+                          {cat.label}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+              </Popover>
+              {selectedCategories && (
+                <div className="mt-2">
+                  <div className="px-2 flex items-center justify-between">
+                    <span>{selectedCategories.label}</span>
+                    <Button
+                      variant={"destructive"}
+                      size="sm"
+                      onClick={() => {
+                        setSelectedCategories(undefined);
+                        form.setValue('under_categoryId', '');
+                      }}
+                    >
+                      <Trash width={20} height={20}  className="text-background"/>
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <FormField
+              control={form.control}
+              name="combine_name"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      // @ts-ignore
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Name Combined
+                    </FormLabel>
+                    <FormDescription>
+                      Check this if you want to combine the name
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="show_products"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      // @ts-ignore
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Show All Products inside this category
+                    </FormLabel>
+                  </div>
+                </FormItem>
+              )}
+            />
+
           </div>
           <Button disabled={loading} className="w-full flex gap-2 bg-green-500 text-white hover:bg-green-600 transition-colors" type="submit">
             {action}

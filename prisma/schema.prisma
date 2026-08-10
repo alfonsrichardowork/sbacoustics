@@ -144,6 +144,9 @@ model allcategory {
   priority  String    @default("")
   thumbnail_url String  @db.Text
   shown_on_all_drivers_page Boolean @default(false)
+  under_categoryId String @default("")
+  combine_name Boolean @default(false)
+  show_products Boolean @default(false)
   updatedBy   String    @default("")
   // products    product[] // Relation to product model
   createdAt   DateTime  @default(now())
@@ -151,6 +154,7 @@ model allcategory {
 
   productCategories allproductcategory[]
   @@index([brandId])
+  @@index([under_categoryId])
 }
 
 model image_catalogues {

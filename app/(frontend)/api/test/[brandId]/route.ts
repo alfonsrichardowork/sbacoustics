@@ -1,3 +1,133 @@
+// import { NextResponse } from "next/server";
+// import prismadb from '@/lib/prismadb';
+
+// export async function GET() {
+//     // const connectors = await prismadb.allproductcategory.findMany({
+//     //     where: {
+//     //         category: {
+//     //         brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+//     //         },
+//     //         product: {
+//     //         brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+//     //         },
+//     //     },
+//     //     select: {
+//     //         productId: true,
+//     //         category: {
+//     //             select: {
+//     //                 slug: true,
+//     //                 type: true,
+//     //             },
+//     //         },
+//     //     },
+//     // });
+
+//     // const paths = Array.from(
+//     // connectors.reduce((map, row) => {
+//     //     const existing = map.get(row.productId) ?? [];
+
+//     //     existing.push({
+//     //     slug: row.category.slug,
+//     //     type: row.category.type,
+//     //     });
+
+//     //     map.set(row.productId, existing);
+
+//     //     return map;
+//     // }, new Map<string, { slug: string; type: string }[]>()).values()
+//     // ).flatMap(categories => {
+//     // const category = categories
+//     //     .filter(c => c.type === 'Category' && c.slug === 'drivers')
+//     //     .map(c => c.slug);
+
+//     // const subCategory = categories
+//     //     .filter(c => c.type === 'Sub Category')
+//     //     .map(c => c.slug);
+
+//     // const subSubCategory = categories
+//     //     .filter(c => c.type === 'Sub Sub Category')
+//     //     .map(c => c.slug);
+
+//     // const result: string[] = [];
+
+//     // // Category only
+//     // if (!subCategory.length) {
+//     //     return category;
+//     // }
+
+//     // // Category + Sub Category
+//     // for (const cat of category) {
+//     //     for (const sub of subCategory) {
+//     //     if (!subSubCategory.length) {
+//     //         result.push(`${cat}/${sub}`);
+//     //     } else {
+//     //         // Category + Sub Category + Sub Sub Category
+//     //         for (const subSub of subSubCategory) {
+//     //         result.push(`${cat}/${sub}/${subSub}`);
+//     //         }
+//     //     }
+//     //     }
+//     // }
+
+//     // return result;
+//     // });
+
+//     // const allPaths = new Set<string>();
+
+//     // for (const path of paths) {
+//     //     const parts = path.split('/');
+
+//     //     // Original path
+//     //     allPaths.add(path);
+
+//     //     // Level 1 (/drivers)
+//     //     if (parts.length >= 1) {
+//     //         allPaths.add(parts[0] ?? '');
+//     //     }
+
+//     //     // Level 2 (/drivers/midranges)
+//     //     if (parts.length >= 2) {
+//     //         allPaths.add(parts.slice(0, 2).join('/'));
+//     //     }
+//     // }
+
+//     // const uniqueSortedPaths = [...allPaths].sort((a, b) => {
+//     //     const depthA = a.split('/').length;
+//     //     const depthB = b.split('/').length;
+
+//     //     if (depthA !== depthB) {
+//     //         return depthA - depthB;
+//     //     }
+
+//     //     return a.localeCompare(b);
+//     // });
+
+//     const allCat = await prismadb.allcategory.findMany({
+//         where: {
+//             under_categoryId: { not: '' },
+//             brandId : '680c5eee-7ed7-41bc-b14b-4185f8a1c379'
+//         }
+//     })
+
+
+//     const products = await prismadb.allproductcategory.findMany({
+//         where: {
+            
+//         }
+//     })
+
+    
+//     return NextResponse.json('');
+// }
+
+
+
+
+
+
+import prismadb from '@/lib/prismadb'
+import { NextRequest, NextResponse } from 'next/server'
+
 type CategoryRecord = Awaited<ReturnType<typeof loadCategories>>[number]
 type ProductRecord = CategoryRecord['productCategories'][number]['product']
 type MenuPriorityRecord = Awaited<ReturnType<typeof loadMenuPriorities>>[number]
@@ -5,25 +135,16 @@ type MenuPriorityRecord = Awaited<ReturnType<typeof loadMenuPriorities>>[number]
 type CategoryNode = CategoryRecord & { children: CategoryNode[] }
 
 async function loadCategories(brandId?: string) {
-  const response = await fetch(`api/test/categories/${brandId}`);
-  if (!response.ok) {
-    throw new Error('Failed to load categories');
-  }
-  return response.json();
+  return prismadb.allcategory.findMany({
+    where: brandId ? { brandId } : undefined,
+    include: { productCategories: { include: { product: true } } },
+  })
 }
 
 async function loadMenuPriorities(categoryIds: string[]) {
-    const categoryIdsParam = categoryIds.join(', ')
-
-    const response = await fetch(
-        `/api/test/priorities/${encodeURIComponent(categoryIdsParam)}`
-    )
-
-    if (!response.ok) {
-        throw new Error('Failed to load menu priorities')
-    }
-
-    return response.json()
+  return prismadb.menupriority.findMany({
+    where: { categoryId: { in: categoryIds } },
+  })
 }
 
 /** "" / "abc" -> Infinity, "10" -> 10, "2.5" -> 2.5 */
@@ -118,7 +239,7 @@ function serializeProduct(product: ProductRecord) {
 }
 
 type SerializedProduct = ReturnType<typeof serializeProduct>
-export type SerializedCategory = {
+type SerializedCategory = {
   id: string
   brandId: string
   type: string
@@ -146,7 +267,7 @@ function getCategoryDistances(node: CategoryNode) {
     if (path.has(current.id)) return
     distances.set(current.id, distance)
     const nextPath = new Set(path).add(current.id)
-    current.children.forEach((child: any) => visit(child, distance + 1, nextPath))
+    current.children.forEach((child) => visit(child, distance + 1, nextPath))
   }
   visit(node, 0)
   return distances
@@ -208,25 +329,31 @@ function serializeCategory(
     updatedBy: node.updatedBy,
     createdAt: node.createdAt,
     updatedAt: node.updatedAt,
-    children: node.children.map((child: any) => serializeCategory(child, nodes, menuPriorities)),
+    children: node.children.map((child) => serializeCategory(child, nodes, menuPriorities)),
     ...(node.show_products ? { products: orderedProducts } : {}),
   }
 }
 
-const getAllNavbarContent = async (path: string): Promise<SerializedCategory[]> => {
-  const brandId = path.includes('sbaudience') ? process.env.NEXT_PUBLIC_SB_AUDIENCE_ID : path.includes('sbautomotive') ? process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID : process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-  const categories = await loadCategories(brandId)
-  const { roots, nodes } = buildHierarchy(categories)
-  const priorities = await loadMenuPriorities([...nodes.keys()])
+export async function GET(request: NextRequest) {
+  try {
+    const brandId =
+      request.nextUrl.searchParams.get('brandId')?.trim() || '680c5eee-7ed7-41bc-b14b-4185f8a1c379'
+    const categories = await loadCategories(brandId)
+    const { roots, nodes } = buildHierarchy(categories)
+    const priorities = await loadMenuPriorities([...nodes.keys()])
 
-  const menuPriorities = new Map<string, MenuPriorityRecord[]>()
-  for (const priority of priorities) {
-    const list = menuPriorities.get(priority.productId) ?? []
-    list.push(priority)
-    menuPriorities.set(priority.productId, list)
+    const menuPriorities = new Map<string, MenuPriorityRecord[]>()
+    for (const priority of priorities) {
+      const list = menuPriorities.get(priority.productId) ?? []
+      list.push(priority)
+      menuPriorities.set(priority.productId, list)
+    }
+
+    return NextResponse.json({
+      categories: roots.map((root) => serializeCategory(root, nodes, menuPriorities)),
+    })
+  } catch (error) {
+    console.error('[categories] Failed to build category hierarchy', error)
+    return NextResponse.json({ error: 'Unable to load categories' }, { status: 500 })
   }
-  return roots.map((root) => serializeCategory(root, nodes, menuPriorities))
-};
-
-export default getAllNavbarContent;
-
+}

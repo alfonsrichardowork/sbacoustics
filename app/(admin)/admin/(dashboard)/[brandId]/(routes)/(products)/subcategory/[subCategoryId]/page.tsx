@@ -16,10 +16,22 @@ const SubCategoryPage = async (
     }
   });
 
+  const categories = await prismadb.allcategory.findMany({
+    where: {
+      type: {
+        in: ["Category", "Sub Category"]
+      },
+      brandId : params.brandId,
+      id: {
+        not: params.subCategoryId
+      }
+    },
+  });
+
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <SubCategoryForm initialData={Subcategory} />
+        <SubCategoryForm initialData={Subcategory} categories={categories} />
       </div>
     </div>
   );
