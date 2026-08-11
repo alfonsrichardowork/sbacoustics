@@ -85,6 +85,9 @@ export const AllProductCategoryForm: React.FC<AllProductCategoryFormProps> = ({
           updatedBy: '',
           createdAt: item.createdAt,
           updatedAt: item.updatedAt,
+          under_categoryId: item.category.under_categoryId,
+          combine_name: item.category.combine_name,
+          show_products: item.category.show_products
         };
         
         if (item.category.type === "Category") {

@@ -358,7 +358,10 @@
 
 @layer utilities {
   html,
-  body,
+  body {
+    max-width: 100%;
+    overflow-x: clip;
+  }
   :root {
     height: 100%;
   }

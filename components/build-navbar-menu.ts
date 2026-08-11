@@ -7,8 +7,6 @@ export type NavbarMenus = {
   subSubMenuMapping: Record<string, NavbarComponents[]>
   subSubSubMenuMapping: Record<string, NavbarComponents[]>
   subSubSubSubMenuMapping: Record<string, NavbarComponents[]>
-  kitsMenu: NavbarComponents[]
-  kitsSubMenuMapping: Record<string, NavbarComponents[]>
 }
 
 /** key used by every mapping: `${title}-${parent}` */
@@ -16,12 +14,27 @@ export const menuKey = (title: string, parent: string) => `${title}-${parent}`
 
 const clean = (value?: string | null) => (value ?? '').trim()
 
-/** category -> menu row. `parent` is non-empty only when the row drills deeper. */
-function categoryToItem(cat: SerializedCategory, hasChildren: boolean): NavbarComponents {
+/**
+ * Builds a category URL from the parent path + category slug.
+ */
+const buildCategoryPath = (parentPath: string, slug?: string | null) => {
+  const cleanSlug = clean(slug)
+
+  if (!cleanSlug) return parentPath || '/'
+
+  return `${parentPath}/${cleanSlug}`.replace(/\/+/g, '/')
+}
+
+/** category -> menu row. */
+function categoryToItem(
+  cat: SerializedCategory,
+  hasChildren: boolean,
+  href: string,
+): NavbarComponents {
   return {
     title: cat.displayName || cat.name,
-    parent: hasChildren ? cat.id : '',
-    href: clean(cat.slug),
+    parent: hasChildren ? cat.under_categoryId : '',
+    href,
     url: clean(cat.thumbnail_url),
     imageDesc: clean(cat.description),
     newProd: false,
@@ -35,84 +48,139 @@ function productToItem(
   return {
     title: product.name,
     parent: '', // leaf: renders as a clickable product
-    href: clean(product.slug),
+    href: `/products/${clean(product.slug)}`,
     url: clean(product.cover_img_url || product.featured_img_url),
-    imageDesc: clean(product.navbarNotes || product.description),
+    imageDesc: clean(product.navbarNotes),
     newProd: Boolean(product.isNewProduct),
     tempAllFinished: Boolean((product as any).tempAllFinished),
   } as NavbarComponents
 }
 
 /**
- * A level's rows = its child categories first, then its own products
- * (already priority-ordered by the API).
+ * A level's rows = its child categories first, then its own products.
+ *
+ * Category hrefs include the complete hierarchy path.
  */
-function rowsFor(cat: SerializedCategory, kits: boolean): NavbarComponents[] {
-  const childRows = cat.children.map((child) =>
-    categoryToItem(child, hasContent(child, kits)),
-  )
+
+function rowsFor(
+  cat: SerializedCategory,
+  parentPath: string,
+): NavbarComponents[] {
+  const childRows = cat.children.map((child) => {
+    const childPath = buildCategoryPath(
+      parentPath,
+      child.slug,
+    )
+
+    return categoryToItem(
+      child,
+      hasContent(child),
+      childPath,
+    )
+  })
+
   const productRows = (cat.products ?? [])
-    .filter((p) => !p.isArchived && Boolean(p.isKits) === kits)
+    .filter((p) => !p.isArchived)
     .map(productToItem)
 
   return [...childRows, ...productRows]
 }
 
-function hasContent(cat: SerializedCategory, kits: boolean): boolean {
-  return rowsFor(cat, kits).length > 0
+
+function hasContent(cat: SerializedCategory): boolean {
+  return (
+    cat.children.length > 0 ||
+    (cat.products ?? []).some((p) => !p.isArchived)
+  )
 }
 
 /**
- * Flattens the API hierarchy into the flat menu + mapping shape the navbar uses.
- * The API already sorts categories and products by numeric priority, so we
- * never re-sort here — insertion order IS the priority order.
+ * Flattens the API hierarchy into the flat menu + mapping shape
+ * the navbar uses.
+ *
+ * Category hrefs contain the complete parent hierarchy:
+ *
+ * /drivers
+ * /drivers/tweeters
+ * /drivers/tweeters/dome-tweeters
+ *
+ * Products continue to use:
+ *
+ * /products/product-slug
  */
-export function buildNavbarMenus(categories: SerializedCategory[]): NavbarMenus {
+export function buildNavbarMenus(
+  categories: SerializedCategory[],
+): NavbarMenus {
   const menus: NavbarMenus = {
     firstMenu: [],
     subMenuMapping: {},
     subSubMenuMapping: {},
     subSubSubMenuMapping: {},
     subSubSubSubMenuMapping: {},
-    kitsMenu: [],
-    kitsSubMenuMapping: {},
   }
 
-  const walk = (
-    cat: SerializedCategory,
-    depth: number,
-    kits: boolean,
-  ) => {
-    const rows = rowsFor(cat, kits)
-    if (rows.length === 0) return
+const walk = (
+  cat: SerializedCategory,
+  depth: number,
+  categoryPath: string,
+) => {
+  const rows = rowsFor(cat, categoryPath)
 
-    const item = categoryToItem(cat, true)
-    const key = menuKey(item.title, cat.id)
+  if (rows.length === 0) return
 
-    if (kits) {
-      if (depth === 1) menus.kitsSubMenuMapping[key] = rows
-    } else {
-      if (depth === 1) menus.subMenuMapping[key] = rows
-      else if (depth === 2) menus.subSubMenuMapping[key] = rows
-      else if (depth === 3) menus.subSubSubMenuMapping[key] = rows
-      else if (depth === 4) menus.subSubSubSubMenuMapping[key] = rows
-    }
+  const item = categoryToItem(
+    cat,
+    true,
+    categoryPath,
+  )
 
-    if (depth < 3) cat.children.forEach((child) => walk(child, depth + 1, kits))
+  const key = menuKey(item.title, cat.under_categoryId)
+
+  if (depth === 1) {
+    menus.subMenuMapping[key] = rows
+  } else if (depth === 2) {
+    menus.subSubMenuMapping[key] = rows
+  } else if (depth === 3) {
+    menus.subSubSubMenuMapping[key] = rows
+  } else if (depth === 4) {
+    menus.subSubSubSubMenuMapping[key] = rows
   }
 
-  for (const root of categories) {
-    // DRIVERS
-    if (hasContent(root, false)) {
-      menus.firstMenu.push(categoryToItem(root, true))
-      walk(root, 1, false)
-    }
-    // KITS
-    if (hasContent(root, true)) {
-      menus.kitsMenu.push(categoryToItem(root, true))
-      walk(root, 1, true)
-    }
+  // Pass the current category's full path
+  // to its children.
+  if (depth < 4) {
+    cat.children.forEach((child) => {
+      const childPath = buildCategoryPath(
+        categoryPath,
+        child.slug,
+      )
+
+      walk(
+        child,
+        depth + 1,
+        childPath,
+      )
+    })
   }
+}
+
+for (const root of categories) {
+  if (hasContent(root)) {
+    const rootPath = buildCategoryPath('', root.slug)
+
+    menus.firstMenu.push(
+      categoryToItem(
+        root,
+        true,
+        rootPath,
+      ),
+    )
+
+    // Start walking from the root's actual path
+    walk(root, 1, rootPath)
+  }
+}
+
 
   return menus
 }

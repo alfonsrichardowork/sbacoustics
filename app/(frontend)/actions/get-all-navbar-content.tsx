@@ -5,7 +5,7 @@ type MenuPriorityRecord = Awaited<ReturnType<typeof loadMenuPriorities>>[number]
 type CategoryNode = CategoryRecord & { children: CategoryNode[] }
 
 async function loadCategories(brandId?: string) {
-  const response = await fetch(`api/test/categories/${brandId}`);
+  const response = await fetch(`/api/test/categories/${brandId}`);
   if (!response.ok) {
     throw new Error('Failed to load categories');
   }
@@ -74,19 +74,20 @@ function buildHierarchy(categories: CategoryRecord[]) {
  * (parent and child) has combine_name === true.
  * e.g. "Cat 1" (combine) -> "Cat 2" (combine) => "Cat 1 / Cat 2"
  */
-function getCombinedName(node: CategoryNode, nodes: Map<string, CategoryNode>) {
+function getCombinedName(node: CategoryNode, _nodes: Map<string, CategoryNode>) {
   const parts: string[] = [node.name]
   let current = node
   const seen = new Set<string>([node.id])
 
   while (current.combine_name) {
-    const parentId = current.under_categoryId?.trim()
-    if (!parentId || seen.has(parentId)) break
-    const parent = nodes.get(parentId)
-    if (!parent || !parent.combine_name) break
-    parts.unshift(parent.name)
-    seen.add(parent.id)
-    current = parent
+    // children are already priority-sorted; take the first combinable one
+    const child = current.children.find(
+      (c: CategoryNode) => c.combine_name && !seen.has(c.id),
+    )
+    if (!child) break
+    parts.push(child.name)
+    seen.add(child.id)
+    current = child
   }
 
   return parts.join(' / ')
@@ -157,26 +158,18 @@ function serializeCategory(
   nodes: Map<string, CategoryNode>,
   menuPriorities: Map<string, MenuPriorityRecord[]>,
 ): SerializedCategory {
-  const categoryDistances = getCategoryDistances(node)
-  const products = new Map<string, { product: ProductRecord; distance: number; priority: number }>()
+  const products = new Map<string, { product: ProductRecord; priority: number }>()
 
   if (node.show_products) {
-    for (const [categoryId, distance] of categoryDistances) {
-      const category = nodes.get(categoryId)
-      if (!category) continue
-      for (const link of category.productCategories) {
-        const entries = menuPriorities.get(link.product.id) ?? []
-        // prefer a priority set on THIS menu node, else the owning category
-        const priority = priorityValue(
-          entries.find((item) => item.categoryId === node.id)?.priorityNumber ??
-            entries.find((item) => item.categoryId === categoryId)?.priorityNumber,
-        )
-        const existing = products.get(link.product.id)
-        if (existing && (existing.priority < priority || (existing.priority === priority && existing.distance <= distance))) {
-          continue
-        }
-        products.set(link.product.id, { product: link.product, distance, priority })
-      }
+    // ONLY links attached directly to this category — children keep their own.
+    for (const link of node.productCategories) {
+      const entries = menuPriorities.get(link.product.id) ?? []
+      const priority = priorityValue(
+        entries.find((item) => item.categoryId === node.id)?.priorityNumber,
+      )
+      const existing = products.get(link.product.id)
+      if (existing && existing.priority <= priority) continue
+      products.set(link.product.id, { product: link.product, priority })
     }
   }
 
@@ -184,8 +177,10 @@ function serializeCategory(
     .sort(
       (a, b) =>
         a.priority - b.priority ||
-        a.distance - b.distance ||
-        a.product.name.localeCompare(b.product.name, undefined, { numeric: true, sensitivity: 'base' }) ||
+        a.product.name.localeCompare(b.product.name, undefined, {
+          numeric: true,
+          sensitivity: 'base',
+        }) ||
         a.product.id.localeCompare(b.product.id),
     )
     .map(({ product }) => serializeProduct(product))
@@ -212,6 +207,7 @@ function serializeCategory(
     ...(node.show_products ? { products: orderedProducts } : {}),
   }
 }
+
 
 const getAllNavbarContent = async (path: string): Promise<SerializedCategory[]> => {
   const brandId = path.includes('sbaudience') ? process.env.NEXT_PUBLIC_SB_AUDIENCE_ID : path.includes('sbautomotive') ? process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID : process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
