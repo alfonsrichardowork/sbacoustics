@@ -9,9 +9,27 @@ const SBAudienceDynamicSpecPage = async (
 ) => {
   const params = await props.params;
 
-  const allParentSpec = await prismadb.dynamicspecificationparent.findMany({})
-  const allSubParentSpec = await prismadb.dynamicspecificationsubparent.findMany({})
-  const allChildSpec = await prismadb.dynamicspecification.findMany({})
+  const allParentSpec = await prismadb.dynamicspecificationparent.findMany(
+    {
+      orderBy: {
+        name: 'asc'
+      }
+    }
+  )
+  const allSubParentSpec = await prismadb.dynamicspecificationsubparent.findMany(
+    {
+      orderBy: {
+        name: 'asc'
+      }
+    }
+  )
+  const allChildSpec = await prismadb.dynamicspecification.findMany(
+    {
+      orderBy: {
+        name: 'asc'
+      }
+    }
+  )
   const initial = await prismadb.specificationconnector.findMany({
     where: {
       brandId: params.brandId,

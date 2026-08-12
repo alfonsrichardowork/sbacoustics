@@ -25,6 +25,13 @@ const buildCategoryPath = (parentPath: string, slug?: string | null) => {
   return `${parentPath}/${cleanSlug}`.replace(/\/+/g, '/')
 }
 
+function shortenMaterial(name: string): string {
+  return name
+    .replace(/Polypropylene/gi, "Poly")
+    // .replace(/Satori /gi, "")
+    .replace(/Aluminum/gi, "Alu");
+}
+
 /** category -> menu row. */
 function categoryToItem(
   cat: SerializedCategory,
@@ -46,13 +53,13 @@ function productToItem(
   product: NonNullable<SerializedCategory['products']>[number],
 ): NavbarComponents {
   return {
-    title: product.name,
+    title: shortenMaterial(product.name),
     parent: '', // leaf: renders as a clickable product
     href: `/products/${clean(product.slug)}`,
-    url: clean(product.cover_img_url || product.featured_img_url),
+    url: clean(product.cover_img_url),
     imageDesc: clean(product.navbarNotes),
     newProd: Boolean(product.isNewProduct),
-    tempAllFinished: Boolean((product as any).tempAllFinished),
+    tempAllFinished: Boolean(product.tempAllFinished),
   } as NavbarComponents
 }
 

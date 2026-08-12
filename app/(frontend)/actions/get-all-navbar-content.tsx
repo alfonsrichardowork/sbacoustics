@@ -69,11 +69,6 @@ function buildHierarchy(categories: CategoryRecord[]) {
   return { nodes, roots }
 }
 
-/**
- * Walks the ancestor chain and joins names while EVERY link in the chain
- * (parent and child) has combine_name === true.
- * e.g. "Cat 1" (combine) -> "Cat 2" (combine) => "Cat 1 / Cat 2"
- */
 function getCombinedName(node: CategoryNode, _nodes: Map<string, CategoryNode>) {
   const parts: string[] = [node.name]
   let current = node
@@ -96,25 +91,15 @@ function getCombinedName(node: CategoryNode, _nodes: Map<string, CategoryNode>) 
 function serializeProduct(product: ProductRecord) {
   return {
     id: product.id,
-    brandId: product.brandId,
     name: product.name,
     slug: product.slug,
-    description: product.description,
     cover_img_url: product.cover_img_url,
-    drawing_img_url: product.drawing_img_url,
-    graph_img_url: product.graph_img_url,
-    featured_img_url: product.featured_img_url,
-    featuredDesc: product.featuredDesc,
-    isFeatured: product.isFeatured,
-    isArchived: product.isArchived,
     isKits: product.isKits,
     isNewProduct: product.isNewProduct,
     navbarNotes: product.navbarNotes,
-    sizeId: product.sizeId,
     priority: product.priority,
-    updatedBy: product.updatedBy,
-    createdAt: product.createdAt,
-    updatedAt: product.updatedAt,
+    tempAllFinished: product.tempAllFinished,
+    isArchived: product.isArchived
   }
 }
 
@@ -139,18 +124,6 @@ export type SerializedCategory = {
   updatedAt: Date
   children: SerializedCategory[]
   products?: SerializedProduct[]
-}
-
-function getCategoryDistances(node: CategoryNode) {
-  const distances = new Map<string, number>()
-  const visit = (current: CategoryNode, distance: number, path = new Set<string>()) => {
-    if (path.has(current.id)) return
-    distances.set(current.id, distance)
-    const nextPath = new Set(path).add(current.id)
-    current.children.forEach((child: any) => visit(child, distance + 1, nextPath))
-  }
-  visit(node, 0)
-  return distances
 }
 
 function serializeCategory(

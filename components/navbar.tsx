@@ -12,14 +12,11 @@ import { NavbarComponents, NavbarProducts, NewProduct, PriorityMenu } from '@/ap
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordionmobilemenu';
 import getAllNewProducts from '@/app/(frontend)/actions/get-all-new-products';
 import SearchBoxNavbar from './searchboxnavbar';
-import { DriversSBAutomotiveMenu, EmptyMenu } from '@/app/(frontend)/utils/navbar-content';
+import { EmptyMenu } from '@/app/(frontend)/utils/navbar-content';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getHref } from '@/app/(frontend)/utils/getHref';
 import getAllNavbarContent, { SerializedCategory } from '@/app/(frontend)/actions/get-all-navbar-content';
-import { LazyImageCustom } from './lazyImageCustom';
-import { useScrollDirection } from './hooks/use-scroll-direction';
 import SearchLightbox from './searchligthbox';
-import path from 'node:path';
 import { LazyImageCustomNavbar } from './lazyImageCustomNavbar';
 import { buildNavbarMenus, menuKey } from './build-navbar-menu';
 
@@ -31,9 +28,10 @@ type MobileMenuProps = {
   childMaps: Record<string, NavbarComponents[]>[];
   pathname: string;
   depth?: number;
+  loading?: boolean;
 };
 
-function MobileMenuItems({ items, childMaps, pathname, depth = 0 }: MobileMenuProps) {
+function MobileMenuItems({ items, childMaps, pathname, depth = 0, loading = false }: MobileMenuProps) {
   const childrenMap = childMaps[depth] ?? {};
   const levelStyles = [
     "border-primary",
@@ -44,6 +42,33 @@ function MobileMenuItems({ items, childMaps, pathname, depth = 0 }: MobileMenuPr
   const levelStyle = levelStyles[Math.min(depth, levelStyles.length - 1)];
 
   return (
+    loading ? 
+      pathname.includes('sbaudience') ?
+        <Accordion type="single" collapsible className={`w-full rounded-lg ${depth !== 0 && `border-l-2 pl-2 bg-zinc-100/10 ${levelStyle}`}`}>
+          <AccordionItem value='Drivers'>
+            <AccordionTrigger className={`px-2 hover:text-primary ${levelStyle}`}>
+              Drivers
+            </AccordionTrigger>
+          </AccordionItem>
+        </Accordion>
+      :
+        <>
+          <Accordion type="single" collapsible className={`w-full rounded-lg ${depth !== 0 && `border-l-2 pl-2 bg-zinc-700/5 ${levelStyle}`}`}>
+            <AccordionItem value='Drivers'>
+              <AccordionTrigger className={`px-2 hover:text-primary ${levelStyle}`}>
+                Drivers
+              </AccordionTrigger>
+            </AccordionItem>
+          </Accordion>
+          <Accordion type="single" collapsible className={`w-full rounded-lg ${depth !== 0 && `border-l-2 pl-2 bg-zinc-700/5 ${levelStyle}`}`}>
+            <AccordionItem value='Kits'>
+              <AccordionTrigger className={`px-2 hover:text-primary ${levelStyle}`}>
+                Kits
+              </AccordionTrigger>
+            </AccordionItem>
+          </Accordion>
+        </>
+    :
     <Accordion type="single" collapsible className={`w-full rounded-lg ${depth !== 0 && `border-l-2 pl-2 ${pathname.includes('sbaudience') ? 'bg-zinc-100/10' : 'bg-zinc-700/5'} ${levelStyle}`}`}>
       {items.map((item, index) => {
         const children = childrenMap[menuKey(item.title, item.parent)] ?? [];
@@ -140,7 +165,7 @@ function Navbar() {
   const [pictureSlugUrl, setPictureSlugUrl] = useState<string>('')
   const [pictureDesc, setPictureDesc] = useState<string>('')
   const [nameForHoveredPicture, setnameForHoveredPicture] = useState<string>('')
-  const [_, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [openedContentForBg, setOpenedContentForBg] = useState(false);
   
   //FOR SEARCHING SUB MENU CONTENT
@@ -410,7 +435,78 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                   </NavigationMenuItem>
                 </>
               }
-              {firstMenu && firstMenu.length > 0 && firstMenu.map((val, index) =>
+              {loading ?
+                pathname.includes("sbaudience")? 
+                  <NavigationMenuItem>
+                    <div className="p-0 relative z-101">
+                      <NavigationMenuTrigger
+                        className={navigationMenuTriggerStyle().concat(
+                          ` bg-transparent ${
+                            navbarBg && pathname.includes('sbaudience') ? 
+                              openedContentForBg ? 
+                              'text-background' 
+                              : 
+                              'text-background'
+                            : 
+                            pathname.includes('sbaudience') ? 
+                            'text-background' 
+                            :
+                            'text-foreground'
+                          } hover:text-primary z-101 relative`
+                        )}
+                      >
+                        Drivers
+                      </NavigationMenuTrigger>
+                    </div>
+                  </NavigationMenuItem>
+                :
+                  <>
+                    <NavigationMenuItem>
+                      <div className="p-0 relative z-101">
+                        <NavigationMenuTrigger
+                          className={navigationMenuTriggerStyle().concat(
+                            ` bg-transparent ${
+                              navbarBg && pathname.includes('sbaudience') ? 
+                                openedContentForBg ? 
+                                'text-background' 
+                                : 
+                                'text-background'
+                              : 
+                              pathname.includes('sbaudience') ? 
+                              'text-background' 
+                              :
+                              'text-foreground'
+                            } hover:text-primary z-101 relative`
+                          )}
+                        >
+                          Drivers
+                        </NavigationMenuTrigger>
+                      </div>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <div className="p-0 relative z-101">
+                        <NavigationMenuTrigger
+                          className={navigationMenuTriggerStyle().concat(
+                            ` bg-transparent ${
+                              navbarBg && pathname.includes('sbaudience') ? 
+                                openedContentForBg ? 
+                                'text-background' 
+                                : 
+                                'text-background'
+                              : 
+                              pathname.includes('sbaudience') ? 
+                              'text-background' 
+                              :
+                              'text-foreground'
+                            } hover:text-primary z-101 relative`
+                          )}
+                        >
+                          Kits
+                        </NavigationMenuTrigger>
+                      </div>
+                    </NavigationMenuItem>
+                  </>
+              : firstMenu && firstMenu.length > 0 && firstMenu.map((val, index) =>
               <NavigationMenuItem key={index}>
                 <Link href={getHref(pathname, val.href)} passHref>
                   <div className="p-0 relative z-101">
@@ -667,14 +763,9 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                       driversubMenuUrl !== "" && (
                                         <NavigationMenuLink
                                           href={getHref(pathname, pictureSlugUrl)}
-                                          className={
-                                            pathname.includes("sbaudience")
-                                              ? "text-white"
-                                              : ""
-                                          }
+                                          className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}
                                         >
                                           <div
-                                            className="relative overflow-hidden flex items-center justify-center h-full w-50"
                                             onMouseEnter={() =>
                                               setactivedriverhovered(
                                                 nameForHoveredPicture
@@ -697,10 +788,7 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                               pathname={pathname}
                                             />
                                           </div>
-
-                                          <div className="flex justify-center items-center text-center h-full">
-                                            {pictureDesc}
-                                          </div>
+                                          {pictureDesc}
                                         </NavigationMenuLink>
                                       )
                                     )
@@ -820,10 +908,9 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                       driversubsubMenuUrl !== "" && (
                                         <NavigationMenuLink
                                           href={getHref(pathname, pictureSlugUrl)}
-                                          className={pathname.includes("sbaudience") ? "text-white" : ""}
+                                          className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}
                                         >
                                           <div
-                                            className="relative overflow-hidden flex items-center justify-center h-full w-50"
                                             onMouseEnter={() => setactivedriverhovered(nameForHoveredPicture)}
                                           >
                                             <LazyImageCustomNavbar
@@ -842,9 +929,7 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                               pathname={pathname}
                                             />
                                           </div>
-                                          <div className="flex justify-center items-center text-center h-full">
-                                            {pictureDesc}
-                                          </div>
+                                          {pictureDesc}
                                         </NavigationMenuLink>
                                       )
                                     )
@@ -957,14 +1042,9 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                     driversubsubsubMenuUrl !== "" && (
                                       <NavigationMenuLink
                                         href={getHref(pathname, pictureSlugUrl)}
-                                        className={
-                                          pathname.includes("sbaudience")
-                                            ? "text-white"
-                                            : ""
-                                        }
+                                        className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}
                                       >
                                         <div
-                                          className="relative overflow-hidden flex items-center justify-center h-full w-50"
                                           onMouseEnter={() =>
                                             setactivedriverhovered(
                                               nameForHoveredPicture
@@ -987,10 +1067,7 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                             pathname={pathname}
                                           />
                                         </div>
-
-                                        <div className="flex justify-center items-center text-center h-full">
-                                          {pictureDesc}
-                                        </div>
+                                        {pictureDesc}
                                       </NavigationMenuLink>
                                     )
                                   )
@@ -1035,14 +1112,9 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                             <ul className="gap-1 p-1">
                           <NavigationMenuLink
                             href={getHref(pathname, pictureSlugUrl)}
-                            className={
-                              pathname.includes("sbaudience")
-                                ? "text-white"
-                                : ""
-                            }
+                            className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}
                           >
                             <div
-                              className="relative overflow-hidden flex items-center justify-center h-full w-50"
                               onMouseEnter={() =>
                                 setactivedriverhovered(
                                   nameForHoveredPicture
@@ -1065,10 +1137,7 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                 pathname={pathname}
                               />
                             </div>
-
-                            <div className="flex justify-center items-center text-center h-full">
-                              {pictureDesc}
-                            </div>
+                            {pictureDesc}
                           </NavigationMenuLink>
                             </ul>
                           </div>
@@ -1149,8 +1218,8 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                       <div className={`overflow-y-auto transform transition-all z-30 ${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'} ${driversubMenuUrl === ''? '-translate-x-1/2' : 'translate-x-0'}`}>
                         <ul className="gap-1 p-1">
                           {driversubMenuUrl != '' &&   
-                              <NavigationMenuLink href={getHref(pathname, pictureSlugUrl)} className={`${pathname.includes("sbaudience") ? 'text-white' : ''}`}>
-                                <div className="relative overflow-hidden flex items-center justify-center h-full w-50" onMouseEnter={() => (setactivedriverhovered(nameForHoveredPicture))}>
+                              <NavigationMenuLink href={getHref(pathname, pictureSlugUrl)} className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}>
+                                <div onMouseEnter={() => (setactivedriverhovered(nameForHoveredPicture))}>
                                   <LazyImageCustomNavbar 
                                     src={driversubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubMenuUrl}` : driversubMenuUrl}
                                     alt={activedriverhovered}
@@ -1162,9 +1231,7 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                     containerwidth='w-40'
                                     pathname={pathname}/>
                                 </div>
-                                <div className='flex justify-center items-center text-center h-full'>
-                                  {pictureDesc}
-                                </div>
+                                {pictureDesc}
                               </NavigationMenuLink>
                           }    
                         </ul>
@@ -1263,14 +1330,17 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
             </SheetTrigger>
             <SheetContent className={`h-auto w-full p-0 z-50 ${pathname.includes('sbaudience') ? 'bg-foreground text-background' : 'bg-background text-foreground'}`}>
               <div className="max-h-screen overflow-y-auto">
-                <div className="pl-6 pt-4"><SearchLightbox changeBrand /></div>
-                <SheetTitle className="sr-only">Mobile navigation</SheetTitle>
-                <SheetDescription className="sr-only">Browse product categories and site links</SheetDescription>
+                <div className="pl-6 pt-4">
+                  <SearchLightbox changeBrand />
+                </div>
+                <SheetTitle />
+                <SheetDescription />
                 <div className="grid gap-1 px-6 pt-2">
                   <MobileMenuItems
                     items={firstMenu}
                     childMaps={[driverSubMenuMapping, driverSubSubMenuMapping, driverSubSubSubMenuMapping, driverSubSubSubSubMenuMapping]}
                     pathname={pathname}
+                    loading={loading}
                   />
                   <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="new-products">

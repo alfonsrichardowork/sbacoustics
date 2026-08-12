@@ -77,7 +77,7 @@
 
 
 
-import React, { Suspense } from 'react'
+import React from 'react'
 import { Toaster } from '@/components/ui/toaster';
 import ScrollToTop from '@/components/scrollToTop';
 import NextTopLoader from 'nextjs-toploader';
@@ -90,7 +90,6 @@ import { Noto_Sans } from 'next/font/google';
 import LoadingWrapper from '@/components/loadingWrapper';
 import { CookieProvider } from '@/lib/cookies-context';
 import CookieBanner from '@/components/cookie-banner';
-import { Loader } from '@/components/ui/loader';
 const font = Noto_Sans({ subsets: ['latin'] })
 
 export default async function Layout({
