@@ -22,7 +22,7 @@ export async function GET(req: Request, props: { params: Promise<{ brandId: stri
     });
 
     if (catId) {
-        const allPriority = await prismadb.menupriority.findMany({
+        const allPriority = await prismadb.allproductcategory.findMany({
             where: {
                 categoryId: catId.id
             }

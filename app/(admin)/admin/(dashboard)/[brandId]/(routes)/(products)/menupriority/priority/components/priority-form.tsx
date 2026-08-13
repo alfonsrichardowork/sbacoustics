@@ -27,7 +27,20 @@ export type PriorityProduct = {
   name: string
   slug: string
   priority: string
+  categoryId: string   // the owning (deepest) category link
   image?: string
+}
+
+export type PriorityProductRecord = {
+  id: string
+  name: string
+  slug: string
+  image?: string
+  links: Array<{ categoryId: string; priority: string }>
+}
+export type PrioritySavePayload = {
+  categories: Array<{ id: string; priority: string }>
+  products: Array<{ productId: string; categoryId: string; priority: string }>
 }
 
 export type CategoryNode = {
@@ -47,10 +60,6 @@ export type PriorityCategoryRecord = {
   under_categoryId: string | null
 }
 
-export type PriorityProductRecord = PriorityProduct & {
-  categoryIds: string[]
-}
-
 export type PrismaCategoryPriorityRecord = Pick<PriorityCategoryRecord, 'id' | 'name' | 'type' | 'priority' | 'under_categoryId'>
 export type PrismaProductPriorityRecord = Pick<PriorityProduct, 'id' | 'name' | 'slug' | 'priority'> & {
   cover_img_url?: string | null
@@ -61,26 +70,6 @@ export type PrismaProductPriorityRecord = Pick<PriorityProduct, 'id' | 'name' | 
 type ReorderOperation =
   | { type: 'category'; parentCategoryId: string | null; orderedIds: string[] }
   | { type: 'product'; categoryId: string; orderedIds: string[] }
-
-const initialTree: CategoryNode[] = [
-  {
-    id: 'cat-1', name: 'Engine systems', type: 'Category', priority: '1',
-    products: [
-      { id: 'p-1', name: 'Turbocharger assemblies', slug: 'turbocharger-assemblies', priority: '1' },
-      { id: 'p-2', name: 'Fuel injection systems', slug: 'fuel-injection-systems', priority: '2' },
-    ],
-    children: [
-      { id: 'cat-1-1', name: 'Air intake', type: 'Sub Category', priority: '1', products: [{ id: 'p-3', name: 'Air filter housings', slug: 'air-filter-housings', priority: '1' }], children: [] },
-      { id: 'cat-1-2', name: 'Exhaust', type: 'Sub Category', priority: '2', products: [], children: [] },
-    ],
-  },
-  {
-    id: 'cat-2', name: 'Drivetrain', type: 'Category', priority: '2', products: [{ id: 'p-4', name: 'Differential covers', slug: 'differential-covers', priority: '1' }], children: [],
-  },
-  {
-    id: 'cat-3', name: 'Electrical', type: 'Category', priority: '', products: [], children: [{ id: 'cat-3-1', name: 'Sensors', type: 'Sub Category', priority: '', products: [], children: [] }],
-  },
-]
 
 
 function updateList(nodes: CategoryNode[], operation: ReorderOperation): CategoryNode[] {
@@ -101,13 +90,13 @@ function reorderCategories(nodes: CategoryNode[], parentId: string | null, order
     : { ...node, children: reorderCategories(node.children, parentId, orderedIds) })
 }
 
-function SortableRow({ label, meta, onDragStart, onDrop, muted = false }: { label: string; meta: string; onDragStart: () => void; onDrop: () => void; muted?: boolean }) {
+function SortableRow({ label, meta, onDragStart, onDrop, muted = false, priority }: { label: string; meta: string; onDragStart: () => void; onDrop: () => void; muted?: boolean; priority: string }) {
   return (
     <div draggable onDragStart={onDragStart} onDragOver={(event) => event.preventDefault()} onDrop={onDrop} className={cn('group flex cursor-grab items-center gap-3 border-b border-border/60 px-3 py-3 transition-colors last:border-0 hover:bg-accent/60 active:cursor-grabbing', muted && 'opacity-70')}>
       <GripVertical className="text-muted-foreground" aria-hidden="true" />
       <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground"><Package aria-hidden="true" /></div>
       <div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{label}</p><p className="truncate text-xs text-muted-foreground">{meta}</p></div>
-      <span className="rounded bg-muted px-2 py-1 font-mono text-xs text-muted-foreground">priority</span>
+      <span className="rounded bg-muted px-2 py-1 font-mono text-xs text-muted-foreground">{priority}</span>
     </div>
   )
 }
@@ -133,6 +122,7 @@ function CategoryBranch({ node, depth, onProductReorder, onCategoryReorder, expa
     onCategoryReorder(node.id, ids)
     setDraggedCategory(null)
   }
+
 
   return (
     <div className="flex flex-col gap-3" style={{ marginLeft: depth ? 24 : 0 }}>
@@ -183,7 +173,7 @@ function CategoryBranch({ node, depth, onProductReorder, onCategoryReorder, expa
                 </Badge>
               </div>
               {node.products.map((product) => 
-                <SortableRow key={product.id} label={product.name} meta={product.slug} onDragStart={() => setDraggedProduct(product.id)} onDrop={() => dropProduct(product.id)} />
+                <SortableRow key={product.id} label={product.name} meta={product.slug} onDragStart={() => setDraggedProduct(product.id)} onDrop={() => dropProduct(product.id)} priority={product.priority} />
               )}
             </div>
           }
@@ -198,23 +188,30 @@ function CategoryBranch({ node, depth, onProductReorder, onCategoryReorder, expa
   )
 }
 
-export type PrioritySavePayload = {
-  categories: Array<{ id: string; priority: string }>
-  products: Array<{ id: string; categoryId: string; priority: string }>
-}
 
-function flattenPriorityTree(nodes: CategoryNode[], result: PrioritySavePayload = { categories: [], products: [] }) {
+function flattenPriorityTree(
+  nodes: CategoryNode[],
+  result: PrioritySavePayload = { categories: [], products: [] },
+) {
   nodes.forEach((node) => {
     result.categories.push({ id: node.id, priority: node.priority })
-    node.products.forEach((product) => result.products.push({ id: product.id, categoryId: node.id, priority: product.priority }))
+    node.products.forEach((product) =>
+      result.products.push({
+        productId: product.id,
+        categoryId: product.categoryId, // always the deepest link
+        priority: product.priority,
+      }),
+    )
     flattenPriorityTree(node.children, result)
   })
   return result
 }
 
-export function CategoryPriorityManager({ initialTree: providedTree = initialTree, onSave, brandId}: { initialTree?: CategoryNode[]; onSave?: (payload: PrioritySavePayload) => Promise<void> | void ; brandId: string}) {
+export function CategoryPriorityManager({ initialTree: providedTree = [], onSave, brandId}: { initialTree?: CategoryNode[]; onSave?: (payload: PrioritySavePayload) => Promise<void> | void ; brandId: string}) {
   const [tree, setTree] = useState(() => normalizeTree(providedTree))
-  const [expanded, setExpanded] = useState(() => new Set(['cat-1', 'cat-1-1', 'cat-2', 'cat-3']))
+  const [expanded, setExpanded] = useState<Set<string>>(
+    () => new Set(providedTree.map((n) => n.id)),
+  )
   const [query, setQuery] = useState('')
   const [dirty, setDirty] = useState(false)
   const [saved, setSaved] = useState(false)

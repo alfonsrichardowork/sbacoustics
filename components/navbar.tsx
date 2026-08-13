@@ -198,6 +198,7 @@ function Navbar() {
     const fetchData = async () => {
       try {
         const navbarData: SerializedCategory[] = await getAllNavbarContent(pathname)
+        console.log("navbarData: ", navbarData)
         const [tempNewKits, tempNewProduct]: [NewProduct[], NewProduct[]] = await getAllNewProducts(pathname)
 
         const menus = buildNavbarMenus(navbarData)

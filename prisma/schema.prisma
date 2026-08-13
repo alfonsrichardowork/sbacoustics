@@ -95,7 +95,6 @@ model product {
   productsKits  productsusedinkits[] @relation("ProductToProductsUsedInKits")
   productsUsedInKits  productsusedinkits[] @relation("ProductUsedInKitsToProduct")
   connectorSpecifications specificationconnector[] @relation("ProductToConnectorSpecification")
-  priority    String    @default("")
   updatedBy   String    @db.Text  @default("")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -240,21 +239,13 @@ model allproductcategory {
   productId   String   // Foreign Key to product
   product     product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   categoryId  String
+  priority  String @default("")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   
   category allcategory @relation(fields: [categoryId], references: [id])
   @@index([productId])
   @@index([categoryId])
-}
-
-model menupriority {
-  id    String  @id @default(uuid())
-  productId  String  @db.Text
-  priorityNumber   String  @db.Text
-  categoryId  String  @db.Text
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
 }
 
 model productsusedinkits {

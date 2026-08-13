@@ -11,9 +11,9 @@ export async function GET(
             .split(',')
             .map((id) => id.trim())
             .filter(Boolean)
-        const x = await prismadb.menupriority.findMany({     
+        const x = await prismadb.allcategory.findMany({     
             where: { 
-                categoryId: { in: categoryId } 
+                id: { in: categoryId } 
             },   
         })
         return NextResponse.json(x)

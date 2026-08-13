@@ -28,7 +28,7 @@ export async function GET(
             id: true,
             categoryId: true,
             productId: true,
-
+            priority: true,
             product: {
               select: {
                 id: true,
@@ -38,7 +38,6 @@ export async function GET(
                 isKits: true,
                 isNewProduct: true,
                 navbarNotes: true,
-                priority: true,
                 tempAllFinished: true,
                 isArchived: true
               },

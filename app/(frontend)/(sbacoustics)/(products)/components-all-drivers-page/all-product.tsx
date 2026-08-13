@@ -32,6 +32,7 @@ import getAllPriorityBySubCategory from "@/app/(frontend)/actions/get-all-priori
 import ProductCard from "./product-card";
 import { LazyImageCustom } from "@/components/lazyImageCustom";
 import { Skeleton } from "@/components/ui/skeleton";
+import { allproductcategory } from "@prisma/client";
 
 
 interface MainProps {
@@ -52,7 +53,8 @@ const AllDriversProducts: React.FC<MainProps> = ({
     const { toast } = useToast()    
     const [isButtonVisible, setIsButtonVisible] = useState(false);
     const [finalBreadcrumb, setFinalBreadcrumb] = useState<string[]>([])
-    const [priority, setPriority] = useState<PriorityMenu[]>([])
+    const [priority, setPriority] = useState<allproductcategory[]>([]);
+    const [priorityLoaded, setPriorityLoaded] = useState(false);
 
 
     const [totalSlidesPerView, setTotalSlidesPerView] = useState<number>(1);
@@ -89,14 +91,20 @@ const AllDriversProducts: React.FC<MainProps> = ({
 
     useEffect(() => {
         const fetchPriority = async () => {
-          try {  
-            let temp = await getAllPriorityBySubCategory(pathname, params[params.length - 1] ?? '')
-            setPriority(temp)
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
+            try {
+                const temp = await getAllPriorityBySubCategory(
+                    pathname,
+                    params[params.length - 1] ?? ''
+                );
+
+                setPriority(temp);
+            } catch (error) {
+                console.error("Error fetching priority:", error);
+            } finally {
+                setPriorityLoaded(true);
+            }
         };
-    
+
         fetchPriority();
     }, []);
 
@@ -243,7 +251,9 @@ const AllDriversProducts: React.FC<MainProps> = ({
                 }
             }
             
+            if (!priorityLoaded) return;
             if(priority.length === 0) {
+                console.log("MAOSK SINI")
                 FinalFeatured.sort((a, b) => {
                     // Extract the leading number from the name
                     const numA = parseInt(a.products.name.match(/^\d+/)?.[0] || "100", 10);
@@ -274,7 +284,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
         };
     
         fetchData();
-      }, [products, allActiveSliderVal, allActiveCheckboxVal]); 
+      }, [priorityLoaded, priority, products, allActiveSliderVal, allActiveCheckboxVal]); 
 
     function addComparison(slug: string, name: string, imgUrl: string) {
         if (!activeSlugCompare.includes(slug)) {
