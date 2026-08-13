@@ -198,7 +198,6 @@ function Navbar() {
     const fetchData = async () => {
       try {
         const navbarData: SerializedCategory[] = await getAllNavbarContent(pathname)
-        console.log("navbarData: ", navbarData)
         const [tempNewKits, tempNewProduct]: [NewProduct[], NewProduct[]] = await getAllNewProducts(pathname)
 
         const menus = buildNavbarMenus(navbarData)
@@ -675,7 +674,8 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                     </NavigationMenuLink>
                                   )}
                                 </div>
-                              ))}
+                              ))} 
+                              {/* Length: {driversubMenu.length} */}
                             </ul>
                           </div>
                         )}
@@ -824,7 +824,8 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                     </NavigationMenuLink>
                                   )}
                                 </div>
-                              ))}
+                              ))} 
+                              {/* Length: {driversubsubMenu.length} */}
                             </ul>
                           </div>
                         )}
@@ -962,7 +963,8 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                     </NavigationMenuLink>
                                   )}
                                 </div>
-                              ))}
+                              ))} 
+                              {/* Length: {driversubsubsubMenu.length} */}
                             </ul>
 
                           </div>
@@ -1092,7 +1094,8 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                   </NavigationMenuLink>
                                   )}
                                 </div>
-                              ))}
+                              ))} 
+                              {/* Length: {driversubsubsubsubMenu.length} */}
                             </ul>
                           </div>
                         )}

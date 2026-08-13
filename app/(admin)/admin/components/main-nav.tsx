@@ -78,16 +78,22 @@ export function MainNav({
         },
       ]
     : []),
+    // {
+    //   title: "Product Priority",
+    //   href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/priority`,
+    //   description: "Set Priorities for Products inside Dropdown Menu.",
+    //   icon: ArrowDown01
+    // },
+    // {
+    //   title: "Menu Priority",
+    //   href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/categorypriority/priority`,
+    //   description: "Set Menu Priority in All Drivers Page.",
+    //   icon: ArrowDown01
+    // },
     {
-      title: "Product Priority",
-      href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/priority`,
-      description: "Set Priorities for Products inside Dropdown Menu.",
-      icon: ArrowDown01
-    },
-    {
-      title: "Menu Priority",
-      href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/categorypriority/priority`,
-      description: "Set Menu Priority in All Drivers Page.",
+      title: "Menu & Product Priority",
+      href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/menupriority/priority`,
+      description: "Set Menu Priority and Product Priority",
       icon: ArrowDown01
     },
   ]
