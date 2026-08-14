@@ -122,6 +122,7 @@ function CategoryBranch({ node, depth, onProductReorder, onCategoryReorder, expa
     onCategoryReorder(node.id, ids)
     setDraggedCategory(null)
   }
+  const rowKey = (p: PriorityProduct) => `${node.id}:${p.id}`
 
 
   return (
@@ -173,7 +174,13 @@ function CategoryBranch({ node, depth, onProductReorder, onCategoryReorder, expa
                 </Badge>
               </div>
               {node.products.map((product) => 
-                <SortableRow key={product.id} label={product.name} meta={product.slug} onDragStart={() => setDraggedProduct(product.id)} onDrop={() => dropProduct(product.id)} priority={product.priority} />
+                <div key={rowKey(product)}
+                  draggable
+                  onDragStart={() => setDraggedProduct(product.id)}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={() => dropProduct(product.id)}>
+                    <SortableRow label={product.name} meta={product.slug} onDragStart={() => setDraggedProduct(product.id)} onDrop={() => dropProduct(product.id)} priority={product.priority} />
+                </div>
               )}
             </div>
           }

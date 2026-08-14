@@ -658,6 +658,7 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                           setDriversSubSubMenuUrl("");
                                           setDriversSubSubSubMenuUrl("");
                                           setDriversSubSubSubSubMenuUrl("");
+                                          setHoveredDriverSubSubMenu("")
                                           setactivedriverhovered("");
                                         }}
                                       >
@@ -808,6 +809,7 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                         onMouseEnter={() => {
                                           setDriversSubSubSubMenuUrl("");
                                           setDriversSubSubSubSubMenuUrl("");
+                                          setHoveredDriverSubSubSubMenu("")
                                           setactivedriverhovered("");
                                         }}
                                       >

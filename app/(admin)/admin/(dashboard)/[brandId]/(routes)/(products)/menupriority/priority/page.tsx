@@ -43,28 +43,25 @@ export function buildCategoryPriorityTree(
   }
   walk(null, 0)
 
-  // one product -> exactly one owning category (deepest link)
+  // one product -> ONE ENTRY PER INCLUDED CATEGORY LINK
   const productsByCategory = new Map<string, PriorityProduct[]>()
   for (const product of products) {
-    const links = product.links.filter((link) => depthById.has(link.categoryId))
-    if (!links.length) continue
-
-    const owner = links.reduce((best, link) =>
-      (depthById.get(link.categoryId) ?? -1) > (depthById.get(best.categoryId) ?? -1) ? link : best,
-    )
-
-    productsByCategory.set(owner.categoryId, [
-      ...(productsByCategory.get(owner.categoryId) ?? []),
-      {
-        id: product.id,
-        name: product.name,
-        slug: product.slug,
-        image: product.image,
-        categoryId: owner.categoryId,
-        priority: owner.priority ?? '',
-      },
-    ])
+    for (const link of product.links) {
+      if (!depthById.has(link.categoryId)) continue
+      productsByCategory.set(link.categoryId, [
+        ...(productsByCategory.get(link.categoryId) ?? []),
+        {
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          image: product.image,
+          categoryId: link.categoryId,   // this row's own link
+          priority: link.priority ?? '',
+        },
+      ])
+    }
   }
+
 
   const makeNode = (category: PriorityCategoryRecord): CategoryNode => ({
     id: category.id,

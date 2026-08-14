@@ -227,11 +227,11 @@ export async function DELETE(
       },
     });
     //Delete menupriority
-    await prismadb.menupriority.deleteMany({
-      where: {
-        productId: params.productId,
-      },
-    });
+    // await prismadb.menupriority.deleteMany({
+    //   where: {
+    //     productId: params.productId,
+    //   },
+    // });
     //Delete similarproducts
     await prismadb.similarproducts.deleteMany({
       where: {
