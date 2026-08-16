@@ -31,6 +31,7 @@ import { Navigation, Thumbs, Scrollbar } from 'swiper/modules';
 import getAllPriorityBySubCategory from "@/app/(frontend)/actions/get-all-priority-by-category";
 import ProductCard from "./product-card";
 import { LazyImageCustom } from "@/components/lazyImageCustom";
+import { allproductcategory } from "@prisma/client";
 
 
 interface MainProps {
@@ -52,7 +53,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
     const { toast } = useToast()    
     const [isButtonVisible, setIsButtonVisible] = useState(false);
     const [finalBreadcrumb, setFinalBreadcrumb] = useState<string[]>([])
-    const [priority, setPriority] = useState<PriorityMenu[]>([])
+    const [priority, setPriority] = useState<allproductcategory[]>([])
 
 
     const [totalSlidesPerView, setTotalSlidesPerView] = useState<number>(1);

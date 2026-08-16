@@ -42,8 +42,8 @@ function categoryToItem(
     title: cat.displayName || cat.name,
     parent: hasChildren ? cat.under_categoryId : '',
     href,
-    url: clean(cat.thumbnail_url),
-    imageDesc: clean(cat.description),
+    url: '',
+    imageDesc: '',
     newProd: false,
     tempAllFinished: false,
   } as NavbarComponents

@@ -2,7 +2,7 @@
 
 import NoResults from "@/components/ui/no-results";
 
-import { activeCheckbox, activeSlider, AllFilterProductsOnlyType, PriorityMenu } from "@/app/(frontend)/types";
+import { activeCheckbox, activeSlider, AllFilterProductsOnlyType } from "@/app/(frontend)/types";
 import React, { useEffect, useRef, useState } from "react";
 import AllActiveFilters from "./all-active-filters";
 import { ChevronDown, ChevronUp, Trash2, X } from "lucide-react";

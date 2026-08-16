@@ -2,7 +2,7 @@
 
 import NoResults from "@/components/ui/no-results";
 
-import { activeCheckbox, activeSlider, AllFilterProductsOnlyType, PriorityMenu } from "@/app/(frontend)/types";
+import { activeCheckbox, activeSlider, AllFilterProductsOnlyType } from "@/app/(frontend)/types";
 import React, { useEffect, useRef, useState } from "react";
 import AllActiveFilters from "./all-active-filters";
 import { ChevronDown, ChevronUp, Trash2, X } from "lucide-react";
@@ -32,6 +32,7 @@ import getAllPriorityBySubCategory from "@/app/(frontend)/actions/get-all-priori
 import ProductCard from "./product-card";
 import { LazyImageCustom } from "@/components/lazyImageCustom";
 import { Skeleton } from "@/components/ui/skeleton";
+import { allproductcategory } from "@prisma/client";
 
 
 interface MainProps {
@@ -52,7 +53,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
     const { toast } = useToast()    
     const [isButtonVisible, setIsButtonVisible] = useState(false);
     const [finalBreadcrumb, setFinalBreadcrumb] = useState<string[]>([])
-    const [priority, setPriority] = useState<PriorityMenu[]>([])
+    const [priority, setPriority] = useState<allproductcategory[]>([])
 
 
     const [totalSlidesPerView, setTotalSlidesPerView] = useState<number>(1);
