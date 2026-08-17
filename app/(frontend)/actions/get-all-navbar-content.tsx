@@ -1,5 +1,3 @@
-// get-all-navbar-content.tsx
-
 type CategoryRecord = Awaited<ReturnType<typeof loadCategories>>[number]
 type ProductLink = CategoryRecord['productCategories'][number]
 type ProductRecord = ProductLink['product']
