@@ -107,28 +107,28 @@ export default async function LandingPageSBAcoustics() {
                     src={brandImages.homepage_open_source_kits_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_open_source_kits_url}` : brandImages.homepage_open_source_kits_url} alt={"SB Acoustics Open Source Kits"} className='w-full h-full object-cover' />
               </div>
             </div>
+            {brandImages.homepage_open_source_kits_url !== '' &&
+              <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 pt-4 flex items-end z-50 text-black bg-linear-to-l from-white/70 via-white/60 to-white/0 w-full">
+                <div className="grid gap-0 grid-cols-1 w-fit">
+                  <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4">
+                    Open Source Kits
+                  </h2>
+                  <div className="text-left text-sm pb-4 hidden md:block">
+                    {brandImages.homepage_open_source_kits_text}
+                  </div>
+                  <div className="items-start pb-4">
+                    <Button asChild size="sm">
+                      <Link href="/kits/open-source-kits">Learn More</Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            }
           </div>
         }
       
 
         <div className="relative min-h-screen">
-          {brandImages.homepage_open_source_kits_url !== '' &&
-            <div className="xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 pt-4 flex items-end z-50 text-black bg-linear-to-l from-white/70 via-white/60 to-white/0 w-full">
-              <div className="grid gap-0 grid-cols-1 w-fit">
-                <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4">
-                  Open Source Kits
-                </h2>
-                <div className="text-left text-sm pb-4 hidden md:block">
-                  {brandImages.homepage_open_source_kits_text}
-                </div>
-                <div className="items-start pb-4">
-                  <Button asChild size="sm">
-                    <Link href="/kits/open-source-kits">Learn More</Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          }
 
           {brandImages.homepage_about_us_url !== '' &&
             <div className="relative min-h-screen">
@@ -167,28 +167,28 @@ export default async function LandingPageSBAcoustics() {
                   <img src={brandImages.homepage_catalogues_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_catalogues_url}` : brandImages.homepage_catalogues_url} alt={"SB Acoustics Catalogues"} className='w-full h-full object-cover' />
                 </div>
               </div>
+              <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 pt-4 flex items-end z-50 text-black bg-linear-to-tl from-white/70 via-white/60 to-white/0 w-full">
+                {brandImages.homepage_catalogues_url !== '' && 
+                  <div className="grid gap-0 grid-cols-1 w-fit">
+                    <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4">
+                      Catalogues
+                    </h2>
+                    <div className="text-left text-sm pb-4 hidden md:block">
+                      {brandImages.homepage_catalogues_text}
+                    </div>
+                    <div className="items-start pb-4">
+                      <Button size={"sm"} asChild>
+                        <Link href={'/catalogues'}>
+                          View Catalogues
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                }
+              </div>
             </div>
           }
           <div className="relative">
-            <div className="xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 pt-4 flex items-end z-50 text-black bg-linear-to-tl from-white/70 via-white/60 to-white/0 w-full">
-              {brandImages.homepage_catalogues_url !== '' && 
-                <div className="grid gap-0 grid-cols-1 w-fit">
-                  <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4">
-                    Catalogues
-                  </h2>
-                  <div className="text-left text-sm pb-4 hidden md:block">
-                    {brandImages.homepage_catalogues_text}
-                  </div>
-                  <div className="items-start pb-4">
-                    <Button size={"sm"} asChild>
-                      <Link href={'/catalogues'}>
-                        View Catalogues
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              }
-            </div>
             {brandImages.socialmedia.length > 0 &&
               <div className='xl:h-96 lg:h-80 md:h-72 sm:h-72 h-60 w-full flex flex-col justify-center items-start xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 bg-white'>
                 <h2 className="text-left font-bold xl:text-5xl text-3xl text-black py-4">

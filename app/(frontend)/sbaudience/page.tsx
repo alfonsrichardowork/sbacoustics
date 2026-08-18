@@ -132,28 +132,28 @@ export default async function LandingPageSBAudience() {
                   <img src={brandImages.homepage_catalogues_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_catalogues_url}` : brandImages.homepage_catalogues_url} alt={"SB Audience Catalogues"} className='w-full h-full object-cover' />
                 </div>
               </div>
+              <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 flex items-end z-50 bg-linear-to-t from-black to-transparent w-full">
+                {brandImages.homepage_catalogues_url !== "" &&
+                  <div className="grid gap-0 grid-cols-1 w-fit">
+                    <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4 text-white">
+                      Catalogues
+                    </h2>
+                    <div className="text-left text-sm pb-4 hidden md:block text-white">
+                      {brandImages.homepage_catalogues_text}
+                    </div>
+                    <div className="items-start pb-4">
+                      <Button size={"sm"} asChild>
+                        <Link href={'/sbaudience/catalogues'}>
+                          View Catalogues
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                }
+              </div>
             </div>
           }
           <div className="relative">
-            <div className="xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 flex items-end z-50 bg-linear-to-t from-black to-transparent w-full">
-              {brandImages.homepage_catalogues_url !== "" &&
-                <div className="grid gap-0 grid-cols-1 w-fit">
-                  <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4 text-white">
-                    Catalogues
-                  </h2>
-                  <div className="text-left text-sm pb-4 hidden md:block text-white">
-                    {brandImages.homepage_catalogues_text}
-                  </div>
-                  <div className="items-start pb-4">
-                    <Button size={"sm"} asChild>
-                      <Link href={'/sbaudience/catalogues'}>
-                        View Catalogues
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
-              }
-            </div>
             {brandImages.socialmedia.length > 0 && 
               <div className='xl:h-96 lg:h-80 md:h-72 sm:h-72 h-60 w-full flex flex-col justify-center items-start xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 bg-zinc-400'>
                 <h2 className="text-left font-bold xl:text-5xl text-3xl text-black py-4">
