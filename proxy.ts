@@ -59,8 +59,8 @@ export async function proxy(req: NextRequest) {
     (isMacSafari && legacySafari);
 
   const isOldRoute =
-    req.nextUrl.pathname === "/old" ||
-    req.nextUrl.pathname.startsWith("/old/");
+    req.nextUrl.pathname === "/legacy" ||
+    req.nextUrl.pathname.startsWith("/legacy/");
 
   const isStaticAsset =
     req.nextUrl.pathname.startsWith("/uploads/") ||
@@ -75,7 +75,7 @@ export async function proxy(req: NextRequest) {
   ) {
     const url = req.nextUrl.clone();
 
-    url.pathname = `/old${url.pathname}`;
+    url.pathname = `/legacy${url.pathname}`;
 
     return NextResponse.redirect(url, 307);
   }

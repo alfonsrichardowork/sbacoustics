@@ -34,16 +34,10 @@ export default function AboutUsPage() {
                 </div>
                 <div className="space-y-6 text-slate-600">
                   <h3>
-                    Built from the foundation of a company with decades of manufacturing experience and partnered with
-                    Danish audio design engineers touted for their revolutionary designs. SB Acoustics was formed to bring
-                    an alternative to the high-end transducer market.
+                    SB Acoustics was born from the union of two established names in audio: the Danish design engineers of Danesian Audio, whose patented tweeter and subwoofer innovations have shaped some of the industry's most distinctive transducer designs, and Sinar Baja Electric, a vertically integrated manufacturer with over {new Date().getFullYear() - 1981} years of experience crafting exceptional transducers.
                   </h3>
                   <h3>
-                    Marrying the design talents of Danesian Audio (Denmark), a company filled with industry veterans,
-                    responsible for many well known and revolutionary designs, and manufacturing expert Sinar Baja
-                    Electric (Indonesia), a vertically integrated company with more than {new Date().getFullYear() - 1981} years of transducer
-                    manufacturing experience. We feel we have been able to create an exciting line of products, without
-                    compromising acoustic performance for cost. Ultimately, we invite you to judge.
+                    In-house capabilities span tooling, coil winding, diaphragm production, die-cast baskets, stamping, and specialty finishing, among other processes — giving us tight control over quality and consistency from raw material to finished component. Together, we've built a product line that balances outstanding acoustic performance with affordability.
                   </h3>
                 </div>
               </div>
@@ -117,24 +111,13 @@ export default function AboutUsPage() {
                 </div>
                 <div className="space-y-6 text-slate-600">
                   <h3>
-                    Established in 1981 and extensively expanded ever since to become the largest loudspeaker manufacturer
-                    in Indonesia and is the company behind SB Acoustics. With a population of more than 250 million
-                    people, Indonesia is a significant contributor to global manufacturing.
+                    Founded in 1981, we've grown into a leading name in loudspeaker manufacturing, with a reputation for high-quality products that meet the demands of discerning customers worldwide. Four decades of craftsmanship remain the backbone of everything we build.
                   </h3>
                   <h3>
-                    To this day, Sinar Baja Electric is a privately held group of companies in Surabaya, Indonesia. We
-                    develop and manufacture our own range of brands that are offered world wide through our distribution
-                    supply chain in major markets such as Europe, Australia, Asia and the United States.
+                    As a privately held group, we stay true to our core values of innovation, quality, and customer satisfaction. We are a preferred OEM/ODM supplier for prestigious brands across the lifestyle hi-fi, high-end, automotive, and professional audio sectors.
                   </h3>
                   <h3>
-                    We are proud to be the preferred OEM/ODM supplier of many prestigious brands from Lifestyle Hi-Fi,
-                    High-End, Automotive to Professional Audio, and much more.
-                  </h3>
-                  <h3>
-                    With more than {new Date().getFullYear() - 1981} years of history in loudspeaker manufacturing and innovation, we continues to expand
-                    in both quality, capacity, as well as services. With in-house Research & Development through the
-                    latest technologies as well as extensive experience in quality control and mass production we are
-                    confident we can deliver what you are searching for.
+                    We continue to invest in cutting-edge R&D, quality control, and mass production — pushing the boundaries of what's possible in transducer design and manufacturing.
                   </h3>
                 </div>
                 <div className="mt-8">
@@ -157,13 +140,12 @@ export default function AboutUsPage() {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">Our Mission & Values</h2>
               <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-                Combining Danish design excellence with Indonesian manufacturing expertise to deliver uncompromising
-                acoustic performance.
+                We dedicate passion and purpose to create and deliver high-valued products, where end user and OEM customer expectation are exceeded
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
-              <Card className="border-none shadow-none">
+              <Card className="border-none shadow-none bg-zinc-100 rounded-none">
                 <img
                   src="/images/sbacoustics/aboutus/Acoustics_excellence.jpg"
                   alt="SB Acoustics About Us Mission 1"
@@ -174,13 +156,12 @@ export default function AboutUsPage() {
                 <CardContent className="p-8 text-center bg-zinc-100">
                   <h3 className="text-xl font-bold mb-4 text-black">Acoustic Excellence</h3>
                   <p className="text-slate-600 leading-relaxed">
-                    Revolutionary Danish designs meet precision Indonesian manufacturing to create transducers that
-                    deliver uncompromising acoustic performance.
+                    Combining innovative Danish design expertise with precision Indonesian manufacturing, to create transducers deliver uncompromised acoustic performance
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="border-none shadow-none">
+              <Card className="border-none shadow-none bg-zinc-100 rounded-none">
                 <img
                   src="/images/sbacoustics/aboutus/Innovation.jpg"
                   alt="SB Acoustics About Us Mission 2"
@@ -191,13 +172,12 @@ export default function AboutUsPage() {
                 <CardContent className="p-8 text-center bg-zinc-100">
                   <h3 className="text-xl font-bold mb-4 text-black">Innovation</h3>
                   <p className="text-slate-600 leading-relaxed">
-                    Over {new Date().getFullYear() - 1981} years of manufacturing experience combined with cutting-edge R&D to continuously push the
-                    boundaries of transducer technology.
+                    Over {new Date().getFullYear() - 1981} years of experience in manufacturing, paired with cutting-edge R&D, enables us to continuously advance technology in transducers and manufacturing
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="border-none shadow-none">
+              <Card className="border-none shadow-none bg-zinc-100 rounded-none">
                 <img
                   src="/images/sbacoustics/aboutus/global_reach.jpg"
                   alt="SB Acoustics About Us Mission 3"
@@ -208,8 +188,7 @@ export default function AboutUsPage() {
                 <CardContent className="p-8 text-center bg-zinc-100">
                   <h3 className="text-xl font-bold mb-4 text-black">Global Reach</h3>
                   <p className="text-slate-600 leading-relaxed">
-                    Serving prestigious brands worldwide across Europe, Australia, Asia, and the United States with our
-                    comprehensive distribution network.
+                    Serving prestigious brands worldwide across Europe, Australia, Asia, and the United States through our comprehensive distribution network
                   </p>
                   <br/>
                 </CardContent>
@@ -218,40 +197,6 @@ export default function AboutUsPage() {
           </div>
         </div>
       </section>
-
-      {/*
-      <section className="md:py-20 py-10 bg-zinc-100">
-        <div
-          className={`transform transition-all duration-700 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"}`}
-        >
-          <div className="container mx-auto max-w-4xl text-center">
-            <div className="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mx-auto mb-6">
-              <Volume2 className="w-8 h-8 text-white" />
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-black">Explore Our Audio Excellence</h2>
-            <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Discover how our Danish-Indonesian partnership creates transducers that set new standards in the high-end
-              audio market.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant={"default"} asChild>
-                <Link href={'/products'}>
-                  <h3>Explore Our Products</h3>
-                </Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                asChild
-              >
-                <Link href={'/contact'}>
-                  <h3>Contact</h3>
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section> */}
     </div>
     </>
   );

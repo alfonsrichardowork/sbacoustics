@@ -53,7 +53,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
     const { toast } = useToast()    
     const [isButtonVisible, setIsButtonVisible] = useState(false);
     const [finalBreadcrumb, setFinalBreadcrumb] = useState<string[]>([])
-    const [priority, setPriority] = useState<allproductcategory[]>([]);
+    const [priority, setPriority] = useState<allproductcategory[]>([])
     const [priorityLoaded, setPriorityLoaded] = useState(false);
 
 
@@ -91,20 +91,16 @@ const AllDriversProducts: React.FC<MainProps> = ({
 
     useEffect(() => {
         const fetchPriority = async () => {
-            try {
-                const temp = await getAllPriorityBySubCategory(
-                    pathname,
-                    params[params.length - 1] ?? ''
-                );
-
-                setPriority(temp);
+          try {  
+            let temp = await getAllPriorityBySubCategory(pathname, params[params.length - 1] ?? '')
+            setPriority(temp)
             } catch (error) {
-                console.error("Error fetching priority:", error);
+                console.error('Error fetching data:', error);
             } finally {
                 setPriorityLoaded(true);
             }
         };
-
+    
         fetchPriority();
     }, []);
 
