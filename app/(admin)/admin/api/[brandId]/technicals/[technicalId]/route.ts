@@ -53,7 +53,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { name, desc, pdf, pdfname } = body;
+    const { name, desc, pdf, pdfname, priority } = body;
 
     if (!params.technicalId) {
       return new NextResponse("Technical id is required", { status: 400 });
@@ -97,6 +97,7 @@ export async function PATCH(
           desc, 
           pdf, 
           pdfname,
+          priority,
           updatedAt: new Date(),
           updatedBy: session.name,
         },
@@ -121,6 +122,7 @@ export async function PATCH(
           desc, 
           pdf, 
           pdfname,
+          priority,
           updatedAt: new Date(),
           createdAt: new Date(),
           updatedBy: session.name,

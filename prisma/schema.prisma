@@ -382,6 +382,7 @@ model technicals {
   desc        String    @db.Text
   pdf         String    @db.Text
   pdfname     String    @db.Text
+  priority    String    @db.Text @default("")
   updatedBy   String    @db.Text  @default("")
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

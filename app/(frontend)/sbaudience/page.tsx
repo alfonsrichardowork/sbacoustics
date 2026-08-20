@@ -155,19 +155,19 @@ export default async function LandingPageSBAudience() {
           }
           <div className="relative">
             {brandImages.socialmedia.length > 0 && 
-              <div className='xl:h-96 lg:h-80 md:h-72 sm:h-72 h-60 w-full flex flex-col justify-center items-start xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 bg-zinc-400'>
+              <div className='xl:h-96 lg:h-80 md:h-72 sm:h-72 h-60 w-full flex flex-col justify-center items-start xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 bg-zinc-200'>
                 <h2 className="text-left font-bold xl:text-5xl text-3xl text-black py-4">
                   Social:
                 </h2>
                 <div className='md:flex hidden md:justify-start pb-4 gap-2 w-full'>
                 {brandImages.socialmedia.map((logo, index) => (
-                      <SocialIcon network={logo.type} style={{ width: 80, height: 80 }} url={logo.value} key={index}/>
+                      <SocialIcon network={logo.type} style={{ width: 60, height: 60 }} url={logo.value} key={index}/>
                     ))
                   }
                 </div>
                 <div className='md:hidden flex justify-start pb-4 gap-2 w-full'>
                   {brandImages.socialmedia.map((logo, index) => (
-                      <SocialIcon network={logo.type} style={{ width: 48, height: 48 }} url={logo.value} key={index}/>
+                      <SocialIcon network={logo.type} style={{ width: 40, height: 40 }} url={logo.value} key={index}/>
                     ))
                   }
                 </div>

@@ -22,6 +22,13 @@ const TechnicalsPage = async (
     where:{
       brandId: params.brandId
     },
+    select: {
+      id: true,
+      name: true,
+      updatedAt: true,
+      updatedBy: true,
+      priority: true
+    },
     orderBy: {
       updatedAt: 'desc'
     }
@@ -31,8 +38,9 @@ const TechnicalsPage = async (
     id: item.id,
     name: item.name,
     updatedAt: format(item.updatedAt, 'MMMM do, yyyy'),
-    updatedBy: item.updatedBy
-  }));
+    updatedBy: item.updatedBy,
+    priority: item.priority
+  })).sort((a, b) => Number(a.priority) - Number(b.priority));
 
   return (
     <div className="flex-col">

@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import getProductsForSearchbox from '@/app/(frontend)/actions/get-product-for-searchbox';
 import Fuse from 'fuse.js';
 import { LazyImageCustomNavbar } from './lazyImageCustomNavbar';
+import { Button } from './ui/button';
 function normalizeFractions(text: string): string {
   return text
     // normalize Unicode fractions
@@ -211,13 +212,17 @@ const SearchLightbox: FC<PropType> = (props) => {
   return (
     <>
       {/* Search Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="p-2 rounded-lg hover:bg-transparent hover:text-primary transition-colors"
-        aria-label="Search products"
-      >
-        <Search size={20} />
-      </button>
+      <div className="pl-1 pr-18">
+        <Button
+          onClick={() => setIsOpen(true)}
+          variant="outline"
+          className={`w-full h-9 px-3 flex items-center justify-between rounded-lg bg-muted/40 text-muted-foreground hover:cursor-pointer hover:bg-muted/60 ${pathname.includes('sbaudience') ?'hover:text-background' : 'hover:text-foreground'} border-border/60 transition-colors`}
+          aria-label="Search products"
+        >
+          <span className="text-sm">Search...</span>
+          <Search size={20} className="shrink-0" />
+        </Button>
+      </div>
 
       {/* Lightbox Overlay */}
       {isOpen && (

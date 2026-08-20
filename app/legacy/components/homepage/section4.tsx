@@ -52,9 +52,9 @@ export default function Section4({ socialmedia }: Section4Props) {
         alignItems: "flex-start",
 
         paddingTop: isMobile ? "16px" : "32px",
-        paddingRight: isMobile ? "32px" : "64px",
+        paddingRight: isMobile ? "16px" : "64px",
         paddingBottom: isMobile ? "16px" : "32px",
-        paddingLeft: isMobile ? "32px" : "64px",
+        paddingLeft: isMobile ? "16px" : "64px",
 
         backgroundColor: "#ffffff",
       }}
@@ -92,8 +92,8 @@ export default function Section4({ socialmedia }: Section4Props) {
           <SocialIcon
             network={logo.type}
             style={{
-              width: isMobile ? 48 : 80,
-              height: isMobile ? 48 : 80,
+              width: isMobile ? 40 : 60,
+              height: isMobile ? 40 : 60,
             }}
             url={logo.value}
             key={index}

@@ -34,9 +34,9 @@ export default function Section3({ text }: Section1Props) {
             boxSizing: "border-box",
 
             paddingTop: "16px",
-            paddingRight: isMobile ? "32px" : "64px",
+            paddingRight: isMobile ? "16px" : "64px",
             paddingBottom: isMobile ? "16px" : "32px",
-            paddingLeft: isMobile ? "32px" : "64px",
+            paddingLeft: isMobile ? "16px" : "64px",
 
             display: "flex",
             alignItems: "flex-end",

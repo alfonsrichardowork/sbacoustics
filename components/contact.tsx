@@ -152,10 +152,10 @@ export default function Contact({ oneBrand }: Props) {
   }, [])
 
   return (
-    <div className=" md:px-16 md:py-8 px-8 py-4">
-      <div className='bg-background py-6 md:shadow-md md:shadow-foreground/50'>
-      <div className="text-center mb-6">
-          <div className="text-4xl font-bold text-foreground mb-4">Contact</div>
+    <div className=" md:px-16 md:py-8 px-0 py-4">
+      <div className='bg-background md:pt-6 md:pb-6 pt-4 pb-0 md:shadow-md md:shadow-foreground/50'>
+      <div className="text-center">
+          <div className="text-4xl font-bold text-foreground md:mb-4 mb-0">Contact</div>
         </div>
 
         <div className="md:flex grid grid-cols-1">
@@ -165,7 +165,7 @@ export default function Contact({ oneBrand }: Props) {
               {/* <CardHeader>
                 <CardTitle>Our Location</CardTitle>
               </CardHeader> */}
-              <CardContent className='bg-background text-foreground'>
+              <CardContent className='bg-background text-foreground md:px-6 px-3'>
                 <div className="aspect-w-16 aspect-h-9 rounded-lg pt-1">
                 {mounted && oneBrand.maps !== '' && oneBrand.maps !== null ?
                   <div className="relative flex items-center justify-center w-full h-96 z-10">
@@ -216,21 +216,21 @@ export default function Contact({ oneBrand }: Props) {
         <div className='md:w-2/5 w-full md:order-2 order-1 md:pr-6 pl-0'>
         {/* <Button onClick={() => sendEmail()}>TEST RESEND</Button> */}
           <Card className='rounded-none border-none md:shadow-md md:shadow-foreground/50 bg-transparent text-foreground'>
-            <CardHeader>
-              <CardTitle>Send us a message</CardTitle>
-              <CardDescription className='text-foreground/50'>Fill out the form below and we will get back to you</CardDescription>
+            <CardHeader className='md:px-6 md:pt-0 pt-4 md:pb-4 pb-2 px-3 md:space-y-1.5 space-y-0'>
+              <CardTitle className='md:text-2xl text-lg'>Send us a message</CardTitle>
+              <CardDescription className='text-foreground/50 md:text-base text-xs'>Fill out the form below and we will get back to you</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className='md:p-6 p-3'>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="md:space-y-4 space-y-2">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel className='md:text-sm text-xs'>Name</FormLabel>
                     <FormControl>
-                      <Input disabled={loading} placeholder="Your full name" {...field} />
+                      <Input disabled={loading} placeholder="Your full name"  className='md:text-sm text-xs' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -241,9 +241,9 @@ export default function Contact({ oneBrand }: Props) {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className='md:text-sm text-xs'>Email</FormLabel>
                     <FormControl>
-                      <Input disabled={loading} type="email" placeholder="example@example.com" {...field} />
+                      <Input disabled={loading} type="email" placeholder="example@example.com" className='md:text-sm text-xs' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -254,9 +254,9 @@ export default function Contact({ oneBrand }: Props) {
                 name="country"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Country</FormLabel>
+                    <FormLabel className='md:text-sm text-xs'>Country</FormLabel>
                     <FormControl>
-                      <Input disabled={loading} placeholder="Which country are you contacting us from" {...field} />
+                      <Input disabled={loading} placeholder="Which country are you contacting us from" className='md:text-sm text-xs' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -267,9 +267,9 @@ export default function Contact({ oneBrand }: Props) {
                 name="subject"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Subject</FormLabel>
+                    <FormLabel className='md:text-sm text-xs'>Subject</FormLabel>
                     <FormControl>
-                      <Input disabled={loading} placeholder="What is the subject you are contacting us about" {...field} />
+                      <Input disabled={loading} placeholder="What is the subject you are contacting us about" className='md:text-sm text-xs' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -280,12 +280,12 @@ export default function Contact({ oneBrand }: Props) {
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Message</FormLabel>
+                    <FormLabel className='md:text-sm text-xs'>Message</FormLabel>
                     <FormControl>
                       <Textarea 
                         disabled={loading} 
                         placeholder="Write a detailed message here" 
-                        className="min-h-[120px]" 
+                        className="min-h-[120px] md:text-sm text-xs" 
                         {...field} 
                       />
                     </FormControl>
@@ -334,7 +334,7 @@ export default function Contact({ oneBrand }: Props) {
             </form>
           </Form>
         </CardContent>
-        <CardFooter>
+        <CardFooter className='md:px-6 px-3'>
           <Button 
             onClick={form.handleSubmit(onSubmit)}
             disabled={loading} 

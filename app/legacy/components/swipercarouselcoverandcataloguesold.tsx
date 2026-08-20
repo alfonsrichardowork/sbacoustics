@@ -89,13 +89,18 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
   return (
     <>
 
-    <div className='lg:px-12 px-10'>
+    <div style={{
+      paddingInline: '40px'
+    }}>
       <Swiper
         style={{
           "--swiper-pagination-color": "#000000",
           "--swiper-navigation-sides-offset": "0px",
           "--swiper-navigation-color": "#000000",
           "--swiper-navigation-size": "25px",
+          height: "100%",
+          backgroundColor: 'transparent',
+
         } as CSSProperties}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => {
@@ -106,11 +111,10 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
         navigation={true}
         thumbs={{ swiper: thumbsSwiper }}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="mySwiper2 h-full bg-transparent custom-swiper"
       >
         {cover && (
             <SwiperSlide>
-                <div className="h-full flex justify-center items-center cursor-zoom-in" onClick={() => openLightbox(0)}>
+                {/* <div className="h-full flex justify-center items-center cursor-zoom-in" onClick={() => openLightbox(0)}>
                   <Card className="border-none h-full w-full flex items-center justify-center">
                     <CardContent className="p-6 flex items-center justify-center w-full h-full bg-background"
                       onMouseEnter={() => setHoverImage(true)}
@@ -118,54 +122,64 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
                     >
                       <div className="relative flex items-center justify-center h-full w-full">
                         <div className='z-10 w-full h-fit'>
-                          <div className="relative flex items-center justify-center h-full w-full">
+                          <div className="relative flex items-center justify-center h-full w-full"> */}
                             <img 
                               src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
                               alt={name} 
                               width={500}
                               height={500}
-                              className={`object-contain h-full w-fit transition-transform duration-300 z-10 ${hoverImage ? 'scale-105' : ''}`}
+                              style={{
+                                objectFit: 'contain',
+                                height: "100%",
+                                width: 'fit-content',
+                                zIndex: 10,
+                              }}
                               loading='eager'
                             />
-                          </div>
+                          {/* </div>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                </div>
+                </div> */}
           </SwiperSlide>
         )}
         {multipleslides && sortedImages.map((item, index) => (
           <SwiperSlide key={`${item.name} - ${index.toString()}`}>
-              <div className="h-full flex justify-center items-center cursor-zoom-in" onClick={() => openLightbox(index+1)}>
+              {/* <div className="h-full flex justify-center items-center cursor-zoom-in" onClick={() => openLightbox(index+1)}>
                 <Card className="border-none h-full w-full flex items-center justify-center">
                   <CardContent className="p-6 flex items-center justify-center w-full h-full bg-background"
                     onMouseEnter={() => setHoverImage(true)}
                     onMouseLeave={() => setHoverImage(false)}>
                     <div className="relative flex items-center justify-center h-full w-full">
                       <div className='z-10 w-full h-fit'>
-                          <div className="relative flex items-center justify-center h-full w-full">
+                          <div className="relative flex items-center justify-center h-full w-full"> */}
                             <img 
                               src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
                               alt={item.name} 
                               width={500}
                               height={500}
-                              className={`object-cover h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
+                              style={{
+                                objectFit: 'cover',
+                                height: '100%',
+                                width: 'fit-content',
+
+                              }}
                               loading='lazy'
                             />
-                          </div>
+                          {/* </div>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                </div>
+                </div> */}
           </SwiperSlide>
         ))}
       </Swiper>
       </div>
       
 
-      {multipleslides &&
+      {/* {multipleslides &&
       <div className='lg:px-16 px-10'>
       <Swiper
         onSwiper={setThumbsSwiper}
@@ -262,7 +276,7 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
           }]}
           plugins={[Zoom, Captions]}
         />
-      } 
+      }  */}
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { socialmedia, technicals } from "@prisma/client";
+import { socialmedia } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 const API=`${process.env.NEXT_PUBLIC_ROOT_URL}/${process.env.NEXT_PUBLIC_FETCH_ALL_SOCIAL_MEDIA}`;

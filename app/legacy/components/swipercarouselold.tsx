@@ -16,13 +16,9 @@ const SwiperCarouselOld: React.FC<PropType> = ({ slides, brand }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
-  /*
-   * Detect mobile/desktop.
-   * 1024px is equivalent to your previous lg breakpoint.
-   */
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 1024);
+      setIsMobile(window.innerWidth < 768);
     };
 
     checkScreenSize();

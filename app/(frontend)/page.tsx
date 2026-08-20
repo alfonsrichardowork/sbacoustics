@@ -196,13 +196,13 @@ export default async function LandingPageSBAcoustics() {
                 </h2>
                 <div className='md:flex hidden md:justify-start pb-4 gap-2 w-full'>
                   {brandImages.socialmedia.map((logo, index) => (
-                      <SocialIcon network={logo.type} style={{ width: 80, height: 80 }} url={logo.value} key={index}/>
+                      <SocialIcon network={logo.type} style={{ width: 60, height: 60 }} url={logo.value} key={index}/>
                     ))
                   }
                 </div>
-                <div className='md:hidden flex justify-start pb-4 gap-2 w-full'>
+                <div className='md:hidden flex justify-start pb-4 gap-1 w-full'>
                   {brandImages.socialmedia.map((logo, index) => (
-                      <SocialIcon network={logo.type} style={{ width: 48, height: 48 }} url={logo.value} key={index}/>
+                      <SocialIcon network={logo.type} style={{ width: 40, height: 40 }} url={logo.value} key={index}/>
                     ))
                   }
                 </div>

@@ -13,12 +13,19 @@ const TechnicalPage = async (
     }
   });
 
+  const totalTechnical = await prismadb.technicals.findMany({
+    select: {
+      priority: true
+    }
+  })
+  const priority = totalTechnical.map((a) => a.priority)
+
 
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <TechnicalForm 
-          initialData={onetechnical}
+          initialData={onetechnical} total={priority}
         />
       </div>
     </div>

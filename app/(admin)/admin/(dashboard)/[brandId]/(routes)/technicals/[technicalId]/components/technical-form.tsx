@@ -19,23 +19,26 @@ import Link from "next/link"
 import { Heading } from "@/app/(admin)/admin/components/ui/heading"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/(admin)/admin/components/ui/form"
 import { Textarea } from "@/app/(admin)/admin/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/(admin)/admin/components/ui/select"
 
 
 const formSchema = z.object({
   name: z.string().min(1),
   desc: z.string().min(1),
   pdf: z.string().optional(),
-  pdfname: z.string().optional()
+  pdfname: z.string().optional(),
+  priority: z.string().optional()
 });
 
 type TechnicalFormValues = z.infer<typeof formSchema>
 
 interface TechnicalFormProps {
   initialData: technicals | null;
+  total: string[]
 };
 
 export const TechnicalForm: React.FC<TechnicalFormProps> = ({
-  initialData
+  initialData, total
 }) => {
   const params = useParams();
   const router = useRouter();
@@ -55,7 +58,8 @@ export const TechnicalForm: React.FC<TechnicalFormProps> = ({
     name: '',
     desc: '',
     pdf: '',
-    pdfname: ''
+    pdfname: '',
+    priority: ''
   }
 
   useEffect(() => {
@@ -246,6 +250,56 @@ export const TechnicalForm: React.FC<TechnicalFormProps> = ({
                         <FormControl>
                           <Textarea disabled={loading} placeholder="Description" {...field}/>
                         </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="py-2">
+                  <FormField
+                    control={form.control}
+                    name="priority"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="font-bold text-base flex gap-2">
+                          Priority
+                        </FormLabel>
+                        <Select
+                          disabled={loading}
+                          value={field.value ? field.value.toString() : "none"}
+                          onValueChange={(value) => {
+                            field.onChange(value === "none" ? "" : value);
+                          }}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select priority" />
+                            </SelectTrigger>
+                          </FormControl>
+
+                          <SelectContent>
+                            <SelectItem value="none">
+                              No priority
+                            </SelectItem>
+
+                            {Array.from({ length: total.length + 1 }, (_, index) => index + 1).map(
+                              (priority) => {
+                                const isUsed = total.includes(priority.toString());
+
+                                return (
+                                  <SelectItem
+                                    key={priority}
+                                    value={priority.toString()}
+                                    disabled={isUsed}
+                                  >
+                                    {priority}
+                                  </SelectItem>
+                                );
+                              }
+                            )}
+                          </SelectContent>
+                        </Select>
+
                         <FormMessage />
                       </FormItem>
                     )}

@@ -17,8 +17,15 @@ export const LightboxOneProductOld = ({ name, url, type }: { name: string, url: 
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="justify-center pt-8" onClick={() => setOpen(true)}>
-        <div className="justify-center cursor-zoom-in p-0">
+    <div style={{
+        justifyContent: "center",
+        paddingTop: '32px'
+    }} onClick={() => setOpen(true)}>
+        <div style={{
+            justifyContent: 'center',
+            cursor: 'zoom-in',
+            padding: '0px'
+        }}>
             {type === "drawing" ?
                 <DrawingSectionOld name={name} drawing={url} />
             :

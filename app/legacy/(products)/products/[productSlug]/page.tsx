@@ -310,12 +310,12 @@ export default async function SingleProductSBAcoustics(props: Props) {
                             <LightboxOneProductOld name={product.name} url={product.graph_img_url} type={"graph"}/>
                         }          
 
-                        {product.kitsFinishing && product.kitsFinishing.length > 0 &&
+                        {/* {product.kitsFinishing && product.kitsFinishing.length > 0 &&
                             <SwiperCarouselKitsFinishingOld name={product.name} kits_finishing={product.kitsFinishing}/>
-                        }             
+                        }              */}
                     </div>
                     <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
-                        <SwiperCarouselOneProductMobileOld name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>        
+                        {/* <SwiperCarouselOneProductMobileOld name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>         */}
                     </div>
 
                     
@@ -349,24 +349,20 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                     <h2>Categories:</h2> 
                                     {prod_sub_cat.length !== 0 &&
                                         prod_sub_cat.map((subcategory, index) => (
-                                        <React.Fragment key={index}>
                                             <a
-                                            href={`/${prod_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${subcategory.slug.toLowerCase().replace(/\s+/g, '-')}`}
+                                            href={`/${prod_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${subcategory.slug.toLowerCase().replace(/\s+/g, '-')}`} key={index}
                                             >
                                             <u>{subcategory.name}</u>
                                             </a>
-                                        </React.Fragment>
                                         ))
                                     }
                                     {prod_sub_sub_cat.length !== 0 &&
                                         prod_sub_sub_cat.map((subsubcategory, index) => (
-                                        <React.Fragment key={index}>
                                             <a
-                                            href={`/${prod_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${prod_sub_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${subsubcategory.slug.toLowerCase().replace(/\s+/g, '-')}`}
+                                            href={`/${prod_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${prod_sub_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${subsubcategory.slug.toLowerCase().replace(/\s+/g, '-')}`} key={index}
                                             >
                                             <u><h3>{subsubcategory.name}</h3></u>
                                             </a>
-                                        </React.Fragment>
                                         ))
                                     }
                                 </div>
@@ -454,7 +450,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                                     alignItems: 'center'
                                                 }}>
                                                     <img
-                                                        src={'/images/sbacoustics/PDF-download-ver2.webp'}
+                                                        src={'/images/sbacoustics/PDF-download-ver2.png'}
                                                         alt={'PDF Download'}
                                                         width={100}
                                                         height={100}
@@ -496,7 +492,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                                             alignItems: 'center'
                                                         }}>
                                                             <img
-                                                                src={'/images/sbacoustics/PDF-download-ver2.webp'}
+                                                                src={'/images/sbacoustics/PDF-download-ver2.png'}
                                                                 alt={'PDF Download'}
                                                                 width={100}
                                                                 height={100}
@@ -547,7 +543,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                                 alignItems: 'center'
                                             }}>
                                                 <img
-                                                    src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} 
+                                                    src={'/images/sbacoustics/FRD-ZMA-download-ver2.png'} 
                                                     alt="FRD ZMA Files Download"
                                                     width={100}
                                                     height={100}
@@ -590,7 +586,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                                             alignItems: 'center'
                                                         }}>
                                                             <img
-                                                                src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} 
+                                                                src={'/images/sbacoustics/FRD-ZMA-download-ver2.png'} 
                                                                 alt="FRD ZMA Files Download"
                                                                 width={100}
                                                                 height={100}
@@ -641,7 +637,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                                 alignItems: 'center'
                                             }}>
                                                 <img
-                                                    src={'/images/sbacoustics/3D-download-ver2.webp'} 
+                                                    src={'/images/sbacoustics/3D-download-ver2.png'} 
                                                     alt="3D Files Download"
                                                     width={100}
                                                     height={100}
@@ -685,7 +681,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                                         alignItems: 'center'
                                                     }}>
                                                         <img
-                                                            src={'/images/sbacoustics/3D-download-ver2.webp'} 
+                                                            src={'/images/sbacoustics/3D-download-ver2.png'} 
                                                             alt="3D Files Download"
                                                             width={100}
                                                             height={100}
@@ -712,7 +708,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
 
                         {specsCombined && specsCombined.length > 0 &&
                             <div style={{ justifyContent: "flex-start", paddingTop: "1rem" }}>
-                                <SpecificationTableOld spec={specsCombined} styling={all_desc_style} stylingTitle={all_sub_title_style}/>
+                                {/* <SpecificationTableOld spec={specsCombined} styling={all_desc_style} stylingTitle={all_sub_title_style}/> */}
                             </div>
                         }
                         
@@ -721,9 +717,9 @@ export default async function SingleProductSBAcoustics(props: Props) {
             </div>
 
             <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
-                {product.kitsFinishing && product.kitsFinishing.length > 1 &&
+                {/* {product.kitsFinishing && product.kitsFinishing.length > 1 &&
                     <SwiperCarouselKitsFinishingOld name={product.name} kits_finishing={product.kitsFinishing}/>
-                }    
+                }     */}
             </div>
 
             {product.similarProducts && product.similarProducts.length > 0 &&
@@ -744,7 +740,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                     }}>
                         Similar Products
                     </h2>
-                    <SwiperCarouselSimilarProductOld similar={product.similarProducts} brand={'sbacoustics'}/>
+                    {/* <SwiperCarouselSimilarProductOld similar={product.similarProducts} brand={'sbacoustics'}/> */}
                 </div>
             }
     

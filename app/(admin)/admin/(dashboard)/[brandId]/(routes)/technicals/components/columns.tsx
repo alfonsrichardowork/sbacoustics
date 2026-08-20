@@ -9,6 +9,7 @@ export type TechnicalsColumn = {
   name: string;
   updatedAt: string;
   updatedBy: string;
+  priority: string
 }
 
 export const columns: ColumnDef<TechnicalsColumn>[] = [

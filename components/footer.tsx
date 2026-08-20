@@ -214,31 +214,15 @@ export default function Footer() {
         <div
           className="flex col-span-3 flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
         >
-          <div className='w-1/3 md:block hidden items-center'>
-            <div className="text-sm text-white text-center md:text-left flex">
-              © {new Date().getFullYear()}{' '}
-              {loading ?
-                <div className='px-2'>
-                  <Skeleton className="h-4 w-18 bg-background/20"/>
-                </div>
-              :
-                finalData && finalData.name
-              }
-              . All rights reserved.
-            </div>
-            <div className='lg:space-x-4 space-x-2 text-xs text-gray-400 pt-1'>
-              <Link href={'/privacy'} className="hover:text-white transition-colors">Privacy policy</Link>
-              <Button
-                variant="ghost"
-                onClick={() => setShowSettings(true)}
-                className="hover:text-white transition-colors hover:bg-transparent p-0 h-fit hover:cursor-pointer text-xs"
-              >
-                Cookie settings
-              </Button>
-              <Link href={'/legal'} className="hover:text-white transition-colors">Terms of use</Link>
-            </div>
+          <div className="flex space-x-4 text-xs text-gray-400 md:w-1/3 md:justify-start justify-center w-full flex-wrap">
+            <Link href={getHref(pathname, 'about')} className="hover:text-white transition-colors">
+              About Us
+            </Link>
+            <Link href={getHref(pathname, 'catalogues')} className="hover:text-white transition-colors">
+              Catalogues
+            </Link>
           </div>
-          <div className="flex space-x-4 md:w-1/3 w-full justify-center">
+          <div className="flex lg:gap-4 gap-2 md:w-1/3 w-full justify-center">
             {loading ? 
               <>
                 <Skeleton className="h-[35px] w-[35px] rounded-full bg-background/20" />
@@ -253,39 +237,72 @@ export default function Footer() {
                 ))
             }
           </div>
-          <div className="flex space-x-4 text-xs text-gray-400 w-1/3 md:justify-end justify-center  ">
-            <Link href={getHref(pathname, 'about')} className="hover:text-white transition-colors">
-              About Us
-            </Link>
+          <div className='w-1/3 md:flex hidden justify-end'>
+            <div className='block'>
+              <div className="text-sm text-white text-center md:text-right">
+                © {new Date().getFullYear()}{' '}
+                {loading ?
+                  <div className='px-2'>
+                    <Skeleton className="h-4 w-18 bg-background/20"/>
+                  </div>
+                :
+                  finalData && finalData.name
+                }
+                . All rights reserved.
+              </div>
+              <div className="lg:gap-4 gap-2 text-xs text-gray-400 pt-1 flex justify-end flex-wrap">
+                <Link
+                  href="/privacy"
+                  className="whitespace-nowrap hover:text-white transition-colors"
+                >
+                  Privacy policy
+                </Link>
+
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowSettings(true)}
+                  className="whitespace-nowrap hover:text-white transition-colors hover:bg-transparent p-0 h-fit hover:cursor-pointer text-xs"
+                >
+                  Cookie settings
+                </Button>
+
+                <Link
+                  href="/legal"
+                  className="whitespace-nowrap hover:text-white transition-colors"
+                >
+                  Terms of use
+                </Link>
+              </div>
+            </div>
           </div>
           
           <div className="text-xs text-white text-center w-full md:hidden block">
             © {new Date().getFullYear()} {!loading && finalData && finalData.name}. All rights reserved.
           </div>
           
-            <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-gray-400 md:hidden">
-              <Link
-                href="/privacy"
-                className="whitespace-nowrap hover:text-white transition-colors"
-              >
-                Privacy policy
-              </Link>
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-gray-400 md:hidden">
+            <Link
+              href="/privacy"
+              className="whitespace-nowrap hover:text-white transition-colors"
+            >
+              Privacy policy
+            </Link>
 
-              <Button
-                variant="ghost"
-                onClick={() => setShowSettings(true)}
-                className="whitespace-nowrap hover:text-white transition-colors hover:bg-transparent p-0 h-fit hover:cursor-pointer text-xs"
-              >
-                Cookie settings
-              </Button>
+            <Button
+              variant="ghost"
+              onClick={() => setShowSettings(true)}
+              className="whitespace-nowrap hover:text-white transition-colors hover:bg-transparent p-0 h-fit hover:cursor-pointer text-xs"
+            >
+              Cookie settings
+            </Button>
 
-              <Link
-                href="/legal"
-                className="whitespace-nowrap hover:text-white transition-colors"
-              >
-                Terms of use
-              </Link>
-            </div>
+            <Link
+              href="/legal"
+              className="whitespace-nowrap hover:text-white transition-colors"
+            >
+              Terms of use
+            </Link>
+          </div>
           </div>
       </div>
     </footer>

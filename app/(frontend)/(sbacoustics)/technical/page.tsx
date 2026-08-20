@@ -9,7 +9,7 @@ export const revalidate = 60;
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-black p-0 py-1"
 
 export default async function TechnicalJsonLd() {
-  const pdfFiles = await prismadb.technicals.findMany({
+  let pdfFiles = await prismadb.technicals.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
     }
@@ -17,6 +17,7 @@ export default async function TechnicalJsonLd() {
   if (!pdfFiles) {
     return null;
   }
+  pdfFiles = pdfFiles.sort((a, b) => Number(a.priority) - Number(b.priority))
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
 
   const mediaObjects = pdfFiles.map((file) => {

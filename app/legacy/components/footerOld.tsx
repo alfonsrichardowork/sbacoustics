@@ -15,6 +15,21 @@ export default function FooterOld() {
   const [finalData, setFinalData] = useState<brand>()
   const [showSettings, setShowSettings] = useState(false)
   const [loading, setLoading] = useState<boolean>(true)
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+        setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+        window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
   useEffect(() => {
     const fetchData = async () => {
       const brand: brand = await getOneBrand(pathname);
@@ -51,7 +66,7 @@ export default function FooterOld() {
         {/* TOP SECTION */}
         <div
           style={{
-            display: "grid",
+            display: isMobile ? "block" : "grid",
             gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
             alignItems: "center",
             justifyContent: "center",
@@ -64,7 +79,7 @@ export default function FooterOld() {
               order: 2,
               display: "flex",
               flexDirection: "column",
-              alignItems: "flex-end",
+              alignItems: isMobile ? "center" : "flex-end",
             }}
           >
             <div
@@ -219,9 +234,10 @@ export default function FooterOld() {
           {/* SBE LOGO */}
           <div
             style={{
+              marginTop: isMobile ? "40px" : "0px",
               display: "flex",
               flexDirection: "column",
-              alignItems: "flex-start",
+              alignItems: isMobile ? "center" : "flex-start",
               paddingTop: "0",
             }}
           >
@@ -237,7 +253,7 @@ export default function FooterOld() {
                 rel="noopener noreferrer"
               >
                 <img
-                  src="/images/sbacoustics/logo SBE-white.webp"
+                  src="/images/sbacoustics/logo SBE-white.png"
                   alt="Sinar Baja Electric Logo"
                   width={500}
                   height={500}
@@ -257,7 +273,7 @@ export default function FooterOld() {
         {/* CONTACT + NEWSLETTER */}
         <div
           style={{
-            display: "grid",
+            display: isMobile ? "block" : "grid",
             gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
             gap: "48px",
           }}
@@ -267,7 +283,7 @@ export default function FooterOld() {
             style={{
               display: "flex",
               flexDirection: "column",
-              alignItems: "flex-start",
+              alignItems: isMobile ? "center" : "flex-start",
             }}
           >
             <ul
@@ -275,7 +291,7 @@ export default function FooterOld() {
                 listStyle: "none",
                 margin: 0,
                 padding: 0,
-                textAlign: "left",
+                textAlign: isMobile ? "center" : "left",
               }}
             >
               <li style={{ marginBottom: "16px" }}>
@@ -294,8 +310,8 @@ export default function FooterOld() {
                 style={{
                   marginBottom: "16px",
                   display: "flex",
-                  alignItems: "flex-start",
-                  justifyContent: "flex-start",
+                  alignItems: isMobile ? "center" : "flex-start",
+                  justifyContent: isMobile ? "center" : "flex-start",
                 }}
               >
                 <span
@@ -312,7 +328,7 @@ export default function FooterOld() {
                   marginBottom: "16px",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "flex-start",
+                  justifyContent: isMobile ? "center" : "flex-start",
                 }}
               >
                 <span
@@ -328,7 +344,7 @@ export default function FooterOld() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "flex-start",
+                  justifyContent: isMobile ? "center" : "flex-start",
                 }}
               >
                 <span
@@ -347,16 +363,16 @@ export default function FooterOld() {
             style={{
               display: "flex",
               flexDirection: "column",
-              alignItems: "flex-end",
+              alignItems: isMobile ? "center" : "flex-end",
               paddingTop: "0",
             }}
           >
             <h3
               style={{
                 fontSize: "18px",
+                marginTop: isMobile ? "60px" : '0px',
                 fontWeight: 600,
                 color: "#e6001b",
-                margin: 0,
               }}
             >
               Newsletter
@@ -367,7 +383,7 @@ export default function FooterOld() {
                 fontSize: "14px",
                 padding: "16px 0",
                 margin: 0,
-                textAlign: "right",
+                textAlign: isMobile ? "center" : "right",
                 color: "#fff",
               }}
             >
@@ -404,24 +420,87 @@ export default function FooterOld() {
         {/* BOTTOM SECTION */}
         <div
           style={{
-            display: "flex",
+            display: isMobile ? "block" : "flex",
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
           }}
         >
+
+          {/* ABOUT */}
+          <div
+            style={{
+              display: "flex",
+              gap: "16px",
+              fontSize: "12px",
+              color: "#9ca3af",
+              width: isMobile ? "100%" : "33.333%",
+              justifyContent: isMobile ? "center" : "flex-start",
+              marginBottom: isMobile ? "12px" : "0px"
+            }}
+          >
+            <a
+              href={`/legacy/${getHref(pathname, "about")}`}
+              style={{
+                color: "#9ca3af",
+                textDecoration: "none",
+              }}
+            >
+              About Us
+            </a>
+            <a
+              href={`/legacy/${getHref(pathname, "catalogues")}`}
+              style={{
+                color: "#9ca3af",
+                textDecoration: "none",
+              }}
+            >
+              Catalogues
+            </a>
+          </div>
+
+          {/* SOCIAL MEDIA */}
+          <div
+            style={{
+              display: "flex",
+              gap: "16px",
+              width: isMobile ? "100%" : "33.333%",
+              justifyContent: "center",
+            }}
+          >
+            {loading ? (
+              "..."
+            ) : (
+              allSocialMedia &&
+              allSocialMedia.length > 0 &&
+              allSocialMedia.map((logo, index) => (
+                <SocialIcon
+                  network={logo.type}
+                  style={{
+                    width: 35,
+                    height: 35,
+                  }}
+                  url={logo.value}
+                  key={index}
+                  fgColor="#c4c4c4"
+                  bgColor="#2e2e2e"
+                />
+              ))
+            )}
+          </div>
+
           {/* COPYRIGHT + LINKS */}
           <div
             style={{
               width: "33.333%",
-              display: "block",
+              display: isMobile ? "none" : "block",
             }}
           >
             <div
               style={{
                 fontSize: "14px",
                 color: "#fff",
-                textAlign: "left",
+                textAlign: "right",
               }}
             >
               © {new Date().getFullYear()}{" "}
@@ -432,10 +511,12 @@ export default function FooterOld() {
             <div
               style={{
                 display: "flex",
+                justifyContent: "flex-end",
                 gap: "16px",
                 fontSize: "12px",
                 color: "#9ca3af",
                 paddingTop: "4px",
+                flexWrap: 'wrap'
               }}
             >
               <a
@@ -473,64 +554,12 @@ export default function FooterOld() {
               </a>
             </div>
           </div>
-
-          {/* SOCIAL MEDIA */}
-          <div
-            style={{
-              display: "flex",
-              gap: "16px",
-              width: "33.333%",
-              justifyContent: "center",
-            }}
-          >
-            {loading ? (
-              "..."
-            ) : (
-              allSocialMedia &&
-              allSocialMedia.length > 0 &&
-              allSocialMedia.map((logo, index) => (
-                <SocialIcon
-                  network={logo.type}
-                  style={{
-                    width: 35,
-                    height: 35,
-                  }}
-                  url={logo.value}
-                  key={index}
-                  fgColor="#c4c4c4"
-                  bgColor="#2e2e2e"
-                />
-              ))
-            )}
-          </div>
-
-          {/* ABOUT */}
-          <div
-            style={{
-              display: "flex",
-              gap: "16px",
-              fontSize: "12px",
-              color: "#9ca3af",
-              width: "33.333%",
-              justifyContent: "flex-end",
-            }}
-          >
-            <a
-              href={`/legacy/${getHref(pathname, "about")}`}
-              style={{
-                color: "#9ca3af",
-                textDecoration: "none",
-              }}
-            >
-              About Us
-            </a>
-          </div>
         </div>
 
         {/* MOBILE COPYRIGHT */}
         <div
           style={{
-            display: "none",
+            display: isMobile ? "block" : "none",
             fontSize: "12px",
             color: "#fff",
             textAlign: "center",
@@ -545,7 +574,7 @@ export default function FooterOld() {
         {/* MOBILE LINKS */}
         <div
           style={{
-            display: "none",
+            display: isMobile ? "flex" : "none",
             flexWrap: "wrap",
             alignItems: "center",
             justifyContent: "center",
