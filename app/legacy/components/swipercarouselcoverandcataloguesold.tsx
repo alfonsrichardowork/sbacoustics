@@ -18,8 +18,6 @@ import '@/app/globals.css';
 
 // import required modules
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
-import { Card, CardContent } from '@/components/ui/card';
-import { Eye } from 'lucide-react';
 
 
 import Lightbox from 'yet-another-react-lightbox'
@@ -57,6 +55,22 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
   const { name, cover, image_catalogues } = props
   const swiperRef = useRef<SwiperClass | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+      const checkMobile = () => {
+          setIsMobile(window.innerWidth < 768);
+      };
+
+      checkMobile();
+
+      window.addEventListener("resize", checkMobile);
+
+      return () => {
+          window.removeEventListener("resize", checkMobile);
+      };
+  }, []);
 
   useEffect(() => {
     const updateSwiperSettings = () => {
@@ -106,6 +120,7 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
         onSlideChange={(swiper) => {
           setActiveIndex(swiper.realIndex)
         }}
+        slidesPerView={1}
         loop={multipleslides}
         spaceBetween={0}
         navigation={true}
@@ -131,7 +146,7 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
                               style={{
                                 objectFit: 'contain',
                                 height: "100%",
-                                width: 'fit-content',
+                                width: '100%',
                                 zIndex: 10,
                               }}
                               loading='eager'
@@ -160,10 +175,10 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
                               width={500}
                               height={500}
                               style={{
-                                objectFit: 'cover',
+                                objectFit: 'contain',
                                 height: '100%',
-                                width: 'fit-content',
-
+                                width: '100%',
+                                zIndex: 10,
                               }}
                               loading='lazy'
                             />
@@ -179,8 +194,12 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
       </div>
       
 
-      {/* {multipleslides &&
-      <div className='lg:px-16 px-10'>
+
+
+      {multipleslides &&
+      <div style={{
+        paddingInline: isMobile ? '40px' : '64px'
+      }}>
       <Swiper
         onSwiper={setThumbsSwiper}
         spaceBetween={10}
@@ -188,25 +207,52 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
         freeMode={true}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="mySwiper"
       >
         {cover && (
-          <SwiperSlide className={`${activeIndex === 0? "opacity-100": "opacity-50"} h-fit flex items-center justify-center hover:cursor-pointer hover:opacity-100`}   
+          <SwiperSlide style={{
+            opacity: activeIndex === 0 ? '100%' : '50%',
+            height: 'fit-content',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}  
           onClick={() => {
             if (swiperRef.current) {
               // If loop is true, use slideToLoop to account for looped indices
               swiperRef.current.slideToLoop(0);
             }
           }}>
-            <div className="relative overflow-hidden flex items-center justify-center h-full w-full">
-              <div className='z-10 h-[75px]'>
-               <div className="relative flex items-center justify-center h-full w-full">
+            <div style={{
+              position: 'relative',
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              width: '100%'
+            }}>
+              <div style={{
+                zIndex: 10,
+                height: '75px'
+              }}>
+               <div style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                width: '100%'
+               }}>
                 <img 
                   src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
                   alt={name} 
                   width={1000}
                   height={1000}
-                  className="object-cover h-full w-fit"
+                  style={{
+                    objectFit: 'contain',
+                    height: '100%',
+                    width: 'fit-content'
+                  }}
                   loading='eager'
                 />
               </div>
@@ -215,22 +261,51 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
           </SwiperSlide>
         )}
         {multipleslides && sortedImages.map((item, index) => (
-          <SwiperSlide key={`${item.name} - ${index.toString()}`} className={`${activeIndex - 1 === index? "opacity-100": "opacity-50"} h-fit flex items-center justify-center hover:cursor-pointer hover:opacity-100`} 
+          <SwiperSlide key={`${item.name} - ${index.toString()}`} 
+          style={{
+            opacity: activeIndex - 1 === index ? '100%' : '50%',
+            height: 'fit-content',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
           onClick={() => {
             if (swiperRef.current) {
               // If loop is true, use slideToLoop to account for looped indices
               swiperRef.current.slideToLoop(index + 1);
             }
           }}>
-            <div className="relative overflow-hidden flex items-center justify-center h-full w-full">
-              <div className='z-10 h-[75px]'>                
-               <div className="relative flex items-center justify-center h-full w-full">
+            <div style={{
+              position: 'relative',
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              width: '100%'
+            }}>
+              <div style={{
+                zIndex: 10,
+                height: '75px'
+              }}>                
+               <div style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                width: '100%'
+               }}>
                 <img 
                   src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
                   alt={item.name} 
                   width={1000}
                   height={1000}
-                  className="object-cover h-full w-fit"
+                  style={{
+                    objectFit: 'contain',
+                    height: '100%',
+                    width: 'fit-content'
+                  }}
                   loading='eager'
                 />
               </div>
@@ -276,7 +351,7 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
           }]}
           plugins={[Zoom, Captions]}
         />
-      }  */}
+      } 
     </>
   );
 }

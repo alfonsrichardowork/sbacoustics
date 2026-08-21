@@ -304,15 +304,21 @@ export default async function SingleProductSBAcoustics(props: Props) {
                             <SwiperCarouselOneProductOld name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues}/>
                         </div>
                         {product.drawing_img_url !== '' &&
-                            <LightboxOneProductOld name={product.name} url={product.drawing_img_url} type={"drawing"}/>
+                            <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
+                                <LightboxOneProductOld name={product.name} url={product.drawing_img_url} type={"drawing"}/>
+                            </div>
                         }
                         {product.graph_img_url !== '' &&
-                            <LightboxOneProductOld name={product.name} url={product.graph_img_url} type={"graph"}/>
+                            <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
+                                <LightboxOneProductOld name={product.name} url={product.graph_img_url} type={"graph"}/>
+                            </div>
                         }          
 
-                        {/* {product.kitsFinishing && product.kitsFinishing.length > 0 &&
-                            <SwiperCarouselKitsFinishingOld name={product.name} kits_finishing={product.kitsFinishing}/>
-                        }              */}
+                        {product.kitsFinishing && product.kitsFinishing.length > 0 &&
+                            <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
+                                <SwiperCarouselKitsFinishingOld name={product.name} kits_finishing={product.kitsFinishing}/>
+                            </div>
+                        }             
                     </div>
                     <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
                         {/* <SwiperCarouselOneProductMobileOld name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>         */}

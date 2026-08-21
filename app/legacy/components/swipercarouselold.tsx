@@ -478,7 +478,7 @@ const SwiperCarouselOld: React.FC<PropType> = ({ slides, brand }) => {
 
     <div 
       style={{
-        display: isMobile ? "none" : "block",
+        // display: isMobile ? "none" : "block",
         flexShrink: 1
       }}
     >
@@ -503,91 +503,120 @@ const SwiperCarouselOld: React.FC<PropType> = ({ slides, brand }) => {
         {slides.map((item, index) => (
           <SwiperSlide
             key={index}
-            style={{
-              height: "100%"
-            }}
           >
             <div style={{
               position: "relative",
               width: "100%",
-              height: "100dvh"
+              height: "100vh"
             }}>
               <img 
                 src={item.featuredImgUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.featuredImgUrl}` : item.featuredImgUrl} 
                 alt={item.name} 
                 style={{
+                  display: "block",
                   width: "100%",
                   height: "100%",
                   objectFit: "cover"
                 }}
               />
 
-              <div style={{
-                position: "absolute",
-                insetInline: "0px",
-                bottom: '0px',
-                paddingInline: isMobile ? '32px' : isDesktop ? '48px' : '64px',
-                paddingBlock: isMobile ? '16px' : isDesktop ? '24px' : '32px',
-                height: "fit-content",
-                display: "flex",
-                alignItems: "flex-end",
-                background: "linear-gradient(to top, black, transparent)",
-                
-              }}>
-                <div style={{
-                  display: "grid",
-                  gap: "0px",
-                  gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
-                  width: "fit-content"
-                }}>
-                  <h3 style={{
-                    textAlign: "left",
-                    fontWeight: 700,
-                    fontSize: isMobile ? '30px' : '48px',
-                    color: '#ffffff',
-                    paddingBottom: '16px',
 
-                  }}>
-                    {item.name}
-                  </h3>
-                  <div style={{
-                    textAlign: 'left',
-                    fontSize: '14px',
-                    lineHeight: '1.428571',
-                    color: '#ffffff',
-                    paddingBottom: '16px',
-                    display: isMobile ? 'none' : 'block'
-                  }}>
-                    {item.featuredDesc}
-                  </div>
-                  <div style={{
-                    alignItems: "flex-start",
-                    paddingBottom: "20px"
-                  }}>
-                    {pathname.includes('sbautomotive') ? 
-                      <button disabled>
-                        Product Page  
-                      </button> 
-                    :
-                      <button style={{
-                        paddingInline: '16px',
-                        paddingBlock: '8px',
-                        color: '#ffffff',
-                        backgroundColor: '#e6001b',
-                        borderRadius: '8px'
-                        
-                      }}>
-                        <a href={brand === 'sbaudience' ? `/legacy/sbaudience/products/${item.slug}`: `/legacy/products/${item.slug}`}>Product Page</a>
-                      </button>
-                    }
-                  </div>
-                </div>
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: "100%",
+            boxSizing: "border-box",
+
+            paddingTop: "16px",
+            paddingRight: isMobile ? "16px" : "64px",
+            paddingBottom: isMobile ? "16px" : "32px",
+            paddingLeft: isMobile ? "16px" : "64px",
+
+            display: "flex",
+            alignItems: "flex-end",
+
+            color: "#000000",
+
+            background:
+              "linear-gradient(to left, rgba(255,255,255,0.7), rgba(255,255,255,0.6), rgba(255,255,255,0))",
+
+            zIndex: 50,
+          }}
+        >
+          <div
+            style={{
+              display: "block",
+              width: "fit-content",
+            }}
+          >
+            <h2
+              style={{
+                margin: 0,
+                padding: 0,
+                marginBottom: "16px",
+
+                fontSize: isMobile ? "30px" : "48px",
+                lineHeight: "1.1",
+                fontWeight: 700,
+
+                textAlign: "left",
+                color: "#000000",
+              }}
+            >
+              {item.name}
+            </h2>
+
+            {!isMobile && (
+              <div
+                style={{
+                  margin: 0,
+                  padding: 0,
+                  marginBottom: "16px",
+
+                  fontSize: "14px",
+                  lineHeight: "1.5",
+
+                  textAlign: "left",
+                  color: "#000000",
+                }}
+              >
+                {item.featuredDesc}
               </div>
+            )}
+
+            <div
+              style={{
+                display: "block",
+                marginBottom: "16px",
+              }}
+            >
+        
+              {pathname.includes('sbautomotive') ? 
+                <button disabled>
+                  Product Page  
+                </button> 
+              :
+                <button style={{
+                  paddingInline: '16px',
+                  paddingBlock: '8px',
+                  color: '#ffffff',
+                  backgroundColor: '#e6001b',
+                  borderRadius: '8px'
+                  
+                }}>
+                  <a href={brand === 'sbaudience' ? `/legacy/sbaudience/products/${item.slug}`: `/legacy/products/${item.slug}`}>Product Page</a>
+                </button>
+              }
+            </div>
+          </div>
+        </div>
             </div>
           </SwiperSlide>
         ))}
-      </Swiper>
-      
+        
       {/* Pagination Dots */}
       <div
         style={{
@@ -621,6 +650,8 @@ const SwiperCarouselOld: React.FC<PropType> = ({ slides, brand }) => {
           />
         ))}
       </div>
+      </Swiper>
+      
     </div>
 
     </>

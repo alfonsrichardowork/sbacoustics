@@ -111,122 +111,83 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
     {brandImages.homepage_open_source_kits_url !== "" && (
       <div
         style={{
-          position: "sticky",
-          top: 0,
-          left: 0,
+          position: "relative",
           width: "100%",
           height: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
         }}
       >
-        <div
+        <img
+          src={
+            brandImages.homepage_open_source_kits_url.startsWith(
+              "/uploads/"
+            )
+              ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_open_source_kits_url}`
+              : brandImages.homepage_open_source_kits_url
+          }
+          alt="SB Acoustics Open Source Kits"
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
+            display: "block",
             width: "100%",
             height: "100%",
-            backgroundColor: "#ffffff",
+            objectFit: "cover",
           }}
-        >
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              height: "100vh",
-            }}
-          >
-            <img
-              src={
-                brandImages.homepage_open_source_kits_url.startsWith(
-                  "/uploads/"
-                )
-                  ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_open_source_kits_url}`
-                  : brandImages.homepage_open_source_kits_url
-              }
-              alt="SB Acoustics Open Source Kits"
-              style={{
-                display: "block",
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
-          </div>
-        </div>
-
+        />
         <Section1 text={brandImages.homepage_open_source_kits_text}/>
       </div>
     )}
 
-    <div
-      style={{
-        position: "relative",
-        minHeight: "100vh",
-      }}
-    >
       {brandImages.homepage_about_us_url !== "" && (
         <div
           style={{
-            position: "relative",
-            minHeight: "100vh",
+              position: "relative",
+            width: "100%",
+            height: "100vh",
           }}
         >
-          <div
+          <img
+            src={
+              brandImages.homepage_about_us_url.startsWith("/uploads/")
+                ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_about_us_url}`
+                : brandImages.homepage_about_us_url
+            }
+            alt="Sinar Baja Electric Facility"
+            width={1000}
+            height={1000}
             style={{
-              position: "relative",
+              display: "block",
               width: "100%",
-              height: "100vh",
+              height: "100%",
+              objectFit: "cover",
             }}
-          >
-            <img
-              src={
-                brandImages.homepage_about_us_url.startsWith("/uploads/")
-                  ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_about_us_url}`
-                  : brandImages.homepage_about_us_url
-              }
-              alt="Sinar Baja Electric Facility"
-              width={1000}
-              height={1000}
-              style={{
-                display: "block",
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
+          />
 
-            <Section2 text={brandImages.homepage_about_us_text} />
-          </div>
+          <Section2 text={brandImages.homepage_about_us_text} />
         </div>
       )}
-    </div>
 
     {brandImages.homepage_catalogues_url !== "" && (
-      <div
-        style={{
-          position: "sticky",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "#ffffff",
-          }}
-        >
+      // <div
+      //   style={{
+      //     position: "sticky",
+      //     top: 0,
+      //     left: 0,
+      //     width: "100%",
+      //     height: "100vh",
+      //     display: "flex",
+      //     alignItems: "center",
+      //     justifyContent: "center",
+      //   }}
+      // >
+      //   <div
+      //     style={{
+      //       position: "absolute",
+      //       top: 0,
+      //       left: 0,
+      //       width: "100%",
+      //       height: "100%",
+      //       backgroundColor: "#ffffff",
+      //     }}
+      //   >
           <div
             style={{
               position: "relative",
@@ -248,12 +209,12 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
                 objectFit: "cover",
               }}
             />
+        <Section3 text={brandImages.homepage_catalogues_text} />
           </div>
-        </div>
+        // </div>
 
         
-        <Section3 text={brandImages.homepage_catalogues_text} />
-      </div>
+      // </div>
     )}
 
     <div

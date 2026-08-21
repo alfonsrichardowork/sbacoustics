@@ -71,16 +71,32 @@ const SwiperCarouselKitsFinishingOld: React.FC<PropType> = (props) => {
   }
 
   return (
-    <div className='block justify-center items-center object-center h-full w-full pt-8'>
+    <div style={{
+      display: "block",
+      justifyContent: 'center',
+      alignItems: 'center',
+      objectPosition: 'center',
+      height: '100%',
+      width: '100%',
+      paddingTop: '32px'
+    }}>
       {!finishLoad && 
         <>
-          <Skeleton className="min-w-full aspect-square max-h-[400px] animate-pulse bg-zinc-200 rounded-lg" />
-          <Skeleton className="mt-4 min-w-full aspect-[1/2] max-h-[70px] animate-pulse bg-zinc-200 rounded-lg" />
+        ...
         </>
       }
       {activeKitsPreview && activeKitsPreview != '' &&
-      <div className="z-10 h-fit w-full">
-        <div className="flex items-center justify-center overflow-hidden">
+      <div style={{
+        zIndex: 10,
+        height: 'fit-content',
+        width: '100%'
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden'
+        }}>
           <img
             src={
               activeKitsPreview.startsWith('/uploads/')
@@ -90,29 +106,78 @@ const SwiperCarouselKitsFinishingOld: React.FC<PropType> = (props) => {
             alt={`${name} - ${activeKitsPreviewName} Finishing`}
             width={1000}
             height={1000}
-            className={`h-full max-w-full w-auto object-contain transition-transform duration-300`}
-            // loading='lazy'
+            style={{
+              height: '100%',
+              maxWidth: '100%',
+              width: 'auto',
+              objectFit: 'contain',
+            }}
             loading='lazy'
             data-testid='kits-finishing-image-single-product-page'
             onLoad={() => setFinishLoad(true)}
           />
         </div>
         
-        <div className='w-full justify-center text-center pb-6 font-bold'>Finish: {activeKitsPreviewName}</div>
-        <div className='flex gap-2 w-full justify-center items-center'>
+        <div style={{
+          width: '100%',
+          justifyContent: 'center',
+          textAlign: 'center',
+          paddingBottom: '24px',
+          fontWeight: 700
+        }}>
+          Finish: {activeKitsPreviewName}
+        </div>
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
         {combinedFinishing && combinedFinishing.length > 0 && combinedFinishing.map((val, index) => 
-          <div className={`flex items-center gap-2 lg:pb-2 pb-1 hover:cursor-pointer transition-all duration-200`} data-testid={`kits-finishing-thumbnail-${index}`} onClick={() => changeImagePreview(val.urlPreview, val.name)} key={index}>
-            <div className={`h-[30px] flex items-center ${activeKitsPreviewName === val.name && 'border-red-500 border-2'}`}>
-              <LazyImageCustom
-                src={val.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.url}` : val.url} 
-                alt={val.name} 
-                width={100}
-                height={100}
-                classname="object-contain h-full w-fit"
-                lazy
-              />
+          // <div style={{
+          // }} >
+            <div
+              style={{
+                flex: '0 0 calc(15% - 4px)',
+                width: 'calc(15% - 4px)',
+                maxWidth: 'calc(15% - 4px)',
+                height: '30px',
+                display: 'flex',
+                alignItems: 'center',
+                boxSizing: 'border-box',
+                borderColor:
+                  activeKitsPreviewName === val.name ? '#ef4444' : 'transparent',
+                borderWidth:
+                  activeKitsPreviewName === val.name ? '2px' : '0px',
+                borderStyle: 'solid',
+              }}
+              onClick={() => changeImagePreview(val.urlPreview, val.name)}
+              key={index}
+            >
+              <div style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+                width: '100%'
+              }}>
+                <img 
+                  src={val.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.url}` : val.url} 
+                  alt={val.name} 
+                  width={100}
+                  height={100}
+                  style={{
+                    objectFit: "contain",
+                    height: "100%",
+                    width: "fit-content"
+                  }}
+                  loading='lazy'
+                />
+              </div>
             </div>
-          </div>
+          // </div>
         )}
         </div>
       </div>

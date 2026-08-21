@@ -13,13 +13,10 @@ const FrequencyResponseSectionOld: React.FC<PropType> = (props) => {
 
   return (
     <>
-    <div 
-    style={{
-      width: '100%',
-      borderRadius: '10',
-      boxShadow: '5'
+    <div style={{
+      paddingInline: '40px'
     }}>
-    <div
+    {/* <div
       style={{
         display: "flex",
         justifyContent: "center",
@@ -49,22 +46,24 @@ const FrequencyResponseSectionOld: React.FC<PropType> = (props) => {
           justifyContent: "center",
           height: '100%',
           width: '100%'
-        }}>
+        }}> */}
           <img 
             src={frequencyres.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${frequencyres}` : frequencyres}
             alt={`${name} - Frequency Response`}
             width={1000}
             height={1000}
             style={{
-              objectFit: "contain",
-              paddingInline: "40px",
+              objectFit: 'contain',
+              height: "100%",
+              width: '100%',
+              zIndex: 10,
             }}
             loading='eager'
           />
-        </div>
+        {/* </div>
             </div>
           </div>
-        </div>
+        </div> */}
     </div>
     </>
   );
