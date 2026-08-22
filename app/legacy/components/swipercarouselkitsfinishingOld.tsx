@@ -139,9 +139,9 @@ const SwiperCarouselKitsFinishingOld: React.FC<PropType> = (props) => {
           // }} >
             <div
               style={{
-                flex: '0 0 calc(15% - 4px)',
-                width: 'calc(15% - 4px)',
-                maxWidth: 'calc(15% - 4px)',
+                flex: '0 0 calc(10%)',
+                width: 'calc(10%)',
+                maxWidth: 'calc(10%)',
                 height: '30px',
                 display: 'flex',
                 alignItems: 'center',
