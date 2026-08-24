@@ -79,6 +79,14 @@ export async function proxy(req: NextRequest) {
 
     return NextResponse.redirect(url, 307);
   }
+  else if (
+    req.nextUrl.pathname === "/old" ||
+    req.nextUrl.pathname.startsWith("/old/")
+  ) {
+    const url = req.nextUrl.clone();
+    url.pathname = `/legacy${url.pathname.slice(4, url.pathname.length)}`;
+    return NextResponse.redirect(url, 307);
+  }
 
   if(!isAdminRoute(url)){
     return NextResponse.next();
