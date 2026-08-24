@@ -1,12 +1,12 @@
+
+
 "use client"
 
 import { usePathname } from "next/navigation"
 import { Searchbox } from "@/app/(frontend)/types"
 import getProductsForSearchbox from "@/app/(frontend)/actions/get-product-for-searchbox"
-import { Input } from "./ui/input"
 import Fuse from "fuse.js";
 import { FC, useEffect, useRef, useState } from "react"
-import { LazyImageCustomNavbar } from "./lazyImageCustomNavbar"
 
 function normalizeFractions(text: string): string {
   return text
@@ -35,8 +35,8 @@ interface ExtendedSearchbox extends Searchbox {
   // sizenospace: string;
 }
 
-const SearchBoxNavbar: FC<PropType> = (props) => {
-  const { changeBrand } = props
+const SearchboxLegacy: FC<PropType> = (props) => {
+    const { changeBrand } = props
   const [finalProductSearchbox, setFinalProductSearchbox] = useState<ExtendedSearchbox[]>([]);
   const [activeSearch, setactiveSearch] = useState<string>('');
   const [foundProducts, setfoundProducts] = useState<Searchbox[]>([]);
@@ -150,13 +150,13 @@ const SearchBoxNavbar: FC<PropType> = (props) => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [finalProductSearchbox]);
-
+    
 
   return (
     <>
         {/* <div className="lg:w-[15vw] w-0"> */}
           {/* <div className="flex items-center py-4"> */}
-            <Input
+            <input
               ref={inputRef}
               placeholder="Product search..."
               onChange={(event) =>
@@ -165,60 +165,120 @@ const SearchBoxNavbar: FC<PropType> = (props) => {
                   searchData(event.target.value)
                 )
               }
-              onBlur={() => {
+            onBlur={() => {
                 if (skipBlurRef.current) {
-                  skipBlurRef.current = false; // reset
-                  return; // 👈 skip localStorage update if Enter triggered blur
+                    skipBlurRef.current = false; // reset
+                    return; // 👈 skip localStorage update if Enter triggered blur
                 }
                 setactiveSearch("");
                 if(pathname.includes("sbaudience")) {
-                  document.cookie = `allDriversProductsSBAudience=; path=/; max-age=86400`;
+                    document.cookie = `allDriversProductsSBAudience=; path=/; max-age=86400`;
                 }
                 else {
-                  document.cookie = `allDriversProducts=; path=/; max-age=86400`;
+                    document.cookie = `allDriversProducts=; path=/; max-age=86400`;
                 }
-              }}
+            }}
               value={activeSearch}
               onKeyDown={(event) => {
                 if (event.key === "Enter" && activeSearch.trim() !== "") {
                   skipBlurRef.current = true; // mark to skip blur
                   setactiveSearch("");
                   inputRef.current?.blur(); // remove focus
-                  // router.replace(
-                  //   `/drivers/all?search=${encodeURIComponent(activeSearch.trim())}`
-                  // );
-                  window.location.href = `${pathname.includes('sbaudience') ? '/sbaudience' : pathname.includes('sbautomotive') ? '/sbautomotive' : ''}/search`;
+                // router.replace(`/drivers/all?search=${encodeURIComponent(activeSearch.trim())}`);
+                window.location.href = `/legacy${pathname.includes('sbaudience') ? '/sbaudience' : pathname.includes('sbautomotive') ? '/sbautomotive' : ''}/search`;
                 }
               }}
-              className=" w-full transform transition-all ease-in-out duration-500 bg-background shadow-md border-foreground border-2 focus:border-none z-102 text-black"
+              style={{
+                width: '100%',
+                transitionProperty: 'all',
+                borderRadius: '8px',
+                padding: '4px',
+                backgroundColor: 'hsl(var(--background))',
+                borderColor: 'hsl(var(--foreground))',
+                borderWidth: '1px',
+                zIndex: 102,
+                color: '#000000'
+              }}
             />
           {/* </div> */}
-          <div className="w-full relative">
-          <div className={`${activeSearch.trim() === "" ? 'hidden' : 'absolute z-105 w-full block border-2 top-1 bg-background max-h-[400px] overflow-y-auto p-2 rounded-lg shadow-2xl'}`}>
-            <div className="border-y-2 border-gray-100">
-              <div className={`overflow-y-auto`}> 
+          <div style={{
+            width: '100%',
+            position: 'relative'
+          }}>
+          <div style={{
+            display: activeSearch.trim() === "" ? 'none' : 'block',
+            position: 'absolute',
+            zIndex: 105,
+            width: '100%',
+            borderWidth: '2px',
+            top: '4px',
+            backgroundColor: '#ffffff',
+            maxHeight: '400px',
+            overflowY: 'auto',
+            padding: '8px',
+            borderRadius: '8px',
+            boxShadow: '8px'
+          }}>
+            <div style={{
+              borderBlockWidth: '2px',
+              borderColor: '#f3f4f6'
+            }}>
+              <div style={{
+                overflowY: 'auto'
+              }}> 
                 {foundProducts.length!=0?
                   foundProducts.map((value) => (
                     <div
                       key={value.label}
-                      className="border-0 block cursor-pointer"
+                      style={{
+                        borderWidth: '0px',
+                        display: 'block',
+                        cursor: 'pointer'
+                      }}
                       onMouseDown={() => {
                         setactiveSearch("");
-                        window.location.href = `${pathname.includes('sbaudience') ? '/sbaudience' : pathname.includes('sbautomotive') ? '/sbautomotive' : ''}/products/${value.slug}`
+                        window.location.href = `${pathname.includes('sbaudience') ? '/legacy/sbaudience' : pathname.includes('sbautomotive') ? '/legacy/sbautomotive' : '/legacy'}/products/${value.slug}`
                       }}
                     >                          
-                      <div className={`p-2 flex border-b-2 border-gray-100 hover:bg-black hover:text-primary hover:font-bold hover:rounded-md transfom duration-200 ${pathname.includes("sbaudience") && 'text-foreground'}`}>
-                        <LazyImageCustomNavbar 
-                          src={value.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${value.url}` : value.url}
-                          alt={value.label}
-                          classname="object-contain rounded max-h-14 w-auto" 
-                          width={100} 
-                          height={100} 
-                          lazy
-                          containerheight='h-14'
-                          containerwidth="w-14"/>
-                        <div className="pl-4 flex flex-col justify-center text-sm">
-                          <div className="font-bold">{value.label}</div>
+                      <div
+                      style={{
+                        padding: '8px',
+                        display: 'flex',
+                        borderBottomWidth: '2px',
+                        borderColor: '#f3f4f6',
+                        
+                      }}>
+                          <div style={{
+                            position: 'relative',
+                            display: 'inline-flex',
+                            height: '56px',
+                            width: '56px',
+                            alignItems: 'center'
+                          }}>
+                            <img
+                              src={value.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${value.url}` : value.url}
+                              alt={value.label}
+                              width={100} 
+                              height={100} 
+                              style={{
+                                objectFit: 'contain',
+                                borderRadius: '4px',
+                                maxHeight: '56px',
+                                width: 'auto'
+                              }}
+                              loading="lazy"
+                            />
+                          </div>
+                        <div style={{
+                          paddingLeft: '16px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          fontSize: '14px'
+                        }}>
+                          <div style={{
+                            fontWeight: 700
+                          }}>{value.label}</div>
                           <div>{value.info}</div>
                         </div>
                         
@@ -229,8 +289,17 @@ const SearchBoxNavbar: FC<PropType> = (props) => {
                   ))
                   :
                   <div>                          
-                    <div className={`p-4 flex justify-center items-center border-b-2 border-gray-100 ${pathname.includes("sbaudience") && 'text-foreground'}`}>
-                      <div className="text-sm">
+                    <div style={{
+                      padding: '16px',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderBottomWidth: '2px',
+                      borderColor: '#f3f4f6'
+                    }}>
+                      <div style={{
+                        fontSize: '14px'
+                      }}>
                         No products found.
                       </div>
                     </div>
@@ -245,4 +314,4 @@ const SearchBoxNavbar: FC<PropType> = (props) => {
   )
 }
 
-export default SearchBoxNavbar;
+export default SearchboxLegacy;

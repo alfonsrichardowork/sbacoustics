@@ -1,6 +1,7 @@
 import { AllFilterProductsOnlyType, CheckBoxData, ChildSpecificationProp, SliderData } from '@/app/(frontend)/types';
 import AllDriversandFiltersProducts from '../components-all-drivers-page/all-filters';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
+import '@/app/legacy/(products)/drivers/driverpage.css'
 
 function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSliderFilter[] {
   return Array.from(new Set(arr));
@@ -72,24 +73,13 @@ export default async function SearchDriversKitsPage() {
         }
         }
     }
-
   return( 
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      
-      <h1 className='sr-only'>Search Drivers and Kits</h1>
-      
-      {tempData &&
-        <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
-            <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
-                <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
-            </div>
+    tempData &&
+    <div className="drivers-container">
+        <div className="drivers-grid">
+            <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
         </div>
-      }
-    </>
-  );
+    </div>
+  )
 }
 

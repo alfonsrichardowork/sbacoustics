@@ -7,9 +7,6 @@ import 'swiper/css';
 //@ts-ignore
 import 'swiper/css/navigation';
 import { Navigation, Thumbs } from 'swiper/modules';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Link from 'next/link';
-import { LazyImageCustom } from '@/components/lazyImageCustom';
 
 type PropType = {
   similar: {similarProduct: {name: string, slug: string, cover_img_url: string}}[]
@@ -54,7 +51,13 @@ const SwiperCarouselSimilarProductOld: React.FC<PropType> = ({ similar, brand })
 
   const shouldShowControls = similar.length > slidesPerView;
   return (
-    <div className={`border-2 rounded-lg ${shouldShowControls ? 'p-4' : 'px-4 pt-4 pb-0'}`}>
+    <div style={{
+      borderWidth: '2px',
+      borderRadius: '12px',
+      paddingInline: '16px',
+      paddingTop: '16px',
+      paddingBottom: shouldShowControls ? '16px' : '0px'
+    }}>
       <Swiper
         slidesPerView={slidesPerView}
         spaceBetween={spaceBetween}
@@ -67,46 +70,114 @@ const SwiperCarouselSimilarProductOld: React.FC<PropType> = ({ similar, brand })
           setRealIndex(real);
         }}
         modules={[Navigation, Thumbs]}
-        className={`mySwiper h-[265px]`}
         style={{
           "--swiper-navigation-color": "#000000",
           "--swiper-navigation-size": "20px",
+          height: '300px'
         } as CSSProperties}
       >
         {similar.map((sim, index) => (
-          <SwiperSlide key={index} className={`${!shouldShowControls && 'p-0'}`}>
-            <Link href={brand === 'sbaudience' ? `/sbaudience/products/${sim.similarProduct.slug}` : `/products/${sim.similarProduct.slug}`} data-testid={`similar-product-${index}-single-product-page`}>
-              <Card className="w-full h-[250px] flex flex-col border-2 hover:border-primary">
-                <CardHeader className="p-2 h-[200px]">
-                  <LazyImageCustom
-                    src={sim.similarProduct.cover_img_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${sim.similarProduct.cover_img_url}` : sim.similarProduct.cover_img_url}
-                    alt={sim.similarProduct.name}
-                    width={500}
-                    height={500}
-                    classname="aspect-auto h-full w-fit object-contain self-center"
-                    lazy={false}
-                  />
-                </CardHeader>
-                <CardContent className="flex flex-col flex-1 h-full p-2">
-                  <CardTitle className="text-center justify-center items-center font-bold text-base text-black whitespace-normal break-words line-clamp-1">
+          <SwiperSlide key={index} style={{
+            padding: !shouldShowControls ? '0px' : '8px'
+          }}>
+            <a href={brand === 'sbaudience' ? `/legacy/sbaudience/products/${sim.similarProduct.slug}` : `/legacy/products/${sim.similarProduct.slug}`}>
+              <div style={{
+                borderRadius: '12px',
+                borderWidth: '2px',
+                backgroundColor: '#ffffff',
+                boxShadow: '12px',
+                width: '100%',
+                height: '250px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}>
+                <div style={{
+                  padding: '8px',
+                  height: '200px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  marginBlockStart: '6px',
+                  marginBlockEnd: '6px'
+                }}>
+                  <div style={{
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    width: '100%'
+                  }}>
+                    <img 
+                      src={sim.similarProduct.cover_img_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${sim.similarProduct.cover_img_url}` : sim.similarProduct.cover_img_url}
+                      alt={sim.similarProduct.name}
+                      width={500}
+                      height={500}
+                      style={{
+                        aspectRatio: 'auto',
+                        height: '100%',
+                        width: 'fit-content',
+                        objectFit: 'contain',
+                        alignSelf: 'center'
+                      }}
+                      loading={'eager'}
+                    />
+                  </div>
+
+
+
+                </div>
+                <div style={{
+                  padding: '8px',
+                  paddingTop: '0px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flex: 1,
+                  height: '100%',
+                }}>
+                  <div style={{
+                    fontSize: '16px',
+                    lineHeight: '1.5',
+                    fontWeight: 700,
+                    lineHeightStep: 1,
+                    letterSpacing: '-0.025em',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: '#000000',
+                    whiteSpace: 'normal',
+                    overflowWrap: 'break-word',
+                    overflow: 'hidden',
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 1
+                  }}>
                     {sim.similarProduct.name}
-                  </CardTitle>
-                </CardContent>
-              </Card>
-            </Link>
+                  </div>
+                </div>
+              </div>
+            </a>
           </SwiperSlide>
         ))}
       </Swiper>
 
       {shouldShowControls &&
-        <div className="flex justify-center gap-2">
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '8px'
+        }}>
           {similar.map((_, index) => (
             <button
               key={index}
               onClick={() => swiperRef.current?.slideToLoop(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 hover:cursor-pointer hover:scale-110 ${
-                realIndex === index ? 'bg-primary scale-125' : 'bg-zinc-700'
-              }`}
+              style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: 'calc(infinity * 1px)',
+                transitionProperty: 'all',
+                backgroundColor: realIndex === index ? '#e6001b' : '#3f3f46',
+                scale: realIndex === index ? '125%' : '100%'
+              }}
             ></button>
           ))}
         </div>

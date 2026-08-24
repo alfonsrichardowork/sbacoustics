@@ -41,7 +41,21 @@ const SwiperCarouselKitsFinishingOld: React.FC<PropType> = (props) => {
   const [activeKitsPreviewName, setActiveKitsPreviewName] = useState<string>('')
   const [finishLoad, setFinishLoad] = useState(false)
   const { name, kits_finishing } = props
+  const [isMobile, setIsMobile] = useState(false);
 
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
   useEffect(() => {
     const initializeData = () => {
       if(kits_finishing && kits_finishing.length > 0){ 
@@ -89,10 +103,10 @@ const SwiperCarouselKitsFinishingOld: React.FC<PropType> = (props) => {
       <div style={{
         zIndex: 10,
         height: 'fit-content',
-        width: '100%'
+        width: isMobile ? '100%' : '50%'
       }}>
         <div style={{
-          display: 'flex',
+          display: 'block',
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden'
@@ -116,7 +130,6 @@ const SwiperCarouselKitsFinishingOld: React.FC<PropType> = (props) => {
             data-testid='kits-finishing-image-single-product-page'
             onLoad={() => setFinishLoad(true)}
           />
-        </div>
         
         <div style={{
           width: '100%',
@@ -135,50 +148,48 @@ const SwiperCarouselKitsFinishingOld: React.FC<PropType> = (props) => {
           alignItems: 'center'
         }}>
         {combinedFinishing && combinedFinishing.length > 0 && combinedFinishing.map((val, index) => 
-          // <div style={{
-          // }} >
             <div
               style={{
-                flex: '0 0 calc(10%)',
-                width: 'calc(10%)',
-                maxWidth: 'calc(10%)',
-                height: '30px',
                 display: 'flex',
                 alignItems: 'center',
-                boxSizing: 'border-box',
-                borderColor:
-                  activeKitsPreviewName === val.name ? '#ef4444' : 'transparent',
-                borderWidth:
-                  activeKitsPreviewName === val.name ? '2px' : '0px',
-                borderStyle: 'solid',
+                gap: '8px',
               }}
               onClick={() => changeImagePreview(val.urlPreview, val.name)}
               key={index}
             >
               <div style={{
-                position: 'relative',
+                height: '30px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                width: '100%'
+                borderWidth: activeKitsPreviewName === val.name ? '2px' : '0px',
+                borderColor: activeKitsPreviewName === val.name ? '#ef4444' : 'transparent'
               }}>
-                <img 
-                  src={val.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.url}` : val.url} 
-                  alt={val.name} 
-                  width={100}
-                  height={100}
-                  style={{
-                    objectFit: "contain",
-                    height: "100%",
-                    width: "fit-content"
-                  }}
-                  loading='lazy'
-                />
+                <div style={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%',
+                  width: '100%'
+                }}>
+                  <img 
+                    src={val.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.url}` : val.url} 
+                    alt={val.name} 
+                    width={100}
+                    height={100}
+                    style={{
+                      objectFit: "contain",
+                      height: "100%",
+                      width: "fit-content"
+                    }}
+                    loading='lazy'
+                  />
+                </div>
               </div>
             </div>
           // </div>
         )}
+        </div>
         </div>
       </div>
       }

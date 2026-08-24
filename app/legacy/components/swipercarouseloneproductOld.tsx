@@ -15,8 +15,6 @@ import '@/app/globals.css';
 
 // import required modules
 import { Navigation, Thumbs, FreeMode } from 'swiper/modules';
-import { Card, CardContent } from '@/components/ui/card';
-import { Eye } from 'lucide-react';
 
 import Lightbox from 'yet-another-react-lightbox'
 import Zoom from 'yet-another-react-lightbox/plugins/zoom'
@@ -28,8 +26,6 @@ import 'yet-another-react-lightbox/styles.css'
 import 'yet-another-react-lightbox/plugins/thumbnails.css'
 //@ts-ignore
 import "yet-another-react-lightbox/plugins/captions.css";
-import { LazyImageCustom } from '@/components/lazyImageCustom';
-import { FilesProp } from '@/app/(frontend)/types';
 
 
 
@@ -103,133 +99,311 @@ const SwiperCarouselOneProductMobileOld: React.FC<PropType> = (props) => {
         thumbs={{ swiper: thumbsSwiper }}
         navigation={true}
         modules={[Navigation, Thumbs, FreeMode]}
-        className="oneproductswiper h-72 custom-swiper"
         style={{
           "--swiper-pagination-color": "#000000",
           "--swiper-navigation-color": "#000000",
           "--swiper-navigation-sides-offset": "0px",
           "--swiper-navigation-size": "20px",
+          height: '288px',
+
         } as CSSProperties}
       >
         {cover && (
           <SwiperSlide>
           {/* <Dialog>
             <DialogTrigger asChild> */}
-              <div className="h-full flex justify-center items-center cursor-pointer" onClick={() => openLightbox(0)}>
-                <Card className="border-none h-full w-full flex items-center justify-center">
-                  <CardContent className="p-6 flex items-center justify-center w-full h-full bg-white"
+              <div style={{
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }} onClick={() => openLightbox(0)}>
+                <div style={{
+                  borderRadius: '10px',
+                  backgroundColor: '#ffffff',
+                  color: '#000000',
+                  boxShadow: '4px',
+                  height: '100%',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <div style={{
+                    padding: '24px',
+                    paddingTop: '0px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: '#ffffff'
+                  }}
                       onMouseEnter={() => setHoverImage(true)}
                       onMouseLeave={() => setHoverImage(false)}>
-                    <div className="relative flex items-center justify-center h-full w-full">
-                    {/* <div
-                          className={`absolute top-0 right-0 transform transition-all duration-300 ease-in-out ${hoverImage ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'} z-20`}
-                        >
-                          <Eye size={25} />
-                        </div> */}
-                        <div className='z-10 w-full h-fit'>
-                          <LazyImageCustom 
-                            src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
-                            alt={name} 
-                            width={200}
-                            height={200}
-                            classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
-                            lazy={false}
-                            testid="cover-image-single-product-page"
-                          />
+                    <div style={{
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
+                      width: '100%'
+                    }}>
+                        <div style={{
+                          zIndex: 10,
+                          width: '100%',
+                          height: 'fit-content'
+                        }}>
+                          <div style={{
+                            position: 'relative',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100%',
+                            width: '100%'
+                          }}>
+                            <img 
+                              src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
+                              alt={name} 
+                              width={200}
+                              height={200}
+                              style={{
+                                objectFit: 'contain',
+                                height: '100%',
+                                width: 'fit-content',
+                                transitionProperty: 'all',
+                              }}
+                              loading='eager'
+                            />
+                          </div>
                         </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </div>
         </SwiperSlide>
         )}
         {image_catalogues && image_catalogues.length > 0 && sortedImages.map((item, index) => (
           <SwiperSlide key={`${item.name} - ${index.toString()}`}>
-              <div className="h-full flex justify-center items-center cursor-pointer" onClick={() => openLightbox(index + 1)}>
-                <Card className="border-none h-full w-full flex items-center justify-center">
-                  <CardContent className="p-6 flex items-center justify-center w-full h-full bg-white"
+              <div style={{
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }} onClick={() => openLightbox(index + 1)}>
+                <div style={{
+                  borderRadius: '10px',
+                  backgroundColor: '#ffffff',
+                  color: '#000000',
+                  boxShadow: '4px',
+                  height: '100%',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <div style={{
+                    padding: '24px',
+                    paddingTop: '0px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: '#ffffff'
+                  }}
                       onMouseEnter={() => setHoverImage(true)}
                       onMouseLeave={() => setHoverImage(false)}>
-                    <div className="relative flex items-center justify-center h-full w-full">
-                    {/* <div
-                          className={`absolute top-0 right-0 transform transition-all duration-300 ease-in-out ${hoverImage ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'} z-20`}
-                        >
-                          <Eye size={25} />
-                        </div> */}
-                        <div className='z-10 w-full h-fit'>
-                        <LazyImageCustom 
-                          src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
-                          alt={`${item.name} - ${index.toString()}`} 
-                          width={200}
-                          height={200}
-                          classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
-                          lazy={true}
-                          testid={`image-catalogues-${index}-single-product-page`}
-                        />
+                    <div style={{
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
+                      width: '100%'
+                    }}>
+                        <div style={{
+                          zIndex: 10,
+                          width: '100%',
+                          height: 'fit-content'
+                        }}>
+
+                        <div style={{
+                          position: 'relative',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          height: '100%',
+                          width: '100%'
+                        }}>
+                          <img 
+                            src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
+                            alt={`${item.name} - ${index.toString()}`} 
+                            width={200}
+                            height={200}
+                            style={{
+                              objectFit: 'contain',
+                              height: '100%',
+                              width: 'fit-content',
+                              transitionProperty: 'all'
+                            }}
+                            loading='lazy'
+                          />
+                        </div>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </div>
           </SwiperSlide>
         ))}
         {drawing !== '' &&
           <SwiperSlide>
-            <div className="h-full flex justify-center items-center cursor-pointer" onClick={() => openLightbox(image_catalogues.length + 1)}>
-              <Card className="border-none h-full w-full flex items-center justify-center">
-                <CardContent className="p-6 flex items-center justify-center w-full h-full bg-white"
+            <div style={{
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }} onClick={() => openLightbox(image_catalogues.length + 1)}>
+              <div style={{
+                borderRadius: '10px',
+                backgroundColor: '#ffffff',
+                color: '#000000',
+                boxShadow: '4px',
+                height: '100%',
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <div style={{
+                    padding: '24px',
+                    paddingTop: '0px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: '#ffffff'
+                  }}
                   onMouseEnter={() => setHoverImage(true)}
                   onMouseLeave={() => setHoverImage(false)}>
-                  <div className="relative  flex items-center justify-center h-full w-full">
-                  {/* <div
-                      className={`absolute top-0 right-0 transform transition-all duration-300 ease-in-out ${hoverImage ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'} z-20`}
-                    >
-                      <Eye size={25} />
-                    </div> */}
-                    <div className='z-10 w-full h-fit'>
-                    <LazyImageCustom 
-                      src={drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing} 
-                      alt={`${name} - Drawing`} 
-                      width={200}
-                      height={200}
-                      classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
-                      lazy={true}
-                      testid='drawing-image-single-product-page'
-                    />
+                  <div style={{
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    width: '100%'
+                  }}>
+                    <div style={{
+                      zIndex: 10,
+                      width: '100%',
+                      height: 'fit-content'
+                    }}>
+                      <div style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '100%',
+                        width: '100%'
+                      }}>
+                        <img 
+                          src={drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing} 
+                          alt={`${name} - Drawing`} 
+                          width={200}
+                          height={200}
+                          style={{
+                            objectFit: 'contain',
+                            height: '100%',
+                            width: 'fit-content',
+                            transitionProperty: 'all'
+                          }}
+                          loading='lazy'
+                        />
+                      </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
           </SwiperSlide>
         }
         {graph !== '' &&
           <SwiperSlide>
-            <div className="h-full flex justify-center items-center cursor-pointer" onClick={() => openLightbox(image_catalogues.length + 2)}>
-              <Card className="border-none h-full w-full flex items-center justify-center">
-                <CardContent className="p-6 flex items-center justify-center w-full h-full bg-white"
+            <div style={{
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }} onClick={() => openLightbox(image_catalogues.length + 2)}>
+              <div style={{
+                  borderRadius: '10px',
+                  backgroundColor: '#ffffff',
+                  color: '#000000',
+                  boxShadow: '4px',
+                  height: '100%',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                <div style={{
+                    padding: '24px',
+                    paddingTop: '0px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: '#ffffff'
+                  }}
                   onMouseEnter={() => setHoverImage(true)}
                   onMouseLeave={() => setHoverImage(false)}>
-                  <div className="relative  flex items-center justify-center h-full w-full"> 
-                  {/* <div
-                      className={`absolute top-0 right-0 transform transition-all duration-300 ease-in-out ${hoverImage ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'} z-20`}
-                    >
-                      <Eye size={25} />
-                    </div> */}
-                    <div className='z-10 w-full h-fit'>
-                    <LazyImageCustom 
-                      src={graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph} 
-                      alt={`${name} - Frequency Response`} 
-                      width={200}
-                      height={200}
-                      classname={`object-contain h-full w-fit transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
-                      lazy={true}
-                      testid='frequency-response-image-single-product-page'
-                    />
+                  <div style={{
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    width: '100%'
+                  }}>
+                    <div style={{
+                      zIndex: 10,
+                      width: '100%',
+                      height: 'fit-content'
+                    }}>
+                      <div style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '100%',
+                        width: '100%'
+                      }}>
+                        <img 
+                          src={graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph} 
+                          alt={`${name} - Frequency Response`} 
+                          width={200}
+                          height={200}
+                          style={{
+                            objectFit: 'contain',
+                            height: '100%',
+                            width: 'fit-content',
+                            transitionProperty: 'all'
+                          }}
+                          loading='lazy'
+                        />
+                      </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
           </SwiperSlide>
         }
@@ -242,90 +416,218 @@ const SwiperCarouselOneProductMobileOld: React.FC<PropType> = (props) => {
         freeMode={true}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="mySwiper h-[100px]"
+        style={{
+          height: '100px'
+        }}
       >
-        <SwiperSlide className={`${activeIndex === 0? "opacity-100": "opacity-50"} h-fit flex items-center justify-center hover:cursor-pointer hover:opacity-100`}
+        <SwiperSlide style={{
+          opacity: activeIndex === 0 ? '100%' : '50%',
+          height: 'fit-content',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+
+        }}
         onClick={() => {
             if (swiperRef.current) {
               // If loop is true, use slideToLoop to account for looped indices
               swiperRef.current.slideToLoop(0);
             }
           }}>
-        <div className="relative overflow-hidden flex items-center justify-center h-full w-full">
-          <div className='z-10 h-[75px]'>
-          <LazyImageCustom 
-            src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
-            alt={name} 
-            width={100}
-            height={100}
-            classname="object-contain w-fit h-full"
-            lazy={false}
-          />
+        <div style={{
+          position: 'relative',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          width: '100%'
+        }}>
+          <div style={{
+            zIndex : 10,
+            height: '75px'
+          }}>          
+          <div style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            width: '100%'
+          }}>
+            <img 
+              src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
+              alt={name} 
+              width={100}
+              height={100}
+              style={{
+                objectFit: 'contain',
+                height: '100%',
+                width: 'fit-content',
+              }}
+              loading='lazy'
+            />
+          </div>
           </div>
           </div>
         </SwiperSlide>
         {image_catalogues && image_catalogues.length > 0 && sortedImages.map((item, index) => (
-          <SwiperSlide key={`${item.name} - ${index.toString()}`} className={`${activeIndex - 1 === index? "opacity-100": "opacity-50"} h-fit flex items-center justify-center hover:cursor-pointer hover:opacity-100`}
+          <SwiperSlide key={`${item.name} - ${index.toString()}`}
+          style={{
+            opacity: activeIndex - 1 === index ? '100%': '50%',
+            height: 'fit-content',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',        
+          }}
           onClick={() => {
             if (swiperRef.current) {
               // If loop is true, use slideToLoop to account for looped indices
               swiperRef.current.slideToLoop(index + 1);
             }
           }}>
-            <div className="relative overflow-hidden flex items-center justify-center h-full w-full">
-              <div className='z-10 h-[75px]'>
-            <LazyImageCustom 
-              src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
-              alt={`${item.name} - ${index.toString()}`} 
-              width={100}
-              height={100}
-              classname="object-contain w-fit h-full"
-              lazy={false}
-            />
-            </div>
+            <div style={{
+              position: 'relative',
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              width: '100%'
+            }}>
+              <div style={{
+                zIndex : 10,
+                height: '75px'
+              }}>      
+              
+                <div style={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%',
+                  width: '100%'
+                }}>
+                  <img 
+                    src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
+                    alt={`${item.name} - ${index.toString()}`} 
+                    width={100}
+                    height={100}
+                    style={{
+                      objectFit: 'contain',
+                      height: '100%',
+                      width: 'fit-content',
+                    }}
+                    loading='lazy'
+                  />
+                </div>
+              </div>
             </div>
           </SwiperSlide>
         ))}
         {drawing !== '' &&
-          <SwiperSlide className={`${activeIndex - image_catalogues.length - 1 === 0 ? "opacity-100": "opacity-50"} h-fit flex items-center justify-center hover:cursor-pointer hover:opacity-100`}
+          <SwiperSlide
+          style={{
+            opacity: activeIndex - image_catalogues.length - 1 === 0 ? '100%': '50%',
+            height: 'fit-content',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',        
+          }}
           onClick={() => {
             if (swiperRef.current) {
               // If loop is true, use slideToLoop to account for looped indices
               swiperRef.current.slideToLoop(image_catalogues.length + 1);
             }
           }}>
-            <div className="relative overflow-hidden flex items-center justify-center h-full w-full">
-            <div className='z-10 h-[75px]'>
-            <LazyImageCustom 
-              src={drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing} 
-              alt={`${name} - Drawing`} 
-              width={100}
-              height={100}
-              classname="object-contain w-fit h-full"
-              lazy={false}
-            />
+            <div style={{
+              position: 'relative',
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              width: '100%'
+            }}>
+              <div style={{
+                zIndex : 10,
+                height: '75px'
+              }}>      
+              <div style={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%',
+                  width: '100%'
+                }}>
+                  <img 
+                    src={drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing} 
+                    alt={`${name} - Drawing`} 
+                    width={100}
+                    height={100}
+                    style={{
+                      objectFit: 'contain',
+                      height: '100%',
+                      width: 'fit-content',
+                    }}
+                    loading='lazy'
+                  />
+                </div>
             </div>
             </div>
           </SwiperSlide>
         }
         {graph !== '' &&
-          <SwiperSlide className={`${activeIndex - image_catalogues.length - 2 === 0 ? "opacity-100": "opacity-50"} h-fit flex items-center justify-center hover:cursor-pointer hover:opacity-100`}
+          <SwiperSlide
+          style={{
+            opacity: activeIndex - image_catalogues.length - 2 === 0 ? '100%': '50%',
+            height: 'fit-content',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',        
+          }}
           onClick={() => {
             if (swiperRef.current) {
               // If loop is true, use slideToLoop to account for looped indices
               swiperRef.current.slideToLoop(image_catalogues.length + 2);
             }
           }}>
-            <div className="relative overflow-hidden flex items-center justify-center h-full w-full">
-            <div className='z-10 h-[75px]'>
-            <LazyImageCustom 
-              src={graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph} 
-              alt={`${name} - Frequency Response`} 
-              width={100}
-              height={100}
-              classname="object-contain w-fit h-full"
-              lazy={false}
-            />
+            <div style={{
+              position: 'relative',
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              width: '100%'
+            }}>
+              <div style={{
+                zIndex : 10,
+                height: '75px'
+              }}>      
+              
+              <div style={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100%',
+                  width: '100%'
+                }}>
+                  <img 
+                    src={graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph} 
+                    alt={`${name} - Frequency Response`} 
+                    width={100}
+                    height={100}
+                    style={{
+                      objectFit: 'contain',
+                      height: '100%',
+                      width: 'fit-content',
+                    }}
+                    loading='lazy'
+                  />
+                </div>
             </div>
             </div>
           </SwiperSlide>

@@ -10,6 +10,9 @@ import SwiperCarouselKitsFinishingOld from "@/app/legacy/components/swipercarous
 import SwiperCarouselOneProductMobileOld from "@/app/legacy/components/swipercarouseloneproductOld";
 import SpecificationTableOld from "@/app/legacy/components/spec-tableold";
 import SwiperCarouselSimilarProductOld from "@/app/legacy/components/swipercarouselsimilarproductold";
+import ClientWrapper from "./pageClient";
+import ClientWrapper2 from "./pageClient2";
+import ClientWrapper3 from "./pageClient3";
 
 const all_desc_style: React.CSSProperties = {
   textAlign: "left",
@@ -298,8 +301,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
     return (
         <div style={{ padding: "1rem 2rem" }}>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
-                <div style={{ display: "flex", justifyContent: "center", width: "50%", height: "100%", flex: "1 1 50%" }}>
-                    <div style={{ display: "flex", flexDirection: "column", width: "100%", paddingRight: "2.5rem" }}>
+                <ClientWrapper>
                         <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
                             <SwiperCarouselOneProductOld name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues}/>
                         </div>
@@ -314,20 +316,18 @@ export default async function SingleProductSBAcoustics(props: Props) {
                             </div>
                         }          
 
-                        {product.kitsFinishing && product.kitsFinishing.length > 0 &&
+                        {/* {product.kitsFinishing && product.kitsFinishing.length > 0 &&
                             <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
                                 <SwiperCarouselKitsFinishingOld name={product.name} kits_finishing={product.kitsFinishing}/>
                             </div>
-                        }             
-                    </div>
-                    <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
-                        {/* <SwiperCarouselOneProductMobileOld name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>         */}
-                    </div>
+                        }        */}
+                </ClientWrapper>
 
-                    
-                </div>
+                <ClientWrapper3>
+                    <SwiperCarouselOneProductMobileOld name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>       
+                </ClientWrapper3>
 
-                <div style={{ display: "flex", justifyContent: "center", width: "50%", height: "100%", flex: "1 1 50%" }}>
+                <ClientWrapper2>
                     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
                         <h1 style={{ textAlign: "left",
                             fontWeight: 700,
@@ -714,18 +714,18 @@ export default async function SingleProductSBAcoustics(props: Props) {
 
                         {specsCombined && specsCombined.length > 0 &&
                             <div style={{ justifyContent: "flex-start", paddingTop: "1rem" }}>
-                                {/* <SpecificationTableOld spec={specsCombined} styling={all_desc_style} stylingTitle={all_sub_title_style}/> */}
+                                <SpecificationTableOld spec={specsCombined} styling={all_desc_style} stylingTitle={all_sub_title_style}/>
                             </div>
                         }
                         
                     </div>
-                </div>
+                </ClientWrapper2>
             </div>
 
             <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
-                {/* {product.kitsFinishing && product.kitsFinishing.length > 1 &&
+                {product.kitsFinishing && product.kitsFinishing.length > 1 &&
                     <SwiperCarouselKitsFinishingOld name={product.name} kits_finishing={product.kitsFinishing}/>
-                }     */}
+                }    
             </div>
 
             {product.similarProducts && product.similarProducts.length > 0 &&
@@ -746,7 +746,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                     }}>
                         Similar Products
                     </h2>
-                    {/* <SwiperCarouselSimilarProductOld similar={product.similarProducts} brand={'sbacoustics'}/> */}
+                    <SwiperCarouselSimilarProductOld similar={product.similarProducts} brand={'sbacoustics'}/>
                 </div>
             }
     

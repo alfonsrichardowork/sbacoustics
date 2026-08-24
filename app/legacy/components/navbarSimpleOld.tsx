@@ -4,6 +4,7 @@ import getAllNewProducts from "@/app/(frontend)/actions/get-all-new-products";
 import { getHref } from "@/app/(frontend)/utils/getHref";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import SearchboxLegacy from "./searchboxold";
 
 export interface NewProduct {
   productId: string;
@@ -174,11 +175,23 @@ function submenuStyle(depth: number): CSSProperties {
 
 /* ------------------------------ dropdown item ----------------------------- */
 
+function getBrandFromPathname(pathname: string) {
+  const parts = pathname.split("/").filter(Boolean); // remove empty strings
+  // if there’s no part → default brand
+  if (parts.length === 0) return "default";
+  // if first part is 'drivers' → also default brand
+  if (parts[0] === "drivers") return "default";
+  // else first part is brand name
+  return parts[0];
+}
+
 function DropdownItem({ node, depth, parent }: { node: MenuNode; depth: number; parent?: string }) {
   const [open, setOpen] = useState(false);
+  const [changeBrand, setChangeBrand] = useState(false);
+  const pathname = usePathname()
+  const [tempPathname, setTempPathname] = useState(getBrandFromPathname(pathname));
   const hasChildren = !!(node.children && node.children.length > 0);
   let parentRoute = ''
-  console.log("depth: ", depth, " - parent: ", parent)
   if(parent !== undefined) {
     if(depth === 0) {
       parentRoute = node.href
@@ -190,6 +203,14 @@ function DropdownItem({ node, depth, parent }: { node: MenuNode; depth: number; 
   if(node.href.startsWith('/products')) {
     parentRoute = node.href
   }
+  useEffect(() => {
+    const currentBrand = getBrandFromPathname(pathname);
+
+    if (currentBrand !== tempPathname) {
+      setTempPathname(currentBrand);
+      setChangeBrand((prev) => !prev); // toggles true/false each time
+    }
+  }, [pathname]); // dependency is pathname but we gate by comparing brand
   return (
     <li
       style={depth === 0 ? parentMenuItemStyle: menuItemStyle}
@@ -486,7 +507,7 @@ export default function NavbarLegacy() {
 
           {/* search */}
           <div style={{ ...cellStyle, width: "25%" }}>
-            <SearchBox items={searchItems} />
+            <SearchboxLegacy changeBrand/>
           </div>
         </div>
 

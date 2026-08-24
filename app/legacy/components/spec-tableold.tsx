@@ -1,5 +1,4 @@
 import { SpecificationProp } from '@/app/(frontend)/types';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { CSSProperties } from 'react';
 
 interface Props {
@@ -21,7 +20,9 @@ export default function SpecificationTableOld({ spec, styling, stylingTitle }: P
 
 
   return (
-    <div className='pt-8'>
+    <div style={{
+      paddingTop: '32px'
+    }}>
       {Object.entries(groupedByParent).map(([parentName, subGroups]) => {
         // Step 2: Collect all unique childnames
         const allChildren = Array.from(
@@ -47,29 +48,62 @@ export default function SpecificationTableOld({ spec, styling, stylingTitle }: P
           
         return (
           parentName !== "Additional Notes" &&
-          <div key={parentName} className="mb-8">
-            {/* <div className={`${stylingTitle}`}></div> */}
-            <Table className='py-4'>
-              <TableBody>
-                {/* Header Row */}
-                <TableRow>
-                  <TableCell className={`${stylingTitle} pb-2 px-0 pt-0 text-start`}>{parentName}</TableCell>
+          <div key={parentName} style={{
+            marginBottom: '32px'
+          }}>
+            <table style={{
+              paddingBlock: '16px',
+              width: '100%',
+              captionSide: 'bottom',
+              fontSize: '14px',
+              lineHeight: '1.43'
+            }}>
+              <tbody>
+                <tr style={{
+                  borderBottomWidth: '1px',
+                }}>
+                  <td style={{
+                    paddingBottom: '8px',
+                    paddingInline: '0px',
+                    paddingTop: '0px',
+                    textAlign: 'start',
+                    ...stylingTitle
+                  }}>{parentName}</td>
                   {subParentNames.map((subName, idx) => (
-                    <TableCell key={idx} className={`${styling} font-semibold text-xs text-end`}>
+                    <td key={idx} style={{
+                    padding: '16px',
+                    verticalAlign: 'middle',
+                    fontWeight: 600,
+                    fontSize: '12px',
+                    textAlign: 'end',
+                    ...styling
+                  }}>
                       {subName}
-                    </TableCell>
+                    </td>
                   ))}
-                </TableRow>
+                </tr>
 
-                {/* Data Rows */}
                 {allChildren.map((childName, rowIdx) => (
-                  <TableRow key={rowIdx}>
-                    <TableCell className={`${styling} pl-2`}>
+                  <tr style={{
+                    borderBottomWidth: '1px',
+                    borderWidth: '1px'
+                  }}>
+                    <td style={{
+                      padding: '16px',
+                      verticalAlign: 'middle',
+                      paddingLeft: '8px',
+                      ...styling
+                    }}>
                       {childName}
                       {allNotes[rowIdx] && allNotes[rowIdx] !== '' && (
-                        <sup className="text-xs ml-1">({counter++})</sup>
+                        <sup style={{
+                          fontSize: '12px',
+                          marginLeft: '4px'
+                        }}>
+                          ({counter++})
+                        </sup>
                       )}
-                    </TableCell>
+                    </td>
                     {subGroups.map((sub, subIdx) => {
                       const foundChild = sub.child.find((c) => c.childname === childName);
                       const value =
@@ -77,29 +111,41 @@ export default function SpecificationTableOld({ spec, styling, stylingTitle }: P
                           ? `${foundChild.value} ${foundChild.unit || ''}`
                           : '-';
                       return (
-                        <TableCell
+                        <td
                           key={subIdx}
-                          className={`${styling} text-right pr-2`}
+                          style={{
+                            padding: '16px',
+                            verticalAlign: 'middle',
+                            textAlign: 'right',
+                            paddingRight: '8px',
+                            ...styling
+                          }}
                         >
                           {value}
-                        </TableCell>
+                        </td>
                       );
                     })}
-                  </TableRow>
+                  </tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </div>
         )
       })}
-      <div className=''>
+      <div>
         {allNotesNonNull.map((val, idx) => 
-          <div key={idx} className='text-xs'>
+          <div key={idx} style={{
+            fontSize: '12px',
+            lineHeight: "1.33"
+          }}>
             ({idx + 1}) {val}
           </div>
         )}
         {allAdditionalNotes.map((val, idx) => 
-          <div key={idx} className='text-xs'>
+          <div key={idx} style={{
+            fontSize: '12px',
+            lineHeight: "1.33"
+          }}>
             - {val}
           </div>
         )}
