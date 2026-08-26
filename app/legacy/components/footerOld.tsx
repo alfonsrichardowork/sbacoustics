@@ -6,7 +6,6 @@ import { brand, socialmedia } from '@prisma/client';
 import getOneBrand from '@/app/(frontend)/actions/get-one-brand';
 import { useEffect, useState } from 'react';
 import getAllSocialMedia from '@/app/(frontend)/actions/get-all-social-media';
-import CookieSettings from '@/components/cookie-settings';
 import { SocialIcon } from 'react-social-icons';
 
 export default function FooterOld() {
@@ -440,7 +439,7 @@ export default function FooterOld() {
             }}
           >
             <a
-              href={`/legacy/${getHref(pathname, "about")}`}
+              href={`/legacy${getHref(pathname, "about")}`}
               style={{
                 color: "#9ca3af",
                 textDecoration: "none",
@@ -449,7 +448,7 @@ export default function FooterOld() {
               About Us
             </a>
             <a
-              href={`/legacy/${getHref(pathname, "catalogues")}`}
+              href={`/legacy${getHref(pathname, "catalogues")}`}
               style={{
                 color: "#9ca3af",
                 textDecoration: "none",

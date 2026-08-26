@@ -1,0 +1,308 @@
+.comparison-page{
+    position:relative;
+    padding:3.5rem 2rem 1.5rem;
+    color:#18181b;
+    background:#fff;
+    font-family:Arial,sans-serif
+}
+
+.comparison-shell{
+    position:relative;
+    border:1px solid #d4d4d8;
+    border-radius:.375rem;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+    overflow:hidden
+}
+
+.comparison-scroll{
+    overflow-x:auto;
+    scrollbar-width:none;
+    -ms-overflow-style:none
+}
+
+.comparison-scroll::-webkit-scrollbar{
+    display:none
+}
+
+.is-grabbable{
+    cursor:grab
+}
+
+.comparison-table{
+    width:max-content;
+    min-width:100%;
+    border-collapse:collapse
+}
+
+.comparison-table th,.comparison-table td{
+    padding:.5rem;
+    text-align:left
+}
+
+.comparison-table thead tr{
+    background:#fff
+}
+
+.comparison-tip{
+    width:3rem;
+    vertical-align:top
+}
+
+.comparison-tip span{
+    display:flex;
+    align-items:center;
+    gap:.25rem;
+    color:#e6001b;
+    font-size:.75rem
+}
+
+.comparison-tip span svg{
+    color:#eab308
+}
+
+.comparison-tip strong{
+    font-size:inherit
+}
+
+.comparison-tip small{
+    display:block;
+    margin-top:.25rem;
+    font-size:.75rem;
+    font-weight:400;
+    white-space:normal
+}
+
+.is-hidden{
+    display:none
+}
+
+.product-header{
+    position:relative;
+    width:max-content;
+    max-width:200px;
+    text-align:center;
+    vertical-align:top;
+    padding:0 .25rem!important
+}
+
+.product-remove,.comparison-close{
+    border:0;
+    background:transparent;
+    color:#e6001b;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center
+}
+
+.product-remove{
+    position:absolute;
+    top:.5rem;
+    right:.5rem;
+    opacity:.7
+}
+
+.product-remove:hover,.comparison-close:hover{
+    opacity:1
+}
+
+.product-image{
+    display:block;
+    width:100px;
+    min-width:100px;
+    max-width:200px;
+    height:auto;
+    margin:0 auto;
+    object-fit:contain
+}
+
+.product-name{
+    width:100%;
+    max-width:13rem;
+    margin-top:.25rem;
+    font-size:.75rem;
+    font-weight:600;
+    line-height:1.4;
+    white-space:normal;
+    overflow-wrap:anywhere
+}
+
+.spec-section{
+    border-top:2px solid #18181b;
+    border-bottom:2px solid #18181b
+}
+
+.spec-section td{
+    background:#f4f4f5;
+    font-size:.875rem;
+    font-weight:700
+}
+
+.spec-section span{
+    color:#71717a;
+    font-size:.75rem;
+    font-weight:600
+}
+
+.spec-name{
+    font-size:.75rem;
+    font-weight:500;
+    white-space:normal
+}
+
+.spec-value{
+    width:6rem;
+    min-width:100px;
+    max-width:200px;
+    padding:0 .5rem!important;
+    text-align:center!important;
+    font-size:.75rem;
+    white-space:normal;
+    overflow-wrap:anywhere
+}
+
+.comparison-close{
+    position:absolute;
+    top:7rem;
+    right:2rem;
+    opacity:.7;
+    z-index:2
+}
+
+.comparison-arrows{
+    position:sticky;
+    top:50%;
+    z-index:3;
+    height:0
+}
+
+.comparison-arrow{
+    position:absolute;
+    top:0;
+    border:1px solid #d4d4d8;
+    border-radius:999px;
+    background:#fff;
+    color:#18181b;
+    box-shadow:0 4px 10px rgba(0,0,0,.15);
+    cursor:pointer;
+    width:2.25rem;
+    height:2.25rem
+}
+
+.comparison-arrow-left{
+    left:-1rem
+}
+
+.comparison-arrow-right{
+    right:-1rem
+}
+
+.comparison-actions{
+    display:flex;
+    justify-content:center;
+    padding-top:1.5rem
+}
+
+.add-products-button{
+    display:flex;
+    align-items:center;
+    border:0;
+    border-radius:.375rem;
+    padding:.625rem 1rem;
+    background:#e6001b;
+    color:#fff;
+    font-size:.75rem;
+    font-weight:500;
+    cursor:pointer
+}
+
+.add-products-button:hover{
+    background:#e6001b
+}
+
+.comparison-loading{
+    padding:3rem;
+    text-align:center
+}
+
+@media (min-width:768px){
+    .comparison-page{
+        padding-left:3rem;
+        padding-right:3rem
+    }
+    
+    .comparison-tip{
+        width:100%
+    }
+    
+    .comparison-tip span,.comparison-tip small{
+        font-size:1rem
+    }
+    
+    .product-header{
+        max-width:none;
+        padding-left:0!important;
+        padding-right:0!important
+    }
+    
+    .product-image{
+        min-width:200px;
+        max-width:400px
+    }
+    
+    .product-name{
+        font-size:1.125rem;
+        font-weight:700
+    }
+    
+    .spec-section td{
+        font-size:1.125rem
+    }
+    
+    .spec-section span{
+        font-size:1rem
+    }
+    
+    .spec-name{
+        font-size:1rem
+    }
+    
+    .spec-value{
+        min-width:250px;
+        max-width:400px;
+        font-size:.875rem
+    }
+    
+    .add-products-button{
+        font-size:1rem
+    }
+}
+
+@media (min-width:1024px){
+    .comparison-page{
+        padding-left:3rem;
+        padding-right:3rem
+    }
+    
+    .comparison-close{
+        right:3rem
+    }
+}
+
+@media (min-width:1280px){
+    .comparison-page{
+        padding-left:4rem;
+        padding-right:4rem
+    }
+    
+    .comparison-close{
+        right:4rem
+    }
+}
+
+@media (min-width:1536px){
+    .comparison-page{
+        padding-left:4rem;
+        padding-right:4rem
+    }
+}

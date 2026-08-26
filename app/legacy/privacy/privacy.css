@@ -1,0 +1,71 @@
+.privacy-page {
+  min-height: 100vh;
+  background: var(--privacy-background, #ffffff);
+  color: var(--privacy-foreground, #171717);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.privacy-header {
+  border-bottom: 1px solid var(--privacy-border, #e5e5e5);
+  background: var(--privacy-card, #ffffff);
+}
+
+.privacy-header-inner {
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.privacy-header h1,
+.privacy-section h2,
+.privacy-subsection h3 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.privacy-header h1 { font-size: 1.5rem; line-height: 1.25; }
+.privacy-header p { margin: 0.5rem 0 0; font-size: 0.625rem; line-height: 1.5; }
+
+.privacy-content {
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 2rem;
+}
+
+.privacy-sections { display: flex; flex-direction: column; gap: 2rem; }
+.privacy-section h2 { font-size: 1rem; line-height: 1.5; }
+.privacy-subsection h3 { margin-top: 0.5rem; font-size: 0.75rem; line-height: 1.5; }
+.privacy-paragraph { margin: 0.5rem 0 0; font-size: 0.75rem; line-height: 1.5; }
+.privacy-section > .privacy-paragraph:first-of-type { margin-top: 0.5rem; }
+.privacy-list { margin: 0; padding: 0; list-style: none; }
+.privacy-list li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; line-height: 1.5; }
+.privacy-dot { display: inline-block; width: 0.25rem; height: 0.25rem; flex: 0 0 0.25rem; border-radius: 50%; background: currentColor; }
+.privacy-note { margin: 0; font-size: 0.625rem; line-height: 1.5; }
+.privacy-subsection .privacy-note { margin-top: 0; }
+
+@media (min-width: 768px) {
+  .privacy-header-inner { padding: 3rem; }
+  .privacy-header h1 { font-size: 2.25rem; }
+  .privacy-header p { font-size: 0.875rem; }
+  .privacy-content { padding-top: 2rem; padding-bottom: 4rem; }
+  .privacy-section h2 { font-size: 1.25rem; }
+  .privacy-subsection h3 { margin-top: 1rem; font-size: 1rem; }
+  .privacy-paragraph, .privacy-list li { font-size: 0.875rem; }
+  .privacy-section > .privacy-paragraph:first-of-type { margin-top: 1rem; }
+  .privacy-note { font-size: 0.75rem; }
+}
+
+@media (min-width: 1024px) {
+  .privacy-content { padding-left: 2rem; padding-right: 2rem; }
+}
+
+@media (min-width: 1280px) {
+  .privacy-content { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+
+@media (min-width: 1536px) {
+  .privacy-content { padding-left: 0; padding-right: 0; }
+}
+
+.privacy-section a { color: var(--privacy-primary, #2563eb); text-decoration: none; }
+.privacy-section a:hover { text-decoration: underline; }

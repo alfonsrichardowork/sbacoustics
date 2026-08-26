@@ -1,0 +1,27 @@
+.newsletter-parent {
+    padding-inline: 32px;
+    padding-block: 64px;
+}
+
+
+@media (min-width: 768px) {
+
+}
+
+@media (min-width: 1024px) {
+    .newsletter-parent {
+        padding-inline: 48px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .newsletter-parent {
+        padding-inline: 240px;
+    }
+}
+
+@media (min-width: 1536px) {
+    .newsletter-parent {
+        padding-inline: 320px;
+    }
+}
