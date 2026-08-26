@@ -434,7 +434,7 @@ export default function NavbarLegacy() {
     return [
       ...categoryNodes,
       ...(newProductNodes.length > 0
-        ? [{ title: "New Products", href: "/legacy/new-products", children: newProductNodes }]
+        ? [{ title: "New Products", href: "/new-products", children: newProductNodes }]
         : []),
     ];
   }, [categories, newProducts, newKits]);

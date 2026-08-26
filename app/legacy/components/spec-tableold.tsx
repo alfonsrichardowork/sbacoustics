@@ -87,7 +87,7 @@ export default function SpecificationTableOld({ spec, styling, stylingTitle }: P
                   <tr style={{
                     borderBottomWidth: '1px',
                     borderWidth: '1px'
-                  }}>
+                  }} key={rowIdx}>
                     <td style={{
                       padding: '16px',
                       verticalAlign: 'middle',

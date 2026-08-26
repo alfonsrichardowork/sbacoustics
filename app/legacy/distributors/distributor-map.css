@@ -1,0 +1,203 @@
+.distributor-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 100px;
+  padding: 0 2rem;
+}
+
+.distributor-card {
+  width: 100%;
+  justify-self: start;
+  padding: 0.5rem;
+  height: 100%;
+  max-height: 100%;
+  /* background: color-mix(in srgb, Canvas 70%, transparent); */
+  background: #f4f4f5;
+  backdrop-filter: blur(4px);
+  z-index: 30;
+  border: none;
+  border-radius: 0;
+}
+
+.distributor-name {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.distributor-details {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  min-width: 0;
+  font-size: 0.75rem;
+}
+
+.contact-row.align-start {
+  align-items: flex-start;
+}
+
+.contact-icon {
+  display: inline-flex;
+  min-width: 1rem;
+  margin-top: 0.25rem;
+}
+
+.contact-row a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.truncate-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.distributors-section {
+  padding: 4rem 2rem;
+}
+
+.distributors-heading {
+  margin: 0 0 4rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.regions-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 72rem;
+  margin: 0 auto;
+  gap: 1rem;
+  text-align: left;
+}
+
+.region-heading {
+  margin: 2rem 0 0;
+  padding: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.region-heading.first-region {
+  margin-top: 0;
+}
+
+.country-heading {
+  margin: 0;
+  padding-top: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.country-block {
+  cursor: pointer;
+}
+
+.country-block:hover,
+.country-block:hover .distributor-link,
+.active-distributor {
+  color: var(--primary, #2563eb);
+  font-weight: 700;
+}
+
+.distributor-link {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-decoration: underline;
+}
+
+@media (min-width: 768px) {
+  .distributor-overlay {
+    padding: 0 2rem;
+  }
+
+  .distributor-card {
+    padding: 1rem;
+  }
+
+  .distributor-name {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+
+  .distributor-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .contact-row {
+    font-size: 1rem;
+  }
+
+  .distributors-heading {
+    font-size: 1.875rem;
+  }
+
+  .regions-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .region-heading {
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .country-heading {
+    padding-top: 2.5rem;
+    font-size: 0.875rem;
+  }
+
+  .distributor-link {
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .distributor-overlay {
+    padding: 0 3rem;
+  }
+
+  .distributors-section {
+    padding-right: 3rem;
+    padding-left: 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .distributor-overlay {
+    padding-right: 18rem;
+    padding-left: 18rem;
+  }
+
+  .distributors-section {
+    padding-right: 4rem;
+    padding-left: 4rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .distributor-overlay {
+    padding-right: 24rem;
+    padding-left: 24rem;
+  }
+}

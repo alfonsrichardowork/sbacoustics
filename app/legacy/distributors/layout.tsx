@@ -66,7 +66,6 @@ export default function DistributorLayout({
   return (
     <div 
       style={{
-        paddingTop: '80px',
         backgroundColor: '#ffffff',
       }}
     >
