@@ -1,14 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect, FC } from 'react';
-import { Search, X } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import { Searchbox } from '@/app/(frontend)/types';
 import { usePathname } from 'next/navigation';
 import getProductsForSearchbox from '@/app/(frontend)/actions/get-product-for-searchbox';
 import Fuse from 'fuse.js';
-import { Button } from '@/components/ui/button';
-import { LazyImageCustomNavbar } from '@/components/lazyImageCustomNavbar';
 function normalizeFractions(text: string): string {
   return text
     // normalize Unicode fractions
@@ -223,7 +219,7 @@ const SearchLightboxOld: FC<PropType> = (props) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             borderRadius: '8px',
-            backgroundColor: 'color-mix(in oklab, var(--color-muted) /* hsl(var(--muted)) */ 40%, transparent)',
+            backgroundColor: '#e4e4e7',
             color: 'hsl(var(--muted-foreground))',
             borderColor: 'color-mix(in oklab, var(--color-border) /* hsl(var(--border)) */ 60%, transparent)'
           }}
@@ -231,7 +227,7 @@ const SearchLightboxOld: FC<PropType> = (props) => {
         >
           <span style={{
             fontSize: '14px',
-            lineHeight: '1.43'
+            lineHeight: '1.43',
           }}>
             Search...
           </span>
@@ -285,21 +281,43 @@ const SearchLightboxOld: FC<PropType> = (props) => {
             }}>
               {/* Header with Close Button */}
               <div style={{
-                
-              }} className={`flex items-center justify-between p-2 border-b border-border flex-shrink-0 ${pathname.includes('sbaudience') && 'bg-black text-white'}`}>
-                <h2 className="text-lg font-semibold">Search Products</h2>
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '8px',
+                borderBottomWidth: '1px',
+                borderColor: 'hsl(var(--border))',
+                flexShrink: 0,
+                backgroundColor: pathname.includes('sbaudience') ? '#000000' : '#ffffff',
+                color: pathname.includes('sbaudience') ? '#ffffff' : '#000000',
+              }}>
+                <h2 style={{
+                  fontSize: '18px',
+                  lineHeight: '1.56',
+                  fontWeight: 600
+                }}>Search Products</h2>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1 rounded-lg hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground"
+                  style={{
+                    padding: '4px',
+                    borderRadius: '8px',
+                  }}
                   aria-label="Close search"
                 >
-                  <X size={20} />
+                  X
                 </button>
               </div>
 
               {/* Search Input */}
-              <div className={`p-2 border-b border-border flex-shrink-0 ${pathname.includes('sbaudience') && 'bg-black text-white'}`}>
-                <Input
+              <div style={{
+                padding: '8px',
+                borderBottomWidth: '1px',
+                borderColor: 'hsl(var(--border))',
+                flexShrink: 0,
+                backgroundColor: pathname.includes('sbaudience') ? '#000000' : '#ffffff',
+                color: pathname.includes('sbaudience') ? '#ffffff' : '#000000',
+              }}>
+                <input
                   ref={inputRef}
                   placeholder="Search products..."
                   onChange={(event) => {
@@ -309,15 +327,32 @@ const SearchLightboxOld: FC<PropType> = (props) => {
                   onBlur={handleBlur}
                   onKeyDown={handleKeyDown}
                   value={activeSearch}
-                  className="w-full text-base bg-white text-black"
+                  style={{
+                    width: '100%',
+                    fontSize: '16px',
+                    lineHeight: 1.5,
+                    backgroundColor: '#e4e4e7',
+                    color: '#000000',
+                    paddingInline: '8px',
+                    paddingBlock: '4px'
+                  }}
                 />
               </div>
 
               {/* Results Container */}
-              <div className={`flex-1 min-h-0 overflow-y-auto ${pathname.includes('sbaudience') && 'bg-black text-white'}`}>
+              <div style={{
+                flex: 1,
+                minHeight: '0px',
+                overflowY: 'auto',
+                backgroundColor: pathname.includes('sbaudience') ? '#000000' : '#ffffff',
+                color: pathname.includes('sbaudience') ? '#ffffff' : '#000000',
+              }}>
                 {activeSearch.trim() !== '' ? (
                   foundProducts.length > 0 ? (
-                    <div className="flex flex-col">
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column'
+                    }}>
                       {foundProducts.map((product) => (
                         <button
                           key={product.slug}
@@ -325,7 +360,16 @@ const SearchLightboxOld: FC<PropType> = (props) => {
                             handleProductClick(product.slug);
                           }}
                           onMouseDown={handleMouseDown}
-                          className="w-full p-1 flex items-center gap-4 border-b border-border hover:bg-secondary transition-colors text-left last:border-b-0"
+                          style={{
+                            width: '100%',
+                            padding: '4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '16px',
+                            borderBottomWidth: '1px',
+                            borderColor: 'hsl(var(--border))',
+                            textAlign: 'left'
+                          }}
                         >
                           {/* Product Image */}
                           {/* <div className="flex-shrink-0">
@@ -335,23 +379,50 @@ const SearchLightboxOld: FC<PropType> = (props) => {
                               className="w-14 h-14 object-cover rounded"
                             />
                           </div> */}
-                          <LazyImageCustomNavbar
-                            src={product.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${product.url}` : product.url}
-                            alt={product.label}
-                            classname="object-contain rounded max-h-14 w-auto" 
-                            width={100} 
-                            height={100} 
-                            lazy
-                            containerheight='h-14'
-                            containerwidth='w-14'
-                            pathname={pathname}/>
 
+                          <div style={{
+                            position: 'relative',
+                            display: 'inline-flex',
+                            height: '56px',
+                            width: '56px',
+                            alignItems: 'center'
+                          }}>
+                            <img
+                              src={product.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${product.url}` : product.url}
+                              alt={product.label}
+                              width={100} 
+                              height={100} 
+                              style={{
+                                objectFit: 'contain',
+                                borderRadius: '4px',
+                                maxHeight: '56px',
+                                width: 'auto'
+                              }}
+                              loading={"lazy"}
+                            />
+                          </div>
+                        
                           {/* Product Info */}
-                          <div className="flex-1 min-w-0">
-                            <div className="font-semibold truncate">
+                          <div style={{
+                            flex: 1,
+                            minWidth: '0px'
+                          }}>
+                            <div style={{
+                              fontWeight: 600,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}>
                               {product.label}
                             </div>
-                            <div className="text-sm text-muted-foreground truncate">
+                            <div style={{
+                              fontSize: '14px',
+                              lineHeight: '1.43',
+                              color: 'hsl(var(--muted-foreground))',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}>
                               {product.info}
                             </div>
                           </div>
@@ -359,12 +430,30 @@ const SearchLightboxOld: FC<PropType> = (props) => {
                       ))}
                     </div>
                   ) : (
-                    <div className="p-12 flex items-center justify-center text-center">
-                      <p className="text-muted-foreground">No products found.</p>
+                    <div style={{
+                      padding: '48px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textAlign: 'center'
+                    }}>
+                      <p 
+                        style={{
+                          color: 'hsl(var(--muted-foreground))'
+                        }}
+                      >
+                        No products found.
+                      </p>
                     </div>
                   )
                 ) : (
-                  <div className="p-0 flex items-center justify-center text-center">
+                  <div style={{
+                    padding: '0px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center'
+                  }}>
                   </div>
                 )}
               </div>
