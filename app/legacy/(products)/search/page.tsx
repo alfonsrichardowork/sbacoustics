@@ -77,7 +77,12 @@ export default async function SearchDriversKitsPage() {
     tempData &&
     <div className="drivers-container">
         <div className="drivers-grid">
-            <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
+            <AllDriversandFiltersProducts
+                data={tempData} 
+                // slider={sliderRows} 
+                // checkbox={checkboxRows} 
+                // showFilters={counterShow!==0}
+            />
         </div>
     </div>
   )

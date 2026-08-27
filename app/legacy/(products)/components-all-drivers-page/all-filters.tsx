@@ -1,368 +1,450 @@
+// "use client";
+
+// import { AllFilterProductsOnlyType } from "@/app/(frontend)/types";
+// import { useState } from "react";
+// import '@/app/legacy/(products)/drivers/driverpage.css'
+
+// interface MainProps {
+//   data: (AllFilterProductsOnlyType)[];
+// };
+
+// const AllDriversandFiltersProducts: React.FC<MainProps> = ({
+//   data
+// }) => {
+
+//     const [activeSlugCompare, setActiveSlugCompare] = useState<string[]>([]);
+//     const [activeNameCompare, setActiveNameCompare] = useState<string[]>([]);
+//     const [activeImgUrlCompare, setActiveImgUrlCompare] = useState<string[]>([]);
+//     const [_1, setRefresh] = useState<string>('');
+//     const [comparisonText, setComparisonText] = useState<string>('')
+
+//     function deleteComparison(slug: string) {
+//         let tempslug: string[] = []
+//         let tempname: string[] = []
+//         let tempimgurl: string[] = []
+//         let tempUrl: string = ''
+//         activeSlugCompare.map((value, index) => {
+//           if (value !== slug) {
+//             tempslug.push(activeSlugCompare[index] ?? '')
+//             tempname.push(activeNameCompare[index] ?? '')
+//             tempimgurl.push(activeImgUrlCompare[index] ?? '')
+//             tempUrl = tempUrl.concat(value, ",");
+//           } else {
+//             if (activeSlugCompare.length === 1) {
+//               tempname = []
+//               tempslug = []
+//             }
+//           }
+//         });
+//         setActiveSlugCompare(tempslug);
+//         setActiveNameCompare(tempname);
+//         setActiveImgUrlCompare(tempimgurl);
+//         // setUrl(tempUrl);
+//         localStorage.setItem("selectedComparison", tempUrl);
+//         setRefresh(slug);
+//       }
+
+//     function addComparison(slug: string, name: string, imgUrl: string) {
+//         if (!activeSlugCompare.includes(slug)) {
+//             const newSlugs = [...activeSlugCompare, slug];
+//             const newNames = [...activeNameCompare, name];
+//             const newImgs = [...activeImgUrlCompare, imgUrl];
+
+//             setActiveSlugCompare(newSlugs);
+//             setActiveNameCompare(newNames);
+//             setActiveImgUrlCompare(newImgs);
+
+//             const tempUrl = newSlugs.join(",") + ",";
+//             localStorage.setItem("selectedComparison", tempUrl);
+//         }
+//     }
+
+//     return ( 
+//         <>
+//             {data.map((value, index) => (
+//                 <div>
+//                 <a key={index} className="product-item" href={`/legacy/products/${value.products.slug}`}>
+//                     <img
+//                         src={value.products.cover_img}
+//                         alt={value.products.name}
+//                         className="product-image"
+//                     />
+
+//                     <div className="product-name">
+//                         {value.products.name}
+//                     </div>
+//                     <button>
+
+//                     </button>
+
+//                 </a>
+//                     <hr className="product-divider" />
+//                 <div
+//                     className={`top-12 right-4 z-30`}
+//                 >
+//                     {activeSlugCompare?.includes(value.products.slug)?
+//                     <div className="hover:text-primary hover:cursor-pointer" onClick={() => {deleteComparison(value.products.slug),
+//                         setComparisonText(value.products.name.concat(" removed from comparison"))
+//                     }}>
+//                         <p>Remove from Comparison</p>
+//                     </div>
+//                     :
+//                     <div className="hover:text-primary hover:cursor-pointer" onClick={() => {
+//                         if (activeSlugCompare.length < 5) {
+//                             addComparison(value.products.slug, value.products.name, value.products.cover_img);
+//                             setComparisonText(value.products.name.concat(" added to comparison"))
+//                         } else {
+//                             setComparisonText('Maximum 5 items can be compared')
+//                         }
+//                     }}>
+//                         <p>Add to Comparison</p>
+//                     </div>
+//                     }
+//                 </div>
+
+
+
+//                 <div
+//                     className={`lg:hidden block absolute top-12 right-4 z-30`}
+//                 >
+//                     {activeSlugCompare?.includes(value.products.slug)?
+//                     <div onClick={() => {deleteComparison(value.products.slug),
+//                         setComparisonText(value.products.name.concat(" removed from comparison"))
+//                     }}>
+//                         <p>Remove from Comparison</p>
+//                     </div>
+//                     :
+//                     <div  onClick={() => {
+//                         if (activeSlugCompare.length < 5) {
+//                             addComparison(value.products.slug, value.products.name, value.products.cover_img);
+//                             setComparisonText(value.products.name.concat(" added to comparison"))
+//                         } else {
+//                             setComparisonText('Maximum 5 items can be compared')
+//                         }
+//                     }}>
+//                         <p>Add to Comparison</p>
+//                     </div>
+//                     }
+//                 </div>
+//                 </div>
+//             ))}
+//             <div style={{
+//                 position: 'absolute'
+//             }}>
+//             {comparisonText !== '' && <p style={{
+//                 position: 'relative',
+//                 right: 0,
+//                 bottom: 0,
+//                 justifyContent: 'center',
+//                 alignItems: 'center',
+//                 textAlign: 'center',
+//                 width: '100%',
+//                 height: '100%',
+//                 zIndex: 0
+//             }}>{comparisonText}</p>}
+//             </div>
+//             <div>
+//                 {activeSlugCompare.length > 0 && 
+//                     <button>
+//                         <a href={`/legacy/comparison`}>Compare Now</a>
+//                     </button>
+//                 }
+//             </div>
+//         </>
+//     );
+// };
+
+// export default AllDriversandFiltersProducts;
+
+
+
+
+
+
+
+
+
 "use client";
 
-import { activeCheckbox, activeSlider, AllFilterProductsOnlyType, CheckBoxData, SliderData } from "@/app/(frontend)/types";
+import { AllFilterProductsOnlyType } from "@/app/(frontend)/types";
 import { useEffect, useState } from "react";
-import '@/app/legacy/(products)/drivers/driverpage.css'
-import { Slider } from "@/components/ui/slider";
-import { cn } from "@/lib/utils";
-import AllDriversProducts from "./all-product";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-
-type SliderSheetValue = {
-    slug: string;
-    value: {
-      min: number;
-      max: number;
-    };
-};
 
 interface MainProps {
-  data: (AllFilterProductsOnlyType)[];
-  slider: (SliderData)[]
-  checkbox: (CheckBoxData)[]
-  showFilters: (boolean)
-};
+  data: AllFilterProductsOnlyType[];
+}
 
-const AllDriversandFiltersProducts: React.FC<MainProps> = ({
-  data, slider, checkbox, showFilters
-}) => {
-    const [allActiveSlider, setAllActiveSlider] = useState<activeSlider[]>([])  
-    const [allActiveCheckbox, setAllActiveCheckbox] = useState<activeCheckbox[]>([])  
-    const [defaultSliderSheet, setdefaultSliderSheet] = useState<SliderSheetValue[]>([])  
-    const [sheetOpenedForSlider, setSheetOpenedForSlider] = useState<boolean>(false)  
-    const [reseted, setReseted] = useState<string>('false')
-    
-    const [sliderValue, setSliderValue] = useState<SliderData[]>([])
-    const [loadingSlider, setLoadingSlider] = useState<boolean>(true)
-
-    useEffect(() => {
-        const fetchDataSlider = async () => {
-            try {
-                let tempSlider: SliderData[] = []
-                slider.map((value) => {
-                    tempSlider.push({
-                        slug: value.slug,
-                        name: value.name,
-                        minIndex: value.minIndex,
-                        maxIndex: value.maxIndex,
-                        min_index: value.min_index,
-                        max_index: value.max_index,
-                        unit: value.unit,
-                        value: value.value
-                    })
-                });
-                
-                setSliderValue(tempSlider)
-                setLoadingSlider(false);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        fetchDataSlider();
-    }, [slider.length > 0]);
-
-    useEffect(() => {
-        if (reseted === 'true') {
-            setAllActiveCheckbox([]);
-            setAllActiveSlider([]);
-          
-            let tempslider = sliderValue
-            tempslider.map((value) => {
-                value.minIndex = value.min_index
-                value.maxIndex = value.max_index
-            })
-            setSliderValue(tempslider)
-
-            setReseted('false');
-        }
-    }, [reseted]);
-
-   const handleSliderChange = (slug: string, value: number[], min_index: number, max_index: number, allVal: number[], parentName: string, unit: string, index: number) => {
-        // setSliderValue((prev) => ({
-        // ...prev,
-        // minIndex: value[0],
-        // maxIndex: value[1],
-        // }))
-        let tempslider = sliderValue
-        if (tempslider[index] && value[0] !== undefined && value[1] !== undefined) {
-            tempslider[index].minIndex = value[0]
-            tempslider[index].maxIndex = value[1]
-            setSliderValue(tempslider)
-        }
-
-        let tempactiveSlider : activeSlider[] = []
-        let sliderisActive : boolean = false
-        if(allActiveSlider.length!= 0){
-          allActiveSlider.map((valueactiveSlider) => {
-            if(valueactiveSlider.slug === slug){
-                sliderisActive = true
-                if(value[0] === min_index && value[1] === max_index){
-
-                }
-                else if(value[0] !== min_index || value[1] !== max_index){
-                    tempactiveSlider.push({
-                    slug,
-                    bottomVal: value[0] ?? 0,
-                    topVal: value[1] ?? 0,
-                    bottomRealVal: allVal[value[0] ?? 0] ?? 0,
-                    topRealVal: allVal[value[1] ?? 0] ?? 0,
-                    parentName,
-                    unit
-                    })
-                }
-            }
-            else{
-              tempactiveSlider.push(valueactiveSlider)
-            }
-          })
-        }
-        else{
-            sliderisActive = true
-            if(value[0] !== min_index || value[1] !== max_index){
-                tempactiveSlider.push({
-                slug,
-                bottomVal: value[0] ?? 0,
-                topVal: value[1] ?? 0,
-                bottomRealVal: allVal[value[0] ?? 0] ?? 0,
-                topRealVal: allVal[value[1] ?? 0] ?? 0,
-                parentName,
-                unit
-                })
-            }
-        }
-        if(!sliderisActive){
-            tempactiveSlider.push({
-                slug,
-                bottomVal: value[0] ?? 0,
-                topVal: value[1] ?? 0,
-                bottomRealVal: allVal[value[0] ?? 0] ?? 0,
-                topRealVal: allVal[value[1] ?? 0] ?? 0,
-                parentName,
-                unit
-            })
-        }
-        setAllActiveSlider(tempactiveSlider)
-      };
+const AllDriversandFiltersProducts: React.FC<MainProps> = ({ data }) => {
+  const [activeSlugCompare, setActiveSlugCompare] = useState<string[]>([]);
+  const [activeNameCompare, setActiveNameCompare] = useState<string[]>([]);
+  const [activeImgUrlCompare, setActiveImgUrlCompare] = useState<string[]>([]);
+  const [_1, setRefresh] = useState<string>("");
+  const [comparisonText, setComparisonText] = useState<string>("");
+  const [timer, setTimer] = useState<boolean>(false)
 
 
-    
-      const handleCheckboxChange = (slug: string, name: string, unit: string, parentName: string) => {
-        if(name!==''){
-            let tempactiveCheckbox: activeCheckbox[] = [...allActiveCheckbox];
-            const index = tempactiveCheckbox.findIndex(item => item.name === name);
-        
-            if (index !== -1) {
-                tempactiveCheckbox.splice(index, 1);
-            } else {
-                let temp: activeCheckbox = {
-                    slug,
-                    name,
-                    unit,
-                    parentName
-                };
-                tempactiveCheckbox.push(temp);
-            }
-        
-            setAllActiveCheckbox(tempactiveCheckbox);
-        }
-    };
-    
-    useEffect(() => {
-        const fetchData = () => {
-          try {
-            let sliderTemp: SliderSheetValue[] = []
-            allActiveSlider.map((value, index) => {
-                sliderTemp.push({
-                    slug: value.slug,
-                    value:{
-                        min: value.bottomVal,
-                        max: value.topVal
-                    }
-                })
-            })
-            setdefaultSliderSheet(sliderTemp)
-            setSheetOpenedForSlider(false)
-          } catch (error) {
-            console.error('Error fetching data:', error);
-          }
-        };
-    
-        fetchData();
-      }, [sheetOpenedForSlider, allActiveSlider]); 
-    
-    return ( 
-        <>
-            {/* {showFilters?
-            
-                !loadingSlider && Array.isArray(sliderValue) ?
-                <div key={'1'} className="hidden md:block pr-4">
-                    <div className="sticky top-24 rounded-md text-black shadow-2xl bg-zinc-100">
-                    <div className="text-lg lg:text-xl font-bold text-center bg-zinc-700 text-white py-2 rounded-t-md">
-                        FILTERS
-                    </div>
-                    <div className="p-4 overflow-auto max-h-[calc(100dvh-12rem)]">
-                        {checkbox.map((valueCheckbox, index) =>
-                        valueCheckbox.value.length > 1 && (
-                            <div key={index} className="grid gap-2 w-full pt-2">
-                            <div className="text-center font-bold text-sm">{valueCheckbox.name}</div>
-                            {valueCheckbox.value.map((choicesVal, indexChoices) => (
-                             <div key={indexChoices} className="flex items-center">
-                             <div className="pr-2 py-1 flex items-center h-full">
-                               <Checkbox
-                                 id={choicesVal}
-                                 checked={allActiveCheckbox.some((item) => item.name === choicesVal)}
-                                 onClick={() =>
-                                   handleCheckboxChange(
-                                     valueCheckbox.slug,
-                                     choicesVal,
-                                     valueCheckbox.unit,
-                                     valueCheckbox.name
-                                   )
-                                 }
-                               />
-                             </div>
-                             <label htmlFor={choicesVal} className="text-start text-sm">
-                               {choicesVal} {valueCheckbox.unit}
-                             </label>
-                           </div>
-                           
-                            ))}
-                            <hr />
-                            </div>
-                        )
-                        )}
-                        {sliderValue.map((sliderValue1, index)=> 
-                            sliderValue1.value.length > 1 &&
-                            <div key={index} className="grid gap-2 w-full pt-2">
-                                <div className="text-center font-bold text-sm">
-                                    {sliderValue1.name}
-                                </div>
-                                <Slider
-                                    value={[sliderValue1.minIndex, sliderValue1.maxIndex]}
-                                    max={sliderValue1.max_index}
-                                    min={sliderValue1.min_index}
-                                    step={1}
-                                    onValueChange={(val) => {
-                                    handleSliderChange(sliderValue1.slug, val, sliderValue1.min_index, sliderValue1.max_index, sliderValue1.value, sliderValue1.name, sliderValue1.unit, index)
-                                    }}
-                                    unit={sliderValue1.unit}
-                                    dataArray={sliderValue1.value}
-                                    className={cn("w-full py-2")}
-                                />
-                                <hr/>
-                            </div>
-                        )}
-                        <div className="pt-2 w-full flex justify-center">
-                            <Button onClick={() => setReseted('true')}>
-                                RESET
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-                </div>
-                :
-                <div key={'1'} className="hidden md:block pr-4">
-                </div>
-            :
-                <></>
-            }
-            <div className='block md:hidden text-center pb-4'>
-                <div className='pb-4'>
-                <Sheet>
-                    <SheetTrigger asChild className="hover:cursor-pointer">
-                    <div className="w-full text-center font-bold text-lg bg-primary p-1 rounded-lg text-background">
-                        Show All Filters
-                    </div>
-                    </SheetTrigger>
-                    <SheetContent side={'left'} className="w-full max-w-[300px] sm:max-w-[300px]">
-                    <SheetTitle/>
-                    <SheetDescription/>
-                    <SheetHeader>
-                        <div className="text-lg lg:text-xl font-bold text-center pb-4">
-                        FILTERS 
-                        </div>
-                    </SheetHeader>
-                    {!loadingSlider && Array.isArray(sliderValue) &&
-                        <ScrollArea className="h-full w-full pb-8 px-2">
-                        {checkbox.map((valueCheckbox, index) =>
-                        valueCheckbox.value.length > 1 && (
-                            <div key={index} className="grid gap-2 w-full pt-2">
-                            <div className="text-center font-bold text-sm">{valueCheckbox.name}</div>
-                            {valueCheckbox.value.map((choicesVal, indexChoices) => (
-                                <div key={indexChoices} className="flex items-center">
-                                <div className="pr-2 py-1 flex items-center h-full">
-                                    <Checkbox
-                                    id={choicesVal}
-                                    checked={allActiveCheckbox.some((item) => item.name === choicesVal)}
-                                    onClick={() => handleCheckboxChange(valueCheckbox.slug, choicesVal, valueCheckbox.unit, valueCheckbox.name)}
-                                    />
-                                </div>
-                                <label htmlFor={choicesVal} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                    {choicesVal} {valueCheckbox.unit}
-                                </label>
-                                </div>
-                            ))}
-                            <hr />
-                            </div>
-                        )
-                        )}
-                        {sliderValue.map((sliderValue1, index)=> 
-                            sliderValue1.value.length > 1 &&
-                            <div key={index} className="grid gap-2 w-full pt-2">
-                                <div className="text-center font-bold text-sm">
-                                    {sliderValue1.name}
-                                </div>
-                                <Slider
-                                    value={[sliderValue1.minIndex, sliderValue1.maxIndex]}
-                                    max={sliderValue1.max_index}
-                                    min={sliderValue1.min_index}
-                                    step={1}
-                                    onValueChange={(val) => {
-                                    handleSliderChange(sliderValue1.slug, val, sliderValue1.min_index, sliderValue1.max_index, sliderValue1.value, sliderValue1.name, sliderValue1.unit, index)
-                                    }}
-                                    unit={sliderValue1.unit}
-                                    dataArray={sliderValue1.value}
-                                    className={cn("w-full py-2")}
-                                />
-                                <hr/>
-                            </div>
-                        )}
-                    <SheetFooter>
-                    <div className="flex justify-center py-4 w-full">
-                            <Button onClick={() => setReseted('true')} className="items-center">
-                                RESET
-                            </Button>
-                    </div>
-                    </SheetFooter>
-                    </ScrollArea>
-                    }
-                    </SheetContent>
-                </Sheet>
-                </div>
-              
-            </div>
-            <AllDriversProducts allActiveSliderVal={allActiveSlider} allActiveCheckboxVal={allActiveCheckbox} products={data}/> */}
-            {data.map((value, index) => (
-                <a key={index} className="product-item" href={`/legacy/products/${value.products.slug}`}>
+  useEffect(() => {
+    timer && setTimeout(() => {
+        setComparisonText('')
+        setTimer(false)
+    }, 2000)
+  }, [timer]);
+
+  function deleteComparison(slug: string) {
+    const tempSlug: string[] = [];
+    const tempName: string[] = [];
+    const tempImgUrl: string[] = [];
+    let tempUrl = "";
+
+    activeSlugCompare.forEach((value, index) => {
+      if (value !== slug) {
+        tempSlug.push(activeSlugCompare[index] ?? "");
+        tempName.push(activeNameCompare[index] ?? "");
+        tempImgUrl.push(activeImgUrlCompare[index] ?? "");
+        tempUrl = tempUrl.concat(value, ",");
+      }
+    });
+
+    setActiveSlugCompare(tempSlug);
+    setActiveNameCompare(tempName);
+    setActiveImgUrlCompare(tempImgUrl);
+
+    localStorage.setItem("selectedComparison", tempUrl);
+    setRefresh(slug);
+  }
+
+  function addComparison(slug: string, name: string, imgUrl: string) {
+    if (!activeSlugCompare.includes(slug)) {
+      const newSlugs = [...activeSlugCompare, slug];
+      const newNames = [...activeNameCompare, name];
+      const newImgs = [...activeImgUrlCompare, imgUrl];
+
+      setActiveSlugCompare(newSlugs);
+      setActiveNameCompare(newNames);
+      setActiveImgUrlCompare(newImgs);
+
+      const tempUrl = newSlugs.join(",") + ",";
+      localStorage.setItem("selectedComparison", tempUrl);
+    }
+  }
+
+  const handleComparison = (
+    slug: string,
+    name: string,
+    imgUrl: string
+  ) => {
+    if (activeSlugCompare.includes(slug)) {
+      deleteComparison(slug);
+      setComparisonText(`${name} removed from comparison`);
+        setTimer(true)
+      return;
+    }
+
+    if (activeSlugCompare.length < 5) {
+      addComparison(slug, name, imgUrl);
+      setComparisonText(`${name} added to comparison`);
+        setTimer(true)
+      return;
+    }
+
+    setComparisonText("Maximum 5 items can be compared");
+    setTimer(true)
+  };
+
+  return (
+    <>
+      {/* <div
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      > */}
+        {data.map((value, index) => {
+            const slug = value.products.slug;
+            const name = value.products.name;
+            const coverImg = value.products.cover_img;
+            const isSelected = activeSlugCompare.includes(slug);
+
+            return (
+                <div
+                key={`${slug}-${index}`}
+                style={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    boxSizing: "border-box",
+                    padding: "4px",
+                }}
+                >
+                <a
+                    href={`/legacy/products/${slug}`}
+                    style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    padding: "4px",
+                    textDecoration: "none",
+                    color: "#222222",
+                    backgroundColor: "#ffffff",
+                    boxSizing: "border-box",
+                    }}
+                >
+                    <div
+                    style={{
+                        width: "140px",
+                        height: "140px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        overflow: "hidden",
+                        boxSizing: "border-box",
+                    }}
+                    >
                     <img
-                        src={value.products.cover_img}
-                        alt={value.products.name}
-                        className="product-image"
+                        src={coverImg}
+                        alt={name}
+                        style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                        display: "block",
+                        }}
                     />
-
-                    <div className="product-name">
-                        {value.products.name}
                     </div>
 
-                    <hr className="product-divider" />
+                    <div
+                    style={{
+                        width: "100%",
+                        marginTop: "4px",
+                        fontSize: "15px",
+                        fontWeight: 600,
+                        lineHeight: "1.3",
+                        wordBreak: "break-word",
+                        textAlign: "center",
+                    }}
+                    >
+                    {name}
+                    </div>
                 </a>
-            ))}
-        </>
-    );
+
+                <div
+                    style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    padding: "4px 0 8px",
+                    }}
+                >
+                    <button
+                    type="button"
+                    onClick={() => handleComparison(slug, name, coverImg)}
+                    style={{
+                        appearance: "none",
+                        border: isSelected ? '0px' : "1px solid #000000",
+                        borderRadius: "3px",
+                        backgroundColor: isSelected ? "#e6001b" : "#ffffff",
+                        color: isSelected ? "#ffffff" : "#000000",
+                        padding: "6px 10px",
+                        fontSize: "12px",
+                        fontWeight: 600,
+                        lineHeight: "1.2",
+                        cursor: "pointer",
+                        textAlign: "center",
+                    }}
+                    >
+                    {isSelected
+                        ? "Remove from Comparison"
+                        : "Add to Comparison"}
+                    </button>
+                </div>
+
+                {/* <hr
+                    style={{
+                    width: "100%",
+                    margin: "0",
+                    border: "0",
+                    borderTop: "1px solid #dddddd",
+                    }}
+                /> */}
+                </div>
+            );
+        })}
+      {/* </div> */}
+
+      {comparisonText !== "" && (
+        <div
+          style={{
+            position: "fixed",
+            right: "20px",
+            bottom: "20px",
+            zIndex: 1000,
+            maxWidth: "320px",
+            padding: "10px 14px",
+            border: "1px solid #d1d5db",
+            borderRadius: "6px",
+            backgroundColor: "#ffffff",
+            color: "#222222",
+            boxShadow: "0 4px 14px rgba(0, 0, 0, 0.15)",
+            fontSize: "14px",
+            lineHeight: "1.4",
+            textAlign: "left",
+          }}
+          className="comparison-text-style"
+        >
+          {comparisonText}
+        </div>
+      )}
+
+      {activeSlugCompare.length > 0 && (
+        <div
+          style={{
+            position: "fixed",
+            left: "50%",
+            bottom: "20px",
+            transform: "translateX(-50%)",
+            zIndex: 999,
+          }}
+        >
+          <a
+            href="/legacy/comparison"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minWidth: "150px",
+              padding: "12px 24px",
+              borderRadius: "5px",
+            //   border: "1px solid #222222",
+              backgroundColor: "#e6001b",
+              color: "#ffffff",
+              textDecoration: "none",
+              fontSize: "14px",
+              fontWeight: 600,
+              lineHeight: "1.2",
+              boxShadow: "0 4px 14px rgba(0, 0, 0, 0.2)",
+              boxSizing: "border-box",
+            }}
+          >
+            Compare Now
+            <span
+              style={{
+                marginLeft: "8px",
+                fontSize: "16px",
+              }}
+            >
+              →
+            </span>
+          </a>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default AllDriversandFiltersProducts;

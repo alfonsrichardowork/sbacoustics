@@ -7,6 +7,7 @@ import getOneBrand from '@/app/(frontend)/actions/get-one-brand';
 import { useEffect, useState } from 'react';
 import getAllSocialMedia from '@/app/(frontend)/actions/get-all-social-media';
 import { SocialIcon } from 'react-social-icons';
+import CookieSettingsOld from './cookie-settings-Old';
 
 export default function FooterOld() {
   const pathname = usePathname()
@@ -44,9 +45,9 @@ export default function FooterOld() {
     
   }, [pathname]); 
   
-  // if (showSettings) {
-  //   return <CookieSettings onClose={() => setShowSettings(false)} />
-  // }
+  if (showSettings) {
+    return <CookieSettingsOld onClose={() => setShowSettings(false)} />
+  }
   return (
     <footer
       style={{

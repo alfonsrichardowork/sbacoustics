@@ -1,0 +1,145 @@
+.cookie-settings-parent {
+    position: fixed;
+    inset: 0px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color-mix(in oklab, var(--color-black) /* #000000 */ 50%, transparent);
+}
+
+.cookie-settings-child-1 {
+    background-color: #ffffff;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 16px rgba(24, 24, 27, 0.18);
+    max-width: 672px;
+    width: 100%;
+    margin-inline: 16px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.cookie-settings-child-header {
+    position: sticky;
+    top: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom-width: 1px;
+    border-color: #e5e7eb;
+    padding-inline: 16px;
+    padding-block: 8px;
+    background-color: #ffffff;
+}
+
+.cookie-settings-title {
+    font-size: 18px;
+    line-height: 1.56;
+    font-weight: 700;
+    color: #111827;
+}
+
+.cookie-settings-content {
+    padding: 16px;
+    margin-block-start: 16px;
+    margin-block-end: 16px;
+}
+
+.cookie-settings-info {
+    font-size: 12px;
+    line-height: 1.33;
+    color: #4b5563;
+}
+
+.cookie-settings-category-parent {
+    border-width: 1px;
+    border-color: #e5e7eb;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.cookie-settings-category-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 12px;
+    line-height: 1.33;
+}
+
+.cookie-settings-category-title {
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.cookie-settings-category-description {
+    color: #4b5563;
+}
+
+.cookie-settings-category-footer {
+    position: sticky;
+    bottom: 0px;
+    border-top-width: 1px;
+    border-color: #e5e7eb;
+    background-color: #f9fafb;
+    padding: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.navbar-mobile {
+    display:none;
+}
+
+
+
+@media (min-width: 768px) {
+    .cookie-settings-parent {
+
+    }
+    
+    .cookie-settings-title {
+        font-size: 24px;
+        line-height: 1.33;
+    }
+
+    .cookie-settings-info {
+        font-size: 14px;
+        line-height: 1.43;
+    }
+    
+    .cookie-settings-category-container {
+        font-size: 14px;
+        line-height: 1.43;
+    }
+    
+    .cookie-settings-category-footer {
+        justify-content: flex-end;
+    }
+}
+
+@media (min-width: 1024px) {
+    .cookie-settings-parent {
+
+    }
+    
+    .navbar-mobile {
+        display: table-cell;
+        vertical-align: middle;
+    }
+}
+
+@media (min-width: 1280px) {
+    .cookie-settings-parent {
+
+    }
+}
+
+@media (min-width: 1536px) {
+    .cookie-settings-parent {
+
+    }
+}

@@ -18,6 +18,7 @@ export default function NewsletterClient() {
   const [status, setStatus] = useState<"success" | "error" | "loading" | "idle"
   >("idle");
   const [responseMsg, setResponseMsg] = useState<string>("");
+  const [finalResponse, setFinalResponse] = useState<string>("");
   const [run, setRun] = useState<boolean>(false);
   const {executeRecaptcha} = useGoogleReCaptcha();
   const { toast } = useToast()
@@ -119,27 +120,29 @@ export default function NewsletterClient() {
   }
 
   useEffect(() => {
-    {run && status === "success" ? responseMsg === 'success'?
-        toast({
-          variant: "default",
-          title: "You have subscribed!",
-          description: "Thank you for subscribing! We'll keep you updated with our latest news and promotions.",
-          className: "bg-green-400 border-none"
-        })
-      : 
-      responseMsg === "already"?
-        toast({
-          variant: "default",
-          title: "This email have already subscribed!",
-          description: "Thank you for your excitement!",
-          className: "bg-yellow-400 border-none"
-        })
-      :
-        toast({
-          variant: "destructive",
-          title: "Email sending failed!",
-          description: "Please try again or contact us directly at info@sbacoustics.com or +6231 748 00 11.",
-        })
+    {run && status === "success" ? 
+      setFinalResponse(responseMsg)
+      // responseMsg === 'success'?
+      //   // toast({
+      //   //   variant: "default",
+      //   //   title: "You have subscribed!",
+      //   //   description: "Thank you for subscribing! We'll keep you updated with our latest news and promotions.",
+      //   //   className: "bg-green-400 border-none"
+      //   // })
+      // : 
+      // responseMsg === "already"?
+      //   toast({
+      //     variant: "default",
+      //     title: "This email have already subscribed!",
+      //     description: "Thank you for your excitement!",
+      //     className: "bg-yellow-400 border-none"
+      //   })
+      // :
+      //   toast({
+      //     variant: "destructive",
+      //     title: "Email sending failed!",
+      //     description: "Please try again or contact us directly at info@sbacoustics.com or +6231 748 00 11.",
+      //   })
         : null
       }
   }, [run, status, toast, responseMsg])
@@ -175,6 +178,7 @@ export default function NewsletterClient() {
               type="email"
               name="email"
               id="email"
+              className="input-style"
               placeholder="What is your email address?"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -192,6 +196,7 @@ export default function NewsletterClient() {
               type="text"
               name="fname"
               id="fname"
+              className="input-style"
               placeholder="What is your first name?"
               value={fname}
               onChange={(e) => setFName(e.target.value)}
@@ -208,6 +213,7 @@ export default function NewsletterClient() {
               type="text"
               name="lname"
               id="lname"
+              className="input-style"
               placeholder="What is your last name?"
               value={lname}
               onChange={(e) => setLName(e.target.value)}
@@ -224,6 +230,7 @@ export default function NewsletterClient() {
               type="text"
               name="country"
               id="country"
+              className="input-style"
               placeholder="What is your country?"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
@@ -249,6 +256,7 @@ export default function NewsletterClient() {
               <input
                 type="checkbox"
                 id="sbacoustics"
+                className="checkbox-style"
                 checked={sbacousticsinterest}
                 onChange={(e) => setSBAcoustics(e.target.checked)}
                 disabled={status === "loading"}
@@ -270,6 +278,7 @@ export default function NewsletterClient() {
               <input
                 type="checkbox"
                 id="sbaudience"
+                className="checkbox-style"
                 checked={sbaudienceinterest}
                 onChange={(e) => setSBAudience(e.target.checked)}
                 disabled={status === "loading"}
@@ -287,6 +296,13 @@ export default function NewsletterClient() {
             <button
               type="submit"
               disabled={status == "loading"}
+              style={{
+                backgroundColor: '#e6001b',
+                color: "#ffffff",
+                padding: '6px',
+                borderRadius: '8px',
+                cursor: 'pointer'
+              }}
             >
                 {status == "loading" ? (
                 <div
@@ -294,14 +310,71 @@ export default function NewsletterClient() {
                     marginRight: '8px'
                   }}
                 >
-                  Loading...
+                  Subscribing...
                 </div>
               ) : (
-                'Send'
+                ''
               )}
-              {status == "loading" ? "Subscribing..." : "Subscribe"}
+              {status == "loading" ? "" : "Subscribe"}
             </button>
           </div>
+          {responseMsg === '' ? (
+            <></>
+          ) : (
+            <div
+              style={{
+                marginTop: '8px',
+                padding: '10px 14px',
+                borderRadius: '4px',
+                fontSize: '14px',
+                lineHeight: '1.5',
+                backgroundColor:
+                  responseMsg === 'success'
+                    ? '#dcfce7'
+                    : responseMsg === 'already'
+                      ? '#fef3c7'
+                      : '#fee2e2',
+                color:
+                  responseMsg === 'success'
+                    ? '#166534'
+                    : responseMsg === 'already'
+                      ? '#92400e'
+                      : '#991b1b',
+                border:
+                  responseMsg === 'success'
+                    ? '1px solid #86efac'
+                    : responseMsg === 'already'
+                      ? '1px solid #fcd34d'
+                      : '1px solid #fca5a5',
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: '600',
+                  marginBottom: '3px',
+                }}
+              >
+                {responseMsg === 'success'
+                  ? 'You have subscribed!'
+                  : responseMsg === 'already'
+                    ? 'This email has already subscribed!'
+                    : 'Email sending failed!'}
+              </div>
+
+              <div
+                style={{
+                  fontSize: '13px',
+                  opacity: 0.9,
+                }}
+              >
+                {responseMsg === 'success'
+                  ? "Thank you for subscribing! We'll keep you updated with our latest news and promotions."
+                  : responseMsg === 'already'
+                    ? 'Thank you for your excitement! This email address is already subscribed to our updates.'
+                    : 'Please try again or contact us directly at info@sbacoustics.com or +6231 748 00 11.'}
+              </div>
+            </div>
+          )}
         </form>
       </div>
       </GoogleCaptchaWrapper>

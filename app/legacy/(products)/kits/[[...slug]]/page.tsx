@@ -352,9 +352,9 @@ export default async function KitsPage({
         <div className="drivers-grid">
             <AllDriversandFiltersProducts
                 data={tempData}
-                slider={sliderRows}
-                checkbox={checkboxRows}
-                showFilters={counterShow !== 0}
+                // slider={sliderRows}
+                // checkbox={checkboxRows}
+                // showFilters={counterShow !== 0}
             />
         </div>
     </div>

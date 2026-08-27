@@ -1,7 +1,7 @@
 "use client"
 
 import { technicals } from "@prisma/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 interface TechnicalData {
     pdfFiles: technicals[];
 }
@@ -9,10 +9,9 @@ interface TechnicalData {
 export const TechnicalClient: React.FC<TechnicalData> = ({
   pdfFiles
 }) => {
-if (typeof window === 'undefined') return;
-const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+    if (typeof window === 'undefined') return;
   return (
-
     <div 
         style={{
             width: '100%',

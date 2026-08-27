@@ -2,6 +2,16 @@
     padding-inline: 32px;
     padding-block: 64px;
 }
+.input-style {
+    background-color: #e8e8e8;
+    width: 100%;
+    padding-inline: 8px;
+    padding-block: 4px;
+}
+.checkbox-style {
+    background-color: #e8e8e8;
+    margin-right: 4px;
+}
 
 
 @media (min-width: 768px) {

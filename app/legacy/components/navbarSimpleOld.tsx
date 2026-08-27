@@ -5,6 +5,8 @@ import { getHref } from "@/app/(frontend)/utils/getHref";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import SearchboxLegacy from "./searchboxold";
+import '@/app/legacy/components/style/all-style.css'
+import SearchLightboxOld from "./searchligthboxold";
 
 export interface NewProduct {
   productId: string;
@@ -410,7 +412,7 @@ export default function NavbarLegacy() {
         setCategories(navbarData)
         setnewProductsMenu(tempNewProduct)
         setnewKitsMenu(tempNewKits)
-        const update = () => setIsDesktop(window.innerWidth >= 900);
+        const update = () => setIsDesktop(window.innerWidth >= 1024);
         update();
         window.addEventListener("resize", update);
         return () => window.removeEventListener("resize", update);
@@ -445,7 +447,7 @@ export default function NavbarLegacy() {
       <div style={navInnerStyle}>
         <div style={rowStyle}>
           {/* brand */}
-          <div style={{ ...cellStyle, width: "25%" }}>
+          <div style={{ ...cellStyle, width: isDesktop ? "25%" : '50%' }}>
             <a
               href={`/legacy${getHref(pathname, '')}`}
               className="legacy-brand"
@@ -486,7 +488,7 @@ export default function NavbarLegacy() {
               </ul>
             </div>
           ) : (
-            <div style={{ ...cellStyle, width: "50%", textAlign: "center" }}>
+            <div style={{ display: "table-cell", verticalAlign: "center", width: "50%", textAlign: "end" }}>
               <button
                 type="button"
                 onClick={() => setMobileOpen(!mobileOpen)}
@@ -506,7 +508,7 @@ export default function NavbarLegacy() {
           )}
 
           {/* search */}
-          <div style={{ ...cellStyle, width: "25%" }}>
+          <div style={{ width: "25%" }} className="navbar-mobile">
             <SearchboxLegacy changeBrand/>
           </div>
         </div>
@@ -514,6 +516,7 @@ export default function NavbarLegacy() {
         {/* mobile drawer */}
         {!isDesktop && mobileOpen ? (
           <div style={{ borderTop: "1px solid " + LINE, marginTop: 10, paddingTop: 6 }}>
+            <SearchLightboxOld changeBrand/>
             {menuNodes.map((node, index) => (
               <MobileNode key={node.href + index} node={node} depth={0} />
             ))}

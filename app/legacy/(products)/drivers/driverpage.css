@@ -8,11 +8,13 @@
 .drivers-grid {
   display: block;
 }
-/* xs: 0px */
-@media (min-width: 0px) {
-  .technical {
-    padding-inline: 24px;
-  }
+
+.technical {
+  padding-inline: 24px;
+}
+
+.comparison-text-style {
+  margin-bottom: 60px;
 }
 
 /* md: 768px */
@@ -24,6 +26,10 @@
 
   .technical {
     padding-inline: 76px;
+  }
+
+  .comparison-text-style {
+    margin-bottom: 0px;
   }
 }
 

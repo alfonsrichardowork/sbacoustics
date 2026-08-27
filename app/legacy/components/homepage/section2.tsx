@@ -93,7 +93,7 @@ export default function Section2({ text }: Section1Props) {
                   }}
                 >
                   <a
-                    href="/legacy/about-us"
+                    href="/legacy/about"
                     style={{
                       display: "inline-block",
                       padding: "8px 16px",

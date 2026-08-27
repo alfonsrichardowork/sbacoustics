@@ -19,23 +19,6 @@ export default async function ContactUsJsonLd() {
   }
   const extractedSrc = extractIframeSrc(brand.maps) ?? '';
   brand.maps = extractedSrc;
-  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": `Contact | SB Acoustics`,
-    "url": `${baseUrl}/contact`,
-    "logo": `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`,
-    "description":"Contact SB Acoustics to ask about our products, distributors, and more.",
-    "contactPoint": [
-      {
-        "@type": "ContactPoint",
-        "telephone": `${brand.telephone}`,
-        "contactType": `${brand.name}`
-      }
-    ]
-  }
 
   return (
     <>
