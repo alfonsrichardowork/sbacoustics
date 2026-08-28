@@ -128,8 +128,9 @@ export default async function KitsPage({
   
     const subslug = slug[0] || null;
     const subsubslug = slug[1] || null;
+    const subsubsubslug = slug[2] || null;
 
-    if(!subslug && !subsubslug){
+    if(!subslug && !subsubslug && !subsubsubslug){
 
         const Kits = await prismadb.allproductcategory.findMany({
             where: {
@@ -155,19 +156,85 @@ export default async function KitsPage({
             select: {
                 category: {
                 select: {
+                    id: true,
                     name: true,
                     thumbnail_url: true,
                     slug: true,
                     priority: true,
+                    under_categoryId: true,
                 },
                 },
             }
         })
+
+        const allCategories = await prismadb.allcategory.findMany({
+            where: {
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select: {
+                id: true,
+                slug: true,
+                under_categoryId: true,
+            },
+        });
+        
+        const categoryMap = new Map(
+            allCategories.map(category => [
+                category.id,
+                category
+            ])
+        );
+        const getCategoryPath = (
+        category: {
+            slug: string;
+            under_categoryId: string | null;
+        }
+            ) => {
+            const slugs = [category.slug];
+
+            let currentParentId = category.under_categoryId;
+
+            while (currentParentId) {
+                const parent = categoryMap.get(currentParentId);
+
+                if (!parent) {
+                break;
+                }
+
+                slugs.push(parent.slug);
+
+                currentParentId = parent.under_categoryId;
+            }
+
+            return '/' + slugs.reverse().join('/');
+        };
+
+
         const uniqueCategories = [
             ...new Map(
                 Kits.map(item => [item.category.slug, item.category])
             ).values()
-        ].sort((a, b) => Number(a.priority) - Number(b.priority))
+            ].map(category => ({
+            ...category,
+            url: getCategoryPath(category),
+            })).sort((a, b) => {
+            const aHasPriority = a.priority !== '';
+            const bHasPriority = b.priority !== '';
+
+            if (!aHasPriority && !bHasPriority) {
+                return a.name.localeCompare(b.name);
+            }
+
+            if (!aHasPriority) {
+                return 1;
+            }
+
+            if (!bHasPriority) {
+                return -1;
+            }
+
+            return Number(a.priority) - Number(b.priority);
+        });
 
         const allKit = await prismadb.allcategory.findFirst({
         where: {
@@ -209,7 +276,7 @@ export default async function KitsPage({
                 "position": index + (allKit ? 2 : 1),
                 "item": {
                 "@type": "Product",
-                "url": `${baseUrl}/kits/${val.slug}`,
+                "url": `${baseUrl}${val.url}`,
                 "name": val.name,
                 "description": `Discover All ${val.name} by SB Acoustics`,
                 "image": val.thumbnail_url.startsWith('/uploads/')
@@ -263,7 +330,7 @@ export default async function KitsPage({
                  {uniqueCategories.map((item, i) => (
                     <div key={i}>
                     <Link 
-                        href={`/kits/${item.slug}`} 
+                        href={item.url}
                         className=" group cursor-pointer space-y-4 block"
                     >
                         <div className="relative aspect-square">
@@ -284,7 +351,7 @@ export default async function KitsPage({
         )
     }
 
-    const [subCatNameResult, subsubCatNameResult] = await Promise.allSettled([
+    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
         await prismadb.allcategory.findFirst({
             where: {
                 slug: subslug ?? '',
@@ -307,12 +374,24 @@ export default async function KitsPage({
                 description: true
             }
         }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
     ]);
 
     const subCatName = subCatNameResult.status === 'fulfilled' ? subCatNameResult.value : { name: '' };
     const subSubCatName = subsubCatNameResult.status === 'fulfilled' ? subsubCatNameResult.value : { name: '' };
+    const subSubsubCatName = subsubsubCatNameResult.status === 'fulfilled' ? subsubsubCatNameResult.value : { name: '' };
     
-    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'kits', subslug, subsubslug);
+    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'kits', subslug, subsubslug, subsubsubslug);
 
     let sliderRows: SliderData[] = [];
     let checkboxRows: CheckBoxData[] = [];
@@ -365,11 +444,11 @@ export default async function KitsPage({
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "ItemList",
-        "url": !subslug ? `${baseUrl}/kits` : subslug === 'all' ? `${baseUrl}/kits/all` : subslug && !subsubslug ? `${baseUrl}/kits/${subslug}` : subslug && subsubslug ? `${baseUrl}/kits/${subslug}/${subsubslug}` : `${baseUrl}/kits`, 
+        "url": !subslug ? `${baseUrl}/kits` : subslug === 'all' ? `${baseUrl}/kits/all` : subslug && !subsubslug && !subsubsubslug ? `${baseUrl}/kits/${subslug}` : subslug && subsubslug && !subsubsubslug ? `${baseUrl}/kits/${subslug}/${subsubslug}` : subslug && subsubslug && subsubsubslug ? `${baseUrl}/kits/${subslug}/${subsubslug}/${subsubsubslug}` : `${baseUrl}/kits`, 
         "name": `${!subslug || subslug === 'all' ? `All Kits` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All Kits`} | SB Acoustics`,
+        : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Kits`} | SB Acoustics`,
         "description": `Found out more about ${!subslug || subslug === 'all' ? `All Kits` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All Kits`} from SB Acoustics!`,
+        : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Kits`} from SB Acoustics!`,
         "itemListElement": tempData?.map((kits: AllFilterProductsOnlyType, index: number) => ({
          "@type": "ListItem",
           "position": index + 1,
@@ -397,7 +476,7 @@ export default async function KitsPage({
       />
       
       <h1 className='sr-only'>{!subslug || subslug === 'all' ? `All Kits` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All Kits`} | SB Acoustics</h1>
+        : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Kits`} | SB Acoustics</h1>
       
       {tempData &&
         <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">

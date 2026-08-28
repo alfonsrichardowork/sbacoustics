@@ -127,8 +127,9 @@ export default async function DriversPage({
   
     const subslug = slug[0] || null;
     const subsubslug = slug[1] || null;
+    const subsubsubslug = slug[2] || null;
 
-    if(!subslug && !subsubslug){
+    if(!subslug && !subsubslug && !subsubsubslug){
         const Drivers = await prismadb.allproductcategory.findMany({
             where: {
                 category: {
@@ -153,19 +154,85 @@ export default async function DriversPage({
             select: {
                 category: {
                 select: {
+                    id: true,
                     name: true,
                     thumbnail_url: true,
                     slug: true,
                     priority: true,
+                    under_categoryId: true,
                 },
                 },
+            },
+        });
+
+        const allCategories = await prismadb.allcategory.findMany({
+            where: {
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select: {
+                id: true,
+                slug: true,
+                under_categoryId: true,
+            },
+        });
+
+        const categoryMap = new Map(
+            allCategories.map(category => [
+                category.id,
+                category
+            ])
+        );
+
+        const getCategoryPath = (
+        category: {
+            slug: string;
+            under_categoryId: string | null;
+        }
+            ) => {
+            const slugs = [category.slug];
+
+            let currentParentId = category.under_categoryId;
+
+            while (currentParentId) {
+                const parent = categoryMap.get(currentParentId);
+
+                if (!parent) {
+                break;
+                }
+
+                slugs.push(parent.slug);
+
+                currentParentId = parent.under_categoryId;
             }
-        })
+
+            return '/' + slugs.reverse().join('/');
+        };
+
         const uniqueCategories = [
-            ...new Map(
-                Drivers.map(item => [item.category.slug, item.category])
-            ).values()
-        ].sort((a, b) => Number(a.priority) - Number(b.priority))
+        ...new Map(
+            Drivers.map(item => [item.category.slug, item.category])
+        ).values()
+        ].map(category => ({
+            ...category,
+            url: getCategoryPath(category),
+            })).sort((a, b) => {
+            const aHasPriority = a.priority !== '';
+            const bHasPriority = b.priority !== '';
+
+            if (!aHasPriority && !bHasPriority) {
+                return a.name.localeCompare(b.name);
+            }
+
+            if (!aHasPriority) {
+                return 1;
+            }
+
+            if (!bHasPriority) {
+                return -1;
+            }
+
+            return Number(a.priority) - Number(b.priority);
+        });
 
         const allDriver = await prismadb.allcategory.findFirst({
         where: {
@@ -207,7 +274,7 @@ export default async function DriversPage({
                 "position": index + (allDriver ? 2 : 1),
                 "item": {
                 "@type": "Product",
-                "url": `${baseUrl}/drivers/${val.slug}`,
+                "url": `${baseUrl}${val.url}`,
                 "name": val.name,
                 "description": `Discover All ${val.name} by SB Acoustics`,
                 "image": val.thumbnail_url.startsWith('/uploads/')
@@ -262,7 +329,7 @@ export default async function DriversPage({
                 {uniqueCategories.map((item, i) => (
                     <div key={i}>
                     <Link 
-                        href={`/drivers/${item.slug}`} 
+                        href={item.url}
                         className=" group cursor-pointer space-y-4 block"
                     >
                         <div className="relative aspect-square">
@@ -283,7 +350,7 @@ export default async function DriversPage({
         );
     }
 
-    const [subCatNameResult, subsubCatNameResult] = await Promise.allSettled([
+    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
         await prismadb.allcategory.findFirst({
             where: {
                 slug: subslug ?? '',
@@ -306,12 +373,24 @@ export default async function DriversPage({
                 description: true
             }
         }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
     ]);
 
     const subCatName = subCatNameResult.status === 'fulfilled' ? subCatNameResult.value : { name: '' };
     const subSubCatName = subsubCatNameResult.status === 'fulfilled' ? subsubCatNameResult.value : { name: '' };
+    const subSubsubCatName = subsubsubCatNameResult.status === 'fulfilled' ? subsubsubCatNameResult.value : { name: '' };
 
-    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'drivers', subslug, subsubslug);
+    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'drivers', subslug, subsubslug, subsubsubslug);
 
     let sliderRows: SliderData[] = [];
     let checkboxRows: CheckBoxData[] = [];
@@ -370,11 +449,11 @@ export default async function DriversPage({
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "ItemList",
-        "url": !subslug ? `${baseUrl}/drivers` : subslug === 'all' ? `${baseUrl}/drivers/all` : subslug && !subsubslug ? `${baseUrl}/drivers/${subslug}` : subslug && subsubslug ? `${baseUrl}/drivers/${subslug}/${subsubslug}` : `${baseUrl}/drivers`, 
+        "url": !subslug ? `${baseUrl}/drivers` : subslug === 'all' ? `${baseUrl}/drivers/all` : subslug && !subsubslug && !subsubsubslug ? `${baseUrl}/drivers/${subslug}` : subslug && subsubslug && !subsubsubslug ? `${baseUrl}/drivers/${subslug}/${subsubslug}` : subslug && subsubslug && subsubsubslug ? `${baseUrl}/drivers/${subslug}/${subsubslug}/${subsubsubslug}` : `${baseUrl}/drivers`, 
         "name": `${!subslug || subslug === 'all' ? `All Drivers` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All Drivers`} | SB Acoustics`,
+        : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Drivers`} | SB Acoustics`,
         "description": `Found out more about ${!subslug || subslug === 'all' ? `All` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All`} Drivers from SB Acoustics!`,
+        : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All`} Drivers from SB Acoustics!`,
         "itemListElement": tempData?.map((driver: AllFilterProductsOnlyType, index: number) => ({
          "@type": "ListItem",
           "position": index + 1,
@@ -401,7 +480,7 @@ export default async function DriversPage({
       />
       
       <h1 className='sr-only'>{!subslug || subslug === 'all' ? `All Drivers` 
-        : subslug && !subsubslug ? subCatName?.name : subslug && subsubslug ? subSubCatName?.name : `All Drivers`} | SB Acoustics</h1>
+        : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Drivers`} | SB Acoustics</h1>
       
       {tempData &&
         <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">

@@ -118,14 +118,6 @@ function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSli
   return Array.from(new Set(arr));
 }
 
-function createData(
-  value: string,
-  url: string,
-  link: string,
-) {
-  return { url, value, link };
-}
-
 export default async function SBAudienceDriversPage({
   params,
 }: {
@@ -135,9 +127,10 @@ export default async function SBAudienceDriversPage({
     const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
   
     const subslug = slug[0] || null;
+    const subsubslug = slug[1] || null;
+    const subsubsubslug = slug[2] || null;
 
-    if(!subslug){
-
+    if(!subslug && !subsubslug && !subsubsubslug){
         const Drivers = await prismadb.allproductcategory.findMany({
             where: {
                 category: {
@@ -159,19 +152,87 @@ export default async function SBAudienceDriversPage({
             select: {
                 category: {
                 select: {
+                    id: true,
                     name: true,
                     thumbnail_url: true,
                     slug: true,
                     priority: true,
+                    under_categoryId: true,
                 },
                 },
             }
         })
+
+        const allCategories = await prismadb.allcategory.findMany({
+            where: {
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+            },
+            select: {
+                id: true,
+                slug: true,
+                under_categoryId: true,
+            },
+        });
+
+        const categoryMap = new Map(
+            allCategories.map(category => [
+                category.id,
+                category
+            ])
+        );
+
+        const getCategoryPath = (
+        category: {
+            slug: string;
+            under_categoryId: string | null;
+        }
+            ) => {
+            const slugs = [category.slug];
+
+            let currentParentId = category.under_categoryId;
+
+            while (currentParentId) {
+                const parent = categoryMap.get(currentParentId);
+
+                if (!parent) {
+                break;
+                }
+
+                slugs.push(parent.slug);
+
+                currentParentId = parent.under_categoryId;
+            }
+
+            return '/' + slugs.reverse().join('/');
+        };
+
+
         const uniqueCategories = [
-            ...new Map(
-                Drivers.map(item => [item.category.slug, item.category])
-            ).values()
-        ].sort((a, b) => Number(a.priority) - Number(b.priority))
+        ...new Map(
+            Drivers.map(item => [item.category.slug, item.category])
+        ).values()
+        ].map(category => ({
+            ...category,
+            url: getCategoryPath(category),
+            })).sort((a, b) => {
+            const aHasPriority = a.priority !== '';
+            const bHasPriority = b.priority !== '';
+
+            if (!aHasPriority && !bHasPriority) {
+                return a.name.localeCompare(b.name);
+            }
+
+            if (!aHasPriority) {
+                return 1;
+            }
+
+            if (!bHasPriority) {
+                return -1;
+            }
+
+            return Number(a.priority) - Number(b.priority);
+        });
+
 
         const allDriver = await prismadb.allcategory.findFirst({
         where: {
@@ -214,7 +275,7 @@ export default async function SBAudienceDriversPage({
                 "position": index + (allDriver ? 2 : 1),
                 "item": {
                 "@type": "Product",
-                "url": `${baseUrl}/sbaudience/drivers/${val.slug}`,
+                "url": `${baseUrl}/sbaudience${val.url}`,
                 "name": val.name,
                 "description": `Discover All ${val.name} by SB Audience`,
                 "image": val.thumbnail_url.startsWith('/uploads/')
@@ -267,7 +328,7 @@ export default async function SBAudienceDriversPage({
                 {uniqueCategories.map((item, i) => (
                     <div key={i}>
                     <Link 
-                        href={`/sbaudience/drivers/${item.slug}`} 
+                        href={`/sbaudience${item.url}`} 
                         className=" group cursor-pointer space-y-4 block"
                     >
                         <div className="relative aspect-square">
@@ -288,7 +349,7 @@ export default async function SBAudienceDriversPage({
         );
     }
 
-    const [subCatNameResult] = await Promise.allSettled([
+    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
         await prismadb.allcategory.findFirst({
             where: {
                 slug: subslug ?? '',
@@ -299,12 +360,36 @@ export default async function SBAudienceDriversPage({
                 name: true,
                 description: true
             }
+        }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
         })
     ]);
 
     const subCatName = subCatNameResult.status === 'fulfilled' ? subCatNameResult.value : { name: '' };
+    const subSubCatName = subsubCatNameResult.status === 'fulfilled' ? subsubCatNameResult.value : { name: '' };
+    const subSubsubCatName = subsubsubCatNameResult.status === 'fulfilled' ? subsubsubCatNameResult.value : { name: '' };
     
-    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_AUDIENCE_ID, 'drivers', subslug, null);
+    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_AUDIENCE_ID, 'drivers', subslug, subsubslug, subsubsubslug);
 
     let sliderRows: SliderData[] = [];
     let checkboxRows: CheckBoxData[] = [];
@@ -355,11 +440,11 @@ export default async function SBAudienceDriversPage({
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "ItemList",
-        "url": !subslug ? `${baseUrl}/sbaudience/drivers` : subslug === 'all' ? `${baseUrl}/sbaudience/drivers/all` : subslug ? `${baseUrl}/sbaudience/drivers/${subslug}` : `${baseUrl}/sbaudience/drivers`, 
+        "url": !subslug ? `${baseUrl}/sbaudience/drivers` : subslug === 'all' ? `${baseUrl}/sbaudience/drivers/all` : subslug && !subsubslug && !subsubsubslug ? `${baseUrl}/sbaudience/drivers/${subslug}` : subslug && subsubslug && !subsubsubslug ? `${baseUrl}/sbaudience/drivers/${subslug}/${subsubslug}` : subslug && subsubslug && subsubsubslug ? `${baseUrl}/sbaudience/drivers/${subslug}/${subsubslug}/${subsubsubslug}` : `${baseUrl}/sbaudience/drivers`, 
         "name": `${!subslug || subslug === 'all' ? `All Drivers` 
-        : subslug ? subCatName?.name : `All Drivers`} | SB Audience`,
+        : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Drivers`} | SB Audience`,
         "description": `Found out more about ${!subslug || subslug === 'all' ? `All` 
-        : subslug ? subCatName?.name : `All`} Drivers from SB Audience!`,
+        : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All`} Drivers from SB Audience!`,
         "itemListElement": tempData?.map((driver: AllFilterProductsOnlyType, index: number) => ({
          "@type": "ListItem",
           "position": index + 1,
@@ -387,7 +472,7 @@ export default async function SBAudienceDriversPage({
       />
       
       <h1 className='sr-only'>{!subslug || subslug === 'all' ? `All Drivers` 
-        : subslug ? subCatName?.name : `All Drivers`} | SB Audience</h1>
+        : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Drivers`} | SB Audience</h1>
       
       {tempData &&
         <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">

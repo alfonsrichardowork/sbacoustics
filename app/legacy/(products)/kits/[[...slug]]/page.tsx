@@ -8,112 +8,6 @@ import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-
 
 export const revalidate = 60;
 
-export async function generateStaticParams() {
-    const connectors = await prismadb.allproductcategory.findMany({
-        where: {
-            category: {
-            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-            },
-            product: {
-            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-            },
-        },
-        select: {
-            productId: true,
-            category: {
-                select: {
-                    slug: true,
-                    type: true,
-                },
-            },
-        },
-    });
-
-    const paths = Array.from(
-    connectors.reduce((map, row) => {
-        const existing = map.get(row.productId) ?? [];
-
-        existing.push({
-        slug: row.category.slug,
-        type: row.category.type,
-        });
-
-        map.set(row.productId, existing);
-
-        return map;
-    }, new Map<string, { slug: string; type: string }[]>()).values()
-    ).flatMap(categories => {
-    const category = categories
-        .filter(c => c.type === 'Category' && c.slug === 'kits')
-        .map(c => c.slug);
-
-    const subCategory = categories
-        .filter(c => c.type === 'Sub Category')
-        .map(c => c.slug);
-
-    const subSubCategory = categories
-        .filter(c => c.type === 'Sub Sub Category')
-        .map(c => c.slug);
-
-    const result: string[] = [];
-
-    // Category only
-    if (!subCategory.length) {
-        return category;
-    }
-
-    // Category + Sub Category
-    for (const cat of category) {
-        for (const sub of subCategory) {
-        if (!subSubCategory.length) {
-            result.push(`${cat}/${sub}`);
-        } else {
-            // Category + Sub Category + Sub Sub Category
-            for (const subSub of subSubCategory) {
-            result.push(`${cat}/${sub}/${subSub}`);
-            }
-        }
-        }
-    }
-
-    return result;
-    });
-
-    const allPaths = new Set<string>();
-
-    for (const path of paths) {
-        const parts = path.split('/');
-
-        // Original path
-        allPaths.add(path);
-
-        // Level 1 (/drivers)
-        if (parts.length >= 1) {
-            allPaths.add(parts[0] ?? '');
-        }
-
-        // Level 2 (/drivers/midranges)
-        if (parts.length >= 2) {
-            allPaths.add(parts.slice(0, 2).join('/'));
-        }
-    }
-
-    const uniqueSortedPaths = [...allPaths].sort((a, b) => {
-        const depthA = a.split('/').length;
-        const depthB = b.split('/').length;
-
-        if (depthA !== depthB) {
-            return depthA - depthB;
-        }
-
-        return a.localeCompare(b);
-    });
-
-    return uniqueSortedPaths.map(path => ({
-        slug: path.split('/').slice(1),
-    }));
-}
-
 function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSliderFilter[] {
   return Array.from(new Set(arr));
 }
@@ -128,8 +22,9 @@ export default async function KitsPage({
   
     const subslug = slug[0] || null;
     const subsubslug = slug[1] || null;
+    const subsubsubslug = slug[2] || null;
 
-    if(!subslug && !subsubslug){
+    if(!subslug && !subsubslug && !subsubsubslug){
 
         const Kits = await prismadb.allproductcategory.findMany({
             where: {
@@ -191,7 +86,23 @@ export default async function KitsPage({
             ...new Map(
                 Kits.map(item => [item.category.slug, item.category])
             ).values()
-        ].sort((a, b) => Number(a.priority) - Number(b.priority))
+            ].sort((a, b) => {
+            const aHasPriority = a.priority !== '';
+            const bHasPriority = b.priority !== '';
+
+            if (!aHasPriority && !bHasPriority) {
+                return a.name.localeCompare(b.name);
+            }
+
+            if (!aHasPriority) {
+                return 1;
+            }
+            if (!bHasPriority) {
+                return -1;
+            }
+
+            return Number(a.priority) - Number(b.priority);
+        });
 
         return(
             <div
@@ -267,7 +178,7 @@ export default async function KitsPage({
         )
     }
 
-    const [subCatNameResult, subsubCatNameResult] = await Promise.allSettled([
+    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
         await prismadb.allcategory.findFirst({
             where: {
                 slug: subslug ?? '',
@@ -290,12 +201,24 @@ export default async function KitsPage({
                 description: true
             }
         }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
     ]);
 
     const subCatName = subCatNameResult.status === 'fulfilled' ? subCatNameResult.value : { name: '' };
     const subSubCatName = subsubCatNameResult.status === 'fulfilled' ? subsubCatNameResult.value : { name: '' };
+    const subSubsubCatName = subsubsubCatNameResult.status === 'fulfilled' ? subsubsubCatNameResult.value : { name: '' };
     
-    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'kits', subslug, subsubslug);
+    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'kits', subslug, subsubslug, subsubsubslug);
 
     let sliderRows: SliderData[] = [];
     let checkboxRows: CheckBoxData[] = [];

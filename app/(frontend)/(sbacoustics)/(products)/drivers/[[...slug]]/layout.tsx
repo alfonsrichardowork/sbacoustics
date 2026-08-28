@@ -12,8 +12,9 @@ export async function generateMetadata({
 
     const subslug = slug[0] || null;
     const subsubslug = slug[1] || null;
+    const subsubsubslug = slug[2] || null;
 
-    if (!subslug && !subsubslug) {
+    if (!subslug && !subsubslug && !subsubsubslug) {
         return {
             title: "All Drivers",
             description: "All Drivers Provided by SB Acoustics",
@@ -99,7 +100,7 @@ export async function generateMetadata({
             },
         };
     }
-    else if (subslug && !subsubslug) {
+    else if (subslug && !subsubslug && !subsubsubslug) {
         const [subCatNameResult] = await Promise.allSettled([
             await prismadb.allcategory.findFirst({
                 where: {
@@ -157,19 +158,8 @@ export async function generateMetadata({
             },
         };
     }
-    else if (subslug && subsubslug) {
-        const [subCatNameResult, subSubCatNameResult] = await Promise.allSettled([
-            await prismadb.allcategory.findFirst({
-                where: {
-                    slug: subslug ?? '',
-                    type: 'Sub Category',
-                    brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-                },
-                select:{
-                    name: true,
-                    description: true
-                }
-            }),
+    else if (subslug && subsubslug && !subsubsubslug) {
+        const [subSubCatNameResult] = await Promise.allSettled([
             await prismadb.allcategory.findFirst({
                 where: {
                     slug: subsubslug ?? '',
@@ -225,6 +215,66 @@ export async function generateMetadata({
             },
             alternates: {
             canonical: `${baseUrl}/drivers/${subslug}/${subsubslug}`,
+            },
+        }
+    }
+    else if (subslug && subsubslug && subsubsubslug) {
+        const [subSubsubCatNameResult] = await Promise.allSettled([
+            await prismadb.allcategory.findFirst({
+                where: {
+                    slug: subsubsubslug ?? '',
+                    type: 'Sub Sub Category',
+                    brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+                },
+                select:{
+                    name: true,
+                    description: true
+                }
+            }),
+        ]);
+        const subSubsubCatName = subSubsubCatNameResult.status === 'fulfilled' ? subSubsubCatNameResult.value : { name: '' };
+        return {
+            title: `${subSubsubCatName?.name}`,
+            description: `Found out more about ${subSubsubCatName?.name} Drivers from SB Acoustics!`,
+            applicationName: 'SB Acoustics',
+            keywords: [`${subSubsubCatName?.name}`, `${subSubsubCatName?.name} SB Acoustics`, `${subSubsubCatName?.name} Drivers by SB Acoustics`],
+            openGraph: {
+            title: `${subSubsubCatName?.name}`,
+            description: `Found out more about ${subSubsubCatName?.name} Drivers from SB Acoustics!`,
+            url: `${baseUrl}/drivers/${subslug}/${subsubslug}/${subsubsubslug}`,
+            siteName: "SB Acoustics",
+            images: [
+                // {
+                //   url: logo_URL,
+                //   width: 1200,
+                //   height: 630,
+                //   alt: subCatName.name.concat(" ", seriesName.name," Series"),
+                // },
+                {
+                url: logo_URL,
+                width: 800,
+                height: 800,
+                alt: `SB Acoustics Logo`,
+                },
+            ],
+            locale: 'id_ID',
+            type: "website",
+            },
+            twitter: {
+            card: "summary_large_image",
+            title: `${subSubsubCatName?.name}`,
+            description: `Found out more about ${subSubsubCatName?.name} Drivers from SB Acoustics!`,
+            images: [
+                {
+                url: logo_URL,
+                width: 800,
+                height: 800,
+                alt: `SB Acoustics Logo`,
+                },
+            ],
+            },
+            alternates: {
+            canonical: `${baseUrl}/drivers/${subslug}/${subsubslug}/${subsubsubslug}`,
             },
         }
     }

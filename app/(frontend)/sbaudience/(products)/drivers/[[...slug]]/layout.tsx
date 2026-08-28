@@ -12,8 +12,10 @@ export async function generateMetadata({
 
 
     const subslug = slug[0] || null;
+    const subsubslug = slug[1] || null;
+    const subsubsubslug = slug[2] || null;
 
-    if (!subslug) {
+    if (!subslug && !subsubslug && !subsubsubslug) {
         return {
             title: "All Drivers",
             description: "All Drivers Provided by SB Audience",
@@ -99,7 +101,7 @@ export async function generateMetadata({
             },
         };
     }
-    else if (subslug) {
+    else if (subslug && !subsubslug && !subsubsubslug) {
         const [subCatNameResult] = await Promise.allSettled([
             await prismadb.allcategory.findFirst({
                 where: {
@@ -156,6 +158,126 @@ export async function generateMetadata({
             },
             alternates: {
             canonical: `${baseUrl}/sbaudience/drivers/${subslug}`,
+            },
+        };
+    }
+    else if (subslug && subsubslug && !subsubsubslug) {
+        const [subSubCatNameResult] = await Promise.allSettled([
+            await prismadb.allcategory.findFirst({
+                where: {
+                    slug: subsubslug ?? '',
+                    type: 'Sub Sub Category',
+                    brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
+                },
+                select:{
+                    name: true,
+                    description: true
+                }
+            }),
+        ]);
+        const subSubCatName = subSubCatNameResult.status === 'fulfilled' ? subSubCatNameResult.value : { name: '' };
+        return {
+            title: `${subSubCatName?.name}`,
+            description: `Found out more about ${subSubCatName?.name} from SB Audience!`,
+            applicationName: 'SB Audience',
+            keywords: [`${subSubCatName?.name}`, `${subSubCatName?.name} SB Audience`, `${subSubCatName?.name} Products by SB Audience`],
+            openGraph: {
+            title: `${subSubCatName?.name}`,
+            description: `Found out more about ${subSubCatName?.name} from SB Audience!`,
+            url: `${baseUrl}/sbaudience/drivers/${subslug}/${subsubslug}`,
+            siteName: "SB Audience",
+            images: [
+                // {
+                //   url: logo_URL,
+                //   width: 1200,
+                //   height: 630,
+                //   alt: subCatName?.name.name.concat(" ", seriesName.name," Series"),
+                // },
+                {
+                url: logo_URL,
+                width: 800,
+                height: 800,
+                alt: `SB Audience Logo`,
+                },
+            ],
+            locale: 'id_ID',
+            type: "website",
+            },
+            twitter: {
+            card: "summary_large_image",
+            title: `${subSubCatName?.name}`,
+            description: `Found out more about ${subSubCatName?.name} from SB Audience!`,
+            images: [
+                {
+                url: logo_URL,
+                width: 800,
+                height: 800,
+                alt: `SB Audience Logo`,
+                },
+            ],
+            },
+            alternates: {
+            canonical: `${baseUrl}/sbaudience/drivers/${subslug}/${subsubslug}`,
+            },
+        };
+    }
+    else if (subslug && subsubslug && subsubsubslug) {
+        const [subSubsubCatNameResult] = await Promise.allSettled([
+            await prismadb.allcategory.findFirst({
+                where: {
+                    slug: subsubsubslug ?? '',
+                    type: 'Sub Sub Category',
+                    brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
+                },
+                select:{
+                    name: true,
+                    description: true
+                }
+            }),
+        ]);
+        const subSubsubCatName = subSubsubCatNameResult.status === 'fulfilled' ? subSubsubCatNameResult.value : { name: '' };
+        return {
+            title: `${subSubsubCatName?.name}`,
+            description: `Found out more about ${subSubsubCatName?.name} from SB Audience!`,
+            applicationName: 'SB Audience',
+            keywords: [`${subSubsubCatName?.name}`, `${subSubsubCatName?.name} SB Audience`, `${subSubsubCatName?.name} Products by SB Audience`],
+            openGraph: {
+            title: `${subSubsubCatName?.name}`,
+            description: `Found out more about ${subSubsubCatName?.name} from SB Audience!`,
+            url: `${baseUrl}/sbaudience/drivers/${subslug}/${subsubslug}/${subsubsubslug}`,
+            siteName: "SB Audience",
+            images: [
+                // {
+                //   url: logo_URL,
+                //   width: 1200,
+                //   height: 630,
+                //   alt: subCatName?.name.name.concat(" ", seriesName.name," Series"),
+                // },
+                {
+                url: logo_URL,
+                width: 800,
+                height: 800,
+                alt: `SB Audience Logo`,
+                },
+            ],
+            locale: 'id_ID',
+            type: "website",
+            },
+            twitter: {
+            card: "summary_large_image",
+            title: `${subSubsubCatName?.name}`,
+            description: `Found out more about ${subSubsubCatName?.name} from SB Audience!`,
+            images: [
+                {
+                url: logo_URL,
+                width: 800,
+                height: 800,
+                alt: `SB Audience Logo`,
+                },
+            ],
+            },
+            alternates: {
+            canonical: `${baseUrl}/sbaudience/drivers/${subslug}/${subsubslug}/${subsubsubslug}`,
             },
         };
     }

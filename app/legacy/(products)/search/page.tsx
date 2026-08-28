@@ -18,7 +18,7 @@ export default async function SearchDriversKitsPage() {
     };
     
 
-    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'search', null, null);
+    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'search', null, null, null);
 
     let sliderRows: SliderData[] = [];
     let checkboxRows: CheckBoxData[] = [];

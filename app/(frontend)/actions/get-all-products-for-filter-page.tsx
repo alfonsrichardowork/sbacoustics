@@ -5,13 +5,13 @@ import prismadb from "@/lib/prismadb";
 import { coaxialssbacoustics, compressiondriversbaudience, hornsbaudience, othercategoriessbacoustics, othercategoriessbaudience, othercategoriessbautomotive, tweeterssbacoustics } from "@/app/(frontend)/utils/filterPageProps";
 import { cookies } from "next/headers";
 
-export async function getAllProductsForFilterPage (brand: string | undefined, slug: string, subslug: string | null, subsubslug: string | null): Promise<[AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>]> {
+export async function getAllProductsForFilterPage (brand: string | undefined, slug: string, subslug: string | null, subsubslug: string | null, subsubsubslug: string | null): Promise<[AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>]> {
 
   let allSizes : string[] = []
-  const hasAnySlug = Boolean(subslug || subsubslug);
+  const hasAnySlug = Boolean(subslug || subsubslug || subsubsubslug);
   let finalProductsIds: string[] = []
 
-  if(subslug && subslug === 'all' && !subsubslug) {
+  if(subslug && subslug === 'all' && !subsubslug && !subsubsubslug) {
     const productIdbyCat =  await prismadb.allproductcategory.findMany({
       where:{
         category: {
@@ -28,7 +28,7 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
 
     finalProductsIds = productIdbyCat.map((value) => value.productId)
   }
-  else if (subslug && subslug !== 'all' && !subsubslug) {
+  else if (subslug && subslug !== 'all' && !subsubslug && !subsubsubslug) {
     const productIdbyCat =  await prismadb.allproductcategory.findMany({
       where:{
         category: {
@@ -63,7 +63,7 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
 
     finalProductsIds = productIdsCat.filter(id => productIdsSubCat.includes(id));
   }
-  else if(subslug && subsubslug) {
+  else if(subslug && subsubslug && !subsubsubslug) {
         const productIdbyCat =  await prismadb.allproductcategory.findMany({
         where:{
           category: {
@@ -115,6 +115,77 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
     const productIdsSubSubSubCat = productIdbySubSubCat.map((value) => value.productId)
 
     finalProductsIds = finalProductIds.filter(id => productIdsSubSubSubCat.includes(id));
+  }
+  else if(subslug && subsubslug && subsubsubslug) {
+        const productIdbyCat =  await prismadb.allproductcategory.findMany({
+        where:{
+          category: {
+          slug: slug,
+          type: {
+              in: ['Category']
+          }
+          }
+      },
+      select:{
+          productId: true
+      }
+    })
+
+    const productIdsCat = productIdbyCat.map((value) => value.productId)
+
+    const productIdbySubCat =  await prismadb.allproductcategory.findMany({
+      where:{
+        category: {
+          slug: subslug,
+          type: {
+            in: ['Sub Category']
+          }
+        }
+      },
+      select:{
+          productId: true
+      }
+    })
+
+    const productIdsSubCat = productIdbySubCat.map((value) => value.productId)
+
+    const finalProductIds = productIdsCat.filter(id => productIdsSubCat.includes(id));
+
+    const productIdbySubSubCat =  await prismadb.allproductcategory.findMany({
+      where:{
+        category: {
+          slug: subsubslug,
+          type: {
+            in: ['Sub Sub Category']
+          }
+        }
+      },
+      select:{
+          productId: true
+      }
+    })
+
+    const productIdsSubSubSubCat = productIdbySubSubCat.map((value) => value.productId)
+
+    const tempfinalProductsIds = finalProductIds.filter(id => productIdsSubSubSubCat.includes(id));
+    
+    const productIdbySubSubSubCat =  await prismadb.allproductcategory.findMany({
+      where:{
+        category: {
+          slug: subsubsubslug,
+          type: {
+            in: ['Sub Sub Category']
+          }
+        }
+      },
+      select:{
+          productId: true
+      }
+    })
+
+    const productIdsSubSubSubSubCat = productIdbySubSubSubCat.map((value) => value.productId)
+
+    finalProductsIds = tempfinalProductsIds.filter(id => productIdsSubSubSubSubCat.includes(id));
   }
 
 

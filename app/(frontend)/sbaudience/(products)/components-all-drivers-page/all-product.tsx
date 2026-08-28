@@ -124,14 +124,17 @@ const AllDriversProducts: React.FC<MainProps> = ({
             let tempShowed: AllFilterProductsOnlyType[][] = [];
             if(params.length === 2){
                 if(params[1] === 'all') {
-                    setFinalBreadcrumb([params[0] ?? '', 'All Drivers'])
+                    setFinalBreadcrumb([params[0] ? params[0] === 'drivers' ? 'Drivers' : 'Kits' : '', params[0] === 'kits' ? 'All Kits' : 'All Drivers'])
                 }
                 else{
-                    setFinalBreadcrumb([params[0] ?? '', await getSubCatNameBySlug(pathname, params[1] ?? '')])
+                    setFinalBreadcrumb([params[0] ? params[0] === 'drivers' ? 'Drivers' : 'Kits' : '', await getSubCatNameBySlug(pathname, params[1] ?? '')])
                 }
             }
-            else if (params.length > 2){
-                setFinalBreadcrumb([params[0] ?? '', await getSubCatNameBySlug(pathname, params[1] ?? ''), await getSubSubCatNameBySlug(pathname, params[2] ?? '')])
+            else if (params.length === 3){
+                setFinalBreadcrumb([params[0] ? params[0] === 'drivers' ? 'Drivers' : 'Kits' : '', await getSubCatNameBySlug(pathname, params[1] ?? ''), await getSubSubCatNameBySlug(pathname, params[2] ?? '')])
+            }
+            else if (params.length > 3){
+                setFinalBreadcrumb([params[0] ? params[0] === 'drivers' ? 'Drivers' : 'Kits' : '', await getSubCatNameBySlug(pathname, params[1] ?? ''), await getSubSubCatNameBySlug(pathname, params[2] ?? ''), await getSubSubCatNameBySlug(pathname, params[3] ?? '')])
             }
             if (allActiveSliderVal.length !== 0) {
                 allActiveSliderVal.forEach((slider, indexslider) => {
@@ -461,26 +464,33 @@ const AllDriversProducts: React.FC<MainProps> = ({
                             {finalBreadcrumb.map((value, index) => {
                                 const isLast = index === finalBreadcrumb.length - 1;
 
+                                // Build URL from the actual slug/params values
+                                const href = `/sbaudience/${params.slice(0, index + 1).join('/')}`;
+
                                 let breadcrumbItem = null;
 
                                 if (index === 0) {
-                                    if (value === 'drivers') {
-                                        breadcrumbItem = (
-                                            <BreadcrumbItem key={index}>
-                                                <BreadcrumbLink href={`/sbaudience/drivers`}>Drivers</BreadcrumbLink>
-                                            </BreadcrumbItem>
-                                        );
-                                    }
+                                    breadcrumbItem = (
+                                        <BreadcrumbItem key={index}>
+                                            <BreadcrumbLink href="/sbaudience/drivers">
+                                                {value}
+                                            </BreadcrumbLink>
+                                        </BreadcrumbItem>
+                                    );
                                 } else if (isLast) {
                                     breadcrumbItem = (
                                         <BreadcrumbItem key={index}>
-                                            <BreadcrumbPage className="text-foreground/50">{value}</BreadcrumbPage>
+                                            <BreadcrumbPage>
+                                                {value}
+                                            </BreadcrumbPage>
                                         </BreadcrumbItem>
                                     );
                                 } else {
                                     breadcrumbItem = (
                                         <BreadcrumbItem key={index}>
-                                            <BreadcrumbLink href={`/sbaudience/drivers/${params[index]}`}>{value}</BreadcrumbLink>
+                                            <BreadcrumbLink href={href}>
+                                                {value}
+                                            </BreadcrumbLink>
                                         </BreadcrumbItem>
                                     );
                                 }
