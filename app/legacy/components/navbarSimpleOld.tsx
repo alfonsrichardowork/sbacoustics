@@ -908,8 +908,11 @@ export default function NavbarLegacy() {
               borderTop: "1px solid " + LINE,
               marginTop: 10,
               paddingTop: 6,
-              maxHeight: "calc(100dvh - 84px)",
-              overflowY: "auto",
+              // Keep an explicit height fallback for older Safari, which does not
+              // understand `dvh` and may not create a scroll container from max-height alone.
+              height: "calc(100vh - 84px)",
+              maxHeight: "calc(100vh - 84px)",
+              overflowY: "scroll",
               WebkitOverflowScrolling: "touch",
               overscrollBehavior: "contain",
             }}
