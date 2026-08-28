@@ -7,7 +7,7 @@ interface BrandChoiceProps {
   url: string
 }
 
-export default function BrandChoiceOldClient({ text, url }: BrandChoiceProps) {
+export default function BrandChoiceOldSBAudienceClient({ text, url }: BrandChoiceProps) {
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
@@ -77,7 +77,7 @@ export default function BrandChoiceOldClient({ text, url }: BrandChoiceProps) {
           width: "33.333%",
           height: "100%",
           background:
-            "linear-gradient(to left, #18181b, transparent)",
+            "linear-gradient(to left, #e4e4e7, transparent)",
         }}
       />
 
@@ -104,8 +104,8 @@ export default function BrandChoiceOldClient({ text, url }: BrandChoiceProps) {
             }}
           >
             <img
-              src="/images/sbacoustics/logo_sbaudience.png"
-              alt="SB Audience Logo"
+                src="/images/sbacoustics/logo_sbacoustics_black_clean.webp"
+                  alt="SB Acoustics Logo"
               width="500"
               height="500"
               fetchPriority="high"
@@ -124,7 +124,7 @@ export default function BrandChoiceOldClient({ text, url }: BrandChoiceProps) {
             }}
           >
             <a
-              href="/legacy/sbaudience"
+              href="/legacy"
               style={{
                 display: "inline-block",
                 boxSizing: "border-box",
@@ -151,7 +151,7 @@ export default function BrandChoiceOldClient({ text, url }: BrandChoiceProps) {
       display: isMobile ? "none" : "block",
       overflow: "hidden",
       height: "50vh",
-      backgroundColor: "#18181b",
+      backgroundColor: "#e4e4e7",
     }}
   >
     <div
@@ -171,7 +171,7 @@ export default function BrandChoiceOldClient({ text, url }: BrandChoiceProps) {
       >
         <div
           style={{
-            color: "#ffffff",
+            color: "#000000",
             fontSize: "14px",
             textAlign: "left",
           }}

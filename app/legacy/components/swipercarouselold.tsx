@@ -109,169 +109,10 @@ const SwiperCarouselOld: React.FC<PropType> = ({ slides, brand }) => {
 
   const safeCurrentIndex = Math.min(currentIndex, slides.length - 1);
   const currentSlide = slides[safeCurrentIndex];
-  const goToPrevious = () => {
-    setCurrentIndex((previousIndex) => {
-        if (previousIndex <= 0) {
-        return slides.length - 1;
-        }
-
-        return previousIndex - 1;
-    });
-    };
-
-    const goToNext = () => {
-    setCurrentIndex((previousIndex) => {
-        if (previousIndex >= slides.length - 1) {
-        return 0;
-        }
-
-        return previousIndex + 1;
-    });
-    };
-
+ 
   if (!currentSlide) {
     return null;
   }
-
-  const imageUrl = currentSlide.featuredImgUrl.startsWith("/uploads/")
-    ? `${process.env.NEXT_PUBLIC_ROOT_URL}${currentSlide.featuredImgUrl}`
-    : currentSlide.featuredImgUrl;
-
-  const titleFontSize = isMobile ? "24px" : "48px";
-  const descriptionFontSize = isMobile ? "12px" : "14px";
-
-  const slideContainerStyle: React.CSSProperties = {
-    position: "relative",
-    width: "100%",
-    height: "100vh",
-    minHeight: "100vh",
-    overflow: "hidden",
-  };
-
-  const imageStyle: React.CSSProperties = {
-    display: "block",
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    objectPosition: "center center",
-  };
-
-  const overlayStyle: React.CSSProperties = {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: "100%",
-    boxSizing: "border-box",
-
-    paddingTop: isMobile ? "40px" : "80px",
-    paddingRight: isMobile ? "16px" : "64px",
-    paddingBottom: isMobile ? "16px" : "32px",
-    paddingLeft: isMobile ? "16px" : "64px",
-
-    display: "flex",
-    alignItems: "flex-end",
-
-    /*
-     * Simple gradient supported by old Safari versions.
-     */
-    background:
-      "linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.95))",
-  };
-
-  const contentStyle: React.CSSProperties = {
-    width: "auto",
-    maxWidth: "100%",
-  };
-
-  const titleStyle: React.CSSProperties = {
-    margin: 0,
-    padding: 0,
-    marginBottom: "16px",
-
-    fontSize: titleFontSize,
-    lineHeight: "1.1",
-    fontWeight: 700,
-
-    color: "#ffffff",
-    textAlign: "left",
-  };
-
-  const descriptionStyle: React.CSSProperties = {
-    margin: 0,
-    padding: 0,
-    marginBottom: "16px",
-
-    fontSize: descriptionFontSize,
-    lineHeight: "1.5",
-
-    color: "#ffffff",
-    textAlign: "left",
-
-    display: isMobile ? "block" : "block",
-  };
-
-  const productButtonStyle: React.CSSProperties = {
-    display: "inline-block",
-
-    padding: "8px 16px",
-
-    border: "none",
-    borderRadius: "4px",
-
-    backgroundColor: "#e6001b",
-    color: "#ffffff",
-
-    fontSize: "14px",
-    lineHeight: "20px",
-    fontWeight: 500,
-
-    textDecoration: "none",
-
-    cursor: pathname.includes("sbautomotive")
-      ? "default"
-      : "pointer",
-
-    boxSizing: "border-box",
-  };
-
-  const paginationStyle: React.CSSProperties = {
-    position: "absolute",
-
-    left: "50%",
-    bottom: isMobile ? "16px" : "16px",
-
-    transform: "translateX(-50%)",
-
-    display: "flex",
-    alignItems: "center",
-
-    gap: isMobile ? "8px" : "8px",
-
-    zIndex: 20,
-  };
-
-  const paginationButtonStyle = (
-    active: boolean
-  ): React.CSSProperties => ({
-    width: isMobile ? "10px" : "16px",
-    height: isMobile ? "10px" : "16px",
-
-    padding: 0,
-    margin: 0,
-
-    border: "none",
-    borderRadius: "50%",
-
-    backgroundColor: active ? "#e6001b" : "#52525b",
-
-    cursor: "pointer",
-
-    /*
-     * Avoid transform/transition/modern CSS here.
-     * This keeps the dots very old-browser friendly.
-     */
-  });
   
   return (
     <>
@@ -300,179 +141,6 @@ const SwiperCarouselOld: React.FC<PropType> = ({ slides, brand }) => {
           ...
         </div>
       )}
-{/* 
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "100vh",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          key={currentIndex}
-          style={{
-            ...slideContainerStyle,
-            opacity: 1,
-          }}
-        >
-          <img
-            src={imageUrl}
-            alt={currentSlide.name}
-            style={imageStyle}
-            data-testid={
-              isMobile
-                ? "featured-products-swiper-mobile-main-image"
-                : "featured-products-swiper-desktop-main-image"
-            }
-          />
-
-          <div style={overlayStyle}>
-            <div style={contentStyle}>
-              <h3
-                style={titleStyle}
-                data-testid={
-                  isMobile
-                    ? `featured-products-swiper-mobile-title-${currentIndex + 1}`
-                    : `featured-products-swiper-desktop-title-${currentIndex + 1}`
-                }
-              >
-                {currentSlide.name}
-              </h3>
-
-              <div
-                style={descriptionStyle}
-                data-testid={
-                  isMobile
-                    ? "featured-products-swiper-mobile-description"
-                    : "featured-products-swiper-desktop-description"
-                }
-              >
-                {currentSlide.featuredDesc}
-              </div>
-
-              <div>
-                {pathname.includes("sbautomotive") ? (
-                  <button
-                    type="button"
-                    disabled
-                    style={{
-                      ...productButtonStyle,
-                      opacity: 0.6,
-                    }}
-                  >
-                    Product Page
-                  </button>
-                ) : (
-                  <a
-                    href={
-                      brand === "sbaudience"
-                        ? `/sbaudience/products/${currentSlide.slug}`
-                        : `/products/${currentSlide.slug}`
-                    }
-                    style={productButtonStyle}
-                    data-testid={
-                      isMobile
-                        ? "featured-products-swiper-mobile-button"
-                        : "featured-products-swiper-desktop-button"
-                    }
-                  >
-                    Product Page
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {slides.length > 1 && (
-          <div style={paginationStyle}>
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => {
-                  setCurrentIndex(index);
-                }}
-                aria-label={`Go to slide ${index + 1}`}
-                data-testid={
-                  isMobile
-                    ? `featured-products-swiper-mobile-pagination-dot-${index + 1}`
-                    : `featured-products-swiper-desktop-pagination-dot-${index + 1}`
-                }
-                data-index={index}
-                style={paginationButtonStyle(
-                  currentIndex === index
-                )}
-              />
-            ))}
-          </div>
-        )}
-
-        <button
-        type="button"
-        onClick={goToPrevious}
-        aria-label="Previous slide"
-        style={{
-            position: "absolute",
-            left: isMobile ? "10px" : "24px",
-            top: "50%",
-
-            width: isMobile ? "40px" : "50px",
-            height: isMobile ? "40px" : "50px",
-
-            padding: 0,
-
-            border: "none",
-            // borderRadius: "50%",
-
-            // backgroundColor: "rgba(0, 0, 0, 0.5)",
-            color: isMobile ? "#ffffff" : "#000000",
-
-            cursor: "pointer",
-
-            zIndex: 30,
-
-            fontSize: isMobile ? "40px" : "50px",
-            lineHeight: isMobile ? "40px" : "50px",
-            textAlign: "center",
-        }}
-        >
-        &#8249;
-        </button>
-
-        <button
-        type="button"
-        onClick={goToNext}
-        aria-label="Next slide"
-        style={{
-            position: "absolute",
-            right: isMobile ? "10px" : "24px",
-            top: "50%",
-
-            width: isMobile ? "40px" : "50px",
-            height: isMobile ? "40px" : "50px",
-
-            padding: 0,
-
-            border: "none",
-            // borderRadius: "50%",
-
-            // backgroundColor: "rgba(0, 0, 0, 0.5)",
-            color: isMobile ? "#ffffff" : "#000000",
-
-            cursor: "pointer",
-
-            zIndex: 30,
-
-            fontSize: isMobile ? "40px" : "50px",
-            lineHeight: isMobile ? "40px" : "50px",
-            textAlign: "center",
-        }}
-        >
-        &#8250;
-        </button>
-      </div> */}
 
 
 
@@ -540,8 +208,10 @@ const SwiperCarouselOld: React.FC<PropType> = ({ slides, brand }) => {
 
             color: "#000000",
 
-            background:
-              "linear-gradient(to left, rgba(255,255,255,0.7), rgba(255,255,255,0.6), rgba(255,255,255,0))",
+            background: pathname.includes('sbaudience') ? 
+            "linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.6), rgba(0,0,0,0))"
+            :
+            "linear-gradient(to left, rgba(255,255,255,0.7), rgba(255,255,255,0.6), rgba(255,255,255,0))",
 
             zIndex: 50,
           }}
@@ -563,7 +233,7 @@ const SwiperCarouselOld: React.FC<PropType> = ({ slides, brand }) => {
                 fontWeight: 700,
 
                 textAlign: "left",
-                color: "#000000",
+                color: pathname.includes('sbaudience') ? "#ffffff" : "#000000",
               }}
             >
               {item.name}
@@ -580,7 +250,7 @@ const SwiperCarouselOld: React.FC<PropType> = ({ slides, brand }) => {
                   lineHeight: "1.5",
 
                   textAlign: "left",
-                  color: "#000000",
+                  color: pathname.includes('sbaudience') ? "#ffffff" : "#000000",
                 }}
               >
                 {item.featuredDesc}

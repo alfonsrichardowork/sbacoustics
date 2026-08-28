@@ -6,19 +6,12 @@ import prismadb from "@/lib/prismadb";
 import { SocialIcon } from 'react-social-icons';
 import BrandChoice from "@/app/(frontend)/sbaudience/components-homescreen/BrandChoice";
 import { FeaturedProducts } from "@/app/(frontend)/types";
+import SwiperCarouselOld from "../components/swipercarouselold";
+import BrandChoiceOldSBAudience from "./components/homepage/BrandChoiceoldsbaudience";
 
 export const revalidate = 60;
 
 export default async function LandingPageSBAudience() {
-  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-  
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "SB Audience | Pro Speakers",
-    "url": `${baseUrl}/sbaudience`,
-    "logo": `${baseUrl}/images/sbaudience/logo_sbaudience.webp`,
-  };
 
   const [productsResult, brandImagesResult] = await Promise.allSettled([
       await prismadb.product.findMany({
@@ -79,21 +72,42 @@ export default async function LandingPageSBAudience() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <div className="relative">
-        <h1 className='sr-only'>Welcome to SB Audience Official Website!</h1>
+  <div
+    style={{
+      position: "relative",
+      width: "100%",
+    }}
+  >
         
-        <div className="sticky top-0 w-full h-dvh flex items-center justify-center">
-          <div className="top-0 left-0 w-full z-10">
-            <SwiperCarousel slides={allFeaturedProducts}  brand='sbaudience'/>
+    <div
+      style={{
+        position: "sticky",
+        top: 0,
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          top: 0,
+          left: 0,
+          width: "100%",
+          zIndex: 10,
+        }}
+      >
+        <SwiperCarouselOld slides={allFeaturedProducts} brand='sbaudience'/>
           </div>
         </div>
 
-        <div className="relative h-[50vh]">
-          <BrandChoice />
+      <div
+        style={{
+          height: "50vh",
+        }}
+      >
+          <BrandChoiceOldSBAudience />
         </div>
       
 
