@@ -1,10 +1,8 @@
-
 import { AllFilterProductsOnlyType, CheckBoxData, ChildSpecificationProp, SliderData } from '@/app/(frontend)/types';
 import prismadb from '@/lib/prismadb';
-import AllDriversProducts from '../../components-all-drivers-page/all-product';
-import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
-import '@/app/legacy/(products)/drivers/driverpage.css'
 import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-filters';
+import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
+import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
 
 export const revalidate = 60;
 
@@ -12,21 +10,18 @@ function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSli
   return Array.from(new Set(arr));
 }
 
-export default async function KitsPage({
+export default async function DriversPage({
   params,
 }: {
   params: Promise<{ slug?: string[] }>;
 }) {
-    const { slug = [] } = await params;
-    const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-  
+    const { slug = [] } = await params;  
     const subslug = slug[0] || null;
     const subsubslug = slug[1] || null;
     const subsubsubslug = slug[2] || null;
 
     if(!subslug && !subsubslug && !subsubsubslug){
-
-        const Kits = await prismadb.allproductcategory.findMany({
+        const Drivers = await prismadb.allproductcategory.findMany({
             where: {
                 category: {
                 shown_on_all_drivers_page: true,
@@ -41,7 +36,7 @@ export default async function KitsPage({
                 allCat: {
                     some: {
                     category: {
-                        slug: 'kits',
+                        slug: 'drivers',
                     },
                     },
                 },
@@ -50,43 +45,95 @@ export default async function KitsPage({
             select: {
                 category: {
                 select: {
+                    id: true,
                     name: true,
                     thumbnail_url: true,
                     slug: true,
                     priority: true,
+                    under_categoryId: true,
                 },
                 },
             }
         })
-        const allKitsImage = await prismadb.allproductcategory.findFirst({
+
+        
+        const allCategories = await prismadb.allcategory.findMany({
+            where: {
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select: {
+                id: true,
+                slug: true,
+                under_categoryId: true,
+            },
+        });
+
+        const categoryMap = new Map(
+            allCategories.map(category => [
+                category.id,
+                category
+            ])
+        );
+
+        const getCategoryPath = (
+        category: {
+            slug: string;
+            under_categoryId: string | null;
+        }
+            ) => {
+            const slugs = [category.slug];
+
+            let currentParentId = category.under_categoryId;
+
+            while (currentParentId) {
+                const parent = categoryMap.get(currentParentId);
+
+                if (!parent) {
+                break;
+                }
+
+                slugs.push(parent.slug);
+
+                currentParentId = parent.under_categoryId;
+            }
+
+            return '/' + slugs.reverse().join('/');
+        };
+
+        const allDriverImage = await prismadb.allproductcategory.findFirst({
             where: {
                 category: {
                     shown_on_all_drivers_page: true,
                     brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
                     type: 'Category',
-                    slug: 'kits'
+                    slug: 'drivers'
                 },
             },
             select: {
                 category: {
                     select: {
+                        id: true,
                         name: true,
                         thumbnail_url: true,
                         slug: true,
                         priority: true,
+                        under_categoryId: true,
                     },
                 },
             }
         })
-        const allKitsImageCategories = allKitsImage ? [allKitsImage.category] : []
+        const allDriverImageCategories = allDriverImage ? [allDriverImage.category] : []
         const uniqueCategories = [
             ...new Map(
-                allKitsImageCategories.map(item => [item.slug, item])
+                allDriverImageCategories.map(item => [item.slug, item])
             ).values(),
             ...new Map(
-                Kits.map(item => [item.category.slug, item.category])
+                Drivers.map(item => [item.category.slug, item.category])
             ).values()
-            ].sort((a, b) => {
+            ].map(category => ({
+            ...category,
+            url: getCategoryPath(category),
+            })).sort((a, b) => {
             const aHasPriority = a.priority !== '';
             const bHasPriority = b.priority !== '';
 
@@ -105,6 +152,55 @@ export default async function KitsPage({
         });
 
         return(
+            // <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4"> 
+            //     <script
+            //     type="application/ld+json"
+            //     dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            //     /> 
+            //     <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            //     <h1 className="sr-only">All Drivers | SB Acoustics</h1>
+            //     {allDriver &&
+            //         <div>
+            //         <Link 
+            //             href='/drivers/all'
+            //             className=" group cursor-pointer space-y-4 block"
+            //         >
+            //             <div className="relative aspect-square">
+            //             <LazyImageClickable
+            //                 src={allDriver.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${allDriver.thumbnail_url}` : allDriver.thumbnail_url} 
+            //                 alt={`${allDriver.name} by SB Acoustics`}
+            //                 width={1000}
+            //                 height={1000}
+            //             />
+            //             </div>
+                        
+            //             <h2 className="font-bold text-xl text-center">All {allDriver.name}</h2>
+            //         </Link>
+            //         </div>
+            //     }
+
+
+            //     {uniqueCategories.map((item, i) => (
+            //         <div key={i}>
+            //         <Link 
+            //             href={`/drivers/${item.slug}`} 
+            //             className=" group cursor-pointer space-y-4 block"
+            //         >
+            //             <div className="relative aspect-square">
+            //             <LazyImageClickable
+            //                 src={item.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}` : item.thumbnail_url} 
+            //                 alt={`${item.name} by SB Acoustics`}
+            //                 width={1000}
+            //                 height={1000}
+            //             />
+            //             </div>
+                        
+            //             <h2 className="font-bold text-xl text-center">{item.name}</h2>
+            //         </Link>
+            //         </div>
+            //     ))}
+            //     </div>
+            // </div>
             <div
                 style={{
                     padding: "16px",
@@ -126,7 +222,7 @@ export default async function KitsPage({
                         }}
                     >
                         <a
-                        href={`/legacy/kits/${item.slug === 'kits' ? 'all' : item.slug}`}
+                        href={`/legacy${item.slug === 'drivers' ? '/drivers/all' : item.url}`}
                         style={{
                             display: "block",
                             textDecoration: "none",
@@ -139,6 +235,18 @@ export default async function KitsPage({
                             width: "100%",
                             }}
                         >
+                            {/* <div
+                                style={{
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                                > */}
 
                                 <img
                                     src={
@@ -174,8 +282,8 @@ export default async function KitsPage({
                     </div>
                     ))}
                 </div>
-            </div>
-        )
+                </div>
+        );
     }
 
     const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
@@ -217,8 +325,8 @@ export default async function KitsPage({
     const subCatName = subCatNameResult.status === 'fulfilled' ? subCatNameResult.value : { name: '' };
     const subSubCatName = subsubCatNameResult.status === 'fulfilled' ? subsubCatNameResult.value : { name: '' };
     const subSubsubCatName = subsubsubCatNameResult.status === 'fulfilled' ? subsubsubCatNameResult.value : { name: '' };
-    
-    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'kits', subslug, subsubslug, subsubsubslug);
+
+    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'drivers', subslug, subsubslug, subsubsubslug);
 
     let sliderRows: SliderData[] = [];
     let checkboxRows: CheckBoxData[] = [];
@@ -251,7 +359,13 @@ export default async function KitsPage({
             else{
             const allValueWithoutDuplicates: string[] = removeDuplicates(allSpecsCombined[key].map((val) => val.value));
             const allValueWithoutDuplicatesAndNone = allValueWithoutDuplicates.filter(number => number != '');
-            const sortedValues = allValueWithoutDuplicatesAndNone.sort()
+            let sortedValues = []
+            if(key === 'nominal-impedance') {
+                sortedValues = allValueWithoutDuplicatesAndNone.slice().sort((a, b) => Number(a) - Number(b));
+            }
+            else {
+                sortedValues = allValueWithoutDuplicatesAndNone.sort()
+            }
             if(sortedValues.length>1){
                 counterShow+=1
             }
@@ -268,8 +382,8 @@ export default async function KitsPage({
         }
     }
 
-
-    return( 
+   
+  return( 
     tempData &&
     <div className="drivers-container">
         <div className="drivers-grid">
@@ -281,6 +395,7 @@ export default async function KitsPage({
             />
         </div>
     </div>
-    );
+    
+  );
 }
 

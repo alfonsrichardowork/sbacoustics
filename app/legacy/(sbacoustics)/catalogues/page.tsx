@@ -1,5 +1,5 @@
 import prismadb from "@/lib/prismadb";
-import '@/app/legacy/catalogues/catalogues.css'
+import '@/app/legacy/(sbacoustics)/catalogues/catalogues.css'
 export const revalidate = 60;
 
 export default async function CataloguesPage() {

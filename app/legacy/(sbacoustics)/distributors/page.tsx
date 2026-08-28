@@ -1,5 +1,5 @@
 import prismadb from "@/lib/prismadb";
-import { DistributorMapWrapper } from "../components/distributorMapWrapper";
+import { DistributorMapWrapper } from "../../components/distributorMapWrapper";
 
 export const revalidate = 60;
 

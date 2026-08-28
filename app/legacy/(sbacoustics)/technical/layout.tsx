@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import React from 'react'
-import '@/app/legacy/(products)/drivers/driverpage.css'
+import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';

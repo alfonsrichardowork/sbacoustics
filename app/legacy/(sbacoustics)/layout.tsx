@@ -1,7 +1,7 @@
 import React from 'react'
 import { Noto_Sans } from 'next/font/google';
-import NavbarSimpleOld from './components/navbarSimpleOld';
-import FooterOld from './components/footerOld';
+import NavbarSimpleOld from '../components/navbarSimpleOld';
+import FooterOld from '../components/footerOld';
 import { CookieProvider } from '@/lib/cookies-context';
 // import NavbarOld from './components/navbarOld';
 const font = Noto_Sans({ subsets: ['latin'] })

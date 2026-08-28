@@ -1,7 +1,7 @@
 'use client'
 
 import { FormEvent, useRef, useState } from 'react'
-import '@/app/legacy/contact/contact.css'
+import '@/app/legacy/(sbacoustics)/contact/contact.css'
 
 type Brand = {
   name?: string | null

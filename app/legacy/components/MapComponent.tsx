@@ -736,7 +736,7 @@ import { usePathname } from 'next/navigation'
 import '@/app/css/styles.scss'
 //@ts-ignore
 import '@/app/globals.css'
-import '@/app/legacy/distributors/distributor-map.css'
+import '@/app/legacy/(sbacoustics)/distributors/distributor-map.css'
 
 interface DistributorProps {
   asianDistributors: distributors[]

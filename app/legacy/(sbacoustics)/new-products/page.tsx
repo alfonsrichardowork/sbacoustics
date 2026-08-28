@@ -1,5 +1,5 @@
 import prismadb from '@/lib/prismadb';
-import '@/app/legacy/(products)/drivers/driverpage.css'
+import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
 
 export const revalidate = 60;
 

@@ -1,5 +1,6 @@
+
 import prismadb from "@/lib/prismadb";
-import Contact from "../components/contact";
+import Contact from "../../components/contact";
 
 export const revalidate = 60;
 

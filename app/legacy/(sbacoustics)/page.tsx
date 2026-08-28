@@ -1,11 +1,11 @@
-import SwiperCarouselOld from "./components/swipercarouselold";
+import SwiperCarouselOld from "../components/swipercarouselold";
 import prismadb from "@/lib/prismadb";
-import { FeaturedProducts } from "../(frontend)/types";
-import Section1 from "./components/homepage/section1";
-import Section2 from "./components/homepage/section2";
-import Section3 from "./components/homepage/section3";
-import Section4 from "./components/homepage/section4";
-import BrandChoiceOld from "./components/homepage/BrandChoiceOld";
+import Section1 from "../components/homepage/section1";
+import Section2 from "../components/homepage/section2";
+import Section3 from "../components/homepage/section3";
+import Section4 from "../components/homepage/section4";
+import BrandChoiceOld from "../components/homepage/BrandChoiceOld";
+import { FeaturedProducts } from "@/app/(frontend)/types";
 
 
 export default async function oldPage() {

@@ -1,5 +1,6 @@
-import SwiperCarouselAboutUsOld from "../components/swipercarouselaboutusold";
-import '@/app/legacy/about/about.css'
+
+import '@/app/legacy/(sbacoustics)/about/about.css'
+import SwiperCarouselAboutUsOld from '../../components/swipercarouselaboutusold';
 
 export default function AboutUsPage() {
   const years = new Date().getFullYear() - 1981

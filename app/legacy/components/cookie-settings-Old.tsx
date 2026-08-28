@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useCookiePreferences } from '@/lib/cookies-context'
 import '@/app/legacy/components/style/all-style.css'
-import { Switch } from '@/components/ui/switch'
 
 interface CookieSettingsProps {
   onClose: () => void

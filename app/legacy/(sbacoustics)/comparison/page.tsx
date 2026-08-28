@@ -4,7 +4,7 @@ import { SingleProducts } from '@/app/(frontend)/types';
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import getProductComparison from '@/app/(frontend)/actions/get-product-comparison';
-import '@/app/legacy/comparison/comparison.css'
+import '@/app/legacy/(sbacoustics)/comparison/comparison.css'
 
 function groupAllSpecifications(products: SingleProducts[]) {
   const grouped: Record<string, Record<string, Record<string, string>>> = {};
