@@ -51,22 +51,25 @@ const ComparisonPageSBAcoustics = () => {
     const [hasOverflow, setHasOverflow] = useState(false);
     const [allSpecsUsed, setAllSpecsUsed] = useState<Record<string, Record<string, Record<string, string>>>>({});
     
-    useEffect(() => {
-        const el = scrollContainerRef.current;
-        if (!el) return;
+ useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
 
-        const checkOverflow = () => {
-            setHasOverflow(el.scrollWidth > el.clientWidth);
-        };
+    const checkOverflow = () => {
+        setHasOverflow(el.scrollWidth > el.clientWidth);
+    };
 
-        const resizeObserver = new ResizeObserver(checkOverflow);
-        resizeObserver.observe(el);
+    checkOverflow();
 
-        // Run once immediately
-        checkOverflow();
+    const timer = window.setTimeout(checkOverflow, 100);
 
-        return () => resizeObserver.disconnect();
-    }, [finalFetchedProducts, loading]);
+    window.addEventListener("resize", checkOverflow);
+
+    return () => {
+        window.clearTimeout(timer);
+        window.removeEventListener("resize", checkOverflow);
+    };
+}, [finalFetchedProducts, loading]);
 
     // Handle mouse down event to start dragging
     const handleMouseDown = (e: React.MouseEvent) => {
