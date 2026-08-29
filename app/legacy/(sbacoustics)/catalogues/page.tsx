@@ -9,7 +9,7 @@ export default async function CataloguesPage() {
     }
   });
   return (
-    <div className="catalogues-parent">
+    <div className="catalogues-parent-page">
       <h1 style={{
         fontSize: '30px',
         lineHeight: '1.2',
@@ -20,7 +20,7 @@ export default async function CataloguesPage() {
         Catalogues
       </h1>
       {pdfFiles.map((item, index) => (
-        <div className="catalogues-child" key={index}>
+        <div className="catalogues-child-page" key={index}>
           <div>
             <div style={{
               position: 'relative',
@@ -44,7 +44,7 @@ export default async function CataloguesPage() {
               />
             </div>
           </div>
-          <div className="catalogues-files">
+          <div className="catalogues-files-page">
             <a href={`${item.pdf}`} target="_blank" style={{
               fontWeight: 700,
               display: 'flex',

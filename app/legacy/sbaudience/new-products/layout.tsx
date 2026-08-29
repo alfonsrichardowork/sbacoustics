@@ -2,18 +2,18 @@ import { Metadata } from "next"
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-  const logo_URL = `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`
+  const logo_URL = `${baseUrl}/images/sbaudience/logo_sbaudience.webp`
 
   return {
     title: "New Products",
-    description: "All New Products by SB Acoustics",
-    applicationName: 'SB Acoustics',
-    keywords: ["SB Acoustics New Products", "New Products by SB Acoustics"],
+    description: "All New Products by SB Audience",
+    applicationName: 'SB Audience',
+    keywords: ["SB Audience New Products", "New Products by SB Audience"],
     openGraph: {
-      title: "New Products | SB Acoustics",
-      description: "All New Products by SB Acoustics",
-      url: `${baseUrl}/new-products`,
-      siteName: "SB Acoustics",
+      title: "New Products | SB Audience",
+      description: "All New Products by SB Audience",
+      url: `${baseUrl}/sbaudience/new-products`,
+      siteName: "SB Audience",
       images: [
         // {
         //   url: logo_URL,
@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: logo_URL,
           width: 800,
           height: 800,
-          alt: `SB Acoustics Logo`,
+          alt: `SB Audience Logo`,
         },
       ],
       locale: 'id_ID',
@@ -33,24 +33,24 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: "New Products | SB Acoustics",
-      description: "All New Products by SB Acoustics",
+      title: "New Products | SB Audience",
+      description: "All New Products by SB Audience",
       images: [
         {
           url: logo_URL,
           width: 800,
           height: 800,
-          alt: `SB Acoustics Logo`,
+          alt: `SB Audience Logo`,
         },
       ],
     },
     alternates: {
-      canonical: `${baseUrl}/new-products`,
+      canonical: `${baseUrl}/sbaudience/new-products`,
     },
   }
 }
 
-export default function NewProductsPageLayout({
+export default function NewProductsSBAudiencePageLayout({
     children,
   }: {
     children: React.ReactNode

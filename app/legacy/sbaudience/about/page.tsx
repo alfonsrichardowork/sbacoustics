@@ -1,26 +1,20 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
-import SwiperCarouselAboutUs from "@/components/single-product-page/swipercarouselaboutus";
+
+import '@/app/legacy/(sbacoustics)/about/about.css'
+import SwiperCarouselAboutUsOld from "../../components/swipercarouselaboutusold";
 
 export default function AboutUsSBAudience() {
   return (
     <>
       
-      <div className="bg-white">
-        <h1 className="sr-only">About Us | SB Audience</h1>
-      {/* Hero Section */}
-
-      {/* SB Audience Section */}
-      <section className="md:py-20 py-10 bg-white">
-        <div>
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-16 gap-8 items-center">
-              <div className="md:order-1 order-2">
-                <div className="md:flex hidden items-center mb-6">
-                  <h2 className="text-3xl md:text-4xl font-bold text-black">SB Audience</h2>
+      <div style={{ backgroundColor: "#ffffff" }}>
+        <section className="about-us-section about-us-section-white">
+          <div className="about-us-container">
+            <div className="about-us-two-column about-us-align-center about-us-gap-large">
+              <div className="about-us-copy about-us-copy-first">
+                <div className="about-us-desktop-heading">
+                  <h2 className="about-us-title">SB Audience</h2>
                 </div>
-                <div className="space-y-6 text-slate-600">
+                <div className="about-us-text-stack">
                   <h3>
                     SB Audience is a premier professional transducer brand built on the heavy industrial foundation of Sinar Baja Electric. Sitting side by side with sister brand SB Acoustics, SB Audience acts as the group's dedicated professional sound reinforcement division aimed at the global market.
                   </h3>
@@ -29,11 +23,11 @@ export default function AboutUsSBAudience() {
                   </h3>
                 </div>
               </div>
-              <div className="relative md:order-2 order-1">
-                <div className="md:hidden flex items-start mb-6">
-                  <div className="text-3xl md:text-4xl font-bold text-black">SB Audience</div>
+              <div className="about-us-carousel about-us-carousel-first">
+                <div className="about-us-mobile-heading">
+                  <div className="about-us-title">SB Audience</div>
                 </div>
-                <SwiperCarouselAboutUs images={[
+                <SwiperCarouselAboutUsOld images={[
                   {
                     src: "/images/sbacoustics/aboutus/SB_Acoustics_1.jpg",
                     alt: "SB Audience About Us 1"
@@ -58,19 +52,17 @@ export default function AboutUsSBAudience() {
               </div>
             </div>
           </div>
-        </div>
       </section>
 
-      {/* Sinar Baja Electric Section */}
-      <section className="md:py-20 py-10 bg-zinc-100">
-        <div>
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-16 gap-8 items-center">
-              <div>
-                <div className="md:hidden flex items-start mb-6">
-                  <div className="text-3xl md:text-4xl font-bold text-black">Sinar Baja Electric</div>
+
+        <section className="about-us-section about-us-section-zinc">
+          <div className="about-us-container">
+            <div className="about-us-two-column about-us-align-center about-us-gap-large">
+              <div className="about-us-carousel">
+                <div className="about-us-mobile-heading">
+                  <div className="about-us-title">Sinar Baja Electric</div>
                 </div>
-                <SwiperCarouselAboutUs images={[
+                <SwiperCarouselAboutUsOld images={[
                   {
                     src:"/images/sbacoustics/aboutus/Sinar_baja_electric_1.jpg",
                     alt:"Sinar Baja Electric About Us 1"
@@ -93,11 +85,11 @@ export default function AboutUsSBAudience() {
                   }
                 ]} />
               </div>
-              <div className="order-1 md:order-2">
-                <div className="md:flex hidden items-center mb-6">
-                  <h2 className="text-3xl md:text-4xl font-bold text-black">Sinar Baja Electric</h2>
+              <div className="about-us-copy about-us-copy-second">
+                <div className="about-us-desktop-heading">
+                  <h2 className="about-us-title">Sinar Baja Electric</h2>
                 </div>
-                <div className="space-y-6 text-slate-600">
+                <div className="about-us-text-stack">
                   <h3>
                     Founded in 1981, we've grown into a leading name in loudspeaker manufacturing, with a reputation for high-quality products that meet the demands of discerning customers worldwide. Four decades of craftsmanship remain the backbone of everything we build.
                   </h3>
@@ -108,84 +100,40 @@ export default function AboutUsSBAudience() {
                     We continue to invest in cutting-edge R&D, quality control, and mass production — pushing the boundaries of what's possible in transducer design and manufacturing.
                   </h3>
                 </div>
-                <div className="mt-8">
-                  <Button variant={"default"} asChild>
-                    <Link href="https://sinarbajaelectric.com/">
-                      Learn More About Sinar Baja Electric
-                    </Link>
-                  </Button>
+                <div className="about-us-button-wrap">
+                  <a className="about-us-button" href="https://sinarbajaelectric.com/">Learn More About Sinar Baja Electric</a>
                 </div>
               </div>
             </div>
           </div>
-        </div>
       </section>
 
-      {/* Mission & Values */}
-      <section className="md:py-20 py-10 bg-white">
-        <div>
-          <div className="container mx-auto max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">Our Mission & Values</h2>
-              <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+        <section className="about-us-section about-us-section-white">
+          <div className="about-us-container">
+            <div className="about-us-mission-header">
+              <h2 className="about-us-title">Our Mission & Values</h2>
+              <p>
                 We dedicate passion and purpose to create and deliver high-valued products, where end user and OEM customer expectation are exceeded
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              <Card className="border-none shadow-none bg-zinc-100 rounded-none">
-                <img
-                  src="/images/sbacoustics/aboutus/Acoustics_excellence.jpg"
-                  alt="SB Audience About Us Mission 1"
-                  width={500}
-                  height={400}
-                  className="w-full h-fit object-cover"
-                />
-                <CardContent className="p-8 text-center bg-zinc-100">
-                  <h3 className="text-xl font-bold mb-4 text-black">Acoustic Excellence</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    Combining innovative Danish design expertise with precision Indonesian manufacturing, to create transducers deliver uncompromised acoustic performance
+            <div className="about-us-cards">
+              {[["Acoustics_excellence.jpg", "Acoustic Excellence", "Combining innovative Danish design expertise with precision Indonesian manufacturing, to create transducers deliver uncompromised acoustic performance"], ["Innovation.jpg", "Innovation", `Over ${new Date().getFullYear() - 1981} years of experience in manufacturing, paired with cutting-edge R&D, enables us to continuously advance technology in transducers and manufacturing`], ["global_reach.jpg", "Global Reach", "Serving prestigious brands worldwide across Europe, Australia, Asia, and the United States through our comprehensive distribution network"]].map(([image, title, text]) => 
+              <article className="about-us-card" key={title}>
+                <img src={`/images/sbacoustics/aboutus/${image}`} alt={`SB Acoustics About Us ${title}`} width={500} height={400} />
+                <div className="about-us-card-content">
+                  <h3>
+                    {title}
+                  </h3>
+                  <p>
+                    {text}
                   </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-none shadow-none bg-zinc-100 rounded-none">
-                <img
-                  src="/images/sbacoustics/aboutus/Innovation.jpg"
-                  alt="SB Audience About Us Mission 2"
-                  width={500}
-                  height={400}
-                  className="w-full h-fit object-cover"
-                />
-                <CardContent className="p-8 text-center bg-zinc-100">
-                  <h3 className="text-xl font-bold mb-4 text-black">Innovation</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    Over {new Date().getFullYear() - 1981} years of experience in manufacturing, paired with cutting-edge R&D, enables us to continuously advance technology in transducers and manufacturing
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-none shadow-none bg-zinc-100 rounded-none">
-                <img
-                  src="/images/sbacoustics/aboutus/global_reach.jpg"
-                  alt="SB Audience About Us Mission 3"
-                  width={500}
-                  height={400}
-                  className="w-full h-fit object-cover"
-                />
-                <CardContent className="p-8 text-center bg-zinc-100">
-                  <h3 className="text-xl font-bold mb-4 text-black">Global Reach</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    Serving prestigious brands worldwide across Europe, Australia, Asia, and the United States through our comprehensive distribution network
-                  </p>
-                  <br/>
-                </CardContent>
-              </Card>
+                </div>
+              </article>
+            )}
             </div>
           </div>
-        </div>
       </section>
-
     </div>
     </>
   );

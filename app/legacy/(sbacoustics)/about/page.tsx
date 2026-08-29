@@ -7,7 +7,6 @@ export default function AboutUsPage() {
   return (
     <>
       <div style={{ backgroundColor: "#ffffff" }}>
-        <h1 className="about-us-sr-only">About Us | SB Acoustics</h1>
 
         <section className="about-us-section about-us-section-white">
           <div className="about-us-container">

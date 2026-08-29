@@ -1,8 +1,8 @@
 import { AllFilterProductsOnlyType, CheckBoxData, ChildSpecificationProp, SliderData } from '@/app/(frontend)/types';
 import prismadb from '@/lib/prismadb';
-import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-filters';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
 import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
+import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-filters';
 
 export const revalidate = 60;
 
@@ -10,12 +10,14 @@ function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSli
   return Array.from(new Set(arr));
 }
 
-export default async function DriversPage({
+export default async function SBAudienceDriversPage({
   params,
 }: {
   params: Promise<{ slug?: string[] }>;
 }) {
-    const { slug = [] } = await params;  
+    const { slug = [] } = await params;
+    const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+  
     const subslug = slug[0] || null;
     const subsubslug = slug[1] || null;
     const subsubsubslug = slug[2] || null;
@@ -25,14 +27,11 @@ export default async function DriversPage({
             where: {
                 category: {
                 shown_on_all_drivers_page: true,
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
                 type: { not: 'Category' }
                 },
                 product: {
-                slug: {
-                    not: 'dw50'
-                },
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
                 allCat: {
                     some: {
                     category: {
@@ -56,10 +55,9 @@ export default async function DriversPage({
             }
         })
 
-        
         const allCategories = await prismadb.allcategory.findMany({
             where: {
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
             },
             select: {
                 id: true,
@@ -100,11 +98,12 @@ export default async function DriversPage({
             return '/' + slugs.reverse().join('/');
         };
 
+
         const allDriverImage = await prismadb.allproductcategory.findFirst({
             where: {
                 category: {
                     shown_on_all_drivers_page: true,
-                    brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+                    brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
                     type: 'Category',
                     slug: 'drivers'
                 },
@@ -123,14 +122,15 @@ export default async function DriversPage({
             }
         })
         const allDriverImageCategories = allDriverImage ? [allDriverImage.category] : []
+
         const uniqueCategories = [
-            ...new Map(
-                allDriverImageCategories.map(item => [item.slug, item])
-            ).values(),
-            ...new Map(
-                Drivers.map(item => [item.category.slug, item.category])
-            ).values()
-            ].map(category => ({
+        ...new Map(
+            allDriverImageCategories.map(item => [item.slug, item])
+        ).values(),
+        ...new Map(
+            Drivers.map(item => [item.category.slug, item.category])
+        ).values()
+        ].map(category => ({
             ...category,
             url: getCategoryPath(category),
             })).sort((a, b) => {
@@ -144,6 +144,7 @@ export default async function DriversPage({
             if (!aHasPriority) {
                 return 1;
             }
+
             if (!bHasPriority) {
                 return -1;
             }
@@ -173,7 +174,7 @@ export default async function DriversPage({
                         }}
                     >
                         <a
-                        href={`/legacy${item.slug === 'drivers' ? '/drivers/all' : item.url}`}
+                        href={`/legacy/sbaudience${item.slug === 'drivers' ? '/drivers/all' : item.url}`}
                         style={{
                             display: "block",
                             textDecoration: "none",
@@ -205,7 +206,7 @@ export default async function DriversPage({
                                         ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}`
                                         : item.thumbnail_url
                                     }
-                                    alt={`${item.name} by SB Acoustics`}
+                                    alt={`${item.name} by SB Audience`}
                                     width={1000}
                                     height={1000}
                                     loading="eager"
@@ -242,7 +243,7 @@ export default async function DriversPage({
             where: {
                 slug: subslug ?? '',
                 type: 'Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
             },
             select:{
                 name: true,
@@ -253,7 +254,7 @@ export default async function DriversPage({
             where: {
                 slug: subsubslug ?? '',
                 type: 'Sub Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
             },
             select:{
                 name: true,
@@ -264,20 +265,20 @@ export default async function DriversPage({
             where: {
                 slug: subsubsubslug ?? '',
                 type: 'Sub Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
             },
             select:{
                 name: true,
                 description: true
             }
-        }),
+        })
     ]);
 
     const subCatName = subCatNameResult.status === 'fulfilled' ? subCatNameResult.value : { name: '' };
     const subSubCatName = subsubCatNameResult.status === 'fulfilled' ? subsubCatNameResult.value : { name: '' };
     const subSubsubCatName = subsubsubCatNameResult.status === 'fulfilled' ? subsubsubCatNameResult.value : { name: '' };
-
-    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'drivers', subslug, subsubslug, subsubsubslug);
+    
+    let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_AUDIENCE_ID, 'drivers', subslug, subsubslug, subsubsubslug);
 
     let sliderRows: SliderData[] = [];
     let checkboxRows: CheckBoxData[] = [];
@@ -286,8 +287,7 @@ export default async function DriversPage({
 
     for (const key in allSpecsCombined) {
         if(allSpecsCombined[key]) {
-        if(key !== 'impedance' && key !== 'program-power'){ 
-            if(key !== 'dome-material' && key !== 'nominal-impedance' && key !== 'cone-material') {
+        if(key !== 'diaphragm-material' && key !== 'magnet' && key !== 'mechanical-connection-of-driver') {
             const allValueWithoutDuplicates: number[] = removeDuplicates(allSpecsCombined[key].map((val) => Number(val.value)));
             const allValueWithoutDuplicatesAndNone = allValueWithoutDuplicates.filter(number => !Number.isNaN(number));
             const sortedValues = allValueWithoutDuplicatesAndNone.slice().sort((a, b) => a - b);
@@ -310,13 +310,7 @@ export default async function DriversPage({
             else{
             const allValueWithoutDuplicates: string[] = removeDuplicates(allSpecsCombined[key].map((val) => val.value));
             const allValueWithoutDuplicatesAndNone = allValueWithoutDuplicates.filter(number => number != '');
-            let sortedValues = []
-            if(key === 'nominal-impedance') {
-                sortedValues = allValueWithoutDuplicatesAndNone.slice().sort((a, b) => Number(a) - Number(b));
-            }
-            else {
-                sortedValues = allValueWithoutDuplicatesAndNone.sort()
-            }
+            const sortedValues = allValueWithoutDuplicatesAndNone.sort()
             if(sortedValues.length>1){
                 counterShow+=1
             }
@@ -330,10 +324,9 @@ export default async function DriversPage({
             )
             }
         }
-        }
     }
 
-   
+
   return( 
     tempData &&
     <div className="drivers-container">
@@ -346,7 +339,6 @@ export default async function DriversPage({
             />
         </div>
     </div>
-    
   );
 }
 

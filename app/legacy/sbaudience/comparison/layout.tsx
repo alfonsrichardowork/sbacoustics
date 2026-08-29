@@ -3,18 +3,18 @@ import React from 'react'
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-  const logo_URL = `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`
+  const logo_URL = `${baseUrl}/images/sbaudience/logo_sbaudience.webp`
 
   return {
     title: "Comparison",
     description: "View Selected Comparison",
-    applicationName: 'SB Acoustics',
-    keywords: ["SB Acoustics Comparison", "Compare Selected SB Acoustics Product", "Compare Specifications of selected SB Acoustics Products"],
+    applicationName: 'SB Audience',
+    keywords: ["SB Audience Comparison", "Compare Selected SB Audience Product", "Compare Specifications of selected SB Audience Products"],
     openGraph: {
-      title: "Comparison | SB Acoustics",
+      title: "Comparison | SB Audience",
       description: "View Selected Comparison",
-      url: `${baseUrl}/comparison`,
-      siteName: "SB Acoustics",
+      url: `${baseUrl}/sbaudience/comparison`,
+      siteName: "SB Audience",
       images: [
         // {
         //   url: logo_URL,
@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: logo_URL,
           width: 800,
           height: 800,
-          alt: `SB Acoustics Logo`,
+          alt: `SB Audience Logo`,
         },
       ],
       locale: 'id_ID',
@@ -34,24 +34,24 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     twitter: {
       card: "summary_large_image",
-      title: "Comparison | SB Acoustics",
+      title: "Comparison | SB Audience",
       description: "View Selected Comparison",
       images: [
         {
           url: logo_URL,
           width: 800,
           height: 800,
-          alt: `SB Acoustics Logo`,
+          alt: `SB Audience Logo`,
         },
       ],
     },
     alternates: {
-      canonical: `${baseUrl}/comparison`,
+      canonical: `${baseUrl}/sbaudience/comparison`,
     },
   }
 }
 
-export default function ComparisonLayout({
+export default function ComparisonLayoutSBAudience({
   children,
 }: {
   children: React.ReactNode

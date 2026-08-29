@@ -1,15 +1,15 @@
-.catalogues-parent {
+.catalogues-parent-page {
     padding-inline: 2rem;
     padding-block: 4rem;
 }
 
-.catalogues-child {
+.catalogues-child-page {
     display: block;
     gap: 1rem;
     padding-top: 2rem;
 }
 
-.catalogues-files {
+.catalogues-files-page {
     display: flex;
     justify-content: center;
     padding-left: 0px;
@@ -17,32 +17,32 @@
 
 
 @media (min-width: 768px) {
-    .catalogues-child {
-        display: grid;
+    .catalogues-child-page {
+        display: flex;
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .catalogues-files {
+    .catalogues-files-page {
         justify-content: flex-start;
         padding-left: 5rem;
     }
 }
 
 @media (min-width: 1024px) {
-    .catalogues-parent {
+    .catalogues-parent-page {
         padding-inline: 3rem;
         padding-block: 4rem;
     }
 }
 
 @media (min-width: 1280px) {
-    .catalogues-parent {
+    .catalogues-parent-page {
         padding-inline: 15rem;
         padding-block: 4rem;
     }
 }
 
 @media (min-width: 1536px) {
-    .catalogues-parent {
+    .catalogues-parent-page {
         padding-inline: 20rem;
         padding-block: 4rem;
     }

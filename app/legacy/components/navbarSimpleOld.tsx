@@ -57,9 +57,9 @@ const TOP_LINKS: MenuNode[] = [
 ];
 
 const TOP_LINKS_SBAUDIENCE: MenuNode[] = [
-  { title: "Application", href: "/sbaudience/application" },
-  { title: "Distributors", href: "/sbaudience/distributors" },
-  { title: "Contact", href: "/sbaudience/contact" },
+  { title: "Application", href: "/application" },
+  { title: "Distributors", href: "/distributors" },
+  { title: "Contact", href: "/contact" },
 ];
 
 /* ------------------------------ dropdown item ----------------------------- */
@@ -117,7 +117,7 @@ function DropdownItem({ node, depth, parent }: { node: MenuNode; depth: number; 
       onMouseLeave={() => setOpen(false)}
     >
       <a
-        href={`/legacy${parentRoute}`}
+        href={pathname.includes('sbaudience') ? `/legacy/sbaudience${parentRoute}` : `/legacy${parentRoute}`}
         style={{
           background: pathname.includes('sbaudience') ? '#000000' : '#ffffff',
           border: "1px solid transparent",
@@ -179,7 +179,7 @@ function PlainItem({ node, pathname }: { node: MenuNode; pathname: string }) {
       display: "inline-block",
       verticalAlign: "middle",
     }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-      <a href={node.href} style={{
+      <a href={pathname.includes('sbaudience') ? `/sbaudience${node.href}` : node.href} style={{
         background: pathname.includes('sbaudience') ? '#000000' : '#ffffff',
         border: "1px solid transparent",
         color: hover ? '#e6001b' : pathname.includes('sbaudience') ? '#ffffff' : '#000000',
@@ -238,7 +238,7 @@ function MobileNode({ node, depth, parent, pathname }: { node: MenuNode; depth: 
         </div>
       ) : (
         <a
-          href={`/legacy${parentRoute}`}
+          href={pathname.includes('sbaudience') ? `/legacy/sbaudience${parentRoute}` : `/legacy${parentRoute}`}
           style={{
             display: "block",
             padding: "10px 8px",
@@ -260,7 +260,7 @@ function MobileNode({ node, depth, parent, pathname }: { node: MenuNode; depth: 
       {hasChildren && open ? (
         <div>
           <a
-            href={`/legacy${parentRoute}`}
+            href={pathname.includes('sbaudience') ? `/legacy/sbaudience${parentRoute}` : `/legacy${parentRoute}`}
             style={{
               display: "block",
               background: '#e6001b',

@@ -9,10 +9,10 @@ function shortenMaterial(name: string): string {
     .replace(/Aluminum/gi, "Alu");
 }
 
-export default async function NewProductsSBAcousticsPage() {
+export default async function NewProductsSBAudiencePage() {
   const products = await prismadb.product.findMany({
     where: {
-      brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
       isArchived: false,
       isNewProduct: true
     },
@@ -24,15 +24,11 @@ export default async function NewProductsSBAcousticsPage() {
       cover_img_url: true,
       name: true,
       slug: true,
-      isKits: true,
     }
   });
-
   if(!products) {
     return null;
   }
-
-  products.sort((a, b) => Number(b.isKits) - Number(a.isKits));
 
   return(
     <div className="drivers-container">
@@ -44,7 +40,7 @@ export default async function NewProductsSBAcousticsPage() {
             position: 'relative'
           }}>
             <a
-              href={`/legacy/products/${item.slug}`}
+              href={`/legacy/sbaudience/products/${item.slug}`}
               style={{
                 backgroundColor: '#ffffff',
                 cursor: 'pointer'

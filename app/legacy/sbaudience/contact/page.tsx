@@ -1,7 +1,6 @@
-
 import prismadb from "@/lib/prismadb";
-import Contact from "../../components/contact";
 import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
+import Contact from "../../components/contact";
 
 export const revalidate = 60;
 
@@ -13,7 +12,7 @@ export function extractIframeSrc(html: string): string | undefined {
 export default async function ContactUsJsonLd() {
   const brand = await prismadb.brand.findFirst({
     where: {
-      id: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+      id: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
     }
   });
   if(!brand){
@@ -21,15 +20,9 @@ export default async function ContactUsJsonLd() {
   }
   const extractedSrc = extractIframeSrc(brand.maps) ?? '';
   brand.maps = extractedSrc;
-
   return (
     <>
-      {/* <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <h1 className="sr-only">Contact | SB Acoustics</h1>
-      <div className="relative pb-[420px]">
+      {/* <div className="relative pb-[420px]">
         <div className="absolute inset-0 z-0">
           {brand && brand.cover != "" ?
             <img 
