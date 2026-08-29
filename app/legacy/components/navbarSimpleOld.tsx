@@ -56,6 +56,12 @@ const TOP_LINKS: MenuNode[] = [
   { title: "Contact", href: "/contact" },
 ];
 
+const TOP_LINKS_SBAUDIENCE: MenuNode[] = [
+  { title: "Application", href: "/sbaudience/application" },
+  { title: "Distributors", href: "/sbaudience/distributors" },
+  { title: "Contact", href: "/sbaudience/contact" },
+];
+
 /* ------------------------------ dropdown item ----------------------------- */
 
 function getBrandFromPathname(pathname: string) {
@@ -193,7 +199,7 @@ function PlainItem({ node, pathname }: { node: MenuNode; pathname: string }) {
 
 /* ------------------------------- mobile menu ------------------------------ */
 
-function MobileNode({ node, depth, parent }: { node: MenuNode; depth: number; parent?: string }) {
+function MobileNode({ node, depth, parent, pathname }: { node: MenuNode; depth: number; parent?: string; pathname: string }) {
   const [open, setOpen] = useState(false);
   const hasChildren = !!(node.children && node.children.length > 0);
   let parentRoute = ''
@@ -213,7 +219,7 @@ function MobileNode({ node, depth, parent }: { node: MenuNode; depth: number; pa
       style={{
         borderLeft: depth > 0 ? "2px solid #e6001b" : "none",
         paddingLeft: depth > 0 ? 10 : 0,
-        background: depth > 0 ? "#f5f5f5" : "transparent",
+        background: depth > 0 ? pathname.includes('sbaudience') ? '#000000' : "#f5f5f5" : "transparent",
       }}
     >
       {hasChildren ? (
@@ -224,7 +230,7 @@ function MobileNode({ node, depth, parent }: { node: MenuNode; depth: number; pa
             padding: "10px 8px",
             fontSize: 15,
             borderBottom: "1px solid #d7dce0",
-            color: open ? '#e6001b' : '#000000',
+            color: open ? '#e6001b' : pathname.includes('sbaudience') ? '#ffffff' : '#000000',
           }}
         >
           {node.title}
@@ -238,7 +244,7 @@ function MobileNode({ node, depth, parent }: { node: MenuNode; depth: number; pa
             padding: "10px 8px",
             fontSize: 15,
             textDecoration: "none",
-            color: '#000000',
+            color: pathname.includes('sbaudience') ? '#ffffff' : '#000000',
             borderBottom: "1px solid #d7dce0",
           }}
         >
@@ -269,7 +275,7 @@ function MobileNode({ node, depth, parent }: { node: MenuNode; depth: number; pa
             Show All {node.title}
           </a>
           {node.children!.map((child, i) => (
-            <MobileNode key={child.title + i} node={child} depth={depth + 1} parent={parentRoute} />
+            <MobileNode key={child.title + i} node={child} depth={depth + 1} parent={parentRoute} pathname={pathname} />
           ))}
         </div>
       ) : null}
@@ -363,7 +369,7 @@ export default function NavbarLegacy() {
                 <div className="legacy-brand-container">
                     <img
                         src={pathname.includes('sbaudience')
-                            ? '/images/sbaudience/logo_sbaudience.webp'
+                            ? '/images/sbaudience/logo_sbaudience.png'
                             : pathname.includes('sbautomotive')
                             ? '/images/sbautomotive/logo_sbautomotive_black.webp'
                             : '/images/sbacoustics/logo_sbacoustics.png'}
@@ -403,7 +409,7 @@ export default function NavbarLegacy() {
                 {menuNodes.map((node, index) => (
                   <DropdownItem key={node.href + index} node={node} depth={0} parent={node.href}/>
                 ))}
-                {TOP_LINKS.map((link) => (
+                {(pathname.includes('sbaudience') ? TOP_LINKS_SBAUDIENCE : TOP_LINKS).map((link) => (
                   <PlainItem key={link.href} node={link} pathname={pathname} />
                 ))}
               </ul>
@@ -452,10 +458,10 @@ export default function NavbarLegacy() {
           >
             <SearchLightboxOld changeBrand/>
             {menuNodes.map((node, index) => (
-              <MobileNode key={node.href + index} node={node} depth={0}  parent={node.href}/>
+              <MobileNode key={node.href + index} node={node} depth={0}  parent={node.href} pathname={pathname}/>
             ))}
-            {TOP_LINKS.map((link) => (
-              <MobileNode key={link.href} node={link} depth={0} parent={link.href}/>
+            {(pathname.includes('sbaudience') ? TOP_LINKS_SBAUDIENCE : TOP_LINKS).map((link) => (
+              <MobileNode key={link.href} node={link} depth={0} parent={link.href} pathname={pathname}/>
             ))}
           </div>
         ) : null}

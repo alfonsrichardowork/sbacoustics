@@ -1,11 +1,9 @@
 import SwiperCarouselOld from "../components/swipercarouselold";
 import prismadb from "@/lib/prismadb";
-import Section1 from "../components/homepage/section1";
-import Section2 from "../components/homepage/section2";
-import Section3 from "../components/homepage/section3";
-import Section4 from "../components/homepage/section4";
 import BrandChoiceOld from "../components/homepage/BrandChoiceOld";
 import { FeaturedProducts } from "@/app/(frontend)/types";
+import '../components/style/all-style.css'
+import { SocialIcon } from "react-social-icons";
 
 
 export default async function oldPage() {
@@ -132,14 +130,59 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
             objectFit: "cover",
           }}
         />
-        <Section1 text={brandImages.homepage_open_source_kits_text}/>
+      
+        <div className="open-source-kits-parent"
+        >
+          <div
+            style={{
+              display: "block",
+              width: "fit-content",
+            }}
+          >
+            <h2 className="open-source-kits-title">
+              Open Source Kits
+            </h2>
+
+              <div className="open-source-kits-text"
+              >
+                {brandImages.homepage_open_source_kits_text}
+              </div>
+
+            <div
+              style={{
+                display: "block",
+                marginBottom: "16px",
+              }}
+            >
+              <a
+                href="/legacy/kits/open-source-kits"
+                style={{
+                  display: "inline-block",
+                  padding: "8px 16px",
+
+                  backgroundColor: "#e6001b",
+                  color: "#ffffff",
+
+                  borderRadius: "4px",
+
+                  fontSize: "14px",
+                  lineHeight: "20px",
+
+                  textDecoration: "none",
+                }}
+              >
+                Learn More
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     )}
 
       {brandImages.homepage_about_us_url !== "" && (
         <div
           style={{
-              position: "relative",
+            position: "relative",
             width: "100%",
             height: "100vh",
           }}
@@ -161,33 +204,52 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
             }}
           />
 
-          <Section2 text={brandImages.homepage_about_us_text} />
+          <div className="about-us-parent">
+            <div
+              style={{
+                display: "block",
+                width: "fit-content",
+              }}
+            >
+              <h2 className="about-us-title">
+                About Us
+              </h2>
+              <div className="about-us-text">
+                {brandImages.homepage_about_us_text}
+              </div>
+
+              <div
+                style={{
+                  display: "block",
+                  marginBottom: "16px",
+                }}
+              >
+                <a
+                  href="/legacy/about"
+                  style={{
+                    display: "inline-block",
+                    padding: "8px 16px",
+
+                    backgroundColor: "#e6001b",
+                    color: "#ffffff",
+
+                    borderRadius: "4px",
+
+                    fontSize: "14px",
+                    lineHeight: "20px",
+
+                    textDecoration: "none",
+                  }}
+                >
+                  Learn More
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
     {brandImages.homepage_catalogues_url !== "" && (
-      // <div
-      //   style={{
-      //     position: "sticky",
-      //     top: 0,
-      //     left: 0,
-      //     width: "100%",
-      //     height: "100vh",
-      //     display: "flex",
-      //     alignItems: "center",
-      //     justifyContent: "center",
-      //   }}
-      // >
-      //   <div
-      //     style={{
-      //       position: "absolute",
-      //       top: 0,
-      //       left: 0,
-      //       width: "100%",
-      //       height: "100%",
-      //       backgroundColor: "#ffffff",
-      //     }}
-      //   >
           <div
             style={{
               position: "relative",
@@ -208,8 +270,51 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
                 height: "100%",
                 objectFit: "cover",
               }}
-            />
-        <Section3 text={brandImages.homepage_catalogues_text} />
+            />        
+            <div className="catalogues-parent">
+              <div
+                style={{
+                  display: "block",
+                  width: "fit-content",
+                }}
+              >
+                <h2 className="catalogues-title">
+                  Catalogues
+                </h2>
+
+                  <div className="catalogues-text"
+                  >
+                    {brandImages.homepage_catalogues_text}
+                  </div>
+
+                <div
+                  style={{
+                    display: "block",
+                    marginBottom: "16px",
+                  }}
+                >
+                  <a
+                    href="/legacy/catalogues"
+                    style={{
+                      display: "inline-block",
+                      padding: "8px 16px",
+
+                      backgroundColor: "#e6001b",
+                      color: "#ffffff",
+
+                      borderRadius: "4px",
+
+                      fontSize: "14px",
+                      lineHeight: "20px",
+
+                      textDecoration: "none",
+                    }}
+                  >
+                    View Catalogues
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         // </div>
 
@@ -224,7 +329,33 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
       }}
     >
       {brandImages.socialmedia.length > 0 && (
-        <Section4 socialmedia={brandImages.socialmedia}/>
+        <div className="social-parent">
+          <h2 className="social-title">
+            Social:
+          </h2>
+    
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+    
+              gap: "8px",
+              width: "100%",
+    
+              paddingBottom: "16px",
+            }}
+          >
+            {brandImages.socialmedia.map((logo, index) => (
+              <SocialIcon
+                network={logo.type}
+                className="social-icon"
+                url={logo.value}
+                key={index}
+              />
+            ))}
+          </div>
+        </div>
       )}
     </div>
   </div>

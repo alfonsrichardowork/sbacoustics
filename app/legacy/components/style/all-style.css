@@ -94,6 +94,227 @@
     display:none;
 }
 
+.open-source-kits-parent {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-left: 16px;
+    display: flex;
+    align-items: flex-end;
+    color: #000000;
+    background: linear-gradient(to left, rgba(255,255,255,0.7), rgba(255,255,255,0.6), rgba(255,255,255,0));
+    z-index: 50,
+}
+
+.open-source-kits-title {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 16px;
+    font-size: 30px;
+    line-height: 1.1;
+    font-weight: 700;
+    text-align: left;
+    color: #000000
+}
+
+.open-source-kits-text {
+    display: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: left;
+    color: #000000
+}
+
+.about-us-parent {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-left: 16px;
+    display: flex;
+    align-items: flex-end;
+    background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0))
+}
+
+.about-us-title {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 16px;
+    font-size: 30px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: left;
+}
+
+.about-us-text {
+    display: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #ffffff;
+    text-align: left;
+}
+
+.catalogues-parent {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-left: 16px;
+    display: flex;
+    align-items: flex-end;
+    color: #000000;
+    background: linear-gradient(to top left, rgba(255,255,255,0.7), rgba(255,255,255,0.6), rgba(255,255,255,0));
+    z-index: 50;
+}
+
+.catalogues-title {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 16px;
+    font-size: 30px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: #000000;
+    text-align: left;
+}
+
+.catalogues-text {
+    display: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #000000;
+    text-align: left;
+}
+
+.social-parent {
+    width: 100%;
+    height: 240px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-left: 16px;
+    background-color: #ffffff;
+}
+
+.social-title {
+    margin: 0;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    font-size: 30px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: #000000;
+    text-align: left;
+}
+
+.social-icon {
+    width: 40;
+    height: 40;
+}
+
+.brand-choice-parent {
+    display: block;
+    grid-template-columns: 0fr 0fr;
+}
+
+.brand-choice-child {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-sizing: border-box;
+    padding: 0 16px 16px;
+    color: #ffffff;
+}
+
+.brand-choice-child-2 {
+    position: relative;
+    display: none;
+    overflow: hidden;
+    height: 50vh;
+    background-color: #18181b;
+}
+
+.brand-choice-child-2-sbaudience {
+    position: relative;
+    display: none;
+    overflow: hidden;
+    height: 50vh;
+    background-color: #e4e4e7;
+}
+
+
+
+.catalogues-parent-sbaudience {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-left: 16px;
+    display: flex;
+    align-items: flex-end;
+    color: #ffffff;
+    background: linear-gradient(to top , rgba(0,0,0,0.7), rgba(0,0,0,0.6), rgba(0,0,0,0));
+    z-index: 50;
+}
+
+.catalogues-title-sbaudience {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 16px;
+    font-size: 30px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: left;
+}
+
+.catalogues-text-sbaudience {
+    display: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #ffffff;
+    text-align: left;
+}
 
 
 @media (min-width: 768px) {
@@ -119,6 +340,98 @@
     .cookie-settings-category-footer {
         justify-content: flex-end;
     }
+
+    .open-source-kits-parent {
+        padding-right: 64px;
+        padding-bottom: 32px;
+        padding-left: 64px;
+    }
+    
+    .open-source-kits-title {
+        font-size: 48px;
+    }
+
+    .open-source-kits-text {
+        display: block;
+    }
+
+    .about-us-parent {
+        padding-top: 24px;
+        padding-right: 64px;
+        padding-bottom: 32px;
+        padding-left: 64px;
+    }
+    
+    .about-us-title {
+        font-size: 48px;
+    }
+    
+    .about-us-text {
+        display: block;
+    }
+    
+    .catalogues-parent {
+        padding-right: 64px;
+        padding-bottom: 32px;
+        padding-left: 64px;
+    }
+    
+    .catalogues-title {
+        font-size: 48px;
+    }
+
+    .catalogues-text {
+        display: block;
+    }
+    
+    .social-parent {
+        height: 288px;
+        padding-top: 32px;
+        padding-right: 64px;
+        padding-bottom: 32px;
+        padding-left: 64px;
+    }
+
+    .social-title {
+        font-size: 48px;
+    }
+
+    .social-icon {
+        width: 60;
+        height: 60;
+    }
+
+    .brand-choice-parent {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+    }
+    
+    .brand-choice-child {
+        padding: 0 64px 32px;
+    }
+
+    .brand-choice-child-2 {
+        display: block;
+    }
+
+    .brand-choice-child-2-sbaudience {
+        display: block;
+    }
+    
+    .catalogues-parent-sbaudience {
+        padding-right: 64px;
+        padding-bottom: 32px;
+        padding-left: 64px;
+    }
+    
+    .catalogues-title-sbaudience {
+        font-size: 48px;
+    }
+
+    .catalogues-text-sbaudience {
+        display: block;
+    }
+    
 }
 
 @media (min-width: 1024px) {
@@ -130,11 +443,19 @@
         display: table-cell;
         vertical-align: middle;
     }
+
+    .social-parent {
+        height: 320px;
+    }
 }
 
 @media (min-width: 1280px) {
     .cookie-settings-parent {
 
+    }
+
+    .social-parent {
+        height: 384px;
     }
 }
 

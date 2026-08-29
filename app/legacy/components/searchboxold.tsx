@@ -274,7 +274,8 @@ const SearchboxLegacy: FC<PropType> = (props) => {
                           display: 'flex',
                           flexDirection: 'column',
                           justifyContent: 'center',
-                          fontSize: '14px'
+                          fontSize: '14px',
+                          color: '#000000'
                         }}>
                           <div style={{
                             fontWeight: 700

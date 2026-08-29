@@ -1,13 +1,9 @@
-
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import SwiperCarousel from "@/components/swipercarousel";
 import prismadb from "@/lib/prismadb";
 import { SocialIcon } from 'react-social-icons';
-import BrandChoice from "@/app/(frontend)/sbaudience/components-homescreen/BrandChoice";
 import { FeaturedProducts } from "@/app/(frontend)/types";
 import SwiperCarouselOld from "../components/swipercarouselold";
 import BrandChoiceOldSBAudience from "./components/homepage/BrandChoiceoldsbaudience";
+import '../components/style/all-style.css'
 
 export const revalidate = 60;
 
@@ -112,79 +108,164 @@ export default async function LandingPageSBAudience() {
       
 
         {brandImages.homepage_about_us_url !== "" &&
-          <div className="relative min-h-screen">
-            <div className="relative w-full h-[calc(100vh)]">
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              height: "100vh",
+            }}
+          >
             <img
               src={brandImages.homepage_about_us_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_about_us_url}` : brandImages.homepage_about_us_url}
               alt='Sinar Baja Electric Facility'
               width={1000}
               height={1000}
-              className="object-cover w-full h-full"
+              style={{
+                display: "block",
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
             />  
-            <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 h-fit flex items-end bg-linear-to-t from-black to-transparent w-full">
-            <div className="grid gap-0 grid-cols-1 w-fit">
-                    <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4 text-white">About Us</h2>
-                    <div className="text-left text-sm text-white pb-4 hidden md:block">
-                      {brandImages.homepage_about_us_text}
-                    </div>
-                    <div className="items-start pb-4">
-                      <Button size={"sm"} asChild>
-                        <Link href={'/sbaudience/about'}>
-                          Learn More
-                        </Link>
-                      </Button>
-                    </div>
+            <div className="about-us-parent">
+              <div 
+                style={{
+                  display: "block",
+                  width: "fit-content",
+                }}>
+                  <h2 className="about-us-title">
+                    About Us
+                  </h2>
+                  <div className="about-us-text">
+                    {brandImages.homepage_about_us_text}
+                  </div>
+                  <div
+                    style={{
+                      display: "block",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <a
+                      href="/legacy/sbaudience/about"
+                      style={{
+                        display: "inline-block",
+                        padding: "8px 16px",
+
+                        backgroundColor: "#e6001b",
+                        color: "#ffffff",
+
+                        borderRadius: "4px",
+
+                        fontSize: "14px",
+                        lineHeight: "20px",
+
+                        textDecoration: "none",
+                      }}
+                    >
+                      Learn More
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
         }
 
           {brandImages.homepage_catalogues_url !== "" &&
-            <div className="sticky top-0 left-0 w-full h-screen flex items-center justify-center bg-background">
-              <div className="absolute top-0 left-0 w-full h-full object-cover bg-background">
-                <div className="relative w-full h-screen">
-                  <img src={brandImages.homepage_catalogues_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_catalogues_url}` : brandImages.homepage_catalogues_url} alt={"SB Audience Catalogues"} className='w-full h-full object-cover' />
-                </div>
-              </div>
-              <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 flex items-end z-50 bg-linear-to-t from-black to-transparent w-full">
-                {brandImages.homepage_catalogues_url !== "" &&
-                  <div className="grid gap-0 grid-cols-1 w-fit">
-                    <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4 text-white">
-                      Catalogues
-                    </h2>
-                    <div className="text-left text-sm pb-4 hidden md:block text-white">
+            <div
+              style={{
+                position: "relative",
+                width: "100%",
+                height: "100vh",
+              }}
+            >
+              <img 
+                src={brandImages.homepage_catalogues_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_catalogues_url}` : brandImages.homepage_catalogues_url} 
+                alt={"SB Audience Catalogues"} 
+                style={{
+                  display: "block",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }} 
+              />
+              <div className="catalogues-parent-sbaudience">
+                <div
+                  style={{
+                    display: "block",
+                    width: "fit-content",
+                  }}
+                >
+                  <h2 className="catalogues-title-sbaudience">
+                    Catalogues
+                  </h2>
+
+                    <div className="catalogues-text-sbaudience"
+                    >
                       {brandImages.homepage_catalogues_text}
                     </div>
-                    <div className="items-start pb-4">
-                      <Button size={"sm"} asChild>
-                        <Link href={'/sbaudience/catalogues'}>
-                          View Catalogues
-                        </Link>
-                      </Button>
-                    </div>
+
+                  <div
+                    style={{
+                      display: "block",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <a
+                      href="/legacy/sbaudience/catalogues"
+                      style={{
+                        display: "inline-block",
+                        padding: "8px 16px",
+
+                        backgroundColor: "#e6001b",
+                        color: "#ffffff",
+
+                        borderRadius: "4px",
+
+                        fontSize: "14px",
+                        lineHeight: "20px",
+
+                        textDecoration: "none",
+                      }}
+                    >
+                      View Catalogues
+                    </a>
                   </div>
-                }
+                </div>
               </div>
             </div>
           }
-          <div className="relative">
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+            }}
+          >
             {brandImages.socialmedia.length > 0 && 
-              <div className='xl:h-96 lg:h-80 md:h-72 sm:h-72 h-60 w-full flex flex-col justify-center items-start xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 bg-zinc-200'>
-                <h2 className="text-left font-bold xl:text-5xl text-3xl text-black py-4">
+              <div className="social-parent">
+                <h2 className="social-title">
                   Social:
                 </h2>
-                <div className='md:flex hidden md:justify-start pb-4 gap-2 w-full'>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+          
+                    gap: "8px",
+                    width: "100%",
+          
+                    paddingBottom: "16px",
+                  }}
+                >
                 {brandImages.socialmedia.map((logo, index) => (
-                      <SocialIcon network={logo.type} style={{ width: 60, height: 60 }} url={logo.value} key={index}/>
-                    ))
-                  }
-                </div>
-                <div className='md:hidden flex justify-start pb-4 gap-2 w-full'>
-                  {brandImages.socialmedia.map((logo, index) => (
-                      <SocialIcon network={logo.type} style={{ width: 40, height: 40 }} url={logo.value} key={index}/>
-                    ))
-                  }
+                    <SocialIcon
+                      network={logo.type}
+                      className="social-icon"
+                      url={logo.value}
+                      key={index}
+                    />
+                  ))
+                }
                 </div>
               </div>
             }
