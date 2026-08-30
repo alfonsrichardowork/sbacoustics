@@ -60,6 +60,7 @@ export default function NewProductsSBAudiencePageLayout({
   return(
     <div style={{
       width: '100%',
+      paddingTop: "40px",
       alignItems: 'flex-end',
       justifyContent: 'flex-start',
       backgroundColor: '#ffffff'

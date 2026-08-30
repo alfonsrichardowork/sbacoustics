@@ -60,6 +60,7 @@ export default function NewProductsPageLayout({
   return(
     <div style={{
       width: '100%',
+      paddingTop: '40px',
       alignItems: 'flex-end',
       justifyContent: 'flex-start',
       backgroundColor: '#ffffff'

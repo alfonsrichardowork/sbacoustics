@@ -67,6 +67,7 @@ export default function DistributorLayout({
     <div 
       style={{
         backgroundColor: '#ffffff',
+        paddingTop: '40px'
       }}
     >
       {children}

@@ -81,8 +81,8 @@ export default function SingleProductLayout({
 )
 {
   return(
-    <>
+    <div style={{ paddingTop: '40px' }}>
       {children}
-    </>
+    </div>
   )
   }

@@ -80,8 +80,8 @@ export default function SingleProductLayoutSBAudience({
 )
 {
   return(
-    <>
+    <div style={{ paddingTop: '40px' }}>
       {children}
-    </>
+    </div>
   )
   }

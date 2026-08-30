@@ -153,7 +153,12 @@ const SearchboxLegacy: FC<PropType> = (props) => {
     
 
   return (
-    <>
+    <div
+      style={{
+        width: '75%',
+        position: 'relative',
+      }}
+    >
         {/* <div className="lg:w-[15vw] w-0"> */}
           {/* <div className="flex items-center py-4"> */}
             <input
@@ -197,27 +202,34 @@ const SearchboxLegacy: FC<PropType> = (props) => {
                 borderColor: 'hsl(var(--foreground))',
                 borderWidth: '1px',
                 zIndex: 102,
-                color: '#000000'
+                color: '#000000',
+                boxSizing: 'border-box',
               }}
             />
           {/* </div> */}
-          <div style={{
-            width: '100%',
-            position: 'relative'
-          }}>
-          <div style={{
+          <div 
+          style={{
             display: activeSearch.trim() === "" ? 'none' : 'block',
             position: 'absolute',
+            top: '100%',
+            left: 0,
+            width: '100%',
             zIndex: 105,
+            marginTop: '4px',
+          }}>
+          <div 
+          style={{
             width: '100%',
             borderWidth: '2px',
-            top: '4px',
+            borderStyle: 'solid',
+            borderColor: '#f3f4f6',
             backgroundColor: '#ffffff',
             maxHeight: '400px',
             overflowY: 'auto',
             padding: '8px',
             borderRadius: '8px',
-            boxShadow: '8px'
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+            boxSizing: 'border-box',
           }}>
             <div style={{
               borderBlockWidth: '2px',
@@ -311,7 +323,7 @@ const SearchboxLegacy: FC<PropType> = (props) => {
           </div>
           </div>
         {/* </div>    */}
-    </>
+    </div>
   )
 }
 

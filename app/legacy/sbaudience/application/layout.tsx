@@ -61,7 +61,7 @@ export default function ApplicationLayoutSBAudience({
         width: '100%',
         alignItems: 'flex-end',
         justifyContent: 'flex-start',
-        paddingTop: '40px',
+        paddingTop: '80px',
         backgroundColor: '#ffffff'
       }}>
         {children}

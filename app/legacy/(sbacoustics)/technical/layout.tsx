@@ -58,7 +58,8 @@ export default function TechnicalLayout({
 }) {
   return (
     <div className='technical' style={{
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
+      paddingTop: '80px'
     }}>
       {children}
     </div>
