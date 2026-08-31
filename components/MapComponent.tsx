@@ -691,8 +691,12 @@ export const DistributorMap: React.FC<DistributorProps> = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           /> */}
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            url={`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=cb1_2mae_1_d7a14f71add66470cd378ab7`}
           />
+          {/* <TileLayer
+            url={`https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=cb1_2mae_1_d7a14f71add66470cd378ab7`}
+            subdomains={["a", "b", "c", "d"]}
+          /> */}
           {allDistributors.map((loc) => (
             <Marker 
               key={loc.name} 
