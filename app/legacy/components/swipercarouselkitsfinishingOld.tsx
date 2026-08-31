@@ -103,10 +103,11 @@ const SwiperCarouselKitsFinishingOld: React.FC<PropType> = (props) => {
       <div style={{
         zIndex: 10,
         height: 'fit-content',
-        width: isMobile ? '100%' : '50%'
+        // width: isMobile ? '100%' : '50%'
+        width: '100%'
       }}>
         <div style={{
-          display: 'block',
+          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden'
@@ -153,6 +154,7 @@ const SwiperCarouselKitsFinishingOld: React.FC<PropType> = (props) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
+                paddingBottom: '6px'
               }}
               onClick={() => changeImagePreview(val.urlPreview, val.name)}
               key={index}

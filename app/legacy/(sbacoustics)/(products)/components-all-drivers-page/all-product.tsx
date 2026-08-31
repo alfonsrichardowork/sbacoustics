@@ -108,7 +108,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
         const fetchData = async () => {
           try {
             setLoadFinsihed(false)
-            const id = localStorage.getItem("selectedComparison") ?? '';
+            const id = localStorage.getItem("selectedComparisonLegacy") ?? '';
             const decodedSlugs = decodeURIComponent(id);
             const slugArray = decodedSlugs.split(',');
             slugArray.pop()
@@ -292,7 +292,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
             setActiveImgUrlCompare(newImgs);
 
             const tempUrl = newSlugs.join(",") + ",";
-            localStorage.setItem("selectedComparison", tempUrl);
+            localStorage.setItem("selectedComparisonLegacy", tempUrl);
         }
     }
 
@@ -339,7 +339,7 @@ const AllDriversProducts: React.FC<MainProps> = ({
         setActiveNameCompare(tempname);
         setActiveImgUrlCompare(tempimgurl);
         // setUrl(tempUrl);
-        localStorage.setItem("selectedComparison", tempUrl);
+        localStorage.setItem("selectedComparisonLegacy", tempUrl);
         setRefresh(slug);
       }
     

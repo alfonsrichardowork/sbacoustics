@@ -316,6 +316,11 @@
     text-align: left;
 }
 
+.navbar-main-nav-logo {
+    width: 50%;
+    display: flex;
+}
+
 .navbar-brand-choice-parent {
     width: 100%;
     padding-inline: 32px;
@@ -345,8 +350,18 @@
 }
 
 .navbar-main-nav-mobile-button {
+    width: 50%;
     display: flex;
     overflow-x: hidden;
+    justify-content: flex-end;
+}
+
+.single-product-page-SwiperCarouselOneProductOld {
+    padding-inline: 40px;
+}
+
+.single-product-page-SwiperCarouselOneProductOld-thumbnail {
+    padding-inline: 40px;
 }
 
 
@@ -489,6 +504,14 @@
     .navbar-main-nav-parent {
         padding-inline: 48px;
     }
+
+    .single-product-page-SwiperCarouselOneProductOld {
+        padding-inline: 48px;
+    }
+
+    .single-product-page-SwiperCarouselOneProductOld-thumbnail {
+        padding-inline: 64px;
+    }
 }
 
 @media (min-width: 1280px) {
@@ -518,6 +541,10 @@
 
     .navbar-main-nav-mobile-button {
         display: none;
+    }
+
+    .navbar-main-nav-logo {
+        width: 25%;
     }
 }
 

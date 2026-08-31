@@ -105,74 +105,56 @@ export default async function KitsPage({
         });
 
         return(
-            <div
-                style={{
-                    padding: "16px",
-                }}
-                >
-                <div
-                    style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    }}
-                >
-                    {uniqueCategories.map((item, i) => (
-                    <div
+            <div className="all-driver-page-parent">
+                <div className="all-driver-page-child-grid">
+                {uniqueCategories.map((item, i) => (
+                    <a 
                         key={i}
-                        style={{
-                        width: "25%",
-                        padding: "8px",
-                        boxSizing: "border-box",
-                        }}
-                    >
-                        <a
                         href={`/legacy/kits/${item.slug === 'kits' ? 'all' : item.slug}`}
                         style={{
-                            display: "block",
-                            textDecoration: "none",
-                            color: "inherit",
+                            cursor: 'pointer',
+                            marginBlockStart: '16px',
+                            marginBlockEnd: '16px',
+                            display: 'block'
                         }}
-                        >
-                        <div
-                            style={{
-                            position: "relative",
-                            width: "100%",
-                            }}
-                        >
-
+                    >
+                        <div style={{
+                            position: 'relative',
+                            aspectRatio: '1/1'
+                        }}>
+                            <div style={{
+                                position: 'relative',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                height: '100%',
+                                width: '100%'
+                            }}>
                                 <img
-                                    src={
-                                        item.thumbnail_url.startsWith("/uploads/")
-                                        ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}`
-                                        : item.thumbnail_url
-                                    }
+                                    src={item.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}` : item.thumbnail_url} 
                                     alt={`${item.name} by SB Acoustics`}
                                     width={1000}
                                     height={1000}
-                                    loading="eager"
                                     style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    objectFit: "contain",
-                                    transition: "opacity 0.3s ease",
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'contain'
                                     }}
+                                    loading='eager'
                                 />
-                                {/* </div> */}
+                            </div>
                         </div>
-
-                        <h2
-                            style={{
-                            fontWeight: "bold",
-                            fontSize: "20px",
-                            textAlign: "center",
-                            marginTop: "16px",
-                            }}
-                        >
+                        
+                        <h2 style={{
+                            fontWeight: 700,
+                            fontSize: '20px',
+                            lineHeight: '1.4',
+                            textAlign: 'center'
+                        }}>
                             {item.name}
                         </h2>
-                        </a>
-                    </div>
-                    ))}
+                    </a>
+                ))}
                 </div>
             </div>
         )

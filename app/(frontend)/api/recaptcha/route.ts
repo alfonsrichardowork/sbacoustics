@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     }
 
     //DEVELOPMENT ONLY
-    if (res && res.data?.success && res.data?.score > 0.05) {
+    if (res && res.data?.success && res.data?.score > 0.3) {
 
         return NextResponse.json({
             success: true,

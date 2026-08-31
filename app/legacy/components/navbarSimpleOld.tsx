@@ -408,282 +408,11 @@ export default function NavbarLegacy() {
   }, [navbarBg, isSBAudience, height]);
 
   return (
-    // <>
-    // <div style={{
-    //   background: pathname.includes('sbaudience') ? '#000000' : '#ffffff',
-    //   borderBottom: "2px solid #3f3f46",
-    //   color: pathname.includes('sbaudience') ? '#ffffff' : '#000000',
-    //   fontFamily: "Arial, Helvetica, sans-serif",
-    //   position: height > 600 ? "fixed" : 'absolute',
-    //   top: scrolled ?  0 : '32px',
-    //   left: 0,
-    //   zIndex: 1000,
-    //   width: "100%",
-    //   boxShadow: "0 1px 6px rgba(0,0,0,0.12)",
-    // }}>
-    //   <div style={{
-    //     margin: "0 auto",
-    //     maxWidth: 1280,
-    //     minHeight: 72,
-    //     padding: "12px 24px",
-    //     boxSizing: "border-box",
-    //     display: "block",
-    //     width: "100%",
-    //   }}>
-    //     <div style={{
-    //       display: "table",
-    //       width: "100%",
-    //       tableLayout: "fixed"
-    //     }}>
-    //       {/* brand */}
-    //       <div style={{
-    //         display: "table-cell",
-    //         verticalAlign: "middle",
-    //         width: isDesktop ? "25%" : '50%' 
-    //       }}>
-    //         <a
-    //           href={`/legacy${getHref(pathname, '')}`}
-    //           className="legacy-brand"
-    //         >
-    //             <div className="legacy-brand-container">
-    //                 <img
-    //                     src={pathname.includes('sbaudience')
-    //                         ? '/images/sbaudience/logo_sbaudience.png'
-    //                         : pathname.includes('sbautomotive')
-    //                         ? '/images/sbautomotive/logo_sbautomotive_black.webp'
-    //                         : '/images/sbacoustics/logo_sbacoustics.png'}
-    //                     className="legacy-brand-logo"
-    //                     alt={
-    //                         pathname.includes('sbaudience')
-    //                             ? 'SB Audience Logo'
-    //                             : pathname.includes('sbautomotive')
-    //                             ? 'SB Automotive Logo'
-    //                             : 'SB Acoustics Logo'
-    //                     }
-    //                     width={200}
-    //                     height={50}
-    //                     loading="eager"
-    //                 />
-    //             </div>
-    //         </a>
-    //       </div>
-
-    //       {/* desktop menu */}
-    //       {isDesktop ? (
-    //         <div style={{ 
-    //           display: "table-cell",
-    //           verticalAlign: "middle",
-    //           width: "50%", 
-    //           position: "relative", 
-    //           zIndex: 100,
-    //         }}>
-    //           <ul style={{
-    //             listStyle: "none",
-    //             margin: 0,
-    //             padding: 0,
-    //             whiteSpace: "nowrap",
-    //             textAlign: "center",
-    //             backgroundColor: pathname.includes('sbaudience') ? '#000000' : '#ffffff'
-    //           }}>
-    //             {menuNodes.map((node, index) => (
-    //               <DropdownItem key={node.href + index} node={node} depth={0} parent={node.href}/>
-    //             ))}
-    //             {(pathname.includes('sbaudience') ? TOP_LINKS_SBAUDIENCE : TOP_LINKS).map((link) => (
-    //               <PlainItem key={link.href} node={link} pathname={pathname} />
-    //             ))}
-    //           </ul>
-    //         </div>
-    //       ) : (
-    //         <div style={{ display: "table-cell", verticalAlign: "center", width: "50%", textAlign: "end" }}>
-    //           <button
-    //             type="button"
-    //             onClick={() => setMobileOpen(!mobileOpen)}
-    //             style={{
-    //               background: '#ffffff',
-    //               border: "1px solid #708090",
-    //               color: '#000000',
-    //               cursor: "pointer",
-    //               fontSize: 14,
-    //               padding: "8px 12px",
-    //               fontFamily: "Arial, Helvetica, sans-serif",
-    //             }}
-    //           >
-    //             {mobileOpen ? "Close" : "Menu"}
-    //           </button>
-    //         </div>
-    //       )}
-
-    //       {/* search */}
-    //       <div style={{ width: "25%" }} className="navbar-mobile">
-    //         <SearchboxLegacy changeBrand/>
-    //       </div>
-    //     </div>
-
-    //     {/* mobile drawer */}
-    //     {!isDesktop && mobileOpen ? (
-    //       <div
-    //         style={{
-    //           borderTop: "1px solid #d7dce0",
-    //           marginTop: 10,
-    //           paddingTop: 6,
-    //           // Keep an explicit height fallback for older Safari, which does not
-    //           // understand `dvh` and may not create a scroll container from max-height alone.
-    //           height: "calc(100vh - 84px)",
-    //           maxHeight: "calc(100vh - 84px)",
-    //           overflowY: "scroll",
-    //           WebkitOverflowScrolling: "touch",
-    //           overscrollBehavior: "contain",
-    //         }}
-    //       >
-    //         <SearchLightboxOld changeBrand/>
-    //         {menuNodes.map((node, index) => (
-    //           <MobileNode key={node.href + index} node={node} depth={0}  parent={node.href} pathname={pathname}/>
-    //         ))}
-    //         {(pathname.includes('sbaudience') ? TOP_LINKS_SBAUDIENCE : TOP_LINKS).map((link) => (
-    //           <MobileNode key={link.href} node={link} depth={0} parent={link.href} pathname={pathname}/>
-    //         ))}
-    //       </div>
-    //     ) : null}
-    //   </div>
-    // </div>
-
-    
-    //   <div style={{
-    //     position: height > 600 ? 'fixed' : 'absolute',
-    //     top: scrolled ? '-32px' : '0px',
-    //     left: '0px',
-    //     zIndex: 50,
-    //     width: '100%',
-    //     display: 'flex',
-    //     alignItems: 'flex-start',
-    //     justifyContent: 'left'
-    //   }}>
-    //     <div className={`navbar-brand-choice-parent`} style={{
-    //       backgroundColor: pathname.includes('sbaudience') ? '#000000' : '#ffffff'
-    //     }}>
-    //       {pathname.includes('sbaudience') ? 
-    //         <a href={'/'}>
-    //           <div style={{
-    //             cursor: 'pointer'
-    //           }}>
-    //             <div style={{
-    //               display: 'flex',
-    //               flexDirection: 'column',
-    //               gap: '4px'
-    //             }}>
-    //               <div style={{
-    //                 height: '20px'
-    //               }}>
-    //                 <img
-    //                   src={'/images/sbacoustics/logo_sbacoustics_white_clean.webp'}
-    //                   alt='SB Acoustics Logo'
-    //                   width={150}
-    //                   height={40}
-    //                   style={{
-    //                     height: '100%',
-    //                     width: 'auto'
-    //                   }}
-    //                 />
-    //                 </div>
-    //             </div>
-    //           </div>
-    //         </a>
-    //         :
-    //         pathname.includes('sbautomotive') ? 
-    //         <>
-    //           <a href={'/'}>
-    //           <div style={{
-    //             cursor: 'pointer'
-    //           }}>
-    //             <div style={{
-    //               display: 'flex',
-    //               flexDirection: 'column',
-    //               gap: '4px'
-    //             }}>
-    //               <div style={{
-    //                 height: '20px'
-    //               }}>
-    //                   <img
-    //                     src={'/images/sbacoustics/logo_sbacoustics_black_clean.webp'}
-    //                     alt='SB Acoustics Logo'
-    //                     width={150}
-    //                     height={40}
-    //                     style={{
-    //                       height: '100%',
-    //                       width: 'auto'
-    //                     }}
-    //                   />
-    //                   </div>
-    //               </div>
-    //             </div>
-    //           </a>
-    //           <a href={'/sbaudience'}>
-    //             <div style={{
-    //               cursor: 'pointer'
-    //             }}>
-    //               <div style={{
-    //                 display: 'flex',
-    //                 flexDirection: 'column',
-    //                 gap: '4px'
-    //               }}>
-    //                 <div style={{
-    //                   height: '20px'
-    //                 }}>
-    //                   <img
-    //                     src={'/images/sbaudience/logo_sbaudience_black.webp'}
-    //                     alt='SB Audience Logo'
-    //                     width={150}
-    //                     height={40}
-    //                     style={{
-    //                       height: '100%',
-    //                       width: 'auto'
-    //                     }}
-    //                   />
-    //                   </div>
-    //               </div>
-    //             </div>
-    //           </a>
-    //         </>
-    //         :
-    //         <a href={'/sbaudience'}>
-    //             <div style={{
-    //               cursor: 'pointer'
-    //             }}>
-    //               <div style={{
-    //                 display: 'flex',
-    //                 flexDirection: 'column',
-    //                 gap: '4px'
-    //               }}>
-    //                 <div style={{
-    //                   height: '20px'
-    //                 }}>
-    //                 <img
-    //                   src={'/images/sbaudience/logo_sbaudience_black.webp'}
-    //                   alt='SB Audience Logo'
-    //                   width={150}
-    //                   height={40}
-    //                   style={{
-    //                     height: '100%',
-    //                     width: 'auto'
-    //                   }}
-    //                 />
-    //                 </div>
-    //             </div>
-    //           </div>
-    //         </a>
-    //       }
-    //     </div>
-    //   </div>
-    
-    // </>
-
-
-
         <>
     <div style={{
       position: height > 600 ? 'fixed' : 'absolute',
       left : 0,
-      zIndex: 40,
+      zIndex: 100,
       backgroundColor: 'transparent',
       top: scrolled ? '0px' : '32px',
       borderStyle: scrolled ? 'none' : 'block',
@@ -717,50 +446,10 @@ export default function NavbarLegacy() {
       <div style={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        width: '100%'
       }}>
-        {/* <div style={{
-          display: "table",
-          width: "100%",
-          tableLayout: "fixed"
-        }}> */}
-
-          {/* brand */}
-          {/* <div style={{
-            display: "table-cell",
-            verticalAlign: "middle",
-            width: isDesktop ? "25%" : '50%' 
-          }}>
-            <a
-              href={`/legacy${getHref(pathname, '')}`}
-              className="legacy-brand"
-            >
-                <div className="legacy-brand-container">
-                    <img
-                        src={pathname.includes('sbaudience')
-                            ? '/images/sbaudience/logo_sbaudience.png'
-                            : pathname.includes('sbautomotive')
-                            ? '/images/sbautomotive/logo_sbautomotive_black.webp'
-                            : '/images/sbacoustics/logo_sbacoustics.png'}
-                        className="legacy-brand-logo"
-                        alt={
-                            pathname.includes('sbaudience')
-                                ? 'SB Audience Logo'
-                                : pathname.includes('sbautomotive')
-                                ? 'SB Automotive Logo'
-                                : 'SB Acoustics Logo'
-                        }
-                        width={200}
-                        height={50}
-                        loading="eager"
-                    />
-                </div>
-            </a>
-          </div> */}
-          <div style={{
-            width: '25%',
-            display: 'flex'
-          }}>
+          <div className="navbar-main-nav-logo">
             <a
               href={getHref(pathname, '')}
               style={{
@@ -780,7 +469,7 @@ export default function NavbarLegacy() {
               }}>
                 <img
                   src={pathname.includes('sbaudience') ? 
-                      '/images/sbaudience/logo_sbaudience.webp' : pathname.includes('sbautomotive') ? '/images/sbautomotive/logo_sbautomotive_black.webp' : '/images/sbacoustics/logo_sbacoustics_black_clean.webp'}
+                      '/images/sbaudience/logo_sbaudience.png' : pathname.includes('sbautomotive') ? '/images/sbautomotive/logo_sbautomotive_black.png' : '/images/sbacoustics/logo_sbacoustics.png'}
                   style={{
                     cursor: 'pointer',
                     maxWidth: '150px',
@@ -796,8 +485,6 @@ export default function NavbarLegacy() {
               </div>
             </a>
           </div>
-
-
 
           <div className="navbar-main-nav-main-menu">
             <ul style={{
@@ -817,9 +504,6 @@ export default function NavbarLegacy() {
             </ul>
           </div>
 
-
-          
-            {/* MOBILE MENU */}
           <div className={`navbar-main-nav-searchbox`}>
             <SearchboxLegacy changeBrand/>
           </div>
@@ -841,40 +525,37 @@ export default function NavbarLegacy() {
             >
               {mobileOpen ? "Close" : "Menu"}
             </button>
-            {!isDesktop && mobileOpen ? (
-              <div
-                style={{
-                  borderTop: "1px solid #d7dce0",
-                  marginTop: 10,
-                  paddingTop: 6,
-                  position: 'absolute',
-                  left: 0,
-                  top: '56px',
-                  // Keep an explicit height fallback for older Safari, which does not
-                  // understand `dvh` and may not create a scroll container from max-height alone.
-                  height: "calc(100vh - 84px)",
-                  width: '100%',
-                  backgroundColor: pathname.includes('sbaudience') ? '#000000' : '#ffffff',
-                  maxHeight: "calc(100vh - 84px)",
-                  overflowY: "scroll",
-                  WebkitOverflowScrolling: "touch",
-                  overscrollBehavior: "contain",
-                }}
-              >
-                <SearchLightboxOld changeBrand/>
-                {menuNodes.map((node, index) => (
-                  <MobileNode key={node.href + index} node={node} depth={0}  parent={node.href} pathname={pathname}/>
-                ))}
-                {(pathname.includes('sbaudience') ? TOP_LINKS_SBAUDIENCE : TOP_LINKS).map((link) => (
-                  <MobileNode key={link.href} node={link} depth={0} parent={link.href} pathname={pathname}/>
-                ))}
-              </div>
-            ) : null}
           </div>
-        {/* </div> */}
-
-        {/* mobile drawer */}
-      </div>
+          
+        </div>
+        
+          {!isDesktop && mobileOpen ? (
+            <div
+              style={{
+                borderTop: "1px solid #d7dce0",
+                marginTop: 10,
+                paddingTop: 6,
+                position: 'absolute',
+                left: 0,
+                top: '56px',
+                height: "calc(100vh - 84px)",
+                width: '100%',
+                backgroundColor: pathname.includes('sbaudience') ? '#000000' : '#ffffff',
+                maxHeight: "calc(100vh - 84px)",
+                overflowY: "scroll",
+                WebkitOverflowScrolling: "touch",
+                overscrollBehavior: "contain",
+              }}
+            >
+              <SearchLightboxOld changeBrand/>
+              {menuNodes.map((node, index) => (
+                <MobileNode key={node.href + index} node={node} depth={0}  parent={node.href} pathname={pathname}/>
+              ))}
+              {(pathname.includes('sbaudience') ? TOP_LINKS_SBAUDIENCE : TOP_LINKS).map((link) => (
+                <MobileNode key={link.href} node={link} depth={0} parent={link.href} pathname={pathname}/>
+              ))}
+            </div>
+          ) : null}
       </nav>
     </div>
 
@@ -906,7 +587,7 @@ export default function NavbarLegacy() {
                     height: '20px'
                   }}>
                     <img
-                      src={'/images/sbacoustics/logo_sbacoustics_white_clean.webp'}
+                      src={'/images/sbacoustics/logo_sbacoustics_white_clean.png'}
                       alt='SB Acoustics Logo'
                       width={150}
                       height={40}
@@ -935,7 +616,7 @@ export default function NavbarLegacy() {
                     height: '20px'
                   }}>
                       <img
-                        src={'/images/sbacoustics/logo_sbacoustics_black_clean.webp'}
+                        src={'/images/sbacoustics/logo_sbacoustics.png'}
                         alt='SB Acoustics Logo'
                         width={150}
                         height={40}
@@ -961,7 +642,7 @@ export default function NavbarLegacy() {
                       height: '20px'
                     }}>
                       <img
-                        src={'/images/sbaudience/logo_sbaudience_black.webp'}
+                        src={'/images/sbaudience/logo_sbaudience_black.png'}
                         alt='SB Audience Logo'
                         width={150}
                         height={40}
@@ -989,7 +670,7 @@ export default function NavbarLegacy() {
                       height: '20px'
                     }}>
                     <img
-                      src={'/images/sbaudience/logo_sbaudience_black.webp'}
+                      src={'/images/sbaudience/logo_sbaudience_black.png'}
                       alt='SB Audience Logo'
                       width={150}
                       height={40}

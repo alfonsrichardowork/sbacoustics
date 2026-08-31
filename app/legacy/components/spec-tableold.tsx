@@ -1,10 +1,10 @@
 import { SpecificationProp } from '@/app/(frontend)/types';
-import { CSSProperties } from 'react';
+import "../(sbacoustics)/(products)/products/[productSlug]/singleproduct.css";
 
 interface Props {
   spec: SpecificationProp[];
-  styling: CSSProperties;
-  stylingTitle: CSSProperties;
+  styling: string;
+  stylingTitle: string;
 }
 
 export default function SpecificationTableOld({ spec, styling, stylingTitle }: Props) {
@@ -67,8 +67,7 @@ export default function SpecificationTableOld({ spec, styling, stylingTitle }: P
                     paddingInline: '0px',
                     paddingTop: '0px',
                     textAlign: 'start',
-                    ...stylingTitle
-                  }}>{parentName}</td>
+                  }} className={stylingTitle}>{parentName}</td>
                   {subParentNames.map((subName, idx) => (
                     <td key={idx} style={{
                     padding: '16px',
@@ -76,8 +75,7 @@ export default function SpecificationTableOld({ spec, styling, stylingTitle }: P
                     fontWeight: 600,
                     fontSize: '12px',
                     textAlign: 'end',
-                    ...styling
-                  }}>
+                  }} className={styling}>
                       {subName}
                     </td>
                   ))}
@@ -91,9 +89,8 @@ export default function SpecificationTableOld({ spec, styling, stylingTitle }: P
                     <td style={{
                       padding: '16px',
                       verticalAlign: 'middle',
-                      paddingLeft: '8px',
-                      ...styling
-                    }}>
+                      paddingLeft: '8px'
+                    }} className={styling}>
                       {childName}
                       {allNotes[rowIdx] && allNotes[rowIdx] !== '' && (
                         <sup style={{
@@ -118,8 +115,7 @@ export default function SpecificationTableOld({ spec, styling, stylingTitle }: P
                             verticalAlign: 'middle',
                             textAlign: 'right',
                             paddingRight: '8px',
-                            ...styling
-                          }}
+                          }} className={styling}
                         >
                           {value}
                         </td>

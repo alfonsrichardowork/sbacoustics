@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
       to: [
         // `${process.env.MY_EMAIL}`, 
         "alfonskerja@gmail.com",
-        // "it.04@sinarbajaelectric.com",
+        "it.04@sinarbajaelectric.com",
       ],
       subject: subject,
       react: EmailTemplate({ name, email, country, subject, message, website }),

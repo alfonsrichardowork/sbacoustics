@@ -1,8 +1,6 @@
 .drivers-container {
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding-inline: 32px;
+  padding-block: 16px;
 }
 
 .drivers-grid {
@@ -15,6 +13,24 @@
 
 .comparison-text-style {
   margin-bottom: 60px;
+}
+
+.all-driver-page-parent {
+  padding-inline: 32px;
+  padding-block: 16px;
+}
+
+.all-driver-page-child-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* sm: 768px */
+@media (min-width: 640px) {
+  .all-driver-page-child-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 /* md: 768px */
@@ -31,15 +47,17 @@
   .comparison-text-style {
     margin-bottom: 0px;
   }
+  
+  .all-driver-page-child-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 /* lg: 1024px */
 @media (min-width: 1024px) {
   .drivers-container {
-    padding-left: 3rem;
-    padding-right: 3rem;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding-inline: 48px;
+    padding-block: 24px;
   }
 
   .drivers-grid {
@@ -49,31 +67,46 @@
   .technical {
     padding-inline: 102px;
   }
+
+  .all-driver-page-parent {
+    padding-inline: 48px;
+    padding-block: 24px;
+  }
+
+  .all-driver-page-child-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 /* xl: 1280px */
 @media (min-width: 1280px) {
   .drivers-container {
-    padding-left: 10rem;
-    padding-right: 10rem;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-block: 32px;
+    padding-inline: 160px;
   }
   
   .technical {
     padding-inline: 128px;
+  }
+
+  .all-driver-page-parent {
+    padding-inline: 160px;
+    padding-block: 32px;
   }
 }
 
 /* 2xl: 1536px */
 @media (min-width: 1536px) {
   .drivers-container {
-    padding-left: 15rem;
-    padding-right: 15rem;
+    padding-inline: 240px;
   }
 
   .technical {
     padding-inline: 160px;
+  }
+
+  .all-driver-page-parent {
+    padding-inline: 240px;
   }
 }
 

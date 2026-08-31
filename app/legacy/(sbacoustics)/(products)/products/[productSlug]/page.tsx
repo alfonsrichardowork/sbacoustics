@@ -12,21 +12,6 @@ import SpecificationTableOld from "@/app/legacy/components/spec-tableold";
 import SwiperCarouselSimilarProductOld from "@/app/legacy/components/swipercarouselsimilarproductold";
 import "./singleproduct.css"
 
-const all_desc_style: React.CSSProperties = {
-  textAlign: "left",
-  fontSize: "clamp(0.75rem, 1vw, 1rem)",
-  color: "black",
-  padding: 0,
-  paddingTop: "0.25rem",
-  paddingBottom: "0.25rem",
-};
-
-const all_sub_title_style: React.CSSProperties = {
-  textAlign: "left",
-  fontWeight: 700,
-  fontSize: "clamp(1.125rem, 2vw, 1.5rem)",
-  color: "black",
-};
 type Props = {
   params: Promise<{ productSlug?: string }>
 }
@@ -295,41 +280,35 @@ export default async function SingleProductSBAcoustics(props: Props) {
     });
 
     return (
-        <div style={{ padding: "1rem 2rem" }}>
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
+        <div className="single-product-page-outer-parent">
+            <div className="single-product-page-outer-parent-2">
             <div className="single-product-page-parent">   
-                <div style={{ display: "flex", flexDirection: "column", width: "100%", paddingRight: "2.5rem" }}>
-  
-                        <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
+                <div className="single-product-page-child-1">
+                        <div className="single-product-page-child-2">
                             <SwiperCarouselOneProductOld name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues}/>
                         </div>
                         {product.drawing_img_url !== '' &&
-                            <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
+                            <div className="single-product-page-child-2">
                                 <LightboxOneProductOld name={product.name} url={product.drawing_img_url} type={"drawing"}/>
                             </div>
                         }
                         {product.graph_img_url !== '' &&
-                            <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
+                            <div className="single-product-page-child-2">
                                 <LightboxOneProductOld name={product.name} url={product.graph_img_url} type={"graph"}/>
                             </div>
                         }
                     </div>
+                    <div className="single-product-page-child-1-mobile">   
+                        {/* <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}> */}
+                            <SwiperCarouselOneProductMobileOld name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>       
+                        {/* </div> */}
+                    </div>
                 </div>
 
-            <div className="single-product-page-SwiperCarouselOneProductMobileOld">   
-                <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
-                    <SwiperCarouselOneProductMobileOld name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>       
-                </div>
-            </div>
 
                 <div className="single-product-page-all-data">   
                     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-                        <h1 style={{ textAlign: "left",
-                            fontWeight: 700,
-                            fontSize: "clamp(1.125rem, 2vw, 1.5rem)",
-                            color: "black",
-                        }}
-                        >
+                        <h1 className="single-product-page-all-data-h1">
                             {(
                                 prod_cat.some((c) => c.name.toLowerCase().includes("satori")) ||
                                 prod_sub_cat.some((s) => s.name.toLowerCase().includes("satori")) ||
@@ -337,16 +316,9 @@ export default async function SingleProductSBAcoustics(props: Props) {
                             ) && "SATORI "}
                             {product.name}
                         </h1>
-                        <div style={{
-                            textAlign: "left",
-                            fontSize: "clamp(0.75rem, 1vw, 1rem)",
-                            color: "black",
-                            padding: 0,
-                            paddingTop: "0.25rem",
-                            paddingBottom: "0.25rem",
-                        }}>
+                        <div className="single-product-page-all-data-desc-1">
                             {(prod_sub_cat.length !== 0 || prod_sub_sub_cat.length !== 0) &&
-                                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
                                     <h2>Categories:</h2> 
                                     {prod_sub_cat.length !== 0 &&
                                         prod_sub_cat.map((subcategory, index) => (
@@ -372,23 +344,10 @@ export default async function SingleProductSBAcoustics(props: Props) {
 
                         {product.description && product.description != '<p></p>' && product.description != '' && product.description != '<></>' &&
                             <>
-                                <div style={{ textAlign: "left",
-                                    fontWeight: 700,
-                                    fontSize: "clamp(1.125rem, 2vw, 1.5rem)",
-                                    color: "black",
-                                    paddingTop: '32px'
-                                }}>
+                                <div className="single-product-page-all-data-h1">
                                     <h2>Features:</h2>
                                 </div>
-                                <h3  
-                                style={{
-                                    textAlign: "left",
-                                    fontSize: "clamp(0.75rem, 1vw, 1rem)",
-                                    color: "black",
-                                    padding: 0,
-                                    paddingTop: "0.25rem",
-                                    paddingBottom: "0.25rem",
-                                }} id="tiptap" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description, {
+                                <h3 className="single-product-page-all-data-desc-1" id="tiptap" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description, {
                                     ALLOWED_TAGS: [
                                         'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
                                     ],
@@ -402,12 +361,12 @@ export default async function SingleProductSBAcoustics(props: Props) {
 
                         {product.productsKits && product.productsKits.length > 0 &&
                             <>
-                                <div style={{ ...all_desc_style, fontWeight: 700, paddingTop: "1rem" }}>
+                                <div className="single-product-page-all-data-desc-1" style={{ fontWeight: 700, paddingTop: "16px" }}>
                                     <h2>{product.slug === 'dw50' ? 'Compatible Drivers:' : 'Drivers:'}</h2>
                                 </div>
                                 {product.productsKits.map((value, index) => (
-                                    <div key={index} style={{ ...all_desc_style, fontWeight: 600, display: "flex", alignItems: "center", paddingTop: 0, paddingBottom: 0 }}>
-                                        <div style={{ paddingRight: "0.5rem" }}>
+                                    <div key={index} className="single-product-page-all-data-desc-1" style={{ fontWeight: 600, display: "flex", alignItems: "center", paddingBlock: '0px' }}>
+                                        <div style={{ paddingRight: "8px" }}>
                                             - 
                                         </div>
                                         <a
@@ -415,7 +374,8 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                             style={{
                                                 color: '#e6001b',
                                                 textDecorationLine: "underline",
-                                                fontSize: "14px"
+                                                fontSize: "14px",
+                                                lineHeight: '1.43'
                                             }}
                                         >
                                             {value.productUsedInKits.name}
@@ -430,18 +390,11 @@ export default async function SingleProductSBAcoustics(props: Props) {
                         {product.multipleDatasheetProduct && product.multipleDatasheetProduct.length > 0 &&
                             <>
                                 {product.multipleDatasheetProduct.length===1 && product.multipleDatasheetProduct[0]?.url!=''?
-                                    <div style={{ display: "flex", justifyContent: "flex-start", paddingTop: "2rem" }}>
-                                        <a href={product.multipleDatasheetProduct[0]?.url ?? '/'} target="_blank" style={{
-                                            textAlign: "left",
-                                            fontSize: "clamp(0.75rem, 1vw, 1rem)",
-                                            color: "black",
-                                            padding: 0,
-                                            paddingTop: "0.25rem",
-                                            paddingBottom: "0.25rem",
+                                    <div style={{ display: "flex", justifyContent: "flex-start", paddingTop: "32px" }}>
+                                        <a href={product.multipleDatasheetProduct[0]?.url ?? '/'} target="_blank" className="single-product-page-all-data-desc-1" style={{
                                             fontWeight: 700,
-                                            display: "flex",
-                                            alignItems: "center",
-
+                                            display: 'flex',
+                                            alignItems: 'center'
                                         }}>
                                                 <div style={{
                                                     position: "relative",
@@ -469,21 +422,14 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                         </a>
                                     </div>
                                 : product.multipleDatasheetProduct[0]?.url!='' &&
-                                    <div style={{ justifyContent: "flex-start", paddingTop: "2rem" }}>
+                                    <div style={{ justifyContent: "flex-start", paddingTop: "32px" }}>
                                         {product.multipleDatasheetProduct && product.multipleDatasheetProduct.map((value, index) => (
                                             value.url!=''&&
-                                                <div key={index} style={{ paddingTop: index !== 0 ? "1rem" : 0 }}>
-                                                    <a href={value.url} target="_blank" style={{
-                                                        textAlign: "left",
-                                                        fontSize: "clamp(0.75rem, 1vw, 1rem)",
-                                                        color: "black",
-                                                        padding: 0,
-                                                        paddingTop: "0.25rem",
-                                                        paddingBottom: "0.25rem",
+                                                <div key={index} style={{ paddingTop: index !== 0 ? "16px" : 0 }}>
+                                                    <a href={value.url} target="_blank" className="single-product-page-all-data-desc-1" style={{
                                                         fontWeight: 700,
-                                                        display: "flex",
-                                                        alignItems: "center",
-
+                                                        display: 'flex',
+                                                        alignItems: 'center'
                                                     }}> 
                                                         <div style={{
                                                             position: "relative",
@@ -521,19 +467,12 @@ export default async function SingleProductSBAcoustics(props: Props) {
                             <>
                                 {
                                 product.multipleFRDZMAFiles.length===1 && product.multipleFRDZMAFiles[0]?.url!=''?
-                                    <div style={{ display: "flex", justifyContent: "flex-start", paddingTop: "1rem" }}>
-                                        <a download href={product.multipleFRDZMAFiles[0]?.url ?? '/'} target="_blank" 
+                                    <div style={{ display: "flex", justifyContent: "flex-start", paddingTop: "16px" }}>
+                                        <a download href={product.multipleFRDZMAFiles[0]?.url ?? '/'} target="_blank" className="single-product-page-all-data-desc-1" 
                                         style={{
-                                            textAlign: "left",
-                                            fontSize: "clamp(0.75rem, 1vw, 1rem)",
-                                            color: "black",
-                                            padding: 0,
-                                            paddingTop: "0.25rem",
-                                            paddingBottom: "0.25rem",
                                             fontWeight: 700,
-                                            display: "flex",
-                                            alignItems: "center",
-
+                                            display: 'flex',
+                                            alignItems: 'center'
                                         }}>
                                         
                                             <div style={{
@@ -563,21 +502,14 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                         </a>
                                     </div>
                                 : product.multipleFRDZMAFiles[0]?.url!='' &&
-                                    <div style={{ justifyContent: "flex-start", paddingTop: "1rem" }}>
+                                    <div style={{ justifyContent: "flex-start", paddingTop: "16px" }}>
                                         {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.map((value, index) => (
                                             value.url!=''&&
-                                                <div key={index} style={{ paddingTop: index !== 0 ? "1rem" : 0 }}>
-                                                    <a download href={value.url} target="_blank" style={{
-                                                        textAlign: "left",
-                                                        fontSize: "clamp(0.75rem, 1vw, 1rem)",
-                                                        color: "black",
-                                                        padding: 0,
-                                                        paddingTop: "0.25rem",
-                                                        paddingBottom: "0.25rem",
+                                                <div key={index} style={{ paddingTop: index !== 0 ? "16px" : 0 }}>
+                                                    <a download href={value.url} target="_blank" className="single-product-page-all-data-desc-1" style={{
                                                         fontWeight: 700,
-                                                        display: "flex",
-                                                        alignItems: "center",
-
+                                                        display: 'flex',
+                                                        alignItems: 'center'
                                                     }}> 
                                                         <div style={{
                                                             position: "relative",
@@ -616,19 +548,12 @@ export default async function SingleProductSBAcoustics(props: Props) {
                         {product.multiple3DModels && product.multiple3DModels.length > 0 &&
                             <>
                                 {product.multiple3DModels.length===1 && product.multiple3DModels[0]?.url!=''?
-                                    <div style={{ display: "flex", justifyContent: "flex-start", paddingTop: "1rem" }}>
-                                        <a download href={product.multiple3DModels[0]?.url ?? '/'} target="_blank"
+                                    <div style={{ display: "flex", justifyContent: "flex-start", paddingTop: "16px" }}>
+                                        <a download href={product.multiple3DModels[0]?.url ?? '/'} target="_blank" className="single-product-page-all-data-desc-1"
                                             style={{
-                                                textAlign: "left",
-                                                fontSize: "clamp(0.75rem, 1vw, 1rem)",
-                                                color: "black",
-                                                padding: 0,
-                                                paddingTop: "0.25rem",
-                                                paddingBottom: "0.25rem",
                                                 fontWeight: 700,
-                                                display: "flex",
-                                                alignItems: "center",
-
+                                                display: 'flex',
+                                                alignItems: 'center'
                                             }}>
                                             <div style={{
                                                 position: "relative",
@@ -657,21 +582,14 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                         </a>
                                     </div>
                                 : product.multiple3DModels[0]?.url!='' &&
-                                    <div style={{ justifyContent: "flex-start", paddingTop: "1rem" }}>
+                                    <div style={{ justifyContent: "flex-start", paddingTop: "16px" }}>
                                         {product.multiple3DModels && product.multiple3DModels.map((value, index) => (
                                             value.url!=''&&
-                                                <div key={index} style={{ paddingTop: index !== 0 ? "1rem" : 0 }}>
-                                                    <a download href={value.url} target="_blank" style={{
-                                                        textAlign: "left",
-                                                        fontSize: "clamp(0.75rem, 1vw, 1rem)",
-                                                        color: "black",
-                                                        padding: 0,
-                                                        paddingTop: "0.25rem",
-                                                        paddingBottom: "0.25rem",
+                                                <div key={index} style={{ paddingTop: index !== 0 ? "16px" : 0 }}>
+                                                    <a download href={value.url} target="_blank" className="single-product-page-all-data-desc-1" style={{
                                                         fontWeight: 700,
-                                                        display: "flex",
-                                                        alignItems: "center",
-
+                                                        display: 'flex',
+                                                        alignItems: 'center'
                                                     }}> 
                                                         
                                                     <div style={{
@@ -708,8 +626,8 @@ export default async function SingleProductSBAcoustics(props: Props) {
 
 
                         {specsCombined && specsCombined.length > 0 &&
-                            <div style={{ justifyContent: "flex-start", paddingTop: "1rem" }}>
-                                <SpecificationTableOld spec={specsCombined} styling={all_desc_style} stylingTitle={all_sub_title_style}/>
+                            <div style={{ justifyContent: "flex-start", paddingTop: "16px" }}>
+                                <SpecificationTableOld spec={specsCombined} styling={'single-product-page-all-data-desc-1'} stylingTitle={'single-product-page-all-data-h1'}/>
                             </div>
                         }
                         
@@ -717,7 +635,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                 </div>
             </div>
 
-            <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}>
+            <div style={{ width: "100%", height: "100%", paddingBottom: "16px" }}>
                 {product.kitsFinishing && product.kitsFinishing.length > 1 &&
                     <SwiperCarouselKitsFinishingOld name={product.name} kits_finishing={product.kitsFinishing}/>
                 }    
@@ -725,15 +643,12 @@ export default async function SingleProductSBAcoustics(props: Props) {
 
             {product.similarProducts && product.similarProducts.length > 0 &&
                 <div 
+                className="single-product-page-all-data-h1"
                 style={{ 
-                    textAlign: "left",
-                    fontWeight: 700,
-                    fontSize: "clamp(1.125rem, 2vw, 1.5rem)",
-                    color: "black",
                     paddingTop: '112px',
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlignLast:"center",
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center',
                     width: '100%'
                 }}>
                     <h2 style={{

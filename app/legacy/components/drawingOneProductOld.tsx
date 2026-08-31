@@ -1,9 +1,6 @@
 "use client"
 
 import { useState } from "react";
-import { Lightbox } from "yet-another-react-lightbox";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
-import Captions from "yet-another-react-lightbox/plugins/captions";
 //@ts-ignore
 import 'yet-another-react-lightbox/styles.css'
 //@ts-ignore
@@ -32,13 +29,6 @@ export const LightboxOneProductOld = ({ name, url, type }: { name: string, url: 
                 <FrequencyResponseSectionOld name={name} frequencyres={url}/>
             }
         </div>
-        <Lightbox
-            open={open}
-            close={() => setOpen(false)}
-            index={0}
-            slides={[{src: url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${url}` : url, title: name}]}
-            plugins={[Zoom, Captions]}
-        />
     </div>
   );
 };

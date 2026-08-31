@@ -30,6 +30,8 @@ import 'yet-another-react-lightbox/styles.css'
 import 'yet-another-react-lightbox/plugins/thumbnails.css'
 //@ts-ignore
 import "yet-another-react-lightbox/plugins/captions.css";
+import "./style/all-style.css"
+import { LazyImageCustom } from '@/components/lazyImageCustom';
 
 
 type PropType = {
@@ -102,10 +104,7 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
 
   return (
     <>
-
-    <div style={{
-      paddingInline: '40px'
-    }}>
+    <div className='single-product-page-SwiperCarouselOneProductOld'>
       <Swiper
         style={{
           "--swiper-pagination-color": "#000000",
@@ -128,16 +127,75 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
         modules={[FreeMode, Navigation, Thumbs]}
       >
         {cover && (
-            <SwiperSlide>
-                {/* <div className="h-full flex justify-center items-center cursor-zoom-in" onClick={() => openLightbox(0)}>
-                  <Card className="border-none h-full w-full flex items-center justify-center">
-                    <CardContent className="p-6 flex items-center justify-center w-full h-full bg-background"
+          //   <SwiperSlide>
+          //                   <img 
+          //                     src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
+          //                     alt={name} 
+          //                     width={500}
+          //                     height={500}
+          //                     style={{
+          //                       objectFit: 'contain',
+          //                       height: "100%",
+          //                       width: '100%',
+          //                       zIndex: 10,
+          //                     }}
+          //                     loading='eager'
+          //                   />
+          // </SwiperSlide>
+          <SwiperSlide>
+                <div style={{
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  cursor: 'zoom-in'
+                }} onClick={() => openLightbox(0)}>
+                  <div style={{
+                    borderRadius: '8px',
+                    backgroundColor: '#ffffff',
+                    borderStyle: 'none',
+                    height: '100%',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <div style={{
+                      paddingInline: '24px',
+                      paddingBottom: '24px',
+                      paddingTop: '0px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                      height: '100%',
+                      backgroundColor: 'transparent'
+                    }}
                       onMouseEnter={() => setHoverImage(true)}
                       onMouseLeave={() => setHoverImage(false)}
                     >
-                      <div className="relative flex items-center justify-center h-full w-full">
-                        <div className='z-10 w-full h-fit'>
-                          <div className="relative flex items-center justify-center h-full w-full"> */}
+                      <div style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '100%',
+                        width: '100%'
+                      }}>
+                        <div style={{
+                          zIndex: 10,
+                          width: '100%',
+                          height: 'fit-content'
+                        }}>
+
+                          <div style={{
+                            position: 'relative',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100%',
+                            width: '100%'
+                          }}>
                             <img 
                               src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
                               alt={name} 
@@ -145,49 +203,91 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
                               height={500}
                               style={{
                                 objectFit: 'contain',
-                                height: "100%",
-                                width: '100%',
-                                zIndex: 10,
+                                height: '100%',
+                                width: 'fit-content',
+                                zIndex: 10
                               }}
-                              loading='eager'
+                              loading={'eager'}
                             />
-                          {/* </div>
+                          </div>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                </div> */}
+                    </div>
+                  </div>
+                </div>
           </SwiperSlide>
         )}
         {multipleslides && sortedImages.map((item, index) => (
           <SwiperSlide key={`${item.name} - ${index.toString()}`}>
-              {/* <div className="h-full flex justify-center items-center cursor-zoom-in" onClick={() => openLightbox(index+1)}>
-                <Card className="border-none h-full w-full flex items-center justify-center">
-                  <CardContent className="p-6 flex items-center justify-center w-full h-full bg-background"
+              <div style={{
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  cursor: 'zoom-in'
+                }} onClick={() => openLightbox(index+1)}>
+                <div style={{
+                    borderRadius: '8px',
+                    backgroundColor: '#ffffff',
+                    borderStyle: 'none',
+                    height: '100%',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                  <div style={{
+                      paddingInline: '24px',
+                      paddingBottom: '24px',
+                      paddingTop: '0px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                      height: '100%',
+                      backgroundColor: 'transparent'
+                    }}
                     onMouseEnter={() => setHoverImage(true)}
                     onMouseLeave={() => setHoverImage(false)}>
-                    <div className="relative flex items-center justify-center h-full w-full">
-                      <div className='z-10 w-full h-fit'>
-                          <div className="relative flex items-center justify-center h-full w-full"> */}
+                    <div style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '100%',
+                        width: '100%'
+                      }}>
+                        <div style={{
+                          zIndex: 10,
+                          width: '100%',
+                          height: 'fit-content'
+                        }}>
+                          <div style={{
+                            position: 'relative',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100%',
+                            width: '100%'
+                          }}>
                             <img 
                               src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
                               alt={item.name} 
                               width={500}
                               height={500}
                               style={{
-                                objectFit: 'contain',
+                                objectFit: 'cover',
                                 height: '100%',
-                                width: '100%',
-                                zIndex: 10,
+                                width: 'fit-content'
                               }}
-                              loading='lazy'
+                              loading={'eager'}
                             />
-                          {/* </div>
+                          </div>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                </div> */}
+                    </div>
+                  </div>
+                </div>
           </SwiperSlide>
         ))}
       </Swiper>
@@ -197,9 +297,7 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
 
 
       {multipleslides &&
-      <div style={{
-        paddingInline: isMobile ? '40px' : '64px'
-      }}>
+      <div className='single-product-page-SwiperCarouselOneProductOld-thumbnail'>
       <Swiper
         onSwiper={setThumbsSwiper}
         spaceBetween={10}
@@ -249,7 +347,7 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
                   width={1000}
                   height={1000}
                   style={{
-                    objectFit: 'contain',
+                    objectFit: 'cover',
                     height: '100%',
                     width: 'fit-content'
                   }}
@@ -302,7 +400,7 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
                   width={1000}
                   height={1000}
                   style={{
-                    objectFit: 'contain',
+                    objectFit: 'cover',
                     height: '100%',
                     width: 'fit-content'
                   }}
@@ -316,42 +414,6 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
       </Swiper>
       </div>
       }
-
-      {multipleslides ?
-        <Lightbox
-          styles={{ container: { backgroundColor: "rgba(255, 255, 255, 1)" } }}
-          open={lightboxOpen}
-          close={() => setLightboxOpen(false)}
-          index={lightboxIndex}
-          slides=
-          {[
-            { 
-              src: cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover, 
-              title: name, 
-              alt: name 
-            },
-            ...sortedImages.map((item, index) => ({ 
-              src: item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url, 
-              title: `${item.name} - ${index.toString()}`, 
-              alt: `${item.name} - ${index.toString()}`
-            }))
-          ]}
-          plugins={[Zoom, Thumbnails, Captions]}
-        />
-        :
-        <Lightbox
-          styles={{ container: { backgroundColor: "rgba(255, 255, 255, 1)" } }}
-          open={lightboxOpen}
-          close={() => setLightboxOpen(false)}
-          index={lightboxIndex}
-          slides={[{ 
-            src: cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover, 
-            title: name, 
-            alt: name 
-          }]}
-          plugins={[Zoom, Captions]}
-        />
-      } 
     </>
   );
 }

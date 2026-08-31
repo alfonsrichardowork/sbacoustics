@@ -131,7 +131,7 @@ const ComparisonPageSBAcoustics = () => {
         const fetchData = async () => {
             try {
                 let fetchedProducts: SingleProducts[] = []
-                const decodedSlugs = decodeURIComponent(localStorage.getItem("selectedComparison") || '');
+                const decodedSlugs = decodeURIComponent(localStorage.getItem("selectedComparisonLegacy") || '');
                 const slugArray = decodedSlugs.split(',');
                 slugArray.pop()
                 setFinalSlug(slugArray)
@@ -160,7 +160,7 @@ const ComparisonPageSBAcoustics = () => {
         if(url === ","){
             url = ""
         }
-        localStorage.setItem("selectedComparison", url);
+        localStorage.setItem("selectedComparisonLegacy", url);
         const index = finalFetchedProducts.findIndex((val) => val.slug === slug);
         if (index !== -1) {
             setFinalFetchedProducts(finalFetchedProducts.filter((_, i) => i !== index));

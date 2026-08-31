@@ -131,7 +131,7 @@ const ComparisonPageSBAudience = () => {
         const fetchData = async () => {
             try {                
                 let fetchedProducts: SingleProducts[] = []
-                const decodedSlugs = decodeURIComponent(localStorage.getItem("selectedComparisonSBAudience") || '');
+                const decodedSlugs = decodeURIComponent(localStorage.getItem("selectedComparisonLegacySBAudience") || '');
                 const slugArray = decodedSlugs.split(',');
                 slugArray.pop()
                 setFinalSlug(slugArray)
@@ -160,7 +160,7 @@ const ComparisonPageSBAudience = () => {
         if(url === ","){
             url = ""
         }
-        localStorage.setItem("selectedComparisonSBAudience", url);
+        localStorage.setItem("selectedComparisonLegacySBAudience", url);
         const index = finalFetchedProducts.findIndex((val) => val.slug === slug);
         if (index !== -1) {
             setFinalFetchedProducts(finalFetchedProducts.filter((_, i) => i !== index));

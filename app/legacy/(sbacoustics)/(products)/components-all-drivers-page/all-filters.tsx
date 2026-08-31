@@ -1,172 +1,8 @@
-// "use client";
-
-// import { AllFilterProductsOnlyType } from "@/app/(frontend)/types";
-// import { useState } from "react";
-// import '@/app/legacy/(products)/drivers/driverpage.css'
-
-// interface MainProps {
-//   data: (AllFilterProductsOnlyType)[];
-// };
-
-// const AllDriversandFiltersProducts: React.FC<MainProps> = ({
-//   data
-// }) => {
-
-//     const [activeSlugCompare, setActiveSlugCompare] = useState<string[]>([]);
-//     const [activeNameCompare, setActiveNameCompare] = useState<string[]>([]);
-//     const [activeImgUrlCompare, setActiveImgUrlCompare] = useState<string[]>([]);
-//     const [_1, setRefresh] = useState<string>('');
-//     const [comparisonText, setComparisonText] = useState<string>('')
-
-//     function deleteComparison(slug: string) {
-//         let tempslug: string[] = []
-//         let tempname: string[] = []
-//         let tempimgurl: string[] = []
-//         let tempUrl: string = ''
-//         activeSlugCompare.map((value, index) => {
-//           if (value !== slug) {
-//             tempslug.push(activeSlugCompare[index] ?? '')
-//             tempname.push(activeNameCompare[index] ?? '')
-//             tempimgurl.push(activeImgUrlCompare[index] ?? '')
-//             tempUrl = tempUrl.concat(value, ",");
-//           } else {
-//             if (activeSlugCompare.length === 1) {
-//               tempname = []
-//               tempslug = []
-//             }
-//           }
-//         });
-//         setActiveSlugCompare(tempslug);
-//         setActiveNameCompare(tempname);
-//         setActiveImgUrlCompare(tempimgurl);
-//         // setUrl(tempUrl);
-//         localStorage.setItem("selectedComparison", tempUrl);
-//         setRefresh(slug);
-//       }
-
-//     function addComparison(slug: string, name: string, imgUrl: string) {
-//         if (!activeSlugCompare.includes(slug)) {
-//             const newSlugs = [...activeSlugCompare, slug];
-//             const newNames = [...activeNameCompare, name];
-//             const newImgs = [...activeImgUrlCompare, imgUrl];
-
-//             setActiveSlugCompare(newSlugs);
-//             setActiveNameCompare(newNames);
-//             setActiveImgUrlCompare(newImgs);
-
-//             const tempUrl = newSlugs.join(",") + ",";
-//             localStorage.setItem("selectedComparison", tempUrl);
-//         }
-//     }
-
-//     return ( 
-//         <>
-//             {data.map((value, index) => (
-//                 <div>
-//                 <a key={index} className="product-item" href={`/legacy/products/${value.products.slug}`}>
-//                     <img
-//                         src={value.products.cover_img}
-//                         alt={value.products.name}
-//                         className="product-image"
-//                     />
-
-//                     <div className="product-name">
-//                         {value.products.name}
-//                     </div>
-//                     <button>
-
-//                     </button>
-
-//                 </a>
-//                     <hr className="product-divider" />
-//                 <div
-//                     className={`top-12 right-4 z-30`}
-//                 >
-//                     {activeSlugCompare?.includes(value.products.slug)?
-//                     <div className="hover:text-primary hover:cursor-pointer" onClick={() => {deleteComparison(value.products.slug),
-//                         setComparisonText(value.products.name.concat(" removed from comparison"))
-//                     }}>
-//                         <p>Remove from Comparison</p>
-//                     </div>
-//                     :
-//                     <div className="hover:text-primary hover:cursor-pointer" onClick={() => {
-//                         if (activeSlugCompare.length < 5) {
-//                             addComparison(value.products.slug, value.products.name, value.products.cover_img);
-//                             setComparisonText(value.products.name.concat(" added to comparison"))
-//                         } else {
-//                             setComparisonText('Maximum 5 items can be compared')
-//                         }
-//                     }}>
-//                         <p>Add to Comparison</p>
-//                     </div>
-//                     }
-//                 </div>
-
-
-
-//                 <div
-//                     className={`lg:hidden block absolute top-12 right-4 z-30`}
-//                 >
-//                     {activeSlugCompare?.includes(value.products.slug)?
-//                     <div onClick={() => {deleteComparison(value.products.slug),
-//                         setComparisonText(value.products.name.concat(" removed from comparison"))
-//                     }}>
-//                         <p>Remove from Comparison</p>
-//                     </div>
-//                     :
-//                     <div  onClick={() => {
-//                         if (activeSlugCompare.length < 5) {
-//                             addComparison(value.products.slug, value.products.name, value.products.cover_img);
-//                             setComparisonText(value.products.name.concat(" added to comparison"))
-//                         } else {
-//                             setComparisonText('Maximum 5 items can be compared')
-//                         }
-//                     }}>
-//                         <p>Add to Comparison</p>
-//                     </div>
-//                     }
-//                 </div>
-//                 </div>
-//             ))}
-//             <div style={{
-//                 position: 'absolute'
-//             }}>
-//             {comparisonText !== '' && <p style={{
-//                 position: 'relative',
-//                 right: 0,
-//                 bottom: 0,
-//                 justifyContent: 'center',
-//                 alignItems: 'center',
-//                 textAlign: 'center',
-//                 width: '100%',
-//                 height: '100%',
-//                 zIndex: 0
-//             }}>{comparisonText}</p>}
-//             </div>
-//             <div>
-//                 {activeSlugCompare.length > 0 && 
-//                     <button>
-//                         <a href={`/legacy/comparison`}>Compare Now</a>
-//                     </button>
-//                 }
-//             </div>
-//         </>
-//     );
-// };
-
-// export default AllDriversandFiltersProducts;
-
-
-
-
-
-
-
-
-
 "use client";
 
+import getAllPriorityBySubCategory from "@/app/(frontend)/actions/get-all-priority-by-category";
 import { AllFilterProductsOnlyType } from "@/app/(frontend)/types";
+import { allproductcategory } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -181,7 +17,12 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({ data }) => {
   const [_1, setRefresh] = useState<string>("");
   const [comparisonText, setComparisonText] = useState<string>("");
   const [timer, setTimer] = useState<boolean>(false)
+  const [priority, setPriority] = useState<allproductcategory[]>([]);
+  const [priorityLoaded, setPriorityLoaded] = useState(false);
+  const [loadFinished, setLoadFinsihed] = useState<boolean>(false)
   const pathname = usePathname()
+  const params = pathname.split('/').slice(1);
+  const [allFeaturedProducts, setAllFeaturedProducts] = useState<AllFilterProductsOnlyType[]>(data)
 
 
   useEffect(() => {
@@ -210,7 +51,7 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({ data }) => {
     setActiveNameCompare(tempName);
     setActiveImgUrlCompare(tempImgUrl);
 
-    localStorage.setItem("selectedComparison", tempUrl);
+    localStorage.setItem("selectedComparisonLegacy", tempUrl);
     setRefresh(slug);
   }
 
@@ -225,7 +66,7 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({ data }) => {
       setActiveImgUrlCompare(newImgs);
 
       const tempUrl = newSlugs.join(",") + ",";
-      localStorage.setItem("selectedComparison", tempUrl);
+      localStorage.setItem("selectedComparisonLegacy", tempUrl);
     }
   }
 
@@ -252,6 +93,66 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({ data }) => {
     setTimer(true)
   };
 
+  useEffect(() => {
+    const fetchPriority = async () => {
+        try {
+            const temp = await getAllPriorityBySubCategory(
+                pathname,
+                params[params.length - 1] ?? ''
+            );
+
+            setPriority(temp);
+        } catch (error) {
+            console.error("Error fetching priority:", error);
+        } finally {
+            setPriorityLoaded(true);
+        }
+    };
+
+    fetchPriority();
+  }, []);
+
+
+  
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            let FinalFeatured: AllFilterProductsOnlyType[] = data
+            if (!priorityLoaded) return;
+            if(priority.length === 0) {
+                FinalFeatured.sort((a, b) => {
+                    // Extract the leading number from the name
+                    const numA = parseInt(a.products.name.match(/^\d+/)?.[0] || "100", 10);
+                    const numB = parseInt(b.products.name.match(/^\d+/)?.[0] || "100", 10);
+                
+                    if (numA !== numB) {
+                    return numA - numB; // Sort numerically first
+                    }
+                
+                    return a.products.name.localeCompare(b.products.name); // Sort alphabetically if numbers are the same
+                });
+                setAllFeaturedProducts(FinalFeatured)
+                setLoadFinsihed(true)
+            }
+            else{
+                FinalFeatured.sort((a, b) => {
+                    const priorityA = Number(priority.find((pri) => pri.productId === a.products.id)?.priority ?? 999)
+                    const priorityB = Number(priority.find((pri) => pri.productId === b.products.id)?.priority ?? 999)
+                    return priorityA - priorityB
+                });
+                setAllFeaturedProducts(FinalFeatured)
+                setLoadFinsihed(true)
+            }
+
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+    
+        fetchData();
+      }, [priorityLoaded, priority, data]); 
+
+
   return (
     <>
       {/* <div
@@ -261,7 +162,7 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({ data }) => {
           flexDirection: "column",
         }}
       > */}
-        {data.map((value, index) => {
+        {allFeaturedProducts.map((value, index) => {
             const slug = value.products.slug;
             const name = value.products.name;
             const coverImg = value.products.cover_img;

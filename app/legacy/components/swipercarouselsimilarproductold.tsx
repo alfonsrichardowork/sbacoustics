@@ -53,7 +53,7 @@ const SwiperCarouselSimilarProductOld: React.FC<PropType> = ({ similar, brand })
   return (
     <div style={{
       borderWidth: '2px',
-      borderRadius: '12px',
+      borderRadius: '8px',
       paddingInline: '16px',
       paddingTop: '16px',
       paddingBottom: shouldShowControls ? '16px' : '0px'
@@ -73,7 +73,7 @@ const SwiperCarouselSimilarProductOld: React.FC<PropType> = ({ similar, brand })
         style={{
           "--swiper-navigation-color": "#000000",
           "--swiper-navigation-size": "20px",
-          height: '300px'
+          height: '265px'
         } as CSSProperties}
       >
         {similar.map((sim, index) => (
@@ -128,7 +128,6 @@ const SwiperCarouselSimilarProductOld: React.FC<PropType> = ({ similar, brand })
                 </div>
                 <div style={{
                   padding: '8px',
-                  paddingTop: '0px',
                   display: 'flex',
                   flexDirection: 'column',
                   flex: 1,

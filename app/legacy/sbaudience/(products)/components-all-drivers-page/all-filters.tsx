@@ -1,6 +1,8 @@
 "use client";
 
+import getAllPriorityBySubCategory from "@/app/(frontend)/actions/get-all-priority-by-category";
 import { AllFilterProductsOnlyType } from "@/app/(frontend)/types";
+import { allproductcategory } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -15,7 +17,12 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({ data }) => {
   const [_1, setRefresh] = useState<string>("");
   const [comparisonText, setComparisonText] = useState<string>("");
   const [timer, setTimer] = useState<boolean>(false)
+  const [priority, setPriority] = useState<allproductcategory[]>([]);
+  const [priorityLoaded, setPriorityLoaded] = useState(false);
+  const [loadFinished, setLoadFinsihed] = useState<boolean>(false)
   const pathname = usePathname()
+  const params = pathname.split('/').slice(1);
+  const [allFeaturedProducts, setAllFeaturedProducts] = useState<AllFilterProductsOnlyType[]>(data)
 
 
   useEffect(() => {
@@ -44,7 +51,7 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({ data }) => {
     setActiveNameCompare(tempName);
     setActiveImgUrlCompare(tempImgUrl);
 
-    localStorage.setItem("selectedComparisonSBAudience", tempUrl);
+    localStorage.setItem("selectedComparisonLegacySBAudience", tempUrl);
     setRefresh(slug);
   }
 
@@ -59,7 +66,7 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({ data }) => {
       setActiveImgUrlCompare(newImgs);
 
       const tempUrl = newSlugs.join(",") + ",";
-      localStorage.setItem("selectedComparisonSBAudience", tempUrl);
+      localStorage.setItem("selectedComparisonLegacySBAudience", tempUrl);
     }
   }
 
@@ -86,6 +93,68 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({ data }) => {
     setTimer(true)
   };
 
+useEffect(() => {
+    const fetchPriority = async () => {
+        try {
+            const temp = await getAllPriorityBySubCategory(
+                pathname,
+                params[params.length - 1] ?? ''
+            );
+
+            setPriority(temp);
+        } catch (error) {
+            console.error("Error fetching priority:", error);
+        } finally {
+            setPriorityLoaded(true);
+        }
+    };
+
+    fetchPriority();
+  }, []);
+
+
+  
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            let FinalFeatured: AllFilterProductsOnlyType[] = data
+            if (!priorityLoaded) return;
+            if(priority.length === 0) {
+                FinalFeatured.sort((a, b) => {
+                    // Extract the leading number from the name
+                    const numA = parseInt(a.products.name.match(/^\d+/)?.[0] || "100", 10);
+                    const numB = parseInt(b.products.name.match(/^\d+/)?.[0] || "100", 10);
+                
+                    if (numA !== numB) {
+                    return numA - numB; // Sort numerically first
+                    }
+                
+                    return a.products.name.localeCompare(b.products.name); // Sort alphabetically if numbers are the same
+                });
+                setAllFeaturedProducts(FinalFeatured)
+                setLoadFinsihed(true)
+            }
+            else{
+                FinalFeatured.sort((a, b) => {
+                    const priorityA = Number(priority.find((pri) => pri.productId === a.products.id)?.priority ?? 999)
+                    const priorityB = Number(priority.find((pri) => pri.productId === b.products.id)?.priority ?? 999)
+                    return priorityA - priorityB
+                });
+                setAllFeaturedProducts(FinalFeatured)
+                setLoadFinsihed(true)
+            }
+
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+    
+        fetchData();
+      }, [priorityLoaded, priority, data]); 
+
+
+
+
   return (
     <>
       {/* <div
@@ -95,7 +164,7 @@ const AllDriversandFiltersProducts: React.FC<MainProps> = ({ data }) => {
           flexDirection: "column",
         }}
       > */}
-        {data.map((value, index) => {
+        {allFeaturedProducts.map((value, index) => {
             const slug = value.products.slug;
             const name = value.products.name;
             const coverImg = value.products.cover_img;
