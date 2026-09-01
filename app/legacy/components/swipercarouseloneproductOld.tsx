@@ -305,8 +305,8 @@ const SwiperCarouselOneProductMobileOld: React.FC<PropType> = (props) => {
               >
                 
                 <img 
-                          src={graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph} 
-                          alt={`${name} - Frequency Response`} 
+                  src={graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph} 
+                  alt={`${name} - Frequency Response`} 
                   width={500}
                   height={500}
                   style={{
@@ -332,123 +332,83 @@ const SwiperCarouselOneProductMobileOld: React.FC<PropType> = (props) => {
         freeMode={true}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
-        style={{
-          height: '100px'
-        }}
       >
-        <SwiperSlide style={{
-          opacity: activeIndex === 0 ? '100%' : '50%',
-          height: 'fit-content',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-
-        }}
-        onClick={() => {
-            if (swiperRef.current) {
-              // If loop is true, use slideToLoop to account for looped indices
-              swiperRef.current.slideToLoop(0);
-            }
-          }}>
-        <div style={{
-          position: 'relative',
-          overflow: 'hidden',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          width: '100%'
-        }}>
-          <div style={{
-            zIndex : 10,
-            height: '75px'
-          }}>          
-          <div style={{
-            position: 'relative',
+        <SwiperSlide
+          style={{
+            opacity: activeIndex === 0 ? '100%' : '50%',
+            height: '75px',
+            width: '75px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '100%',
-            width: '100%'
-          }}>
-            <img 
-              src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
-              alt={name} 
-              width={100}
-              height={100}
-              style={{
-                objectFit: 'contain',
-                height: '100%',
-                width: 'fit-content',
-              }}
-              loading='lazy'
-            />
-          </div>
-          </div>
-          </div>
-        </SwiperSlide>
-        {image_catalogues && image_catalogues.length > 0 && sortedImages.map((item, index) => (
-          <SwiperSlide key={`${item.name} - ${index.toString()}`}
-          style={{
-            opacity: activeIndex - 1 === index ? '100%': '50%',
-            height: 'fit-content',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',        
+            boxSizing: 'border-box'
           }}
           onClick={() => {
             if (swiperRef.current) {
-              // If loop is true, use slideToLoop to account for looped indices
-              swiperRef.current.slideToLoop(index + 1);
+              swiperRef.current.slideToLoop(0);
             }
-          }}>
-            <div style={{
-              position: 'relative',
-              overflow: 'hidden',
+          }}
+        >
+            <img 
+              src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
+              alt={name} 
+              width={1000}
+              height={1000}
+              style={{
+                display: 'block',
+                width: '75px',
+                height: '75px',
+                maxWidth: '75px',
+                maxHeight: '75px',
+                objectFit: 'contain'
+              }}
+              loading='lazy'
+            />
+        </SwiperSlide>
+        {image_catalogues && image_catalogues.length > 0 && sortedImages.map((item, index) => (
+          <SwiperSlide key={`${item.name} - ${index.toString()}`}
+            style={{
+              opacity: activeIndex - 1 === index ? '100%' : '50%',
+              height: '75px',
+              width: '75px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              height: '100%',
-              width: '100%'
-            }}>
-              <div style={{
-                zIndex : 10,
-                height: '75px'
-              }}>      
-              
-                <div style={{
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%',
-                  width: '100%'
-                }}>
-                  <img 
-                    src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
-                    alt={`${item.name} - ${index.toString()}`} 
-                    width={100}
-                    height={100}
-                    style={{
-                      objectFit: 'contain',
-                      height: '100%',
-                      width: 'fit-content',
-                    }}
-                    loading='lazy'
-                  />
-                </div>
-              </div>
-            </div>
+              boxSizing: 'border-box'
+            }}
+            onClick={() => {
+              if (swiperRef.current) {
+                swiperRef.current.slideToLoop(index + 1);
+              }
+            }}
+          >
+            <img 
+              src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
+              alt={`${item.name} - ${index.toString()}`} 
+              width={1000}
+              height={1000}
+              style={{
+                display: 'block',
+                width: '75px',
+                height: '75px',
+                maxWidth: '75px',
+                maxHeight: '75px',
+                objectFit: 'contain'
+              }}
+              loading="lazy"
+            />
           </SwiperSlide>
         ))}
         {drawing !== '' &&
           <SwiperSlide
           style={{
             opacity: activeIndex - image_catalogues.length - 1 === 0 ? '100%': '50%',
-            height: 'fit-content',
+            height: '75px',
+            width: '75px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',        
+            justifyContent: 'center',
+            boxSizing: 'border-box'
           }}
           onClick={() => {
             if (swiperRef.current) {
@@ -456,52 +416,33 @@ const SwiperCarouselOneProductMobileOld: React.FC<PropType> = (props) => {
               swiperRef.current.slideToLoop(image_catalogues.length + 1);
             }
           }}>
-            <div style={{
-              position: 'relative',
-              overflow: 'hidden',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              width: '100%'
-            }}>
-              <div style={{
-                zIndex : 10,
-                height: '75px'
-              }}>      
-              <div style={{
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%',
-                  width: '100%'
-                }}>
-                  <img 
-                    src={drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing} 
-                    alt={`${name} - Drawing`} 
-                    width={100}
-                    height={100}
-                    style={{
-                      objectFit: 'contain',
-                      height: '100%',
-                      width: 'fit-content',
-                    }}
-                    loading='lazy'
-                  />
-                </div>
-            </div>
-            </div>
+            <img 
+              src={drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing} 
+              alt={`${name} - Drawing`} 
+              width={1000}
+              height={1000}
+              style={{
+                display: 'block',
+                width: '75px',
+                height: '75px',
+                maxWidth: '75px',
+                maxHeight: '75px',
+                objectFit: 'contain'
+              }}
+              loading='lazy'
+            />
           </SwiperSlide>
         }
         {graph !== '' &&
           <SwiperSlide
           style={{
             opacity: activeIndex - image_catalogues.length - 2 === 0 ? '100%': '50%',
-            height: 'fit-content',
+            height: '75px',
+            width: '75px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',        
+            justifyContent: 'center',
+            boxSizing: 'border-box'
           }}
           onClick={() => {
             if (swiperRef.current) {
@@ -509,43 +450,21 @@ const SwiperCarouselOneProductMobileOld: React.FC<PropType> = (props) => {
               swiperRef.current.slideToLoop(image_catalogues.length + 2);
             }
           }}>
-            <div style={{
-              position: 'relative',
-              overflow: 'hidden',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              width: '100%'
-            }}>
-              <div style={{
-                zIndex : 10,
-                height: '75px'
-              }}>      
-              
-              <div style={{
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%',
-                  width: '100%'
-                }}>
-                  <img 
-                    src={graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph} 
-                    alt={`${name} - Frequency Response`} 
-                    width={100}
-                    height={100}
-                    style={{
-                      objectFit: 'contain',
-                      height: '100%',
-                      width: 'fit-content',
-                    }}
-                    loading='lazy'
-                  />
-                </div>
-            </div>
-            </div>
+            <img 
+              src={graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph} 
+              alt={`${name} - Frequency Response`} 
+              width={1000}
+              height={1000}
+              style={{
+                display: 'block',
+                width: '75px',
+                height: '75px',
+                maxWidth: '75px',
+                maxHeight: '75px',
+                objectFit: 'contain'
+              }}
+              loading='lazy'
+            />
           </SwiperSlide>
         }
       </Swiper>
