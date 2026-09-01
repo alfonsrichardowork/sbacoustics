@@ -691,7 +691,7 @@ export const DistributorMap: React.FC<DistributorProps> = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           /> */}
           <TileLayer
-            url={`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=cb1_2mae_1_d7a14f71add66470cd378ab7`}
+            url={`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${process.env.NEXT_PUBLIC_CARTO_MAPS_API_KEY}`}
           />
           {/* <TileLayer
             url={`https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=cb1_2mae_1_d7a14f71add66470cd378ab7`}

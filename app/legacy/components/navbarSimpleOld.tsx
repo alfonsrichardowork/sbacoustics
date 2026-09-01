@@ -416,10 +416,10 @@ export default function NavbarLegacy() {
       backgroundColor: 'transparent',
       top: scrolled ? '0px' : '32px',
       borderStyle: scrolled ? 'none' : 'block',
-      borderTopWidth: scrolled ? '0px' : '1px'
+      borderTopWidth: scrolled ? '0px' : '1px',
+      width: '100%'
     }}>
     <nav
-  className="navbar-main-nav-parent"
   style={{
     position: height  > 600 ? 'fixed' : 'static',
     width: '100%',
@@ -504,7 +504,7 @@ export default function NavbarLegacy() {
             </ul>
           </div>
 
-          <div className={`navbar-main-nav-searchbox`}>
+          <div className="navbar-main-nav-searchbox">
             <SearchboxLegacy changeBrand/>
           </div>
 
@@ -535,6 +535,8 @@ export default function NavbarLegacy() {
                 borderTop: "1px solid #d7dce0",
                 marginTop: 10,
                 paddingTop: 6,
+                paddingLeft: '8px',
+                paddingRight: '8px',
                 position: 'absolute',
                 left: 0,
                 top: '56px',

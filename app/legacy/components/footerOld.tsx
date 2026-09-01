@@ -431,7 +431,7 @@ export default function FooterOld() {
           <div
             style={{
               display: "flex",
-              gap: "16px",
+              // gap: "16px",
               fontSize: "12px",
               color: "#9ca3af",
               width: isMobile ? "100%" : "33.333%",
@@ -444,6 +444,7 @@ export default function FooterOld() {
               style={{
                 color: "#9ca3af",
                 textDecoration: "none",
+                marginRight: '16px'
               }}
             >
               About Us
@@ -512,7 +513,7 @@ export default function FooterOld() {
               style={{
                 display: "flex",
                 justifyContent: "flex-end",
-                gap: "16px",
+                // gap: "16px",
                 fontSize: "12px",
                 color: "#9ca3af",
                 paddingTop: "4px",
@@ -524,6 +525,7 @@ export default function FooterOld() {
                 style={{
                   color: "#9ca3af",
                   textDecoration: "none",
+                  marginRight: '16px'
                 }}
               >
                 Privacy policy
@@ -548,6 +550,7 @@ export default function FooterOld() {
                 style={{
                   color: "#9ca3af",
                   textDecoration: "none",
+                  marginLeft: '16px'
                 }}
               >
                 Terms of use
@@ -578,7 +581,7 @@ export default function FooterOld() {
             flexWrap: "wrap",
             alignItems: "center",
             justifyContent: "center",
-            gap: "4px 8px",
+            // gap: "4px 8px",
             fontSize: "12px",
             color: "#9ca3af",
             marginTop: "8px",
@@ -590,6 +593,7 @@ export default function FooterOld() {
               color: "#9ca3af",
               textDecoration: "none",
               whiteSpace: "nowrap",
+              marginRight: '8px'
             }}
           >
             Privacy policy
@@ -616,6 +620,7 @@ export default function FooterOld() {
               color: "#9ca3af",
               textDecoration: "none",
               whiteSpace: "nowrap",
+              marginLeft: '8px'
             }}
           >
             Terms of use

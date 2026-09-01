@@ -8,21 +8,27 @@ export default function AboutUsPage() {
     <>
       <div style={{ backgroundColor: "#ffffff" }}>
 
-        <section className="about-us-section about-us-section-white">
-          <div className="about-us-container">
-            <div className="about-us-two-column about-us-align-center about-us-gap-large">
-              <div className="about-us-copy about-us-copy-first">
-                <div className="about-us-desktop-heading">
-                  <h2 className="about-us-title">SB Acoustics</h2>
+
+      <section className="about-us-section-parent">
+        <div>
+          <div className="about-us-section-parent-div">
+            <div className="about-us-section-child-grid">
+              <div className="about-us-section-first-order">
+                <div className="about-us-section-first-head">
+                  <h2 className="about-us-section-first-head-text">SB Acoustics</h2>
                 </div>
-                <div className="about-us-text-stack">
+                <div style={{
+                  marginBlockStart: '24px',
+                  marginBlockEnd: '24px',
+                  color: '#475569'
+                }}>
                   <h3>SB Acoustics was born from the union of two established names in audio: the Danish design engineers of Danesian Audio, whose patented tweeter and subwoofer innovations have shaped some of the industry&apos;s most distinctive transducer designs, and Sinar Baja Electric, a vertically integrated manufacturer with over {years} years of experience crafting exceptional transducers.</h3>
                   <h3>In-house capabilities span tooling, coil winding, diaphragm production, die-cast baskets, stamping, and specialty finishing, among other processes — giving us tight control over quality and consistency from raw material to finished component. Together, we&apos;ve built a product line that balances outstanding acoustic performance with affordability.</h3>
                 </div>
               </div>
-              <div className="about-us-carousel about-us-carousel-first">
-                <div className="about-us-mobile-heading">
-                  <div className="about-us-title">SB Acoustics</div>
+              <div className="about-us-section-second-relative">
+                <div className="about-us-section-second-relative-head">
+                  <div className="about-us-section-second-relative-desc">SB Acoustics</div>
                 </div>
                 <SwiperCarouselAboutUsOld images={[
                   { src: "/images/sbacoustics/aboutus/SB_Acoustics_1.jpg", alt: "SB Acoustics About Us 1" },
@@ -34,40 +40,52 @@ export default function AboutUsPage() {
               </div>
             </div>
           </div>
+          </div>
         </section>
 
-        <section className="about-us-section about-us-section-zinc">
-          <div className="about-us-container">
-            <div className="about-us-two-column about-us-align-center about-us-gap-large">
-              <div className="about-us-carousel">
-                <div className="about-us-mobile-heading">
-                  <div className="about-us-title">
+  
+      <section className="about-us-section-parent-2">
+        <div>
+          <div className="about-us-section-parent-div">
+            <div className="about-us-section-child-grid">
+              <div>
+                <div className="about-us-section-second-head">
+                  <div className="about-us-section-first-head-text">
                     Sinar Baja Electric
                   </div>
                 </div>
                 <SwiperCarouselAboutUsOld images={[{ src: "/images/sbacoustics/aboutus/Sinar_baja_electric_1.jpg", alt: "Sinar Baja Electric About Us 1" }, { src: "/images/sbacoustics/aboutus/Sinar_baja_electric_2.jpg", alt: "Sinar Baja Electric About Us 2" }, { src: "/images/sbacoustics/aboutus/Sinar_baja_electric_3.jpg", alt: "Sinar Baja Electric About Us 3" }, { src: "/images/sbacoustics/aboutus/Sinar_baja_electric_4.jpg", alt: "Sinar Baja Electric About Us 4" }, { src: "/images/sbacoustics/aboutus/Sinar_baja_electric_5.jpg", alt: "Sinar Baja Electric About Us 5" }]} />
               </div>
-              <div className="about-us-copy about-us-copy-second">
-                <div className="about-us-desktop-heading">
-                  <h2 className="about-us-title">
+              <div className="about-us-section-second-order">
+                <div className="about-us-section-first-head">
+                  <h2 className="about-us-section-first-head-text">
                     Sinar Baja Electric
                   </h2>
                 </div>
-                <div className="about-us-text-stack">
+                <div style={{
+                  marginBlockStart: '24px',
+                  marginBlockEnd: '24px',
+                  color: '#475569'
+                }}>
                   <h3>Founded in 1981, we&apos;ve grown into a leading name in loudspeaker manufacturing, with a reputation for high-quality products that meet the demands of discerning customers worldwide. Four decades of craftsmanship remain the backbone of everything we build.</h3>
                   <h3>As a privately held group, we stay true to our core values of innovation, quality, and customer satisfaction. We are a preferred OEM/ODM supplier for prestigious brands across the lifestyle hi-fi, high-end, automotive, and professional audio sectors.</h3>
                   <h3>We continue to invest in cutting-edge R&amp;D, quality control, and mass production — pushing the boundaries of what&apos;s possible in transducer design and manufacturing.</h3>
                 </div>
+                <div style={{
+                  marginTop: '32px'
+                }}>
                 <div className="about-us-button-wrap">
                   <a className="about-us-button" href="https://sinarbajaelectric.com/">Learn More About Sinar Baja Electric</a>
+                </div>
                 </div>
               </div>
             </div>
           </div>
+          </div>
         </section>
 
-        <section className="about-us-section about-us-section-white">
-          <div className="about-us-container">
+        <section>
+          <div className="about-us-section-parent-div" style={{ paddingBlock: '24px' }}>
             <div className="about-us-mission-header">
               <h2 className="about-us-title">
                 Our Mission &amp; Values

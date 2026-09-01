@@ -98,310 +98,227 @@ const SwiperCarouselOneProductMobileOld: React.FC<PropType> = (props) => {
         }}
         thumbs={{ swiper: thumbsSwiper }}
         navigation={true}
+        spaceBetween={0}
         modules={[Navigation, Thumbs, FreeMode]}
         style={{
           "--swiper-pagination-color": "#000000",
           "--swiper-navigation-color": "#000000",
           "--swiper-navigation-sides-offset": "0px",
           "--swiper-navigation-size": "20px",
-          height: '288px',
+          height: '400px',
+          width: '100%',
+          backgroundColor: 'transparent',
 
         } as CSSProperties}
       >
         {cover && (
-          <SwiperSlide>
-          {/* <Dialog>
-            <DialogTrigger asChild> */}
-              <div style={{
+          
+          <SwiperSlide
+            style={{
+              width: '100%',
+              height: '400px',
+              display: 'block',
+              flexShrink: 0
+            }}
+          >
+            <div
+              style={{
+                width: '100%',
                 height: '100%',
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
-                cursor: 'pointer'
-              }} onClick={() => openLightbox(0)}>
-                <div style={{
-                  borderRadius: '10px',
-                  backgroundColor: '#ffffff',
-                  color: '#000000',
-                  boxShadow: '4px',
-                  height: '100%',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                boxSizing: 'border-box'
+              }}
+            >
+              <div
+                style={{
                   width: '100%',
+                  height: '100%',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <div style={{
-                    padding: '24px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#ffffff'
+                  justifyContent: 'center',
+                  paddingLeft: '24px',
+                  paddingRight: '24px',
+                  paddingBottom: '24px',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <img 
+                  src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
+                  alt={name} 
+                  width={500}
+                  height={500}
+                  style={{
+                    display: 'block',
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    zIndex: 10
                   }}
-                      onMouseEnter={() => setHoverImage(true)}
-                      onMouseLeave={() => setHoverImage(false)}>
-                    <div style={{
-                      position: 'relative',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      height: '100%',
-                      width: '100%'
-                    }}>
-                        <div style={{
-                          zIndex: 10,
-                          width: '100%',
-                          height: 'fit-content'
-                        }}>
-                          <div style={{
-                            position: 'relative',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: '100%',
-                            width: '100%'
-                          }}>
-                            <img 
-                              src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
-                              alt={name} 
-                              width={200}
-                              height={200}
-                              style={{
-                                objectFit: 'contain',
-                                height: '100%',
-                                width: 'fit-content',
-                                transitionProperty: 'all',
-                              }}
-                              loading='eager'
-                            />
-                          </div>
-                        </div>
-                    </div>
-                  </div>
-                </div>
+                  loading="eager"
+                />
               </div>
-        </SwiperSlide>
+            </div>
+          </SwiperSlide>
         )}
         {image_catalogues && image_catalogues.length > 0 && sortedImages.map((item, index) => (
-          <SwiperSlide key={`${item.name} - ${index.toString()}`}>
-              <div style={{
+          <SwiperSlide key={`${item.name} - ${index.toString()}`}
+            style={{
+              width: '100%',
+              height: '400px',
+              display: 'block',
+              flexShrink: 0
+            }}
+          >
+            <div
+              style={{
+                width: '100%',
                 height: '100%',
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
-                cursor: 'pointer'
-              }} onClick={() => openLightbox(index + 1)}>
-                <div style={{
-                  borderRadius: '10px',
-                  backgroundColor: '#ffffff',
-                  color: '#000000',
-                  boxShadow: '4px',
-                  height: '100%',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                boxSizing: 'border-box'
+              }}
+            >
+              <div
+                style={{
                   width: '100%',
+                  height: '100%',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <div style={{
-                    padding: '24px',
-                    paddingTop: '0px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#ffffff'
+                  justifyContent: 'center',
+                  paddingLeft: '24px',
+                  paddingRight: '24px',
+                  paddingBottom: '24px',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <img 
+                  src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
+                  alt={item.name} 
+                  width={500}
+                  height={500}
+                  style={{
+                    display: 'block',
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain'
                   }}
-                      onMouseEnter={() => setHoverImage(true)}
-                      onMouseLeave={() => setHoverImage(false)}>
-                    <div style={{
-                      position: 'relative',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      height: '100%',
-                      width: '100%'
-                    }}>
-                        <div style={{
-                          zIndex: 10,
-                          width: '100%',
-                          height: 'fit-content'
-                        }}>
-
-                        <div style={{
-                          position: 'relative',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          height: '100%',
-                          width: '100%'
-                        }}>
-                          <img 
-                            src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
-                            alt={`${item.name} - ${index.toString()}`} 
-                            width={200}
-                            height={200}
-                            style={{
-                              objectFit: 'contain',
-                              height: '100%',
-                              width: 'fit-content',
-                              transitionProperty: 'all'
-                            }}
-                            loading='lazy'
-                          />
-                        </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  loading="eager"
+                />
+              </div>
+            </div>
           </SwiperSlide>
         ))}
         {drawing !== '' &&
-          <SwiperSlide>
-            <div style={{
-                height: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                cursor: 'pointer'
-              }} onClick={() => openLightbox(image_catalogues.length + 1)}>
-              <div style={{
-                borderRadius: '10px',
-                backgroundColor: '#ffffff',
-                color: '#000000',
-                boxShadow: '4px',
-                height: '100%',
+          <SwiperSlide
+            style={{
+              width: '100%',
+              height: '400px',
+              display: 'block',
+              flexShrink: 0
+            }}
+          >
+            <div
+              style={{
                 width: '100%',
+                height: '100%',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <div style={{
-                    padding: '24px',
-                    paddingTop: '0px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#ffffff'
+                justifyContent: 'center',
+                overflow: 'hidden',
+                boxSizing: 'border-box'
+              }}
+            >
+              <div
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingLeft: '24px',
+                  paddingRight: '24px',
+                  paddingBottom: '24px',
+                  boxSizing: 'border-box'
+                }}
+              >
+                
+                <img 
+                  src={drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing} 
+                  alt={`${name} - Drawing`} 
+                  width={500}
+                  height={500}
+                  style={{
+                    display: 'block',
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain'
                   }}
-                  onMouseEnter={() => setHoverImage(true)}
-                  onMouseLeave={() => setHoverImage(false)}>
-                  <div style={{
-                    position: 'relative',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '100%',
-                    width: '100%'
-                  }}>
-                    <div style={{
-                      zIndex: 10,
-                      width: '100%',
-                      height: 'fit-content'
-                    }}>
-                      <div style={{
-                        position: 'relative',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '100%',
-                        width: '100%'
-                      }}>
-                        <img 
-                          src={drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing} 
-                          alt={`${name} - Drawing`} 
-                          width={200}
-                          height={200}
-                          style={{
-                            objectFit: 'contain',
-                            height: '100%',
-                            width: 'fit-content',
-                            transitionProperty: 'all'
-                          }}
-                          loading='lazy'
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  loading="eager"
+                />
               </div>
             </div>
           </SwiperSlide>
         }
         {graph !== '' &&
-          <SwiperSlide>
-            <div style={{
+          <SwiperSlide
+            style={{
+              width: '100%',
+              height: '400px',
+              display: 'block',
+              flexShrink: 0
+            }}
+          >
+            <div
+              style={{
+                width: '100%',
                 height: '100%',
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
-                cursor: 'pointer'
-              }} onClick={() => openLightbox(image_catalogues.length + 2)}>
-              <div style={{
-                  borderRadius: '10px',
-                  backgroundColor: '#ffffff',
-                  color: '#000000',
-                  boxShadow: '4px',
-                  height: '100%',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                boxSizing: 'border-box'
+              }}
+            >
+              <div
+                style={{
                   width: '100%',
+                  height: '100%',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                <div style={{
-                    padding: '24px',
-                    paddingTop: '0px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#ffffff'
-                  }}
-                  onMouseEnter={() => setHoverImage(true)}
-                  onMouseLeave={() => setHoverImage(false)}>
-                  <div style={{
-                    position: 'relative',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '100%',
-                    width: '100%'
-                  }}>
-                    <div style={{
-                      zIndex: 10,
-                      width: '100%',
-                      height: 'fit-content'
-                    }}>
-                      <div style={{
-                        position: 'relative',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '100%',
-                        width: '100%'
-                      }}>
-                        <img 
+                  justifyContent: 'center',
+                  paddingLeft: '24px',
+                  paddingRight: '24px',
+                  paddingBottom: '24px',
+                  boxSizing: 'border-box'
+                }}
+              >
+                
+                <img 
                           src={graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph} 
                           alt={`${name} - Frequency Response`} 
-                          width={200}
-                          height={200}
-                          style={{
-                            objectFit: 'contain',
-                            height: '100%',
-                            width: 'fit-content',
-                            transitionProperty: 'all'
-                          }}
-                          loading='lazy'
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  width={500}
+                  height={500}
+                  style={{
+                    display: 'block',
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain'
+                  }}
+                  loading="eager"
+                />
               </div>
             </div>
           </SwiperSlide>

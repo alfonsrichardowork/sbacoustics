@@ -319,6 +319,7 @@
 .navbar-main-nav-logo {
     width: 50%;
     display: flex;
+    margin-left: 32px;
 }
 
 .navbar-brand-choice-parent {
@@ -332,7 +333,7 @@
 }
 
 .navbar-main-nav-parent {
-    padding-inline: 32px;
+    margin-inline: 32px;
 }
 
 .navbar-main-nav-main-menu {
@@ -347,6 +348,7 @@
     display: none;
     width: 25%;
     justify-content: flex-end;
+    margin-right: 32px;
 }
 
 .navbar-main-nav-mobile-button {
@@ -354,14 +356,19 @@
     display: flex;
     overflow-x: hidden;
     justify-content: flex-end;
+    margin-right: 32px;
 }
 
 .single-product-page-SwiperCarouselOneProductOld {
-    padding-inline: 40px;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 40px;
+    padding-right: 40px;
 }
 
 .single-product-page-SwiperCarouselOneProductOld-thumbnail {
-    padding-inline: 40px;
+    padding-left: 40px;
+    padding-right: 40px;
 }
 
 
@@ -502,15 +509,31 @@
     }
 
     .navbar-main-nav-parent {
-        padding-inline: 48px;
+        margin-inline: 48px;
+    }
+
+    .navbar-main-nav-searchbox {
+        margin-right: 48px;
+    }
+
+    .navbar-main-nav-mobile-button {
+        margin-right: 48px;
+    }
+
+    .navbar-main-nav-logo {
+        margin-left: 48px;
     }
 
     .single-product-page-SwiperCarouselOneProductOld {
-        padding-inline: 48px;
+        width: 100%;
+        box-sizing: border-box;
+        padding-left: 48px;
+        padding-right: 48px;
     }
 
     .single-product-page-SwiperCarouselOneProductOld-thumbnail {
-        padding-inline: 64px;
+        padding-left: 64px;
+        padding-right: 64px;
     }
 }
 
@@ -528,7 +551,7 @@
     }
 
     .navbar-main-nav-parent {
-        padding-inline: 64px;
+        margin-inline: 64px;
     }
     
     .navbar-main-nav-main-menu {
@@ -537,14 +560,17 @@
 
     .navbar-main-nav-searchbox {
         display: flex;
+        margin-right: 64px;
     }
 
     .navbar-main-nav-mobile-button {
         display: none;
+        margin-right: 64px;
     }
 
     .navbar-main-nav-logo {
         width: 25%;
+        margin-left: 64px;
     }
 }
 

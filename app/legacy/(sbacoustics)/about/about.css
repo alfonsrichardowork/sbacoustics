@@ -138,6 +138,98 @@
     border:0
 }
 
+.about-us-section-parent {
+    padding-block: 40px;
+    background-color: #ffffff;
+}
+
+.about-us-section-parent-2 {
+    padding-block: 40px;
+    background-color: #f4f4f5;
+}
+
+.about-us-section-parent-div {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 1152px;
+    @media (width >= 40rem /* 640px */) {
+        max-width: 40rem /* 640px */;
+    }
+    @media (width >= 48rem /* 768px */) {
+        max-width: 48rem /* 768px */;
+    }
+    @media (width >= 64rem /* 1024px */) {
+        max-width: 64rem /* 1024px */;
+    }
+    @media (width >= 80rem /* 1280px */) {
+        max-width: 80rem /* 1280px */;
+    }
+    @media (width >= 96rem /* 1536px */) {
+        max-width: 96rem /* 1536px */;
+    }
+    margin-inline: auto;
+    padding-inline: 2rem /* 32px */;
+    @media (width >= 40rem /* 640px */) {
+        max-width: none;
+    }
+    @media (width >= 1400px) {
+        max-width: 1400px;
+    }
+}
+
+.about-us-section-child-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 32px;
+    align-items: center;
+}
+
+.about-us-section-first-order {
+    order: 2;
+}
+
+.about-us-section-second-order {
+    order: 1;
+}
+
+.about-us-section-first-head {
+    display: none;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.about-us-section-first-head-text {
+    font-size: 30px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #000000;
+}
+
+.about-us-section-second-relative {
+    position: relative;
+    order: 1
+}
+
+.about-us-section-second-relative-head {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.about-us-section-second-relative-desc {
+    font-size: 30px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #000000;
+    display: block;
+}
+
+.about-us-section-second-head {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
 @media (min-width:768px){
     .about-us-section{
         padding:80px 24px
@@ -176,6 +268,55 @@
     .about-us-title{
         font-size:36px
     }
+    
+    .about-us-section-parent {
+        padding-block: 80px;
+    }
+
+    .about-us-section-parent-2 {
+        padding-block: 80px;
+    }
+
+    .about-us-section-child-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 64px;
+    }
+
+    .about-us-section-first-order {
+        order: 1;
+    }
+
+    .about-us-section-first-head {
+        display: flex;
+    }
+
+    .about-us-section-first-head-text {
+        font-size: 36px;
+        line-height: 1.11;
+    }
+
+    .about-us-section-second-relative {
+        order: 2
+    }
+
+    .about-us-section-second-relative-head {
+        display: hidden;
+    }
+
+    .about-us-section-second-relative-desc {
+        font-size: 36px;
+        line-height: 1.11;
+        display: none;
+    }
+
+    .about-us-section-second-head {
+        display: none;
+    }
+    
+    .about-us-section-second-order {
+        order: 2;
+    }
+
 }
 
 @media (min-width:1024px){

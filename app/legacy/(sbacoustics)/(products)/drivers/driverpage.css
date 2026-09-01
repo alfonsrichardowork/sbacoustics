@@ -8,7 +8,9 @@
 }
 
 .technical {
-  padding-inline: 24px;
+  display: block;
+  padding-inline: 32px;
+  padding-block: 16px;
 }
 
 .comparison-text-style {
@@ -41,7 +43,10 @@
   }
 
   .technical {
-    padding-inline: 76px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-inline: 0px;
+    padding-block: 0px;
   }
 
   .comparison-text-style {
@@ -63,10 +68,6 @@
   .drivers-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
-  
-  .technical {
-    padding-inline: 102px;
-  }
 
   .all-driver-page-parent {
     padding-inline: 48px;
@@ -84,10 +85,6 @@
     padding-block: 32px;
     padding-inline: 160px;
   }
-  
-  .technical {
-    padding-inline: 128px;
-  }
 
   .all-driver-page-parent {
     padding-inline: 160px;
@@ -99,10 +96,6 @@
 @media (min-width: 1536px) {
   .drivers-container {
     padding-inline: 240px;
-  }
-
-  .technical {
-    padding-inline: 160px;
   }
 
   .all-driver-page-parent {

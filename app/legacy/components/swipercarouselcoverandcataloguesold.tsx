@@ -107,17 +107,19 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
     <div className='single-product-page-SwiperCarouselOneProductOld'>
       <Swiper
         style={{
-          "--swiper-pagination-color": "#000000",
-          "--swiper-navigation-sides-offset": "0px",
-          "--swiper-navigation-color": "#000000",
-          "--swiper-navigation-size": "25px",
-          height: "100%",
+          height: '400px',
+          width: '100%',
           backgroundColor: 'transparent',
-
+          '--swiper-pagination-color': '#000000',
+          '--swiper-navigation-sides-offset': '0px',
+          '--swiper-navigation-color': '#000000',
+          '--swiper-navigation-size': '25px',
         } as CSSProperties}
-        onSwiper={(swiper) => (swiperRef.current = swiper)}
+        onSwiper={(swiper) => {
+          swiperRef.current = swiper;
+        }}
         onSlideChange={(swiper) => {
-          setActiveIndex(swiper.realIndex)
+          setActiveIndex(swiper.realIndex);
         }}
         slidesPerView={1}
         loop={multipleslides}
@@ -127,167 +129,108 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
         modules={[FreeMode, Navigation, Thumbs]}
       >
         {cover && (
-          //   <SwiperSlide>
-          //                   <img 
-          //                     src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
-          //                     alt={name} 
-          //                     width={500}
-          //                     height={500}
-          //                     style={{
-          //                       objectFit: 'contain',
-          //                       height: "100%",
-          //                       width: '100%',
-          //                       zIndex: 10,
-          //                     }}
-          //                     loading='eager'
-          //                   />
-          // </SwiperSlide>
-          <SwiperSlide>
-                <div style={{
+          <SwiperSlide
+            style={{
+              width: '100%',
+              height: '400px',
+              display: 'block',
+              flexShrink: 0
+            }}
+          >
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                boxSizing: 'border-box'
+              }}
+            >
+              <div
+                style={{
+                  width: '100%',
                   height: '100%',
                   display: 'flex',
-                  justifyContent: 'center',
                   alignItems: 'center',
-                  cursor: 'zoom-in'
-                }} onClick={() => openLightbox(0)}>
-                  <div style={{
-                    borderRadius: '8px',
-                    backgroundColor: '#ffffff',
-                    borderStyle: 'none',
-                    height: '100%',
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                    <div style={{
-                      paddingInline: '24px',
-                      paddingBottom: '24px',
-                      paddingTop: '0px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '100%',
-                      height: '100%',
-                      backgroundColor: 'transparent'
-                    }}
-                      onMouseEnter={() => setHoverImage(true)}
-                      onMouseLeave={() => setHoverImage(false)}
-                    >
-                      <div style={{
-                        position: 'relative',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '100%',
-                        width: '100%'
-                      }}>
-                        <div style={{
-                          zIndex: 10,
-                          width: '100%',
-                          height: 'fit-content'
-                        }}>
-
-                          <div style={{
-                            position: 'relative',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: '100%',
-                            width: '100%'
-                          }}>
-                            <img 
-                              src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
-                              alt={name} 
-                              width={500}
-                              height={500}
-                              style={{
-                                objectFit: 'contain',
-                                height: '100%',
-                                width: 'fit-content',
-                                zIndex: 10
-                              }}
-                              loading={'eager'}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  justifyContent: 'center',
+                  paddingLeft: '24px',
+                  paddingRight: '24px',
+                  paddingBottom: '24px',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <img 
+                  src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
+                  alt={name} 
+                  width={500}
+                  height={500}
+                  style={{
+                    display: 'block',
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    zIndex: 10
+                  }}
+                  loading="eager"
+                />
+              </div>
+            </div>
           </SwiperSlide>
         )}
         {multipleslides && sortedImages.map((item, index) => (
-          <SwiperSlide key={`${item.name} - ${index.toString()}`}>
-              <div style={{
+          <SwiperSlide key={`${item.name} - ${index.toString()}`}
+            style={{
+              width: '100%',
+              height: '400px',
+              display: 'block',
+              flexShrink: 0
+            }}
+          >
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                boxSizing: 'border-box'
+              }}
+            >
+              <div
+                style={{
+                  width: '100%',
                   height: '100%',
                   display: 'flex',
-                  justifyContent: 'center',
                   alignItems: 'center',
-                  cursor: 'zoom-in'
-                }} onClick={() => openLightbox(index+1)}>
-                <div style={{
-                    borderRadius: '8px',
-                    backgroundColor: '#ffffff',
-                    borderStyle: 'none',
-                    height: '100%',
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}>
-                  <div style={{
-                      paddingInline: '24px',
-                      paddingBottom: '24px',
-                      paddingTop: '0px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '100%',
-                      height: '100%',
-                      backgroundColor: 'transparent'
-                    }}
-                    onMouseEnter={() => setHoverImage(true)}
-                    onMouseLeave={() => setHoverImage(false)}>
-                    <div style={{
-                        position: 'relative',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '100%',
-                        width: '100%'
-                      }}>
-                        <div style={{
-                          zIndex: 10,
-                          width: '100%',
-                          height: 'fit-content'
-                        }}>
-                          <div style={{
-                            position: 'relative',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: '100%',
-                            width: '100%'
-                          }}>
-                            <img 
-                              src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
-                              alt={item.name} 
-                              width={500}
-                              height={500}
-                              style={{
-                                objectFit: 'cover',
-                                height: '100%',
-                                width: 'fit-content'
-                              }}
-                              loading={'eager'}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  justifyContent: 'center',
+                  paddingLeft: '24px',
+                  paddingRight: '24px',
+                  paddingBottom: '24px',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <img 
+                  src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
+                  alt={item.name} 
+                  width={500}
+                  height={500}
+                  style={{
+                    display: 'block',
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    width: 'auto',
+                    height: 'auto',
+                    objectFit: 'contain'
+                  }}
+                  loading="eager"
+                />
+              </div>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
@@ -307,108 +250,72 @@ const SwiperCarouselOneProductOld: React.FC<PropType> = (props) => {
         modules={[FreeMode, Navigation, Thumbs]}
       >
         {cover && (
-          <SwiperSlide style={{
-            opacity: activeIndex === 0 ? '100%' : '50%',
-            height: 'fit-content',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}  
-          onClick={() => {
-            if (swiperRef.current) {
-              // If loop is true, use slideToLoop to account for looped indices
-              swiperRef.current.slideToLoop(0);
-            }
-          }}>
-            <div style={{
-              position: 'relative',
-              overflow: 'hidden',
+          <SwiperSlide
+            style={{
+              opacity: activeIndex === 0 ? '100%' : '50%',
+              height: '75px',
+              width: '75px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              height: '100%',
-              width: '100%'
-            }}>
-              <div style={{
-                zIndex: 10,
-                height: '75px'
-              }}>
-               <div style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                width: '100%'
-               }}>
-                <img 
-                  src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
-                  alt={name} 
-                  width={1000}
-                  height={1000}
-                  style={{
-                    objectFit: 'cover',
-                    height: '100%',
-                    width: 'fit-content'
-                  }}
-                  loading='eager'
-                />
-              </div>
-              </div>
-            </div>
+              boxSizing: 'border-box'
+            }}
+            onClick={() => {
+              if (swiperRef.current) {
+                swiperRef.current.slideToLoop(0);
+              }
+            }}
+          >
+            <img
+              src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover}
+              alt={name}
+              width={1000}
+              height={1000}
+              style={{
+                display: 'block',
+                width: '75px',
+                height: '75px',
+                maxWidth: '75px',
+                maxHeight: '75px',
+                objectFit: 'contain'
+              }}
+              loading="eager"
+            />
           </SwiperSlide>
         )}
         {multipleslides && sortedImages.map((item, index) => (
-          <SwiperSlide key={`${item.name} - ${index.toString()}`} 
-          style={{
-            opacity: activeIndex - 1 === index ? '100%' : '50%',
-            height: 'fit-content',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          onClick={() => {
-            if (swiperRef.current) {
-              // If loop is true, use slideToLoop to account for looped indices
-              swiperRef.current.slideToLoop(index + 1);
-            }
-          }}>
-            <div style={{
-              position: 'relative',
-              overflow: 'hidden',
+          <SwiperSlide
+            key={`${item.name}-${index}`}
+            style={{
+              opacity: activeIndex - 1 === index ? '100%' : '50%',
+              height: '75px',
+              width: '75px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              height: '100%',
-              width: '100%'
-            }}>
-              <div style={{
-                zIndex: 10,
-                height: '75px'
-              }}>                
-               <div style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                width: '100%'
-               }}>
-                <img 
-                  src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
-                  alt={item.name} 
-                  width={1000}
-                  height={1000}
-                  style={{
-                    objectFit: 'cover',
-                    height: '100%',
-                    width: 'fit-content'
-                  }}
-                  loading='eager'
-                />
-              </div>
-                </div>
-              </div>
+              boxSizing: 'border-box'
+            }}
+            onClick={() => {
+              if (swiperRef.current) {
+                swiperRef.current.slideToLoop(index + 1);
+              }
+            }}
+          >
+            <img
+              src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url}
+              alt={item.name}
+              width={1000}
+              height={1000}
+              style={{
+                display: 'block',
+                width: '75px',
+                height: '75px',
+                maxWidth: '75px',
+                maxHeight: '75px',
+                objectFit: 'contain'
+              }}
+              loading="eager"
+            />
           </SwiperSlide>
         ))} 
       </Swiper>

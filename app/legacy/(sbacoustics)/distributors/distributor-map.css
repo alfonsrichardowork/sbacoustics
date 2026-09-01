@@ -3,7 +3,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  top: 100px;
+  top: 225px;
   padding: 0 2rem;
 }
 
@@ -123,9 +123,14 @@
   text-decoration: underline;
 }
 
+.distributor-map-height {
+  height: 400px;
+}
+
 @media (min-width: 768px) {
   .distributor-overlay {
     padding: 0 2rem;
+    top: 300px;
   }
 
   .distributor-card {
@@ -169,6 +174,10 @@
 
   .distributor-link {
     font-size: 0.875rem;
+  }
+
+  .distributor-map-height {
+    height: 500px;
   }
 }
 

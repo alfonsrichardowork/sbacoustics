@@ -160,41 +160,41 @@ export const DistributorMap: React.FC<DistributorProps> = ({
 
   return (
       <>
-      <div style={{ width: '100%', height: 300, position: 'relative' }}>
-        {/* <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', width: '100%' }}>
-          {isLoadingLoader && (
-            <div style={{ position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 0, width: 40, height: 40 }}>
-              ...
-            </div>
-          )}
-
-          <MapContainer
-            center={center}
-            zoom={3}
-            attributionControl={false}
-            style={{ zIndex: 10, marginTop: 48, height: 500, width: '100%' }}
-            ref={(mapInstance) => {
-              if (mapInstance && !mapRef.current) mapRef.current = mapInstance
-            }}
-          >
-            <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
-            {allDistributors.map((loc) => (
-              <Marker
-                key={loc.name}
-                position={[Number(loc.lat), Number(loc.lng)]}
-                icon={activeMap?.name === loc.name ? icons.activeIcon : icons.defaultIcon}
-                eventHandlers={{
-                  click: () => {
-                    setActiveMap(loc)
-                    mapRef.current?.flyTo([Number(loc.lat), Number(loc.lng)], 3, { duration: 1.5 })
-                  },
-                }}
-              >
-                <Popup>{loc.name}</Popup>
-              </Marker>
-            ))}
-          </MapContainer>
-        </div> */}
+      <div className="distributor-map-height" style={{ width: '100%', position: 'relative' }}>
+        {/* <MapContainer
+          center={center}
+          zoom={3}
+          attributionControl={false}
+          style={{
+            zIndex: 10,
+            marginTop: '48px',
+            width: '100%',
+          }}
+          className="distributor-map-height"
+          ref={(mapInstance) => {
+            if (mapInstance && !mapRef.current) {
+              mapRef.current = mapInstance;
+            }
+          }}
+        >
+          <TileLayer
+            url={`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${process.env.NEXT_PUBLIC_CARTO_MAPS_API_KEY}`}
+          />
+          {allDistributors.map((loc) => (
+            <Marker 
+              key={loc.name} 
+              position={[Number(loc.lat), Number(loc.lng)]}
+              icon={activeMap?.name === loc.name ? icons.activeIcon : icons.defaultIcon}
+              eventHandlers={{
+                click: () => {
+                  setActiveMap(loc), 
+                  mapRef.current?.flyTo([Number(loc.lat), Number(loc.lng)], 3, { duration: 1.5 });
+                }
+              }}>
+              <Popup>{loc.name}</Popup>
+            </Marker>
+          ))}
+        </MapContainer> */}
 
         <div className="distributor-overlay">
           <div style={{ display: 'grid', gap: 16 }}>

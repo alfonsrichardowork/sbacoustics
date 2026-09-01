@@ -7,14 +7,22 @@ export default function AboutUsSBAudience() {
     <>
       
       <div style={{ backgroundColor: "#ffffff" }}>
-        <section className="about-us-section about-us-section-white">
-          <div className="about-us-container">
-            <div className="about-us-two-column about-us-align-center about-us-gap-large">
-              <div className="about-us-copy about-us-copy-first">
-                <div className="about-us-desktop-heading">
-                  <h2 className="about-us-title">SB Audience</h2>
+
+        
+      {/* SB Audience Section */}
+      <section className="about-us-section-parent">
+        <div>
+          <div className="about-us-section-parent-div">
+            <div className="about-us-section-child-grid">
+              <div className="about-us-section-first-order">
+                <div className="about-us-section-first-head">
+                  <h2 className="about-us-section-first-head-text">SB Audience</h2>
                 </div>
-                <div className="about-us-text-stack">
+                <div style={{
+                  marginBlockStart: '24px',
+                  marginBlockEnd: '24px',
+                  color: '#475569'
+                }}>
                   <h3>
                     SB Audience is a premier professional transducer brand built on the heavy industrial foundation of Sinar Baja Electric. Sitting side by side with sister brand SB Acoustics, SB Audience acts as the group's dedicated professional sound reinforcement division aimed at the global market.
                   </h3>
@@ -23,9 +31,9 @@ export default function AboutUsSBAudience() {
                   </h3>
                 </div>
               </div>
-              <div className="about-us-carousel about-us-carousel-first">
-                <div className="about-us-mobile-heading">
-                  <div className="about-us-title">SB Audience</div>
+              <div className="about-us-section-second-relative">
+                <div className="about-us-section-second-relative-head">
+                  <div className="about-us-section-second-relative-desc">SB Audience</div>
                 </div>
                 <SwiperCarouselAboutUsOld images={[
                   {
@@ -52,15 +60,17 @@ export default function AboutUsSBAudience() {
               </div>
             </div>
           </div>
+        </div>
       </section>
 
-
-        <section className="about-us-section about-us-section-zinc">
-          <div className="about-us-container">
-            <div className="about-us-two-column about-us-align-center about-us-gap-large">
-              <div className="about-us-carousel">
-                <div className="about-us-mobile-heading">
-                  <div className="about-us-title">Sinar Baja Electric</div>
+      {/* Sinar Baja Electric Section */}
+      <section className="about-us-section-parent-2">
+        <div>
+          <div className="about-us-section-parent-div">
+            <div className="about-us-section-child-grid">
+              <div>
+                <div className="about-us-section-second-head">
+                  <div className="about-us-section-first-head-text">Sinar Baja Electric</div>
                 </div>
                 <SwiperCarouselAboutUsOld images={[
                   {
@@ -85,11 +95,15 @@ export default function AboutUsSBAudience() {
                   }
                 ]} />
               </div>
-              <div className="about-us-copy about-us-copy-second">
-                <div className="about-us-desktop-heading">
-                  <h2 className="about-us-title">Sinar Baja Electric</h2>
+              <div className="about-us-section-second-order">
+                <div className="about-us-section-first-head">
+                  <h2 className="about-us-section-first-head-text">Sinar Baja Electric</h2>
                 </div>
-                <div className="about-us-text-stack">
+                <div style={{
+                  marginBlockStart: '24px',
+                  marginBlockEnd: '24px',
+                  color: '#475569'
+                }}>
                   <h3>
                     Founded in 1981, we've grown into a leading name in loudspeaker manufacturing, with a reputation for high-quality products that meet the demands of discerning customers worldwide. Four decades of craftsmanship remain the backbone of everything we build.
                   </h3>
@@ -100,16 +114,22 @@ export default function AboutUsSBAudience() {
                     We continue to invest in cutting-edge R&D, quality control, and mass production — pushing the boundaries of what's possible in transducer design and manufacturing.
                   </h3>
                 </div>
+                <div style={{
+                  marginTop: '32px'
+                }}>
                 <div className="about-us-button-wrap">
                   <a className="about-us-button" href="https://sinarbajaelectric.com/">Learn More About Sinar Baja Electric</a>
+                </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
       </section>
 
-        <section className="about-us-section about-us-section-white">
-          <div className="about-us-container">
+
+        <section>
+          <div className="about-us-section-parent-div" style={{ paddingBlock: '24px' }}>
             <div className="about-us-mission-header">
               <h2 className="about-us-title">Our Mission & Values</h2>
               <p>

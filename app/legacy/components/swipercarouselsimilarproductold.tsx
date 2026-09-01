@@ -73,7 +73,7 @@ const SwiperCarouselSimilarProductOld: React.FC<PropType> = ({ similar, brand })
         style={{
           "--swiper-navigation-color": "#000000",
           "--swiper-navigation-size": "20px",
-          height: '265px'
+          height: '300px'
         } as CSSProperties}
       >
         {similar.map((sim, index) => (
@@ -87,7 +87,7 @@ const SwiperCarouselSimilarProductOld: React.FC<PropType> = ({ similar, brand })
                 backgroundColor: '#ffffff',
                 boxShadow: '12px',
                 width: '100%',
-                height: '250px',
+                height: '300px',
                 display: 'flex',
                 flexDirection: 'column',
               }}>

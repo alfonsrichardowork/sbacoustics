@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import React from 'react'
-import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
@@ -57,9 +56,9 @@ export default function TechnicalLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className='technical' style={{
+    <div style={{
       backgroundColor: '#ffffff',
-      paddingTop: '80px'
+      paddingTop: '96px'
     }}>
       {children}
     </div>
