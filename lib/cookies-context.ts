@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import type { CookiePreferences } from './cookies'
 import { cookieManager } from './cookies'
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 interface CookieContextType {
   preferences: CookiePreferences | null
@@ -21,6 +22,7 @@ const CookieContext = createContext<CookieContextType | undefined>(undefined)
 export function CookieProvider({ children }: { children: React.ReactNode }) {
   const [preferences, setPreferencesState] = useState<CookiePreferences | null>(null)
   const [isLoaded, setIsLoaded] = useState(false)
+  const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? 'G-XYZ'
 
   useEffect(() => {
     // Load preferences from cookie on mount
@@ -91,22 +93,25 @@ export function CookieProvider({ children }: { children: React.ReactNode }) {
   }
 
   return React.createElement(
-    CookieContext.Provider,
-    {
-      value: {
-        preferences,
-        isLoaded,
-        setPreferences,
-        setFirstLoad,
-        acceptAll,
-        rejectAll,
-        acceptFirstLoad,
-        updatePreference,
-        isCategoryAllowed,
-      },
+  CookieContext.Provider,
+  {
+    value: {
+      preferences,
+      isLoaded,
+      setPreferences,
+      setFirstLoad,
+      acceptAll,
+      rejectAll,
+      acceptFirstLoad,
+      updatePreference,
+      isCategoryAllowed,
     },
-    children,
-  )
+  },
+  children,
+  isLoaded && preferences?.analytics
+    ? React.createElement(GoogleAnalytics, { gaId: GA_ID })
+    : null,
+)
 }
 
 export function useCookiePreferences() {

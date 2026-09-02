@@ -81,7 +81,7 @@ function MobileMenuItems({ items, childMaps, pathname, depth = 0, loading = fals
           <AccordionItem key={`${item.title}-${item.href}-${index}`} value={`${item.title}-${index}`}>
             {hasChildren ? (
               <>
-                <AccordionTrigger className={`px-2 hover:text-primary ${levelStyle}`}>{label}</AccordionTrigger>
+                <AccordionTrigger className={`px-2 text-left hover:text-primary ${levelStyle}`}>{label}</AccordionTrigger>
                 <AccordionContent>
                   <Link href={getHref(pathname, item.href)} className="w-full">
                     <SheetClose className="flex w-full justify-center rounded-xl bg-primary p-1 text-center text-primary-foreground">

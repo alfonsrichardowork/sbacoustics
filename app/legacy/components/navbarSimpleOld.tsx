@@ -468,20 +468,31 @@ export default function NavbarLegacy() {
                 maxWidth: '150px'
               }}>
                 <img
-                  src={pathname.includes('sbaudience') ? 
-                      '/images/sbaudience/logo_sbaudience.png' : pathname.includes('sbautomotive') ? '/images/sbautomotive/logo_sbautomotive_black.png' : '/images/sbacoustics/logo_sbacoustics.png'}
+                  src={
+                    pathname.includes('sbaudience')
+                      ? '/images/sbaudience/logo_sbaudience.png'
+                      : pathname.includes('sbautomotive')
+                        ? '/images/sbautomotive/logo_sbautomotive_black.png'
+                        : '/images/sbacoustics/logo_sbacoustics.png'
+                  }
                   style={{
                     cursor: 'pointer',
+                    display: 'block',
                     maxWidth: '150px',
                     height: '32px',
-                    zIndex: 101,
-                    objectFit: 'contain'
+                    objectFit: 'contain',
                   }}
-                  alt={pathname.includes('sbaudience') ? "SB Audience Logo" : pathname.includes('sbautomotive') ? "SB Automotive Logo" : "SB Acoustics Logo"}
+                  alt={
+                    pathname.includes('sbaudience')
+                      ? 'SB Audience Logo'
+                      : pathname.includes('sbautomotive')
+                        ? 'SB Automotive Logo'
+                        : 'SB Acoustics Logo'
+                  }
                   width={200}
                   height={50}
                   loading="eager"
-                />  
+                />
               </div>
             </a>
           </div>
@@ -532,29 +543,59 @@ export default function NavbarLegacy() {
           {!isDesktop && mobileOpen ? (
             <div
               style={{
-                borderTop: "1px solid #d7dce0",
-                marginTop: 10,
-                paddingTop: 6,
+                position: 'absolute',
+                left: '0px',
+                right: '0px',
+                top: '56px',
+
+                width: '100%',
+                maxWidth: '100%',
+
+                height: 'calc(100vh - 84px)',
+                maxHeight: 'calc(100vh - 84px)',
+
+                boxSizing: 'border-box',
+
+                borderTop: '1px solid #d7dce0',
+                marginTop: '10px',
+
+                paddingTop: '6px',
                 paddingLeft: '8px',
                 paddingRight: '8px',
-                position: 'absolute',
-                left: 0,
-                top: '56px',
-                height: "calc(100vh - 84px)",
-                width: '100%',
-                backgroundColor: pathname.includes('sbaudience') ? '#000000' : '#ffffff',
-                maxHeight: "calc(100vh - 84px)",
-                overflowY: "scroll",
-                WebkitOverflowScrolling: "touch",
-                overscrollBehavior: "contain",
+
+                backgroundColor: pathname.includes('sbaudience')
+                  ? '#000000'
+                  : '#ffffff',
+
+                overflowX: 'hidden',
+                overflowY: 'auto',
+
+                WebkitOverflowScrolling: 'touch',
               }}
             >
-              <SearchLightboxOld changeBrand/>
+              <SearchLightboxOld changeBrand />
+
               {menuNodes.map((node, index) => (
-                <MobileNode key={node.href + index} node={node} depth={0}  parent={node.href} pathname={pathname}/>
+                <MobileNode
+                  key={node.href + index}
+                  node={node}
+                  depth={0}
+                  parent={node.href}
+                  pathname={pathname}
+                />
               ))}
-              {(pathname.includes('sbaudience') ? TOP_LINKS_SBAUDIENCE : TOP_LINKS).map((link) => (
-                <MobileNode key={link.href} node={link} depth={0} parent={link.href} pathname={pathname}/>
+
+              {(pathname.includes('sbaudience')
+                ? TOP_LINKS_SBAUDIENCE
+                : TOP_LINKS
+              ).map((link) => (
+                <MobileNode
+                  key={link.href}
+                  node={link}
+                  depth={0}
+                  parent={link.href}
+                  pathname={pathname}
+                />
               ))}
             </div>
           ) : null}

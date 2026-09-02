@@ -90,6 +90,7 @@ import { Noto_Sans } from 'next/font/google';
 import LoadingWrapper from '@/components/loadingWrapper';
 import { CookieProvider } from '@/lib/cookies-context';
 import CookieBanner from '@/components/cookie-banner';
+import { cookies } from 'next/headers';
 const font = Noto_Sans({ subsets: ['latin'] })
 
 export default async function Layout({
@@ -97,7 +98,14 @@ export default async function Layout({
 }: {
   children: React.ReactNode
 }) {
-  const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? 'G-XYZ'
+  // const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? 'G-XYZ'
+  // const cookieStore = await cookies();
+
+  // const raw = cookieStore.get('cookie-preferences')?.value;
+
+  // const preferences = raw
+  //   ? JSON.parse(raw)
+  //   : null;
 
   return (
     <html lang="en" className="overflow-x-hidden">
@@ -136,7 +144,8 @@ export default async function Layout({
         </CookieProvider>
       </body>
 
-      <GoogleAnalytics gaId={GA_ID} />
+      {/* {preferences['analytics'] && <GoogleAnalytics gaId={GA_ID} />} */}
+      {/* <GoogleAnalytics gaId={GA_ID} /> */}
     </html>
   )
 }

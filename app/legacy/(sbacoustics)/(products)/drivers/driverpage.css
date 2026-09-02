@@ -1,6 +1,8 @@
 .drivers-container {
-  padding-inline: 32px;
-  padding-block: 16px;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 
 .drivers-grid {
@@ -9,8 +11,10 @@
 
 .technical {
   display: block;
-  padding-inline: 32px;
-  padding-block: 16px;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 
 .comparison-text-style {
@@ -18,8 +22,10 @@
 }
 
 .all-driver-page-parent {
-  padding-inline: 32px;
-  padding-block: 16px;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 
 .all-driver-page-child-grid {
@@ -45,8 +51,10 @@
   .technical {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    padding-inline: 0px;
-    padding-block: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
   }
 
   .comparison-text-style {
@@ -60,9 +68,11 @@
 
 /* lg: 1024px */
 @media (min-width: 1024px) {
-  .drivers-container {
-    padding-inline: 48px;
-    padding-block: 24px;
+  .drivers-container {    
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-top: 24px;
+    padding-bottom: 24px;
   }
 
   .drivers-grid {
@@ -70,8 +80,10 @@
   }
 
   .all-driver-page-parent {
-    padding-inline: 48px;
-    padding-block: 24px;
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-top: 24px;
+    padding-bottom: 24px;
   }
 
   .all-driver-page-child-grid {
@@ -82,24 +94,30 @@
 /* xl: 1280px */
 @media (min-width: 1280px) {
   .drivers-container {
-    padding-block: 32px;
-    padding-inline: 160px;
+    padding-left: 160px;
+    padding-right: 160px;
+    padding-top: 32px;
+    padding-bottom: 32px;
   }
 
   .all-driver-page-parent {
-    padding-inline: 160px;
-    padding-block: 32px;
+    padding-left: 160px;
+    padding-right: 160px;
+    padding-top: 32px;
+    padding-bottom: 32px;
   }
 }
 
 /* 2xl: 1536px */
 @media (min-width: 1536px) {
   .drivers-container {
-    padding-inline: 240px;
+    padding-left: 240px;
+    padding-right: 240px;
   }
 
   .all-driver-page-parent {
-    padding-inline: 240px;
+    padding-left: 240px;
+    padding-right: 240px;
   }
 }
 

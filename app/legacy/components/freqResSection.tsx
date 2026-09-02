@@ -33,72 +33,54 @@ const FrequencyResponseSectionOld: React.FC<PropType> = (props) => {
     // </div>
     // </>
 
-    
-    <>
-    <div style={{
-      borderRadius: '8px',
+    <div 
+    style={{
       width: '100%',
-      borderStyle: 'none'
+      height: '400px',
+      display: 'block',
+      flexShrink: 0
     }}>
-    <div
-      style={{
-        paddingInline: '24px',
-        paddingBottom: '24px',
-        paddingTop: '0px',
-        display: 'flex',
-        justifyContent: 'center',
-        backgroundColor: 'transparent'
-      }}
-            onMouseEnter={() => sethoverImage(true)}
-            onMouseLeave={() => sethoverImage(false)}
-        >
-        <div style={{
-          position: 'relative',
-          overflow: 'hidden',
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          overflow: 'hidden',
+          boxSizing: 'border-box'
+        }}
+      >
+        <div style={{
+          width: '100%',
           height: '100%',
-          width: '100%'
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingLeft: '24px',
+          paddingRight: '24px',
+          paddingBottom: '24px',
+          boxSizing: 'border-box'
         }}>
-            {/* <div
-              className={`text-foreground absolute top-0 right-0 transform transition-all duration-300 ease-in-out ${hoverImage ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'} z-20`}
-            >
-              <Eye size={25} />
-            </div> */}
-            
-            <div style={{
-              position: 'relative',
-              overflow: 'hidden',
+          <img
+            src={frequencyres.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${frequencyres}` : frequencyres}
+            alt={`${name} - Frequency Response`}
+            width={500}
+            height={500}
+            style={{
+              display: 'block',
+              maxWidth: '100%',
+              maxHeight: '100%',
+              width: 'auto',
+              height: 'auto',
+              objectFit: 'contain',
               zIndex: 10
-            }}> 
-          
-              <div style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: "center",
-                height: '100%',
-                width: '100%'
-              }}>
-                <img
-                  src={frequencyres.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${frequencyres}` : frequencyres}
-                  alt={`${name} - Frequency Response`}
-                  width={1000}
-                  height={1000}
-                  style={{
-                    objectFit: 'contain',
-                    paddingInline: '40px',
-                    scale: hoverImage ? '105%' : '100%'
-                  }}
-                  loading={'eager'}
-                />
-              </div>
-            </div>
-          </div>
+            }}
+            loading={'eager'}
+          />
         </div>
+      </div>
     </div>
-    </>
   );
 }
 

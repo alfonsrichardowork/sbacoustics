@@ -1,6 +1,8 @@
 .application-all-parent {
-    padding-inline: 32px;
-    padding-block: 16px;
+    padding-left: 32px;
+    padding-right: 32px;
+    padding-top: 16px;
+    padding-bottom: 16px;
 }
 
 .application-all-h1 {
@@ -26,8 +28,10 @@
 }
 
 .single-application-page-parent {
-    padding-block: 32px;
-    padding-inline: 32px;
+    padding-left: 32px;
+    padding-right: 32px;
+    padding-top: 32px;
+    padding-bottom: 32px;
 }
 
 .single-application-page-child {
@@ -56,20 +60,26 @@
 
 @media (min-width:1024px){
     .application-all-parent {
-        padding-inline: 48px;
-        padding-block: 24px;
+        padding-left: 48px;
+        padding-right: 48px;
+        padding-top: 24px;
+        padding-bottom: 24px;
     }
     
     .single-application-page-parent {
-        padding-block: 40px;
-        padding-inline: 48px;
+        padding-left: 48px;
+        padding-right: 48px;
+        padding-top: 40px;
+        padding-bottom: 40px;
     }
 }
 
 @media (min-width:1280px){
     .application-all-parent {
-        padding-inline: 160px;
-        padding-block: 32px;
+        padding-left: 160px;
+        padding-right: 160px;
+        padding-top: 32px;
+        padding-bottom: 32px;
     }
 
     .application-all-single-app {
@@ -78,14 +88,17 @@
     }
     
     .single-application-page-parent {
-        padding-block: 32px;
-        padding-inline: 160px;
+        padding-left: 160px;
+        padding-right: 160px;
+        padding-top: 32px;
+        padding-bottom: 32px;
     }
 }
 
 @media (min-width:1536px){
     .application-all-parent {
-        padding-inline: 240px;
+        padding-left: 240px;
+        padding-right: 240px;
     }
 
     .application-all-single-app {
@@ -94,7 +107,8 @@
     }
     
     .single-application-page-parent {
-        padding-inline: 240px;
+        padding-left: 240px;
+        padding-right: 240px;
     }
 
 }

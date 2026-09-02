@@ -14,14 +14,14 @@ export const LightboxOneProductOld = ({ name, url, type }: { name: string, url: 
   const [open, setOpen] = useState(false);
 
   return (
-    <div style={{
-        justifyContent: "center",
-        paddingTop: '32px'
-    }} onClick={() => setOpen(true)}>
+    // <div style={{
+    //     justifyContent: "center",
+    //     paddingTop: '32px'
+    // }} onClick={() => setOpen(true)}>
         <div style={{
-            justifyContent: 'center',
-            cursor: 'zoom-in',
-            padding: '0px'
+          height: '400px',
+          width: '100%',
+          backgroundColor: 'transparent',
         }}>
             {type === "drawing" ?
                 <DrawingSectionOld name={name} drawing={url} />
@@ -29,6 +29,6 @@ export const LightboxOneProductOld = ({ name, url, type }: { name: string, url: 
                 <FrequencyResponseSectionOld name={name} frequencyres={url}/>
             }
         </div>
-    </div>
+    // </div>
   );
 };

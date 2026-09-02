@@ -161,6 +161,18 @@ export const DistributorMap: React.FC<DistributorProps> = ({
   return (
       <>
       <div className="distributor-map-height" style={{ width: '100%', position: 'relative' }}>
+
+        <iframe
+          width="100%"
+          height="100%"
+          style={{
+            border: 0,
+            display: 'block',
+          }}
+          loading="lazy"
+          src={`https://www.google.com/maps?q=${activeMap?.lat},${activeMap?.lng}&z=5&output=embed`}
+          allowFullScreen
+        />
         {/* <MapContainer
           center={center}
           zoom={3}

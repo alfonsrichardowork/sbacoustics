@@ -33,45 +33,34 @@ const DrawingSectionOld: React.FC<PropType> = (props) => {
 
 
     
-    <div style={{
-      borderRadius: '8px',
+    <div 
+    style={{
       width: '100%',
-      borderStyle: 'none'
+      height: '400px',
+      display: 'block',
+      flexShrink: 0
     }}>
-    <div
-      style={{
-        paddingInline: '24px',
-        paddingBottom: '24px',
-        paddingTop: '0px',
-        display: 'flex',
-        justifyContent: 'center',
-        backgroundColor: 'transparent'
-      }}
-      onMouseEnter={() => sethoverImage(true)}
-      onMouseLeave={() => sethoverImage(false)}
-    >
-    <div style={{
-      position: 'relative',
-      overflow: 'hidden',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      height: '100%',
-      width: '100%'
-    }}>
-      <div style={{
-        position: 'relative',
-        overflow: 'hidden',
-        zIndex: 10
-      }}> 
-          
-        <div style={{
-          position: 'relative',
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: "center",
+          justifyContent: 'center',
+          overflow: 'hidden',
+          boxSizing: 'border-box'
+        }}
+      >
+        <div style={{
+          width: '100%',
           height: '100%',
-          width: '100%'
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingLeft: '24px',
+          paddingRight: '24px',
+          paddingBottom: '24px',
+          boxSizing: 'border-box'
         }}>
           <img 
             src={drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing}
@@ -79,18 +68,18 @@ const DrawingSectionOld: React.FC<PropType> = (props) => {
             width={500}
             height={500}
             style={{
+              display: 'block',
+              maxWidth: '100%',
+              maxHeight: '100%',
+              width: 'auto',
+              height: 'auto',
               objectFit: 'contain',
-              paddingInline: '40px',
-              scale: hoverImage ? '105%' : '100%'
+              zIndex: 10
             }}
             loading={'eager'}
           />
         </div>
       </div>
-    </div>
-
-    </div>
-
     </div>
   );
 }

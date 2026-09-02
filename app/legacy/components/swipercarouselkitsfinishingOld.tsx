@@ -85,117 +85,236 @@ const SwiperCarouselKitsFinishingOld: React.FC<PropType> = (props) => {
   }
 
   return (
-    <div style={{
-      display: "block",
-      justifyContent: 'center',
-      alignItems: 'center',
-      objectPosition: 'center',
-      height: '100%',
-      width: '100%',
-      paddingTop: '32px'
-    }}>
-      {!finishLoad && 
-        <>
-        ...
-        </>
-      }
-      {activeKitsPreview && activeKitsPreview != '' &&
-      <div style={{
-        zIndex: 10,
-        height: 'fit-content',
-        // width: isMobile ? '100%' : '50%'
-        width: '100%'
-      }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden'
-        }}>
-          <img
-            src={
-              activeKitsPreview.startsWith('/uploads/')
-                ? `${process.env.NEXT_PUBLIC_ROOT_URL}${activeKitsPreview}`
-                  : activeKitsPreview
-            }
-            alt={`${name} - ${activeKitsPreviewName} Finishing`}
-            width={1000}
-            height={1000}
-            style={{
-              height: '100%',
-              maxWidth: '100%',
-              width: 'auto',
-              objectFit: 'contain',
-            }}
-            loading='lazy'
-            data-testid='kits-finishing-image-single-product-page'
-            onLoad={() => setFinishLoad(true)}
-          />
+    // <div style={{
+    //   display: "block",
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    //   objectPosition: 'center',
+    //   height: '100%',
+    //   width: '100%',
+    //   paddingTop: '32px'
+    // }}>
+    //   {!finishLoad && 
+    //     <>
+    //     ...
+    //     </>
+    //   }
+    //   {activeKitsPreview && activeKitsPreview != '' &&
+    //   <div style={{
+    //     zIndex: 10,
+    //     height: 'fit-content',
+    //     // width: isMobile ? '100%' : '50%'
+    //     width: '100%'
+    //   }}>
+    //     <div style={{
+    //       display: 'flex',
+    //       alignItems: 'center',
+    //       justifyContent: 'center',
+    //       overflow: 'hidden'
+    //     }}>
+    //       <img
+    //         src={
+    //           activeKitsPreview.startsWith('/uploads/')
+    //             ? `${process.env.NEXT_PUBLIC_ROOT_URL}${activeKitsPreview}`
+    //               : activeKitsPreview
+    //         }
+    //         alt={`${name} - ${activeKitsPreviewName} Finishing`}
+    //         width={1000}
+    //         height={1000}
+    //         style={{
+    //           height: '100%',
+    //           maxWidth: '100%',
+    //           width: 'auto',
+    //           objectFit: 'contain',
+    //         }}
+    //         loading='lazy'
+    //         data-testid='kits-finishing-image-single-product-page'
+    //         onLoad={() => setFinishLoad(true)}
+    //       />
         
-        <div style={{
+    //     <div style={{
+    //       width: '100%',
+    //       justifyContent: 'center',
+    //       textAlign: 'center',
+    //       paddingBottom: '24px',
+    //       fontWeight: 700
+    //     }}>
+    //       Finish: {activeKitsPreviewName}
+    //     </div>
+    //     <div style={{
+    //       display: 'flex',
+    //       gap: '8px',
+    //       width: '100%',
+    //       justifyContent: 'center',
+    //       alignItems: 'center'
+    //     }}>
+    //     {combinedFinishing && combinedFinishing.length > 0 && combinedFinishing.map((val, index) => 
+    //         <div
+    //           style={{
+    //             display: 'flex',
+    //             alignItems: 'center',
+    //             gap: '8px',
+    //             paddingBottom: '6px'
+    //           }}
+    //           onClick={() => changeImagePreview(val.urlPreview, val.name)}
+    //           key={index}
+    //         >
+    //           <div style={{
+    //             height: '30px',
+    //             display: 'flex',
+    //             alignItems: 'center',
+    //             borderWidth: activeKitsPreviewName === val.name ? '2px' : '0px',
+    //             borderColor: activeKitsPreviewName === val.name ? '#ef4444' : 'transparent'
+    //           }}>
+    //             <div style={{
+    //               position: 'relative',
+    //               display: 'flex',
+    //               alignItems: 'center',
+    //               justifyContent: 'center',
+    //               height: '100%',
+    //               width: '100%'
+    //             }}>
+    //               <img 
+    //                 src={val.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.url}` : val.url} 
+    //                 alt={val.name} 
+    //                 width={100}
+    //                 height={100}
+    //                 style={{
+    //                   objectFit: "contain",
+    //                   height: "100%",
+    //                   width: "fit-content"
+    //                 }}
+    //                 loading='lazy'
+    //               />
+    //             </div>
+    //           </div>
+    //         </div>
+    //       // </div>
+    //     )}
+    //     </div>
+    //     </div>
+    //   </div>
+    //   }
+    // </div>
+
+    <div
+  style={{
+    width: '100%',
+    textAlign: 'center',
+    paddingTop: '32px',
+  }}
+>
+  {!finishLoad && (
+    <>
+      ...
+    </>
+  )}
+
+  {activeKitsPreview && activeKitsPreview !== '' && (
+    <div
+      style={{
+        width: '100%',
+        textAlign: 'center',
+      }}
+    >
+      <img
+        src={
+          activeKitsPreview.startsWith('/uploads/')
+            ? `${process.env.NEXT_PUBLIC_ROOT_URL}${activeKitsPreview}`
+            : activeKitsPreview
+        }
+        alt={`${name} - ${activeKitsPreviewName} Finishing`}
+        width={1000}
+        height={1000}
+        style={{
+          display: 'block',
+          width: 'auto',
+          maxWidth: '100%',
+          height: 'auto',
+          maxHeight: '600px',
+          margin: '0 auto',
+          objectFit: 'contain',
+        }}
+        loading="eager"
+        data-testid="kits-finishing-image-single-product-page"
+        onLoad={() => setFinishLoad(true)}
+      />
+
+      <div
+        style={{
           width: '100%',
-          justifyContent: 'center',
           textAlign: 'center',
           paddingBottom: '24px',
-          fontWeight: 700
-        }}>
-          Finish: {activeKitsPreviewName}
-        </div>
-        <div style={{
+          fontWeight: 700,
+        }}
+      >
+        Finish: {activeKitsPreviewName}
+      </div>
+
+      <div
+        style={{
           display: 'flex',
           gap: '8px',
           width: '100%',
           justifyContent: 'center',
-          alignItems: 'center'
-        }}>
-        {combinedFinishing && combinedFinishing.length > 0 && combinedFinishing.map((val, index) => 
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
+        {combinedFinishing &&
+          combinedFinishing.length > 0 &&
+          combinedFinishing.map((val, index) => (
             <div
+              key={index}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                paddingBottom: '6px'
+                paddingBottom: '6px',
+                cursor: 'pointer',
               }}
-              onClick={() => changeImagePreview(val.urlPreview, val.name)}
-              key={index}
+              onClick={() =>
+                changeImagePreview(val.urlPreview, val.name)
+              }
             >
-              <div style={{
-                height: '30px',
-                display: 'flex',
-                alignItems: 'center',
-                borderWidth: activeKitsPreviewName === val.name ? '2px' : '0px',
-                borderColor: activeKitsPreviewName === val.name ? '#ef4444' : 'transparent'
-              }}>
-                <div style={{
-                  position: 'relative',
+              <div
+                style={{
+                  height: '30px',
+                  minWidth: '30px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  height: '100%',
-                  width: '100%'
-                }}>
-                  <img 
-                    src={val.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.url}` : val.url} 
-                    alt={val.name} 
-                    width={100}
-                    height={100}
-                    style={{
-                      objectFit: "contain",
-                      height: "100%",
-                      width: "fit-content"
-                    }}
-                    loading='lazy'
-                  />
-                </div>
+                  border:
+                    activeKitsPreviewName === val.name
+                      ? '2px solid #ef4444'
+                      : '2px solid transparent',
+                  boxSizing: 'border-box',
+                }}
+              >
+                <img
+                  src={
+                    val.url.startsWith('/uploads/')
+                      ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.url}`
+                      : val.url
+                  }
+                  alt={val.name}
+                  width={100}
+                  height={100}
+                  style={{
+                    display: 'block',
+                    width: 'auto',
+                    height: '26px',
+                    maxWidth: '100%',
+                    objectFit: 'contain',
+                  }}
+                  loading="eager"
+                />
               </div>
             </div>
-          // </div>
-        )}
-        </div>
-        </div>
+          ))}
       </div>
-      }
     </div>
+  )}
+</div>
   );
 }
 

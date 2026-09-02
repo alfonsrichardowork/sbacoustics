@@ -297,12 +297,20 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                 <LightboxOneProductOld name={product.name} url={product.graph_img_url} type={"graph"}/>
                             </div>
                         }
+                        
+
+                        <div style={{ width: "100%", height: "100%", paddingBottom: "16px" }}>
+                            {product.kitsFinishing && product.kitsFinishing.length > 1 &&
+                                <SwiperCarouselKitsFinishingOld name={product.name} kits_finishing={product.kitsFinishing}/>
+                            }    
+                        </div>
                     </div>
                     <div className="single-product-page-child-1-mobile">   
                         {/* <div style={{ width: "100%", height: "100%", paddingBottom: "1rem" }}> */}
                             <SwiperCarouselOneProductMobileOld name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>       
                         {/* </div> */}
                     </div>
+                    
                 </div>
 
 
@@ -347,7 +355,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                 <div className="single-product-page-all-data-h1">
                                     <h2>Features:</h2>
                                 </div>
-                                <h3 className="single-product-page-all-data-desc-1" id="tiptap" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description, {
+                                <h3 className="single-product-page-all-data-desc-1 tiptap" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description, {
                                     ALLOWED_TAGS: [
                                         'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
                                     ],
@@ -635,25 +643,16 @@ export default async function SingleProductSBAcoustics(props: Props) {
                 </div>
             </div>
 
-            <div style={{ width: "100%", height: "100%", paddingBottom: "16px" }}>
+            <div style={{ width: "100%", height: "100%", paddingBottom: "16px" }} className="single-product-page-kits-finishing-display">
                 {product.kitsFinishing && product.kitsFinishing.length > 1 &&
                     <SwiperCarouselKitsFinishingOld name={product.name} kits_finishing={product.kitsFinishing}/>
                 }    
             </div>
 
             {product.similarProducts && product.similarProducts.length > 0 &&
-                <div 
-                className="single-product-page-all-data-h1"
-                style={{ 
-                    paddingTop: '112px',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                    width: '100%'
-                }}>
-                    <h2 style={{
-                        paddingBottom: "16px"
-                    }}>
+                <div className="single-product-page-all-data-h1" 
+                style={{ paddingTop: '112px', textAlign: 'center', width: '100%', }} >
+                    <h2 style={{ paddingBottom: '16px', }} >
                         Similar Products
                     </h2>
                     <SwiperCarouselSimilarProductOld similar={product.similarProducts} brand={'sbacoustics'}/>

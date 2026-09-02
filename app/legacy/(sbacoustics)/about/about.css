@@ -139,12 +139,14 @@
 }
 
 .about-us-section-parent {
-    padding-block: 40px;
+    padding-top: 40px;
+    padding-bottom: 40px;
     background-color: #ffffff;
 }
 
 .about-us-section-parent-2 {
-    padding-block: 40px;
+    padding-top: 40px;
+    padding-bottom: 40px;
     background-color: #f4f4f5;
 }
 
@@ -168,7 +170,8 @@
         max-width: 96rem /* 1536px */;
     }
     margin-inline: auto;
-    padding-inline: 2rem /* 32px */;
+    padding-left: 2rem;
+    padding-right: 2rem;
     @media (width >= 40rem /* 640px */) {
         max-width: none;
     }
@@ -270,11 +273,13 @@
     }
     
     .about-us-section-parent {
-        padding-block: 80px;
+        padding-top: 80px;
+        padding-bottom: 80px;
     }
 
     .about-us-section-parent-2 {
-        padding-block: 80px;
+        padding-top: 80px;
+        padding-bottom: 80px;
     }
 
     .about-us-section-child-grid {

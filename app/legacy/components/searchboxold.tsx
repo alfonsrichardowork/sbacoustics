@@ -198,7 +198,7 @@ const SearchboxLegacy: FC<PropType> = (props) => {
                 transitionProperty: 'all',
                 borderRadius: '8px',
                 padding: '4px',
-                backgroundColor: 'hsl(var(--background))',
+                backgroundColor: '#ffffff',
                 borderColor: 'hsl(var(--foreground))',
                 borderWidth: '1px',
                 zIndex: 102,
@@ -311,7 +311,8 @@ const SearchboxLegacy: FC<PropType> = (props) => {
                       borderColor: '#f3f4f6'
                     }}>
                       <div style={{
-                        fontSize: '14px'
+                        fontSize: '14px',
+                        color: '#000000'
                       }}>
                         No products found.
                       </div>
