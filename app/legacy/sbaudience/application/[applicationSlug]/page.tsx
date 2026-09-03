@@ -3,10 +3,6 @@ import prismadb from "@/lib/prismadb";
 //@ts-ignore
 import "@/app/css/styles.scss";
 import DOMPurify from 'isomorphic-dompurify'; 
-import Link from "next/link";
-import Image from "next/image";
-import { LazyImageCustom } from "@/components/lazyImageCustom";
-import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
 import '../application.css'
 
 type Props = {

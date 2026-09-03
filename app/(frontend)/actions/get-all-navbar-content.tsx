@@ -4,7 +4,7 @@ type ProductRecord = ProductLink['product']
 
 type CategoryNode = CategoryRecord & { children: CategoryNode[] }
 
-async function loadCategories(brandId?: string) {
+export async function loadCategories(brandId?: string) {
   const response = await fetch(`/api/test/categories/${brandId}`)
   if (!response.ok) {
     throw new Error('Failed to load categories')
@@ -28,7 +28,7 @@ function compareByPriority(
   return priorityValue(a.priority) - priorityValue(b.priority)
 }
 
-function buildHierarchy(categories: CategoryRecord[]) {
+export function buildHierarchy(categories: CategoryRecord[]) {
   const nodes = new Map<string, CategoryNode>()
   for (const category of categories) nodes.set(category.id, { ...category, children: [] })
 
@@ -101,7 +101,7 @@ export type SerializedCategory = {
   products?: SerializedProduct[]
 }
 
-function serializeCategory(node: CategoryNode): SerializedCategory {
+export function serializeCategory(node: CategoryNode): SerializedCategory {
   const products = new Map<string, { product: ProductRecord; priority: string | null }>()
 
   if (node.show_products) {
