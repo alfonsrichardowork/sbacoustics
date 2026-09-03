@@ -156,13 +156,79 @@ export const DistributorMap: React.FC<DistributorProps> = ({
   if (!icons) {
     return null;
   }
-
-
   return (
       <>
       <div className="distributor-map-height" style={{ width: '100%', position: 'relative' }}>
 
-        <iframe
+
+      <a
+        href={`https://www.google.com/maps?q=${activeMap?.lat},${activeMap?.lng}`}
+        className="distributor-map-height"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: 'flex',
+          width: '100%',
+          boxSizing: 'border-box',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textDecoration: 'none',
+          cursor: 'pointer',
+          backgroundColor: '#e5e7eb',
+          backgroundImage:
+            'linear-gradient(45deg, #dfe2e5 25%, transparent 25%), linear-gradient(-45deg, #dfe2e5 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #dfe2e5 75%), linear-gradient(-45deg, transparent 75%, #dfe2e5 75%)',
+          backgroundSize: '40px 40px',
+          backgroundPosition: '0 0, 0 20px, 20px -20px, -20px 0px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginBottom: '125px',
+            justifyContent: 'center',
+            padding: '18px 24px',
+            backgroundColor: '#ffffff',
+            borderRadius: '10px',
+            border: '1px solid #d1d5db',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.18)',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '36px',
+              lineHeight: '36px',
+              marginBottom: '8px',
+            }}
+          >
+            📍
+          </div>
+
+          <div
+            style={{
+              fontSize: '17px',
+              fontWeight: 'bold',
+              color: '#111827',
+            }}
+          >
+            View on Google Maps
+          </div>
+
+          <div
+            style={{
+              marginTop: '5px',
+              fontSize: '13px',
+              color: '#6b7280',
+            }}
+          >
+            Click to view this location
+          </div>
+        </div>
+      </a>
+        {/* <iframe
           width="100%"
           height="100%"
           style={{
@@ -170,9 +236,17 @@ export const DistributorMap: React.FC<DistributorProps> = ({
             display: 'block',
           }}
           loading="lazy"
-          src={`https://www.google.com/maps?q=${activeMap?.lat},${activeMap?.lng}&z=5&output=embed`}
+          src={
+            activeMap
+              ? 'https://www.google.com/maps?q=' +
+                activeMap.lat +
+                ',' +
+                activeMap.lng +
+                '&z=5&output=embed'
+              : ''
+          }
           allowFullScreen
-        />
+        /> */}
         {/* <MapContainer
           center={center}
           zoom={3}
