@@ -174,11 +174,11 @@ export const DistributorMap: React.FC<DistributorProps> = ({
           justifyContent: 'center',
           textDecoration: 'none',
           cursor: 'pointer',
-          backgroundColor: '#e5e7eb',
-          backgroundImage:
-            'linear-gradient(45deg, #dfe2e5 25%, transparent 25%), linear-gradient(-45deg, #dfe2e5 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #dfe2e5 75%), linear-gradient(-45deg, transparent 75%, #dfe2e5 75%)',
-          backgroundSize: '40px 40px',
-          backgroundPosition: '0 0, 0 20px, 20px -20px, -20px 0px',
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url(${pathname.includes('sbaudience') ? '/images/sbaudience/sbaudience-distributors-legacy.png' : '/images/sbacoustics/sbacoustics-distributors-legacy.png'})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+
           position: 'relative',
           overflow: 'hidden',
         }}
