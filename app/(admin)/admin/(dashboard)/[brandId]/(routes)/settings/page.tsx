@@ -20,6 +20,9 @@ const SettingsPage = async (
   const brand = await prismadb.brand.findFirst({
     where: {
       id: params.brandId
+    },
+    include: {
+      aboutUsImages: true
     }
   });
 

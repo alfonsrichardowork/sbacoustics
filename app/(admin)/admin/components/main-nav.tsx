@@ -152,12 +152,12 @@ export function MainNav({
       description: "Show All Distributors.",
       icon: Users,
     },
-    {
-      title: "About Us",
-      href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/about-us`,
-      description: "Edit About SB Acoustics",
-      icon: Info,
-    },
+    // {
+    //   title: "About Us",
+    //   href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/about`,
+    //   description: "Edit About SB Acoustics",
+    //   icon: Info,
+    // },
     {
       title: "Contacts",
       href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/contacts`,
@@ -317,7 +317,7 @@ export function MainNav({
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className={`flex gap-1.5 text-xs ${pathSegments[3] === 'superior' || pathSegments[3] === 'catalogues' || pathSegments[3] === 'distributors' || pathSegments[3] === 'about-us' || pathSegments[3] === 'contacts' || pathSegments[3] === 'allfinishing' ? 'bg-primary text-background hover:text-background' : ''}`}>
+              <NavigationMenuTrigger className={`flex gap-1.5 text-xs ${pathSegments[3] === 'superior' || pathSegments[3] === 'catalogues' || pathSegments[3] === 'distributors' || pathSegments[3] === 'about' || pathSegments[3] === 'contacts' || pathSegments[3] === 'allfinishing' ? 'bg-primary text-background hover:text-background' : ''}`}>
                 <List size={16} /> Others
               </NavigationMenuTrigger>
               <NavigationMenuContent>
@@ -328,7 +328,7 @@ export function MainNav({
                       <ListItem
                         key={component.title}
                         href={component.href}
-                        className={`${pathSegments[3] === component.href.split('/')[3] ? 'bg-primary hover:bg-primary' : ''} ${(component.title === 'About Us' || component.title === 'Contacts') && 'cursor-not-allowed pointer-events-none opacity-50'}`}
+                        className={`${pathSegments[3] === component.href.split('/')[3] ? 'bg-primary hover:bg-primary' : ''} ${(component.title === 'Contacts') && 'cursor-not-allowed pointer-events-none opacity-50'}`}
                       >
                         <div className={`flex items-center gap-1.5 ${pathSegments[3] === component.href.split('/')[3] ? "bg-primary text-background" : "text-foreground"}`}>
                           <Icon size={14}/>

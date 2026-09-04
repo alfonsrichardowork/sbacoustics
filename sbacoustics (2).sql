@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 31, 2026 at 11:24 AM
+-- Generation Time: Sep 04, 2026 at 11:07 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -1123,17 +1123,20 @@ CREATE TABLE `brand` (
   `homepage_about_us_text` text NOT NULL DEFAULT '',
   `homepage_brand_choice_text` text NOT NULL DEFAULT '',
   `homepage_catalogues_text` text NOT NULL DEFAULT '',
-  `homepage_open_source_kits_text` text NOT NULL DEFAULT ''
+  `homepage_open_source_kits_text` text NOT NULL DEFAULT '',
+  `brand_desc` text NOT NULL DEFAULT '',
+  `mission_values_desc` text NOT NULL DEFAULT '',
+  `sbe_desc` text NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `brand`
 --
 
-INSERT INTO `brand` (`id`, `name`, `userId`, `createdAt`, `updatedAt`, `address`, `email`, `telephone`, `maps`, `cover`, `homepage_about_us_url`, `homepage_brand_choice_url`, `homepage_catalogues_url`, `homepage_open_source_kits_url`, `homepage_about_us_text`, `homepage_brand_choice_text`, `homepage_catalogues_text`, `homepage_open_source_kits_text`) VALUES
-('680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'SB Acoustics', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2024-03-28 07:42:40.393', '2026-08-19 04:30:14.655', 'Jl. Margomulyo No. 5, Tandes, Surabaya, East Java. 60186, Indonesia', 'info@sbacoustics.com', '+62 31 748 00 11', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.8699107897037!2d112.68077017406677!3d-7.255643211727469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fe923ed24eeb%3A0x85682a2a3bd9cf3a!2sSinar%20Baja%20Electric%20Group!5e0!3m2!1sen!2sid!4v1764722745629!5m2!1sen!2sid\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '/uploads/other/about us sba.jpg.jpeg', '/uploads/other/about us sba.jpg-1.jpeg', '/uploads/other/SB Acoustics cover-2.jpg', '/uploads/other/SB-Acoustics-catalogue-new.jpg', '/uploads/other/open-source-kits-home-cover-new-2.jpeg', 'Built from the foundation of a company with decades of manufacturing experience and partnered with Danish audio design engineers touted for their...', 'Built from the foundation of a company with decades of manufacturing experience and partnered with Danish audio design engineers touted for their...', 'Full downloadable drivers and kits catalogue are here!', 'Build your dream speakers!'),
-('9e2a9f31-bce3-48ff-b438-0a00f8f8ec0b', 'SB Audience', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2024-03-28 07:43:15.783', '2026-08-19 08:00:43.145', 'Jl. Margomulyo No. 5, Tandes. Surabaya, East java, Indonesia - 60186', 'info@sbaudience.com', '+6231 748 00', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.888909152044!2d112.67790557483885!3d-7.253482692753138!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fe923ed24eeb%3A0x85682a2a3bd9cf3a!2sSinar%20Baja%20Electric%20Group!5e0!3m2!1sen!2sid!4v1764809692949!5m2!1sen!2sid\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '/uploads/other/about us sba.jpg-2.jpeg', '/uploads/other/about us sbau-2.jpg.jpeg', '/uploads/other/SB Audience cover-2-1.jpg', '/uploads/other/SB-Audience-catalogue-new.jpg', '/uploads/other/open-source-kits-home-cover-new-2-1.jpeg', 'SB Audience is spawned from the heavyweight manufacturing of Sinar Baja Electric Indonesia, with well over 44 years of experience in development and manufacturing of solutions for...', 'SB Audience is spawned from the heavyweight manufacturing of Sinar Baja Electric Indonesia, with well over 45 years of experience in development and manufacturing...', 'Full downloadable drivers catalogue is here!', ''),
-('aa1c3571-6040-4386-b11e-747af242beb1', 'SB Automotive', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2024-05-24 07:08:23.630', '2026-07-21 00:52:04.536', 'Jl. Margomulyo No. 5, Tandes, Surabaya, East Java. 60186, Indonesia', 'info@sbautomotiveaudio.com', '+62 31 748 00 11', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.8699107897037!2d112.68077017406677!3d-7.255643211727469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fe923ed24eeb%3A0x85682a2a3bd9cf3a!2sSinar%20Baja%20Electric%20Group!5e0!3m2!1sen!2sid!4v1764722745629!5m2!1sen!2sid\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '/uploads/other/New_SBE-3.webp', '/uploads/other/New_SBE-4.webp', '/uploads/other/SB-Automotive-cover-new-2.jpeg', '/uploads/other/VeXion 3.0 _Explode_ 9 1.webp', '/uploads/other/all product 1.webp', '', '', '', '');
+INSERT INTO `brand` (`id`, `name`, `userId`, `createdAt`, `updatedAt`, `address`, `email`, `telephone`, `maps`, `cover`, `homepage_about_us_url`, `homepage_brand_choice_url`, `homepage_catalogues_url`, `homepage_open_source_kits_url`, `homepage_about_us_text`, `homepage_brand_choice_text`, `homepage_catalogues_text`, `homepage_open_source_kits_text`, `brand_desc`, `mission_values_desc`, `sbe_desc`) VALUES
+('680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'SB Acoustics', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2024-03-28 07:42:40.393', '2026-09-04 07:13:36.884', 'Jl. Margomulyo No. 5, Tandes, Surabaya, East Java. 60186, Indonesia', 'info@sbacoustics.com', '+62 31 748 00 11', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.8699107897037!2d112.68077017406677!3d-7.255643211727469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fe923ed24eeb%3A0x85682a2a3bd9cf3a!2sSinar%20Baja%20Electric%20Group!5e0!3m2!1sen!2sid!4v1764722745629!5m2!1sen!2sid\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '/uploads/other/about us sba.jpg.jpeg', '/uploads/other/about us sba.jpg-1.jpeg', '/uploads/other/SB Acoustics cover-2.jpg', '/uploads/other/SB-Acoustics-catalogue-new.jpg', '/uploads/other/open-source-kits-home-cover-new-2.jpeg', 'Built from the foundation of a company with decades of manufacturing experience and partnered with Danish audio design engineers touted for their...', 'Built from the foundation of a company with decades of manufacturing experience and partnered with Danish audio design engineers touted for their...', 'Full downloadable drivers and kits catalogue are here!', 'Build your dream speakers!', '<h3>SB Acoustics was born from the union of two established names in audio: the Danish design engineers of Danesian Audio, whose patented tweeter and subwoofer innovations have shaped some of the industry\'s most distinctive transducer designs, and Sinar Baja Electric, a vertically integrated manufacturer with over 45 years of experience crafting exceptional transducers.</h3><p></p><h3>In-house capabilities span tooling, coil winding, diaphragm production, die-cast baskets, stamping, and specialty finishing, among other processes — giving us tight control over quality and consistency from raw material to finished component. Together, we\'ve built a product line that balances outstanding acoustic performance with affordability.</h3>', '<p><span style=\"color: rgb(71, 85, 105);\">We dedicate passion and purpose to create and deliver high-valued products, where end user and OEM customer expectation are exceeded</span></p>', '<h3>Founded in 1981, we\'ve grown into a leading name in loudspeaker manufacturing, with a reputation for high-quality products that meet the demands of discerning customers worldwide. Four decades of craftsmanship remain the backbone of everything we build.</h3><p></p><h3>As a privately held group, we stay true to our core values of innovation, quality, and customer satisfaction. We are a preferred OEM/ODM supplier for prestigious brands across the lifestyle hi-fi, high-end, automotive, and professional audio sectors.</h3><p></p><h3>We continue to invest in cutting-edge R&amp;D, quality control, and mass production — pushing the boundaries of what\'s possible in transducer design and manufacturing.</h3>'),
+('9e2a9f31-bce3-48ff-b438-0a00f8f8ec0b', 'SB Audience', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2024-03-28 07:43:15.783', '2026-08-19 08:00:43.145', 'Jl. Margomulyo No. 5, Tandes. Surabaya, East java, Indonesia - 60186', 'info@sbaudience.com', '+6231 748 00', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.888909152044!2d112.67790557483885!3d-7.253482692753138!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fe923ed24eeb%3A0x85682a2a3bd9cf3a!2sSinar%20Baja%20Electric%20Group!5e0!3m2!1sen!2sid!4v1764809692949!5m2!1sen!2sid\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '/uploads/other/about us sba.jpg-2.jpeg', '/uploads/other/about us sbau-2.jpg.jpeg', '/uploads/other/SB Audience cover-2-1.jpg', '/uploads/other/SB-Audience-catalogue-new.jpg', '/uploads/other/open-source-kits-home-cover-new-2-1.jpeg', 'SB Audience is spawned from the heavyweight manufacturing of Sinar Baja Electric Indonesia, with well over 44 years of experience in development and manufacturing of solutions for...', 'SB Audience is spawned from the heavyweight manufacturing of Sinar Baja Electric Indonesia, with well over 45 years of experience in development and manufacturing...', 'Full downloadable drivers catalogue is here!', '', '', '', ''),
+('aa1c3571-6040-4386-b11e-747af242beb1', 'SB Automotive', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2024-05-24 07:08:23.630', '2026-07-21 00:52:04.536', 'Jl. Margomulyo No. 5, Tandes, Surabaya, East Java. 60186, Indonesia', 'info@sbautomotiveaudio.com', '+62 31 748 00 11', '<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.8699107897037!2d112.68077017406677!3d-7.255643211727469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fe923ed24eeb%3A0x85682a2a3bd9cf3a!2sSinar%20Baja%20Electric%20Group!5e0!3m2!1sen!2sid!4v1764722745629!5m2!1sen!2sid\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>', '/uploads/other/New_SBE-3.webp', '/uploads/other/New_SBE-4.webp', '/uploads/other/SB-Automotive-cover-new-2.jpeg', '/uploads/other/VeXion 3.0 _Explode_ 9 1.webp', '/uploads/other/all product 1.webp', '', '', '', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -2746,6 +2749,40 @@ INSERT INTO `multiple3dmodels` (`id`, `productId`, `url`, `name`) VALUES
 ('ff27e01b-cfc3-4742-9d2a-9bd5bc118e9e', 'd372ce43-9a94-4e9f-ab84-6b261e3eb04f', '/uploads/3dmodels/SB13PFCR25-4.STEP', '3D Model'),
 ('ff86cab3-1976-4330-8c1b-24204ba008c0', '28ff428d-f208-41ca-afea-6166d324a39b', '/uploads/3dmodels/ROSSO-15W400.STEP', '3D Model'),
 ('ffc876f5-e8e7-48d9-8a43-bb1fe54dbd09', 'a1336f81-0ed3-4a4d-99b7-26086082e359', '/uploads/3dmodels/BIANCO-34CD-PK.STEP', '3D Model');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `multipleaboutusimages`
+--
+
+CREATE TABLE `multipleaboutusimages` (
+  `id` varchar(191) NOT NULL,
+  `brandId` varchar(191) NOT NULL,
+  `type` enum('SBE','BRAND','VALUES') NOT NULL,
+  `url` text NOT NULL DEFAULT '',
+  `name` text NOT NULL DEFAULT '',
+  `desc` text NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `multipleaboutusimages`
+--
+
+INSERT INTO `multipleaboutusimages` (`id`, `brandId`, `type`, `url`, `name`, `desc`) VALUES
+('0794186e-81d3-449a-92ce-2be8efcf8c0b', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'SBE', '/uploads/other/Sinar baja electric_ 5-1.jpeg', '', ''),
+('110fe82f-f14a-4b82-ba69-ec8a0b517bb4', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'BRAND', '/uploads/other/SB Acoustics_ 4B-1.jpeg', '', ''),
+('51007d77-83cc-46dd-85a0-f43e2674bd5a', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'VALUES', '/uploads/other/global reach-SBA-2.jpeg', 'Global Reach', 'Serving prestigious brands worldwide across Europe, Australia, Asia, and the United States through our comprehensive distribution network'),
+('536c195c-7e88-4f1d-9513-c7dd515cfd9d', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'VALUES', '/uploads/other/Innovation 2-2.jpeg', 'Innovation', 'Over 45 years of experience in manufacturing, paired with cutting-edge R&D, enables us to continuously advance technology in transducers and manufacturing'),
+('53d307f0-483e-46cd-b56b-369d26290c8c', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'VALUES', '/uploads/other/Acoustics_excellence-1.jpg', 'Acoustic Excellence', 'Combining innovative Danish design expertise with precision Indonesian manufacturing, to create transducers deliver uncompromised acoustic performance'),
+('5e59ef52-1cd7-4478-92d1-80f362a62822', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'SBE', '/uploads/other/Sinar baja electric_ 3-1.jpeg', '', ''),
+('7a7d0ce9-c1eb-4846-beaa-38ec610f1efc', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'SBE', '/uploads/other/Sinar baja electric_ 2-1.jpeg', '', ''),
+('7e647e6d-1a95-48ac-9450-4fa71ebdb6dd', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'BRAND', '/uploads/other/SB Acoustics_ 3B-1.jpeg', '', ''),
+('88d0614b-6436-4f30-bfdb-ee78dad68dd9', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'SBE', '/uploads/other/Sinar baja electric_ 4-3.jpeg', '', ''),
+('94a7e770-0d9f-44f3-b18f-beabf7a8ffb0', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'BRAND', '/uploads/other/SB Acoustics_ 2B-2.jpeg', '', ''),
+('a909276c-2991-4df1-8ec5-c2a0878f5b56', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'BRAND', '/uploads/other/SB Acoustics_ 5B-2.jpeg', '', ''),
+('cec61f0f-3c2e-457b-98cb-c7cfd146f5da', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'BRAND', '/uploads/other/SB Acoustics_ 1B-2.jpeg', '', ''),
+('f7a2e767-c67a-48a7-b6fe-3f22531e5108', '680c5eee-7ed7-41bc-b14b-4185f8a1c379', 'SBE', '/uploads/other/Sinar baja electric_ 1-3.jpeg', '', '');
 
 -- --------------------------------------------------------
 
@@ -4819,12 +4856,12 @@ CREATE TABLE `socialmedia` (
 --
 
 INSERT INTO `socialmedia` (`id`, `type`, `value`, `updatedBy`, `createdAt`, `updatedAt`, `brandId`) VALUES
+('0949ed76-c6e8-465b-b3a0-3c00dab8fc4c', 'instagram', 'https://www.instagram.com/sbacoustics/', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2026-09-04 07:13:36.893', '2026-09-04 07:13:36.893', '680c5eee-7ed7-41bc-b14b-4185f8a1c379'),
+('0d92dced-7c60-4fae-9d17-66865417fc40', 'youtube', 'https://www.youtube.com/channel/UC_5Sb3GW88wu_VyJyT0uYqg', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2026-09-04 07:13:36.893', '2026-09-04 07:13:36.893', '680c5eee-7ed7-41bc-b14b-4185f8a1c379'),
 ('12a798f5-4775-43fa-9396-d45cc2c70462', 'facebook', 'https://www.facebook.com/sbaudience/', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2026-08-19 08:00:43.150', '2026-08-19 08:00:43.150', '9e2a9f31-bce3-48ff-b438-0a00f8f8ec0b'),
 ('4a412c23-7e93-4dfb-be69-6df2332d8b61', 'instagram', 'https://www.instagram.com/sbaudience/', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2026-08-19 08:00:43.150', '2026-08-19 08:00:43.150', '9e2a9f31-bce3-48ff-b438-0a00f8f8ec0b'),
-('5733dc4b-d7b9-4b12-90ef-6c55fac0c844', 'facebook', 'https://www.facebook.com/sbacoustics/', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2026-08-19 04:30:14.663', '2026-08-19 04:30:14.663', '680c5eee-7ed7-41bc-b14b-4185f8a1c379'),
-('6382b22d-649a-480f-843f-2f08f2126196', 'x', 'https://twitter.com/sbacoustics_?lang=en', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2026-08-19 04:30:14.663', '2026-08-19 04:30:14.663', '680c5eee-7ed7-41bc-b14b-4185f8a1c379'),
-('da22427f-e367-46f6-a44f-cddaee9faf85', 'instagram', 'https://www.instagram.com/sbacoustics/', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2026-08-19 04:30:14.663', '2026-08-19 04:30:14.663', '680c5eee-7ed7-41bc-b14b-4185f8a1c379'),
-('e6650166-746b-4df5-9074-549dcda17a51', 'youtube', 'https://www.youtube.com/channel/UC_5Sb3GW88wu_VyJyT0uYqg', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2026-08-19 04:30:14.663', '2026-08-19 04:30:14.663', '680c5eee-7ed7-41bc-b14b-4185f8a1c379'),
+('6773635f-d305-4dbc-80d2-e69a49008fa7', 'x', 'https://twitter.com/sbacoustics_?lang=en', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2026-09-04 07:13:36.893', '2026-09-04 07:13:36.893', '680c5eee-7ed7-41bc-b14b-4185f8a1c379'),
+('e201bb11-7330-426f-813d-b6af0167a8a9', 'facebook', 'https://www.facebook.com/sbacoustics/', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2026-09-04 07:13:36.893', '2026-09-04 07:13:36.893', '680c5eee-7ed7-41bc-b14b-4185f8a1c379'),
 ('ffc0cdfa-915c-4a33-9d98-090bdd6e05f1', 'youtube', 'https://www.youtube.com/channel/UCUGH4gSTP5hS3aekg0DzYgg', '25cd8d0d-d185-41e8-9943-fdf1264236f2', '2026-08-19 08:00:43.150', '2026-08-19 08:00:43.150', '9e2a9f31-bce3-48ff-b438-0a00f8f8ec0b');
 
 -- --------------------------------------------------------
@@ -12277,6 +12314,13 @@ ALTER TABLE `kitsfinishing`
 ALTER TABLE `multiple3dmodels`
   ADD PRIMARY KEY (`id`),
   ADD KEY `multiple3dmodels_productId_idx` (`productId`);
+
+--
+-- Indexes for table `multipleaboutusimages`
+--
+ALTER TABLE `multipleaboutusimages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `multipleaboutusimages_brandId_idx` (`brandId`);
 
 --
 -- Indexes for table `multipledatasheetproduct`

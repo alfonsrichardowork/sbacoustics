@@ -2,8 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import SwiperCarouselAboutUs from "@/components/single-product-page/swipercarouselaboutus";
+import DOMPurify from 'isomorphic-dompurify'; 
+import prismadb from "@/lib/prismadb";
+import "@/app/css/styles.scss";
 
-export default function AboutUsPage() {
+export default async function AboutUsPage() {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
 
   const jsonLd = {
@@ -13,6 +16,22 @@ export default function AboutUsPage() {
     "url": `${baseUrl}/about`,
     "logo": `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`,
   };
+
+  const allData = await prismadb.brand.findFirst({
+    where: {
+      id: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+    },
+    select: {
+      aboutUsImages: true,
+      sbe_desc: true,
+      brand_desc: true,
+      mission_values_desc: true
+    }
+  })
+
+  if(!allData) {
+    return null
+  }
   return (
     <>
       <script
@@ -33,19 +52,27 @@ export default function AboutUsPage() {
                   <h2 className="text-3xl md:text-4xl font-bold text-black">SB Acoustics</h2>
                 </div>
                 <div className="space-y-6 text-slate-600">
-                  <h3>
+                  <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.brand_desc, {
+                    ALLOWED_TAGS: [
+                        'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
+                    ],
+                    ALLOWED_ATTR: [
+                        'href', 'target', 'rel', 'class', 'id', 'style'
+                    ],
+                }) }}></h3>
+                  {/* <h3>
                     SB Acoustics was born from the union of two established names in audio: the Danish design engineers of Danesian Audio, whose patented tweeter and subwoofer innovations have shaped some of the industry's most distinctive transducer designs, and Sinar Baja Electric, a vertically integrated manufacturer with over {new Date().getFullYear() - 1981} years of experience crafting exceptional transducers.
                   </h3>
                   <h3>
                     In-house capabilities span tooling, coil winding, diaphragm production, die-cast baskets, stamping, and specialty finishing, among other processes — giving us tight control over quality and consistency from raw material to finished component. Together, we've built a product line that balances outstanding acoustic performance with affordability.
-                  </h3>
+                  </h3> */}
                 </div>
               </div>
               <div className="relative md:order-2 order-1">
                 <div className="md:hidden flex items-start mb-6">
                   <div className="text-3xl md:text-4xl font-bold text-black">SB Acoustics</div>
                 </div>
-                <SwiperCarouselAboutUs images={[
+                {/* <SwiperCarouselAboutUs images={[ 
                   {
                     src: "/images/sbacoustics/aboutus/SB_Acoustics_1.jpg",
                     alt: "SB Acoustics About Us 1"
@@ -66,7 +93,17 @@ export default function AboutUsPage() {
                     src:"/images/sbacoustics/aboutus/SB_Acoustics_5.jpg",
                     alt:"SB Acoustics About Us 5"
                   }
-                ]} />
+                ]} /> */}
+                
+                <SwiperCarouselAboutUs
+                  images={allData.aboutUsImages
+                    .filter((val) => val.type === 'BRAND')
+                    .map((val, index) => ({
+                      src: val.url,
+                      alt: `SB Acoustics About Us ${index + 1}`,
+                    }))
+                  }
+                />
               </div>
             </div>
           </div>
@@ -82,7 +119,17 @@ export default function AboutUsPage() {
                 <div className="md:hidden flex items-start mb-6">
                   <div className="text-3xl md:text-4xl font-bold text-black">Sinar Baja Electric</div>
                 </div>
-                <SwiperCarouselAboutUs images={[
+                
+                <SwiperCarouselAboutUs
+                  images={allData.aboutUsImages
+                    .filter((val) => val.type === 'SBE')
+                    .map((val, index) => ({
+                      src: val.url,
+                      alt: `Sinar Baja Electric About Us ${index + 1}`,
+                    }))
+                  }
+                />
+                {/* <SwiperCarouselAboutUs images={[
                   {
                     src:"/images/sbacoustics/aboutus/Sinar_baja_electric_1.jpg",
                     alt:"Sinar Baja Electric About Us 1"
@@ -103,14 +150,22 @@ export default function AboutUsPage() {
                     src:"/images/sbacoustics/aboutus/Sinar_baja_electric_5.jpg",
                     alt:"Sinar Baja Electric About Us 5"
                   }
-                ]} />
+                ]} /> */}
               </div>
               <div className="order-1 md:order-2">
                 <div className="md:flex hidden items-center mb-6">
                   <h2 className="text-3xl md:text-4xl font-bold text-black">Sinar Baja Electric</h2>
                 </div>
                 <div className="space-y-6 text-slate-600">
-                  <h3>
+                  <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.sbe_desc, {
+                    ALLOWED_TAGS: [
+                        'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
+                    ],
+                    ALLOWED_ATTR: [
+                        'href', 'target', 'rel', 'class', 'id', 'style'
+                    ],
+                }) }}></h3>
+                  {/* <h3>
                     Founded in 1981, we've grown into a leading name in loudspeaker manufacturing, with a reputation for high-quality products that meet the demands of discerning customers worldwide. Four decades of craftsmanship remain the backbone of everything we build.
                   </h3>
                   <h3>
@@ -118,7 +173,7 @@ export default function AboutUsPage() {
                   </h3>
                   <h3>
                     We continue to invest in cutting-edge R&D, quality control, and mass production — pushing the boundaries of what's possible in transducer design and manufacturing.
-                  </h3>
+                  </h3> */}
                 </div>
                 <div className="mt-8">
                   <Button variant={"default"} asChild>
@@ -140,12 +195,40 @@ export default function AboutUsPage() {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">Our Mission & Values</h2>
               <p className="text-lg text-slate-600 max-w-3xl mx-auto">
-                We dedicate passion and purpose to create and deliver high-valued products, where end user and OEM customer expectation are exceeded
+                {/* We dedicate passion and purpose to create and deliver high-valued products, where end user and OEM customer expectation are exceeded */}                  
+                <p className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.mission_values_desc, {
+                    ALLOWED_TAGS: [
+                        'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
+                    ],
+                    ALLOWED_ATTR: [
+                        'href', 'target', 'rel', 'class', 'id', 'style'
+                    ],
+                }) }}></p>
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
-              <Card className="border-none shadow-none bg-zinc-100 rounded-none">
+              {allData.aboutUsImages
+                .filter((val) => val.type === 'VALUES')
+                .map((val, index) => 
+                  <Card className="border-none shadow-none bg-zinc-100 rounded-none">
+                    <img
+                      src={val.url}
+                      alt={`SB Acoustics About Us Mission ${index}`}
+                      width={500}
+                      height={400}
+                      className="w-full h-fit object-cover"
+                    />
+                    <CardContent className="p-8 text-center bg-zinc-100">
+                      <h3 className="text-xl font-bold mb-4 text-black">{val.name}</h3>
+                      <p className="text-slate-600 leading-relaxed">
+                        {val.desc}
+                      </p>
+                    </CardContent>
+                  </Card>
+                )
+              }
+              {/* <Card className="border-none shadow-none bg-zinc-100 rounded-none">
                 <img
                   src="/images/sbacoustics/aboutus/Acoustics_excellence.jpg"
                   alt="SB Acoustics About Us Mission 1"
@@ -192,7 +275,7 @@ export default function AboutUsPage() {
                   </p>
                   <br/>
                 </CardContent>
-              </Card>
+              </Card> */}
             </div>
           </div>
         </div>

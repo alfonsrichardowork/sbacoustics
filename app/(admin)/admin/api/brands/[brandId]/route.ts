@@ -6,6 +6,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { multipleaboutusimages } from "@prisma/client";
 
 
 export async function PATCH(req: Request, props: { params: Promise<{ brandId: string }> }) {
@@ -43,7 +44,11 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
         homepage_brand_choice_text,
         homepage_open_source_kits_text,
         homepage_about_us_text,
-        homepage_catalogues_text
+        homepage_catalogues_text,
+        aboutUsImages,
+        brand_desc,
+        sbe_desc,
+        mission_values_desc
       },
       socials,
     } = body;
@@ -76,7 +81,8 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
           homepage_brand_choice_url: true,
           homepage_open_source_kits_url: true,
           homepage_about_us_url: true,
-          homepage_catalogues_url: true
+          homepage_catalogues_url: true,
+          aboutUsImages: true
         }
       })
       //Delete physical files
@@ -121,6 +127,90 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
             console.warn(`Could not delete file ${oldUrl.homepage_catalogues_url}:`, error);
           }
         }
+        // if(oldUrl.aboutUsImages != aboutUsImages) {
+        //   const aboutImages = await prismadb.multipleaboutusimages.findMany({
+        //     where: {
+        //       brandId: params.brandId,
+        //     },
+        //   });
+        //   let finalfound : multipleaboutusimages[] = []
+        //   aboutImages.forEach((val) => {
+        //     const found = aboutUsImages.find((value: multipleaboutusimages) => value.url === val.url);
+            
+        //     if (found && !finalfound.some((item) => item.url === found.url)) {
+        //       finalfound.push(found);
+        //     }
+        //   });
+        //   //DELETE IMAGE CATALOGUES
+        //   //Delete physical files
+        //   for (const image of aboutImages) {
+        //     const isInFinal = finalfound.some((item) => item.url === image.url);
+        //     if (isInFinal) continue;
+
+        //     if (image.url) {
+        //       const imagePath = path.join(process.cwd(), image.url);
+
+        //       try {
+        //         await fs.unlink(imagePath);
+        //       } catch (error) {
+        //         console.warn(`Could not delete file ${image.url}:`, error);
+        //       }
+        //     }
+        //   }
+        //   //Delete Image_catalogues records
+        //   await prismadb.multipleaboutusimages.deleteMany({
+        //     where: {
+        //       brandId: params.brandId,
+        //       url: {
+        //         notIn: finalfound.map((val) => val.url),
+        //       },
+        //     },
+        //   });
+        //   if (aboutUsImages.length !== 0) {
+        //     const creations = aboutUsImages.map(async (value: multipleaboutusimages) => {
+        //       if(value !== null && value !== undefined){
+        //         const alreadyInDB = finalfound.some((val) => val.url === value.url);
+        //         if (!alreadyInDB && value.url !== '') {
+        //           await prismadb.multipleaboutusimages.create({
+        //             data: {
+        //               brandId: params.brandId,
+        //               type: value.type,
+        //               desc: value.desc,
+        //               url: value.url,
+        //               name: value.name,
+        //             }
+        //           });
+        //         }
+        //         else{ //UPDATE NAME
+        //           const multiple_about_us_image_Id = await prismadb.multipleaboutusimages.findFirst({
+        //             where: {
+        //               url: value.url,
+        //               brandId: params.brandId
+        //             },
+        //             select: {
+        //               id: true
+        //             }
+        //           })
+        //           if (multiple_about_us_image_Id) {
+        //             await prismadb.multipleaboutusimages.update({
+        //               where: {
+        //                 id: multiple_about_us_image_Id.id
+        //               },
+        //               data: {
+        //                 name: value.name,
+        //                 desc: value.desc,
+        //                 url: value.url,
+        //                 type: value.type,
+        //               },
+        //             });
+        //           }
+        //         }
+        //       }
+        //     });
+
+        //     await Promise.all(creations);
+        //   }
+        // }
       }
 
       await prismadb.brand.updateMany({
@@ -142,6 +232,9 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
           homepage_open_source_kits_text,
           homepage_about_us_text,
           homepage_catalogues_text,
+          brand_desc,
+          sbe_desc,
+          mission_values_desc,
           updatedAt: new Date(),
         },
       })
@@ -165,6 +258,23 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
         })
       }
 
+      await prismadb.multipleaboutusimages.deleteMany({
+        where: {
+          brandId: params.brandId
+        }
+      })
+      
+      if(aboutUsImages && aboutUsImages.length > 0){
+        await prismadb.multipleaboutusimages.createMany({
+          data: aboutUsImages.map((val: multipleaboutusimages) => ({
+            brandId: params.brandId,   // ✅ important for relation
+            type: val.type,
+            name: val.name,
+            desc: val.desc,
+            url: val.url
+          })),
+        })
+      }
       
 
       revalidatePath('/contact');
@@ -176,7 +286,6 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
 
     }
     else{
-
       const duplicates = await prismadb.brand.findFirst({
         where:{
           name
@@ -203,11 +312,28 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
           homepage_open_source_kits_text,
           homepage_about_us_text,
           homepage_catalogues_text,
+          brand_desc,
+          sbe_desc,
+          mission_values_desc,
           updatedAt: new Date(),
           createdAt: new Date(),
           userId: session.userId!,
         },
       })
+
+      
+
+      if(aboutUsImages && aboutUsImages.length > 0){
+        await prismadb.multipleaboutusimages.createMany({
+          data: aboutUsImages.map((val: multipleaboutusimages) => ({
+            brandId: newBrand.id,   // ✅ important for relation
+            name: val.name,
+            type: val.type,
+            url: val.url,
+            desc: val.desc
+          })),
+        })
+      }
 
 
       if(socials && socials.length > 0){
@@ -281,7 +407,8 @@ export async function DELETE(req: Request, props: { params: Promise<{ brandId: s
         homepage_brand_choice_url: true,
         homepage_open_source_kits_url: true,
         homepage_about_us_url: true,
-        homepage_catalogues_url: true
+        homepage_catalogues_url: true,
+        aboutUsImages: true
       }
     })
     //Delete physical files
@@ -326,6 +453,16 @@ export async function DELETE(req: Request, props: { params: Promise<{ brandId: s
           console.warn(`Could not delete file ${oldUrl.homepage_catalogues_url}:`, error);
         }
       }
+      if(oldUrl.aboutUsImages != null){ 
+        oldUrl.aboutUsImages.map( async (val) => {
+          const imgPath = path.join(process.cwd(), val.url);
+          try {
+            await fs.unlink(imgPath);
+          } catch (error) {
+            console.warn(`Could not delete file ${val.url}:`, error);
+          } 
+        })
+      }
     }
 
     const brand = await prismadb.brand.deleteMany({
@@ -335,6 +472,11 @@ export async function DELETE(req: Request, props: { params: Promise<{ brandId: s
     });
 
     await prismadb.socialmedia.deleteMany({
+      where: {
+        brandId: params.brandId
+      }
+    })
+    await prismadb.multipleaboutusimages.deleteMany({
       where: {
         brandId: params.brandId
       }
