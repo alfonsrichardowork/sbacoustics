@@ -46,6 +46,7 @@ import OrderedList from '@tiptap/extension-ordered-list'
 import Text from '@tiptap/extension-text'
 import TextStyle from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/(admin)/admin/components/ui/select"
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -62,6 +63,7 @@ const formSchema = z.object({
   homepage_open_source_kits_text: z.string().optional(),
   homepage_about_us_text: z.string().optional(),
   homepage_catalogues_text: z.string().optional(),
+  priority: z.string().optional(),
   brand_desc: z.string().optional(),
   sbe_desc: z.string().optional(),
   mission_values_desc: z.string().optional(),
@@ -148,6 +150,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
       homepage_open_source_kits_text: '',
       homepage_about_us_text: '',
       homepage_catalogues_text: '',
+      priority: '',
       brand_desc: '',
       sbe_desc: '',
       mission_values_desc: '',
@@ -456,8 +459,6 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
       data.brand_desc = editorBrand && editorBrand.getHTML() ? editorBrand.getHTML() : ''
       data.mission_values_desc = editorVision && editorVision.getHTML() ? editorVision.getHTML() : ''
 
-      console.log("data before submit: ", data)
-
       const response = await axios.patch(`${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/api/brands/${params.brandId}`, 
       {
         data,
@@ -515,6 +516,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
         type: 'SBE',
         url: "",
         name: "",
+        priority: '999',
         desc: "",
       },
     ]);
@@ -574,6 +576,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
         brandId: typeof params.brandId === 'string' ? params.brandId : '',
         type: 'BRAND',
         url: "",
+        priority: '999',
         name: "",
         desc: "",
       },
@@ -634,6 +637,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
         type: 'VALUES',
         url: "",
         name: "",
+        priority: '999',
         desc: "",
       },
     ]);
@@ -1972,6 +1976,60 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                           // required
                           className="border border-gray-300 p-2 rounded-md w-48"
                         />
+
+                        <Select
+                          disabled={loading}
+                          value={value.priority ?? '999'}
+                          onValueChange={(val) => {
+                            const updatedValuesImages = [...valuesImages];
+                            if (updatedValuesImages[index]) {
+                              updatedValuesImages[index].priority = val;
+                            }
+                            setValuesImages(updatedValuesImages);
+                          }}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select priority" />
+                            </SelectTrigger>
+                          </FormControl>
+
+                          <SelectContent>
+                            <SelectItem value="none">
+                              No priority
+                            </SelectItem>
+
+                            {Array.from({ length: valuesImages.length + 1 }, (_, index) => index + 1).map(
+                              (priority) => {
+                                const isUsed = valuesImages.map((val) => val.priority).includes(priority.toString());
+
+                                return (
+                                  <SelectItem
+                                    key={priority}
+                                    value={priority.toString()}
+                                    disabled={isUsed}
+                                  >
+                                    {priority}
+                                  </SelectItem>
+                                );
+                              }
+                            )}
+                          </SelectContent>
+                        </Select>
+                        {/* <Input
+                          type="text"
+                          defaultValue={value.priority ?? '999'}
+                          placeholder="Input this image priority"
+                          onChange={(e) => {
+                            const updatedValuesImages = [...valuesImages];
+                            if (updatedValuesImages[index]) {
+                              updatedValuesImages[index].priority = e.target.value;
+                            }
+                            setValuesImages(updatedValuesImages);
+                          }}
+                          // required
+                          className="border border-gray-300 p-2 rounded-md w-48"
+                        /> */}
                       </div>
                       <Button
                         variant={"destructive"}

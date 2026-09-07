@@ -227,6 +227,7 @@ model multipleaboutusimages {
 
   type AboutUsImageType
 
+  priority  String? @db.TinyText @default("")
   url  String @db.Text @default("")
   name String @db.Text @default("")
   desc String @db.Text @default("")

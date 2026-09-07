@@ -269,6 +269,7 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
           data: aboutUsImages.map((val: multipleaboutusimages) => ({
             brandId: params.brandId,   // ✅ important for relation
             type: val.type,
+            priority: val.priority,
             name: val.name,
             desc: val.desc,
             url: val.url
@@ -283,6 +284,9 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
       revalidatePath('/sbaudience/contact');
       revalidatePath('/sbautomotive');
       revalidatePath('/sbautomotive/contact');
+      revalidatePath('/about');
+      revalidatePath('/sbaudience/about');
+      revalidatePath('/sbautomotive/about');
 
     }
     else{
@@ -328,6 +332,7 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
           data: aboutUsImages.map((val: multipleaboutusimages) => ({
             brandId: newBrand.id,   // ✅ important for relation
             name: val.name,
+            priority: val.priority,
             type: val.type,
             url: val.url,
             desc: val.desc
@@ -356,6 +361,9 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
       revalidatePath('/sbaudience/contact');
       revalidatePath('/sbautomotive');
       revalidatePath('/sbautomotive/contact');
+      revalidatePath('/about');
+      revalidatePath('/sbaudience/about');
+      revalidatePath('/sbautomotive/about');
 
     }
 

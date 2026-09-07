@@ -209,7 +209,7 @@ export default async function AboutUsPage() {
 
             <div className="grid md:grid-cols-3 gap-8">
               {allData.aboutUsImages
-                .filter((val) => val.type === 'VALUES')
+                .filter((val) => val.type === 'VALUES').sort((a,b) => Number(a.priority) - Number(b.priority))
                 .map((val, index) => 
                   <Card className="border-none shadow-none bg-zinc-100 rounded-none">
                     <img

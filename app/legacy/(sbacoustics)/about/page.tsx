@@ -139,7 +139,7 @@ export default async function AboutUsPage() {
             </div>
             <div className="about-us-cards">
               {allData.aboutUsImages
-                .filter((val) => val.type === 'VALUES')
+                .filter((val) => val.type === 'VALUES').sort((a,b) => Number(a.priority) - Number(b.priority))
                 .map((val, index) => 
                 <article className="about-us-card" key={index}>
                   <img src={val.url} alt={`SB Acoustics About Us Mission ${index}`} width={500} height={400} />
