@@ -331,46 +331,67 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
           </SwiperSlide>
         }
       </Swiper>
-      <Lightbox
-        open={lightboxOpen}
-        close={() => setLightboxOpen(false)}
-        index={lightboxIndex}
-        slides={[
-          {
-            src: cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover,
-            title: name,
-            description: "Cover",
-            alt: name,
-          },
-          ...sortedImages.map((item, index) => ({
-            src: item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url,
-            title: `${item.name} - ${index.toString()}`,
-            description: `Catalogue ${index.toString()}`,
-            alt: `${item.name} - ${index.toString()}`,
-          })),
-          ...(drawing !== ''
-            ? [
-                {
-                  src: drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing,
-                  title: `${name} - Drawing`,
-                  description: "Drawing",
-                  alt: `${name} - Drawing`,
-                },
-              ]
-            : []),
-          ...(graph !== ''
-            ? [
-                {
-                  src: graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph,
-                  title: `${name} - Frequency Response`,
-                  description: "Frequency Response",
-                  alt: `${name} - Frequency Response`,
-                },
-              ]
-            : []),
-        ]}
-        plugins={[Zoom, Thumbnails, Captions]}
-      />
+
+      
+
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-[9999] bg-white"
+          style={{
+            position: "fixed",
+            inset: 0,
+          }}
+        >
+          <div className="absolute inset-0 flex items-center justify-center">
+          </div>
+
+          <Lightbox
+            open={lightboxOpen}
+            close={() => setLightboxOpen(false)}
+            index={lightboxIndex}
+            slides={[
+              {
+                src: cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover,
+                title: name,
+                description: "Cover",
+                alt: name,
+              },
+              ...sortedImages.map((item, index) => ({
+                src: item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url,
+                title: `${item.name} - ${index.toString()}`,
+                description: `Catalogue ${index.toString()}`,
+                alt: `${item.name} - ${index.toString()}`,
+              })),
+              ...(drawing !== ''
+                ? [
+                    {
+                      src: drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing,
+                      title: `${name} - Drawing`,
+                      description: "Drawing",
+                      alt: `${name} - Drawing`,
+                    },
+                  ]
+                : []),
+              ...(graph !== ''
+                ? [
+                    {
+                      src: graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph,
+                      title: `${name} - Frequency Response`,
+                      description: "Frequency Response",
+                      alt: `${name} - Frequency Response`,
+                    },
+                  ]
+                : []),
+            ]}
+            plugins={[Zoom, Thumbnails, Captions]}
+            styles={{
+              root: {
+                backgroundColor: "#000",
+              },
+            }}
+          />
+        </div>
+      )}
     </>
   );
 }

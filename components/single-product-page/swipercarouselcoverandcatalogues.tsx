@@ -223,41 +223,68 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
       </div>
       }
 
-      {multipleslides ?
-        <Lightbox
-          styles={{ container: { backgroundColor: "rgba(255, 255, 255, 1)" } }}
-          open={lightboxOpen}
-          close={() => setLightboxOpen(false)}
-          index={lightboxIndex}
-          slides=
-          {[
-            { 
-              src: cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover, 
-              title: name, 
-              alt: name 
-            },
-            ...sortedImages.map((item, index) => ({ 
-              src: item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url, 
-              title: `${item.name} - ${index.toString()}`, 
-              alt: `${item.name} - ${index.toString()}`
-            }))
-          ]}
-          plugins={[Zoom, Thumbnails, Captions]}
-        />
-        :
-        <Lightbox
-          styles={{ container: { backgroundColor: "rgba(255, 255, 255, 1)" } }}
-          open={lightboxOpen}
-          close={() => setLightboxOpen(false)}
-          index={lightboxIndex}
-          slides={[{ 
-            src: cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover, 
-            title: name, 
-            alt: name 
-          }]}
-          plugins={[Zoom, Captions]}
-        />
-      } 
+      {lightboxOpen && (
+        <div
+          className="fixed inset-0 z-[9999] bg-white"
+          style={{
+            position: "fixed",
+            inset: 0,
+          }}
+        >
+          <div className="absolute inset-0 flex items-center justify-center">
+          </div>
+
+          {multipleslides ?
+            <Lightbox
+              styles={{ 
+                container: { 
+                  backgroundColor: "rgba(255, 255, 255, 1)"
+                },
+                root: {
+                  backgroundColor: "#000",
+                },
+              }}
+              open={lightboxOpen}
+              close={() => setLightboxOpen(false)}
+              index={lightboxIndex}
+              slides=
+              {[
+                { 
+                  src: cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover, 
+                  title: name, 
+                  alt: name 
+                },
+                ...sortedImages.map((item, index) => ({ 
+                  src: item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url, 
+                  title: `${item.name} - ${index.toString()}`, 
+                  alt: `${item.name} - ${index.toString()}`
+                }))
+              ]}
+              plugins={[Zoom, Thumbnails, Captions]}
+            />
+            :
+            <Lightbox
+              styles={{ 
+                container: { 
+                  backgroundColor: "rgba(255, 255, 255, 1)" 
+                },
+                root: {
+                  backgroundColor: "#000",
+                },
+              }}
+              open={lightboxOpen}
+              close={() => setLightboxOpen(false)}
+              index={lightboxIndex}
+              slides={[{ 
+                src: cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover, 
+                title: name, 
+                alt: name 
+              }]}
+              plugins={[Zoom, Captions]}
+            />
+          } 
+        </div>
+      )}
     </>
   );
 }

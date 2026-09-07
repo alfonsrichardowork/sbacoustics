@@ -12,12 +12,6 @@ import 'swiper/css/navigation';
 //@ts-ignore
 import 'swiper/css/thumbs';
 
-//@ts-ignore
-import 'yet-another-react-lightbox/styles.css'
-//@ts-ignore
-import 'yet-another-react-lightbox/plugins/thumbnails.css'
-//@ts-ignore
-import "yet-another-react-lightbox/plugins/captions.css";
 import { LazyImageCustom } from '@/components/lazyImageCustom';
 import { FilesProp, FilesWithOrder } from '@/app/(frontend)/types';
 import Image from 'next/image';
