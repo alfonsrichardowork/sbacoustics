@@ -110,7 +110,8 @@ export default function Contact({ oneBrand, aboutHref = '/about' }: ContactProps
     } catch (error) {
       setNotice({
         type: 'error',
-        text: error instanceof Error ? error.message : 'An unexpected error occurred.',
+        // text: error instanceof Error ? error.message : 'An unexpected error occurred.',
+        text: 'Please try again or contact us directly at info@sbacoustics.com or +6231 748 00 11.'
       })
     } finally {
       setLoading(false)

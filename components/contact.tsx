@@ -119,7 +119,7 @@ export default function Contact({ oneBrand }: Props) {
         toast({
           variant: "destructive",
           title: "Message failed to send!",
-          description: message,
+          description: "Please try again or contact us directly at info@sbacoustics.com or +6231 748 00 11.",
         });
     } finally {
       setLoading(false);
