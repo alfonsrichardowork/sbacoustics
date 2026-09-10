@@ -14,7 +14,6 @@ import SwiperCarouselOneProductSkeleton from "@/components/single-product-page/s
 import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
 import SwiperCarouselSimilarProductLoading from "@/components/single-product-page/swipercarouselsimilarproductloading";
 import SwiperCarouselOneProductLoading from "@/components/single-product-page/swipercarouseloneproductloading";
-import DatasheetViewer from "@/components/pdfviewer";
 
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-black p-0 py-1"
 const all_sub_title_style = "text-left font-bold xl:text-2xl lg:text-xl md:text-lg sm:text-md text-black"
@@ -442,26 +441,24 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                 <h2 className="sr-only">Datasheet:</h2>
                                 {product.multipleDatasheetProduct.length===1 && product.multipleDatasheetProduct[0]?.url!=''?
                                     <div className="flex justify-start pt-8">
-                                        <DatasheetViewer url={product.multipleDatasheetProduct[0]?.url ?? ''} name={product.multipleDatasheetProduct[0]?.name ?? ''} />
-                                        {/* <Link href={product.multipleDatasheetProduct[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-0-single-product-page`}>
+                                        <Link href={product.multipleDatasheetProduct[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-0-single-product-page`}>
                                                 <LazyImageCustomNavbar src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
                                             <h3 className="pl-2">
                                                 {product.multipleDatasheetProduct[0]?.name}
                                             </h3>
-                                        </Link> */}
+                                        </Link>
                                     </div>
                                 : product.multipleDatasheetProduct[0]?.url!='' &&
                                     <div className="justify-start pt-8">
                                         {product.multipleDatasheetProduct && product.multipleDatasheetProduct.map((value, index) => (
                                             value.url!=''&&
                                                 <div key={index} className={`${index !== 0 && 'pt-4'}`}>
-                                        <DatasheetViewer url={value.url} name={product.multipleDatasheetProduct[index]?.name ?? ''} />
-                                                        {/* <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-${index}-single-product-page`}> 
+                                                        <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-${index}-single-product-page`}> 
                                                         <LazyImageCustomNavbar src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
                                                     <h3 className="pl-2">
                                                         {product.multipleDatasheetProduct[index]?.name}
                                                     </h3>
-                                                    </Link> */}
+                                                    </Link>
                                                 </div>
                                         ))}
                                     </div>                
