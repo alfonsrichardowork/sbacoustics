@@ -1598,6 +1598,46 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                             className="border border-gray-300 p-2 rounded-md"
                           />
                         )}
+
+                        <Select
+                          disabled={loading}
+                          value={value.priority ?? '999'}
+                          onValueChange={(val) => {
+                            const updatedSBEImages = [...sbeImages];
+                            if (updatedSBEImages[index]) {
+                              updatedSBEImages[index].priority = val;
+                            }
+                            setSbeImages(updatedSBEImages);
+                          }}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select priority" />
+                            </SelectTrigger>
+                          </FormControl>
+
+                          <SelectContent>
+                            <SelectItem value="none">
+                              No priority
+                            </SelectItem>
+
+                            {Array.from({ length: sbeImages.length + 1 }, (_, index) => index + 1).map(
+                              (priority) => {
+                                const isUsed = sbeImages.map((val) => val.priority).includes(priority.toString());
+
+                                return (
+                                  <SelectItem
+                                    key={priority}
+                                    value={priority.toString()}
+                                    disabled={isUsed}
+                                  >
+                                    {priority}
+                                  </SelectItem>
+                                );
+                              }
+                            )}
+                          </SelectContent>
+                        </Select>
                         {/* <Input
                           type="text"
                           defaultValue={value.name}
@@ -1773,6 +1813,47 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                             className="border border-gray-300 p-2 rounded-md"
                           />
                         )}
+
+                        
+                        <Select
+                          disabled={loading}
+                          value={value.priority ?? '999'}
+                          onValueChange={(val) => {
+                            const updatedBrandImages = [...brandImages];
+                            if (updatedBrandImages[index]) {
+                              updatedBrandImages[index].priority = val;
+                            }
+                            setBrandImages(updatedBrandImages);
+                          }}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select priority" />
+                            </SelectTrigger>
+                          </FormControl>
+
+                          <SelectContent>
+                            <SelectItem value="none">
+                              No priority
+                            </SelectItem>
+
+                            {Array.from({ length: brandImages.length + 1 }, (_, index) => index + 1).map(
+                              (priority) => {
+                                const isUsed = brandImages.map((val) => val.priority).includes(priority.toString());
+
+                                return (
+                                  <SelectItem
+                                    key={priority}
+                                    value={priority.toString()}
+                                    disabled={isUsed}
+                                  >
+                                    {priority}
+                                  </SelectItem>
+                                );
+                              }
+                            )}
+                          </SelectContent>
+                        </Select>
                         {/* <Input
                           type="text"
                           defaultValue={value.name}

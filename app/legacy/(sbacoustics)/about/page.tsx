@@ -55,7 +55,7 @@ export default async function AboutUsPage() {
                 </div>
                 <SwiperCarouselAboutUsOld 
                   images={allData.aboutUsImages
-                    .filter((val) => val.type === 'BRAND')
+                    .filter((val) => val.type === 'BRAND').sort((a,b) => Number(a.priority) - Number(b.priority))
                     .map((val, index) => ({
                       src: val.url,
                       alt: `SB Acoustics About Us ${index + 1}`,
@@ -81,7 +81,7 @@ export default async function AboutUsPage() {
                 </div>
                 <SwiperCarouselAboutUsOld 
                   images={allData.aboutUsImages
-                    .filter((val) => val.type === 'SBE')
+                    .filter((val) => val.type === 'SBE').sort((a,b) => Number(a.priority) - Number(b.priority))
                     .map((val, index) => ({
                       src: val.url,
                       alt: `Sinar Baja Electric About Us ${index + 1}`,
