@@ -25,13 +25,22 @@ import { usePathname } from 'next/navigation';
 // import { sendEmail } from './testresend';
 
 const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
-  country: z.string().min(2, { message: "Please enter a valid country name." }),
-  subject: z.string().min(5, { message: "Subject must be at least 5 characters." }),
-  message: z.string().min(10, { message: "Message must be at least 10 characters." }),
-  website: z.string().default("SB Acoustics").optional(),
-  fromemail: z.string().default("contact@sbacoustics.com").optional()
+  name: z.string().trim().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  email: z.string().trim().email({
+    message: "Please enter a valid email address.",
+  }),
+  country: z.string().trim().min(2, {
+    message: "Please enter a valid country name.",
+  }),
+  subject: z.string().trim().min(5, {
+    message: "Subject must be at least 5 characters.",
+  }),
+  message: z.string().trim().min(10, {
+    message: "Message must be at least 10 characters.",
+  }),
+  hp_company: z.string().optional(),
 });
 
 type Props = {
@@ -47,6 +56,8 @@ export default function Contact({ oneBrand }: Props) {
   const { toast } = useToast()
   const { executeRecaptcha } = useGoogleReCaptcha();
   const pathname = usePathname()
+  const [formLoadedAt, setFormLoadedAt] = useState(() => Date.now());
+  const [hpCompany, setHpCompany] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,77 +65,72 @@ export default function Contact({ oneBrand }: Props) {
       email: "",
       country: "",
       subject: "",
-      message: "",
-      website: oneBrand?.name,
-      fromemail: oneBrand?.email
+      message: ""
     },
   });
+const onSubmit = async (
+  values: z.infer<typeof formSchema>,
+) => {
+  setLoading(true);
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setLoading(true);
-    // setSuccess(false);
-    // setError(false);
-
-    try {
-  if (!executeRecaptcha) {
-    throw new Error("reCAPTCHA not available");
-  }
-
-  const gRecaptchaToken = await executeRecaptcha("contactFormSubmit");
-
-  const recaptchaResponse = await axios.post("/api/recaptcha", {
-    gRecaptchaToken,
-  });
-
-  if (!recaptchaResponse.data.success) {
-    throw new Error(
-      recaptchaResponse.data.error ||
-      recaptchaResponse.data.message ||
-      "reCAPTCHA verification failed"
-    );
-  }
-
-  const response = await fetch("/api/email", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(values),
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.error || "Message failed to send");
-  }
-
-  form.reset();
-
-  toast({
-    variant: "default",
-    title: "Message Sent Successfully!",
-    description: "Thank you for reaching out. We will get back to you.",
-    className: "bg-green-400 border-none",
-  });
-    } catch (err) {
-        let message = "An unexpected error occurred.";
-
-        if (axios.isAxiosError(err)) {
-          message =
-            err.response?.data?.error ||
-            err.response?.data?.message ||
-            err.message;
-        } else if (err instanceof Error) {
-          message = err.message;
-        }
-
-        toast({
-          variant: "destructive",
-          title: "Message failed to send!",
-          description: "Please try again or contact us directly at info@sbacoustics.com or +6231 748 00 11.",
-        });
-    } finally {
-      setLoading(false);
+  try {
+    if (!executeRecaptcha) {
+      throw new Error(
+        "reCAPTCHA is not available. Please try again.",
+      );
     }
-  };
+
+    const gRecaptchaToken = await executeRecaptcha(
+      "contactFormSubmit",
+    );
+
+    const requestId = crypto.randomUUID();
+
+    const response = await fetch("/api/email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...values,
+        hp_company: hpCompany,
+        gRecaptchaToken,
+        elapsedMs: Date.now() - formLoadedAt,
+        requestId,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "Message failed to send.",
+      );
+    }
+
+    form.reset();
+    setHpCompany("");
+    setFormLoadedAt(Date.now());
+
+    toast({
+      title: "Message Sent Successfully!",
+      description:
+        "Thank you for reaching out. We will get back to you.",
+      className: "bg-green-400 border-none",
+    });
+  } catch (error) {
+    toast({
+      variant: "destructive",
+      title: "Message failed to send!",
+      description:
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred.",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   // useEffect(() => {
   //   if(success || error) {
@@ -223,6 +229,32 @@ export default function Contact({ oneBrand }: Props) {
             <CardContent className='md:p-6 p-3'>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="md:space-y-4 space-y-2">
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: "-9999px",
+                  width: "1px",
+                  height: "1px",
+                  overflow: "hidden",
+                }}
+              >
+                <label htmlFor="hp_company">
+                  Company
+                </label>
+
+                <input
+                  id="hp_company"
+                  name="hp_company"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={hpCompany}
+                  onChange={(e) =>
+                    setHpCompany(e.target.value)
+                  }
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="name"
@@ -293,7 +325,7 @@ export default function Contact({ oneBrand }: Props) {
                   </FormItem>
                 )}
               />
-              <div className='hidden'>
+              {/* <div className='hidden'>
               <FormField
                 control={form.control}
                 name="website"
@@ -330,7 +362,7 @@ export default function Contact({ oneBrand }: Props) {
                   </FormItem>
                 )}
               />
-              </div>
+              </div> */}
             </form>
           </Form>
         </CardContent>
