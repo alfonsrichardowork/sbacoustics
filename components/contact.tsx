@@ -97,6 +97,7 @@ const onSubmit = async (
         gRecaptchaToken,
         elapsedMs: Date.now() - formLoadedAt,
         requestId,
+        brand: oneBrand?.id ?? process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
       }),
     });
 
@@ -131,27 +132,6 @@ const onSubmit = async (
     setLoading(false);
   }
 };
-
-  // useEffect(() => {
-  //   if(success || error) {
-  //     if (success) {
-  //       toast({
-  //         variant: "default",
-  //         title: "Message Sent Successfully!",
-  //         description: "Thank you for reaching out. We will get back to you.",
-  //         className: "bg-green-400 border-none"
-  //       })
-  //     } else if (error) {
-  //       toast({
-  //         variant: "destructive",
-  //         title: "Message failed to send!",
-  //         description: "Please try again or contact us directly at info@sbacoustics.com or +6231 748 00 11.",
-  //       })
-  //     }
-  //   }
-  //   setSuccess(false)
-  //   setError(false)
-  // }, [success, error, toast])
 
   useEffect(() => {
     setMounted(true)
@@ -325,44 +305,6 @@ const onSubmit = async (
                   </FormItem>
                 )}
               />
-              {/* <div className='hidden'>
-              <FormField
-                control={form.control}
-                name="website"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Website</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        placeholder="Website"
-                        {...field}
-                        value={oneBrand?.name ?? field.value}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="fromemail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>From Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        placeholder="fromemail"
-                        {...field}
-                        value={oneBrand?.email ?? field.value}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              </div> */}
             </form>
           </Form>
         </CardContent>

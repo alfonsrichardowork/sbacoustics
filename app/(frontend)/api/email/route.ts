@@ -113,6 +113,7 @@ const requestSchema = z.object({
   hp_company: z.string().max(200).optional(),
   elapsedMs: z.number().int().min(0).max(60 * 60 * 1000),
   requestId: z.string().uuid(),
+  brand: z.string()
 });
 
 const RATE_LIMIT_WINDOW = 10 * 60 * 1000;
@@ -288,6 +289,8 @@ async function verifyRecaptcha(token: string, request: NextRequest) {
   const allowedHostnames = new Set([
     "sbacoustics.com",
     "www.sbacoustics.com",
+    "sbaudience.com",
+    "www.sbaudience.com",
     "webdemosbe.xyz",
     "www.webdemosbe.xyz",
     "localhost",
@@ -342,6 +345,7 @@ export async function POST(request: NextRequest) {
       hp_company,
       elapsedMs,
       requestId,
+      brand
     } = validation.data;
 
     const previous = idempotencyStore.get(requestId);
@@ -410,7 +414,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await resend.emails.send(
       {
         from:
-          "SB Acoustics Contact Form <noreply@webdemosbe.xyz>",
+          brand === process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID ? "SB Acoustics Contact Form <noreply@webdemosbe.xyz>" : "SB Audience Contact Form <noreply@webdemosbe.xyz>",
         replyTo: email,
         to: [
           "alfonskerja@gmail.com",
@@ -423,7 +427,7 @@ export async function POST(request: NextRequest) {
           country,
           subject,
           message,
-          website: "SB Acoustics",
+          website: brand === process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID ? "SB Acoustics" : "SB Audience",
         }),
       },
       {

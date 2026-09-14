@@ -14,19 +14,19 @@ type Props = {
 
 export const revalidate = 60;
 
-export async function generateStaticParams(){
-  const app = await prismadb.sbaudienceapplication.findMany({
-    where: {
-      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-    },
-    select: {
-      slug: true,
-    },
-  });
-  return app.map((application: { slug: string }) => ({
-    applicationSlug: application.slug
-  }));
-}
+// export async function generateStaticParams(){
+//   const app = await prismadb.sbaudienceapplication.findMany({
+//     where: {
+//       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+//     },
+//     select: {
+//       slug: true,
+//     },
+//   });
+//   return app.map((application: { slug: string }) => ({
+//     applicationSlug: application.slug
+//   }));
+// }
 
 export default async function SingleAppJsonLd(props: Props) {
     const { applicationSlug = '' } = await props.params;

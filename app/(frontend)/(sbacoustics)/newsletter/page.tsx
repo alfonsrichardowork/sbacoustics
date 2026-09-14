@@ -1,3 +1,4 @@
+import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
 import NewsletterClient from "./pageClient";
 
 export default function Newsletter() {
@@ -17,7 +18,9 @@ export default function Newsletter() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <NewsletterClient />
+      <GoogleCaptchaWrapper>
+        <NewsletterClient />
+      </GoogleCaptchaWrapper>
     </>
    );
 }

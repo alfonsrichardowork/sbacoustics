@@ -2,17 +2,12 @@
 
 import { FormEvent, useRef, useState } from 'react'
 import '@/app/legacy/(sbacoustics)/contact/contact.css'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { brand } from '@prisma/client'
 
-type Brand = {
-  name?: string | null
-  email?: string | null
-  maps?: string | null
-  address?: string | null
-  telephone?: string | null
-}
 
 type ContactProps = {
-  oneBrand?: Brand
+  oneBrand?: brand
   aboutHref?: string
 }
 
@@ -42,7 +37,21 @@ const initialValues: FormValues = {
   hp_company: '',
 }
 
+function createRequestId() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+    /[xy]/g,
+    function (c) {
+      const r = Math.floor(Math.random() * 16)
 
+      const v =
+        c === "x"
+          ? r
+          : (r & 0x3) | 0x8
+
+      return v.toString(16)
+    }
+  )
+}
 
 function validate(values: FormValues): FormErrors {
   const errors: FormErrors = {}
@@ -55,6 +64,7 @@ function validate(values: FormValues): FormErrors {
 }
 
 export default function Contact({ oneBrand, aboutHref = '/about' }: ContactProps) {
+  const { executeRecaptcha } = useGoogleReCaptcha()
   const [values, setValues] = useState<FormValues>({
     ...initialValues,
     website: oneBrand?.name ?? '',
@@ -76,43 +86,123 @@ export default function Contact({ oneBrand, aboutHref = '/about' }: ContactProps
     event.preventDefault()
 
     const nextErrors = validate(values)
+
     setErrors(nextErrors)
-    if (Object.keys(nextErrors).length > 0) return
 
-    const elapsedMs = Date.now() - mountedAt.current
-
-    // Bot traps: silently pretend success so bots get no feedback signal.
-    if (values.hp_company.trim() !== '' || elapsedMs < MIN_FILL_MS) {
-      setNotice({ type: 'success', text: 'Thank you for reaching out. We will get back to you.' })
+    if (Object.keys(nextErrors).length > 0) {
       return
     }
+
+    const elapsedMs =
+      Date.now() - mountedAt.current
+
+
+    // Bot traps
+    if (
+      values.hp_company.trim() !== '' ||
+      elapsedMs < MIN_FILL_MS
+    ) {
+      setNotice({
+        type: 'success',
+        text:
+          'Thank you for reaching out. We will get back to you.'
+      })
+
+      return
+    }
+
 
     setLoading(true)
     setNotice(undefined)
 
     try {
-      const response = await fetch('/api/email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...values, elapsedMs, old: true }),
-      })
-      const data = await response.json()
+      if (!executeRecaptcha) {
+        throw new Error(
+          'reCAPTCHA is not available. Please try again.'
+        )
+      }
 
-      if (!response.ok) throw new Error(data.error || 'Message failed to send.')
+
+      const gRecaptchaToken =
+        await executeRecaptcha(
+          'contactFormSubmit'
+        )
+
+
+      const requestId =
+        createRequestId()
+
+
+      const response =
+        await fetch(
+          '/api/email',
+          {
+            method: 'POST',
+
+            headers: {
+              'Content-Type':
+                'application/json'
+            },
+
+            body: JSON.stringify({
+              ...values,
+              gRecaptchaToken,
+              elapsedMs,
+              requestId,
+              brand: oneBrand?.id ?? process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            }),
+          }
+        )
+
+
+      const data =
+        await response.json()
+
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+          'Message failed to send.'
+        )
+      }
+
 
       setValues({
         ...initialValues,
-        website: oneBrand?.name ?? '',
-        fromemail: oneBrand?.email ?? '',
+
+        website:
+          oneBrand?.name ?? '',
+
+        fromemail:
+          oneBrand?.email ?? '',
       })
-      mountedAt.current = Date.now()
-      setNotice({ type: 'success', text: 'Thank you for reaching out. We will get back to you.' })
+
+
+      mountedAt.current =
+        Date.now()
+
+
+      setNotice({
+        type: 'success',
+
+        text:
+          'Thank you for reaching out. We will get back to you.'
+      })
+
     } catch (error) {
+
+      console.error(
+        'Contact form error:',
+        error
+      )
+
       setNotice({
         type: 'error',
-        // text: error instanceof Error ? error.message : 'An unexpected error occurred.',
-        text: 'Please try again or contact us directly at info@sbacoustics.com or +6231 748 00 11.'
+
+        text:
+          'Please try again or contact us directly at info@sbacoustics.com or +6231 748 00 11.'
       })
+
     } finally {
       setLoading(false)
     }
