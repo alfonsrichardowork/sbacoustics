@@ -59,6 +59,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
             drawing_img_url: true,
             graph_img_url: true,
             isKits: true,
+            willHaveFRD: true,
             allCat: {
                 select: {
                     id: true,
@@ -467,7 +468,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
                         }
 
 
-                        {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.length > 0 &&
+                        {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.length > 0 ?
                             <>
                                 <h2 className="sr-only">FRD & ZMA Files:</h2>
                                 {
@@ -502,6 +503,17 @@ export default async function SingleProductSBAcoustics(props: Props) {
                                     </div>    
                                 }            
                             </>
+                            :
+                            product.willHaveFRD &&
+                            <div className="flex justify-start pt-4">
+                                <div className={`${all_desc_style} italic flex items-center`} data-testid={`multiple-frd-zma-0-single-product-page`}>
+                                    <LazyImageCustomNavbar src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                    {/* </div> */}
+                                    <h3 className="pl-2">
+                                        Uploading soon
+                                    </h3>
+                                </div>
+                            </div>
                         }
 
 

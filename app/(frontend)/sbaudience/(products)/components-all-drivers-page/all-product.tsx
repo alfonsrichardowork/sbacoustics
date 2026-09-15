@@ -243,18 +243,18 @@ const AllDriversProducts: React.FC<MainProps> = ({
             }
             
             if(priority.length === 0) {
-                FinalFeatured.sort((a, b) => {
-                    const numA = parseInt(a.products.name.match(/\d+/)?.[0] || "999", 10);
-                    const numB = parseInt(b.products.name.match(/\d+/)?.[0] || "999", 10);
+                // FinalFeatured.sort((a, b) => {
+                //     const numA = parseInt(a.products.name.match(/\d+/)?.[0] || "999", 10);
+                //     const numB = parseInt(b.products.name.match(/\d+/)?.[0] || "999", 10);
 
-                    // Sort by the first number found
-                    if (numA !== numB) {
-                        return numA - numB;
-                    }
+                //     // Sort by the first number found
+                //     if (numA !== numB) {
+                //         return numA - numB;
+                //     }
 
-                    // If numbers are equal, sort alphabetically
-                    return a.products.name.localeCompare(b.products.name);
-                });
+                //     // If numbers are equal, sort alphabetically
+                //     return a.products.name.localeCompare(b.products.name);
+                // });
                 setAllFeaturedProducts(FinalFeatured)
                 setLoadFinsihed(true)
             }

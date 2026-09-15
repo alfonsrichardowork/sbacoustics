@@ -139,9 +139,6 @@ function CategoryBranch({ node, depth, onProductReorder, onCategoryReorder, expa
             <h3 className="truncate font-semibold">
               {node.name}
             </h3>
-            <Badge variant="secondary">
-              {node.type}
-            </Badge>
           </div>
           <p className="text-xs text-muted-foreground">
             {node.children.length} subcategories · {node.products.length} products
@@ -269,44 +266,22 @@ export function CategoryPriorityManager({ initialTree: providedTree = [], onSave
   }
 
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-8 lg:px-10 lg:py-12">
+    <main className="min-h-screen text-foreground">
+      <div className="mx-auto flex flex-col gap-8 px-6 py-8 lg:px-10">
         <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2 text-sm font-medium text-primary">
-              <Sparkles aria-hidden="true" /> 
-              Catalog operations
-            </div>
             <div>
               <h1 className="text-3xl font-semibold tracking-tight text-balance md:text-4xl">
                 Menu priority
               </h1>
-              <p className="mt-2 max-w-2xl text-muted-foreground">
-                Control the order customers see across every category level and its products.
-              </p>
             </div>
           </div>
           <Button onClick={save} disabled={!dirty} size="lg">
-            <Save data-icon="inline-start" />
-            {saved ? 'Saved' : 'Save priorities'}
+            {saved ? 'Saved' : 'Save Priorities'}
             </Button>
         </header>
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
+        <div className="grid gap-5">
           <Card className="min-w-0">
-            <CardHeader className="gap-4 border-b border-border">
-              <div className="flex flex-col gap-1">
-              <CardTitle>
-              All drivers catalog
-              </CardTitle>
-              <CardDescription>
-                Drag categories within their level and products within their parent category.
-              </CardDescription>
-            </div>
-            <div className="relative max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-              <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search categories" className="pl-9" aria-label="Search categories" />
-            </div>
-          </CardHeader>
             <CardContent className="flex flex-col gap-4 p-4 md:p-6">{visibleTree.map((node) => 
               <div key={node.id} draggable onDragStart={() => setDraggedRoot(node.id)} onDragOver={(event) => event.preventDefault()} onDrop={() => { if (!draggedRoot || draggedRoot === node.id) return; const ids = tree.map((item) => item.id).filter((id) => id !== draggedRoot); ids.splice(ids.indexOf(node.id), 0, draggedRoot); updateCategories(null, ids); setDraggedRoot(null) }}>
                 <CategoryBranch node={node} depth={0} onProductReorder={updateProducts} onCategoryReorder={updateCategories} expanded={expanded} toggle={(id) => setExpanded((current) => { const next = new Set(current); next.has(id) ? next.delete(id) : next.add(id); return next })} />
@@ -314,46 +289,6 @@ export function CategoryPriorityManager({ initialTree: providedTree = [], onSave
             )}
           </CardContent>
         </Card>
-        <aside className="flex flex-col gap-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">
-                How priorities work
-              </CardTitle>
-              <CardDescription>
-                Ordering is scoped to each parent.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3 text-sm text-muted-foreground">
-              <p>
-                <strong className="text-foreground">
-                  Categories
-                </strong>
-                reorder among siblings at the same level.
-              </p>
-              <p>
-                <strong className="text-foreground">
-                  Products
-                </strong> 
-                reorder inside their assigned category.
-              </p>
-              <Separator />
-              <p className="text-xs">
-                Blank priorities fall behind explicitly ordered items and are assigned when saved.
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-primary text-primary-foreground">
-            <CardContent className="flex flex-col gap-3 p-5">
-              <p className="text-sm font-medium">
-                Unsaved changes
-              </p>
-              <p className="text-sm text-primary-foreground/75">
-                {dirty ? 'You have reordered items. Save to publish the new menu.' : saved ? 'Your latest ordering is saved.' : 'Drag any row to update its position.'}
-              </p>
-              </CardContent>
-            </Card>
-          </aside>
         </div>
       </div>
     </main>

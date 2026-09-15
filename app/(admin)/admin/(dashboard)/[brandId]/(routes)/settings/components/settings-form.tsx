@@ -1466,8 +1466,9 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 
 
           <div className="border bg-background rounded-lg p-4 shadow-lg">
+            <div className="text-left font-bold text-base pb-2">About Us Section</div>
             <div className='grid grid-cols-1 gap-4'>
-              <div className="border rounded-lg p-4 shadow-lg bg-background">
+              <div className="rounded-lg p-4 shadow-lg bg-background border-primary border-2">
                 <div className="text-center pb-2 flex justify-between items-center">
                   <div className="text-left font-bold text-base">SBE Images</div>
                   <div
@@ -1478,7 +1479,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                   </div>
                 </div>
                 <div className={`border rounded-lg p-4 shadow-lg bg-background`}>
-                  <div className="font-bold text-base pb-2">Description</div>
+                  <div className="font-bold text-base pb-2">Main Description</div>
                     {/* Toolbar */}
                     <div>
                     <div className="flex gap-2 mb-4 flex-wrap">
@@ -1568,120 +1569,126 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                     <EditorContent editor={editorSBE} className="border p-4"/>
                   </div>
                 </div>
-                {sbeImages && sbeImages.length > 0 && sbeImages.map((value, index) => (
-                    
-                  <div className="space-y-4 rounded-lg border shadow-md p-2" key={index}>
-                    <div
-                      key={value.id}
-                      className="flex items-center justify-between rounded-md shadow-xs"
-                    >
-                      <div className="flex items-center space-x-4">
-                        {value.url !== '' && (
-                          <Image
-                          src={value.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${value.url}` : value.url}
-                          alt={`SBE Images ${index}`}
-                          width={100}
-                          height={100}
-                            className="w-32 h-fit"
-                          />
-                        )}
-                        {value.url === '' && (
-                          <Input
-                            id={`sbe-images-${index}`}
-                            type="file"
-                            accept="image/*"
-                            name="file"
-                            onChange={(e) =>
-                              e.target.files && handleSBEImagesFileChange(e, index)
-                            }
-                            disabled={loading}
-                            className="border border-gray-300 p-2 rounded-md"
-                          />
-                        )}
-
-                        <Select
-                          disabled={loading}
-                          value={value.priority ?? '999'}
-                          onValueChange={(val) => {
-                            const updatedSBEImages = [...sbeImages];
-                            if (updatedSBEImages[index]) {
-                              updatedSBEImages[index].priority = val;
-                            }
-                            setSbeImages(updatedSBEImages);
-                          }}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select priority" />
-                            </SelectTrigger>
-                          </FormControl>
-
-                          <SelectContent>
-                            <SelectItem value="none">
-                              No priority
-                            </SelectItem>
-
-                            {Array.from({ length: sbeImages.length + 1 }, (_, index) => index + 1).map(
-                              (priority) => {
-                                const isUsed = sbeImages.map((val) => val.priority).includes(priority.toString());
-
-                                return (
-                                  <SelectItem
-                                    key={priority}
-                                    value={priority.toString()}
-                                    disabled={isUsed}
-                                  >
-                                    {priority}
-                                  </SelectItem>
-                                );
-                              }
-                            )}
-                          </SelectContent>
-                        </Select>
-                        {/* <Input
-                          type="text"
-                          defaultValue={value.name}
-                          placeholder="Input this image name"
-                          onChange={(e) => {
-                            const updatedSBEImages = [...sbeImages];
-                            if (updatedSBEImages[index]) {
-                              updatedSBEImages[index].name = e.target.value;
-                            }
-                            setSbeImages(updatedSBEImages);
-                          }}
-                          // required
-                          className="border border-gray-300 p-2 rounded-md w-48"
-                        />
-                        <Input
-                          type="text"
-                          defaultValue={value.desc}
-                          placeholder="Input this image desc"
-                          onChange={(e) => {
-                            const updatedSBEImages = [...sbeImages];
-                            if (updatedSBEImages[index]) {
-                              updatedSBEImages[index].desc = e.target.value;
-                            }
-                            setSbeImages(updatedSBEImages);
-                          }}
-                          // required
-                          className="border border-gray-300 p-2 rounded-md w-48"
-                        /> */}
-                      </div>
-                      <Button
-                        variant={"destructive"}
-                        onClick={() => reduceSBEImagesCounter(index)}
+                <div className={`border rounded-lg p-4 shadow-lg bg-background mt-4`}>
+                  <div className="font-bold text-base pb-2">Slideshow Images</div>
+                  {sbeImages && sbeImages.length > 0 && sbeImages.sort((a, b) => Number(a.priority) - Number(b.priority)).map((value, index) => (
+                      
+                    <div className="space-y-4 rounded-lg border shadow-md p-2" key={index}>
+                      <div
+                        key={value.id}
+                        className="flex items-center justify-between rounded-md shadow-xs"
                       >
-                        <Trash width={20} height={20} />
-                      </Button>
-                    </div>      
-                  </div>
-                  ))
-                }
+                        <div className="flex items-center space-x-4">
+                          {value.url !== '' && (
+                            <Image
+                            src={value.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${value.url}` : value.url}
+                            alt={`SBE Images ${index}`}
+                            width={100}
+                            height={100}
+                              className="w-32 h-fit"
+                            />
+                          )}
+                          {value.url === '' && (
+                            <Input
+                              id={`sbe-images-${index}`}
+                              type="file"
+                              accept="image/*"
+                              name="file"
+                              onChange={(e) =>
+                                e.target.files && handleSBEImagesFileChange(e, index)
+                              }
+                              disabled={loading}
+                              className="border border-gray-300 p-2 rounded-md"
+                            />
+                          )}
+
+                          <div>
+                            <div className="font-bold text-sm pb-2">Description:</div>
+                            <Select
+                              disabled={loading}
+                              value={value.priority ?? '999'}
+                              onValueChange={(val) => {
+                                const updatedSBEImages = [...sbeImages];
+                                if (updatedSBEImages[index]) {
+                                  updatedSBEImages[index].priority = val;
+                                }
+                                setSbeImages(updatedSBEImages);
+                              }}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select priority" />
+                                </SelectTrigger>
+                              </FormControl>
+
+                              <SelectContent>
+                                <SelectItem value="none">
+                                  No priority
+                                </SelectItem>
+
+                                {Array.from({ length: sbeImages.length + 1 }, (_, index) => index + 1).map(
+                                  (priority) => {
+                                    const isUsed = sbeImages.map((val) => val.priority).includes(priority.toString());
+
+                                    return (
+                                      <SelectItem
+                                        key={priority}
+                                        value={priority.toString()}
+                                        disabled={isUsed}
+                                      >
+                                        {priority}
+                                      </SelectItem>
+                                    );
+                                  }
+                                )}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          {/* <Input
+                            type="text"
+                            defaultValue={value.name}
+                            placeholder="Input this image name"
+                            onChange={(e) => {
+                              const updatedSBEImages = [...sbeImages];
+                              if (updatedSBEImages[index]) {
+                                updatedSBEImages[index].name = e.target.value;
+                              }
+                              setSbeImages(updatedSBEImages);
+                            }}
+                            // required
+                            className="border border-gray-300 p-2 rounded-md w-48"
+                          />
+                          <Input
+                            type="text"
+                            defaultValue={value.desc}
+                            placeholder="Input this image desc"
+                            onChange={(e) => {
+                              const updatedSBEImages = [...sbeImages];
+                              if (updatedSBEImages[index]) {
+                                updatedSBEImages[index].desc = e.target.value;
+                              }
+                              setSbeImages(updatedSBEImages);
+                            }}
+                            // required
+                            className="border border-gray-300 p-2 rounded-md w-48"
+                          /> */}
+                        </div>
+                        <Button
+                          variant={"destructive"}
+                          onClick={() => reduceSBEImagesCounter(index)}
+                        >
+                          <Trash width={20} height={20} />
+                        </Button>
+                      </div>      
+                    </div>
+                    ))
+                  }
+                </div>
               </div>
 
 
 
-              <div className="border rounded-lg p-4 shadow-lg bg-background">
+              <div className="rounded-lg p-4 shadow-lg bg-background border-primary border-2">
                 <div className="text-center pb-2 flex justify-between items-center">
                   <div className="text-left font-bold text-base">Brand Images</div>
                   <div
@@ -1693,7 +1700,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                 </div>
                 
                 <div className={`border rounded-lg p-4 shadow-lg bg-background`}>
-                  <div className="font-bold text-base pb-2">Description</div>
+                  <div className="font-bold text-base pb-2">Main Description</div>
                     {/* Toolbar */}
                     <div>
                     <div className="flex gap-2 mb-4 flex-wrap">
@@ -1783,121 +1790,127 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                     <EditorContent editor={editorBrand} className="border p-4"/>
                   </div>
                 </div>
-                {brandImages && brandImages.length > 0 && brandImages.map((value, index) => (
-                    
-                  <div className="space-y-2 rounded-lg border shadow-md p-2" key={index}>
-                    <div
-                      key={value.id}
-                      className="flex items-center justify-between rounded-md shadow-xs"
-                    >
-                      <div className="flex items-center space-x-4">
-                        {value.url !== '' && (
-                          <Image
-                          src={value.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${value.url}` : value.url}
-                          alt={`Brand Images ${index}`}
-                          width={100}
-                          height={100}
-                            className="w-32 h-fit"
-                          />
-                        )}
-                        {value.url === '' && (
-                          <Input
-                            id={`brand-images-${index}`}
-                            type="file"
-                            accept="image/*"
-                            name="file"
-                            onChange={(e) =>
-                              e.target.files && handleBrandImagesFileChange(e, index)
-                            }
-                            disabled={loading}
-                            className="border border-gray-300 p-2 rounded-md"
-                          />
-                        )}
-
-                        
-                        <Select
-                          disabled={loading}
-                          value={value.priority ?? '999'}
-                          onValueChange={(val) => {
-                            const updatedBrandImages = [...brandImages];
-                            if (updatedBrandImages[index]) {
-                              updatedBrandImages[index].priority = val;
-                            }
-                            setBrandImages(updatedBrandImages);
-                          }}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select priority" />
-                            </SelectTrigger>
-                          </FormControl>
-
-                          <SelectContent>
-                            <SelectItem value="none">
-                              No priority
-                            </SelectItem>
-
-                            {Array.from({ length: brandImages.length + 1 }, (_, index) => index + 1).map(
-                              (priority) => {
-                                const isUsed = brandImages.map((val) => val.priority).includes(priority.toString());
-
-                                return (
-                                  <SelectItem
-                                    key={priority}
-                                    value={priority.toString()}
-                                    disabled={isUsed}
-                                  >
-                                    {priority}
-                                  </SelectItem>
-                                );
-                              }
-                            )}
-                          </SelectContent>
-                        </Select>
-                        {/* <Input
-                          type="text"
-                          defaultValue={value.name}
-                          placeholder="Input this image name"
-                          onChange={(e) => {
-                            const updatedBrandImages = [...brandImages];
-                            if (updatedBrandImages[index]) {
-                              updatedBrandImages[index].name = e.target.value;
-                            }
-                            setBrandImages(updatedBrandImages);
-                          }}
-                          // required
-                          className="border border-gray-300 p-2 rounded-md w-48"
-                        />
-                        <Input
-                          type="text"
-                          defaultValue={value.desc}
-                          placeholder="Input this image desc"
-                          onChange={(e) => {
-                            const updatedBrandImages = [...brandImages];
-                            if (updatedBrandImages[index]) {
-                              updatedBrandImages[index].desc = e.target.value;
-                            }
-                            setBrandImages(updatedBrandImages);
-                          }}
-                          // required
-                          className="border border-gray-300 p-2 rounded-md w-48"
-                        /> */}
-                      </div>
-                      <Button
-                        variant={"destructive"}
-                        onClick={() => reduceBrandImagesCounter(index)}
+                <div className={`border rounded-lg p-4 shadow-lg bg-background mt-4`}>
+                  <div className="font-bold text-base pb-2">Slideshow Images</div>
+                  {brandImages && brandImages.length > 0 && brandImages.sort((a, b) => Number(a.priority) - Number(b.priority)).map((value, index) => (
+                      
+                    <div className="space-y-2 rounded-lg border shadow-md p-2" key={index}>
+                      <div
+                        key={value.id}
+                        className="flex items-center justify-between rounded-md shadow-xs"
                       >
-                        <Trash width={20} height={20} />
-                      </Button>
-                    </div>      
-                  </div>
-                  ))
-                }
+                        <div className="flex items-center space-x-4">
+                          {value.url !== '' && (
+                            <Image
+                            src={value.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${value.url}` : value.url}
+                            alt={`Brand Images ${index}`}
+                            width={100}
+                            height={100}
+                              className="w-32 h-fit"
+                            />
+                          )}
+                          {value.url === '' && (
+                            <Input
+                              id={`brand-images-${index}`}
+                              type="file"
+                              accept="image/*"
+                              name="file"
+                              onChange={(e) =>
+                                e.target.files && handleBrandImagesFileChange(e, index)
+                              }
+                              disabled={loading}
+                              className="border border-gray-300 p-2 rounded-md"
+                            />
+                          )}
+
+                          
+                          <div>
+                            <div className="font-bold text-sm pb-2">Description:</div>
+                            <Select
+                              disabled={loading}
+                              value={value.priority ?? '999'}
+                              onValueChange={(val) => {
+                                const updatedBrandImages = [...brandImages];
+                                if (updatedBrandImages[index]) {
+                                  updatedBrandImages[index].priority = val;
+                                }
+                                setBrandImages(updatedBrandImages);
+                              }}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select priority" />
+                                </SelectTrigger>
+                              </FormControl>
+
+                              <SelectContent>
+                                <SelectItem value="none">
+                                  No priority
+                                </SelectItem>
+
+                                {Array.from({ length: brandImages.length + 1 }, (_, index) => index + 1).map(
+                                  (priority) => {
+                                    const isUsed = brandImages.map((val) => val.priority).includes(priority.toString());
+
+                                    return (
+                                      <SelectItem
+                                        key={priority}
+                                        value={priority.toString()}
+                                        disabled={isUsed}
+                                      >
+                                        {priority}
+                                      </SelectItem>
+                                    );
+                                  }
+                                )}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          {/* <Input
+                            type="text"
+                            defaultValue={value.name}
+                            placeholder="Input this image name"
+                            onChange={(e) => {
+                              const updatedBrandImages = [...brandImages];
+                              if (updatedBrandImages[index]) {
+                                updatedBrandImages[index].name = e.target.value;
+                              }
+                              setBrandImages(updatedBrandImages);
+                            }}
+                            // required
+                            className="border border-gray-300 p-2 rounded-md w-48"
+                          />
+                          <Input
+                            type="text"
+                            defaultValue={value.desc}
+                            placeholder="Input this image desc"
+                            onChange={(e) => {
+                              const updatedBrandImages = [...brandImages];
+                              if (updatedBrandImages[index]) {
+                                updatedBrandImages[index].desc = e.target.value;
+                              }
+                              setBrandImages(updatedBrandImages);
+                            }}
+                            // required
+                            className="border border-gray-300 p-2 rounded-md w-48"
+                          /> */}
+                        </div>
+                        <Button
+                          variant={"destructive"}
+                          onClick={() => reduceBrandImagesCounter(index)}
+                        >
+                          <Trash width={20} height={20} />
+                        </Button>
+                      </div>      
+                    </div>
+                    ))
+                  }
+                </div>
               </div>
 
 
 
-              <div className="border rounded-lg p-4 shadow-lg bg-background">
+              <div className="rounded-lg p-4 shadow-lg bg-background border-primary border-2">
                 <div className="text-center pb-2 flex justify-between items-center">
                   <div className="text-left font-bold text-base">Mission & Values Images</div>
                   <div
@@ -1909,7 +1922,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                 </div>
                 
                 <div className={`border rounded-lg p-4 shadow-lg bg-background`}>
-                  <div className="font-bold text-base pb-2">Description</div>
+                  <div className="font-bold text-base pb-2">Main Description</div>
                     {/* Toolbar */}
                     <div>
                     <div className="flex gap-2 mb-4 flex-wrap">
@@ -1999,129 +2012,127 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                     <EditorContent editor={editorVision} className="border p-4"/>
                   </div>
                 </div>
-                {valuesImages && valuesImages.length > 0 && valuesImages.map((value, index) => (
-                    
-                  <div className="space-y-2 rounded-lg border shadow-md p-2" key={index}>
-                    <div
-                      key={value.id}
-                      className="flex items-center justify-between rounded-md shadow-xs"
-                    >
-                      <div className="flex items-center space-x-4">
-                        {value.url !== '' && (
-                          <Image
-                          src={value.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${value.url}` : value.url}
-                          alt={`Value Images ${index}`}
-                          width={100}
-                          height={100}
-                            className="w-32 h-fit"
-                          />
-                        )}
-                        {value.url === '' && (
-                          <Input
-                            id={`values-images-${index}`}
-                            type="file"
-                            accept="image/*"
-                            name="file"
-                            onChange={(e) =>
-                              e.target.files && handleValuesImagesFileChange(e, index)
-                            }
-                            disabled={loading}
-                            className="border border-gray-300 p-2 rounded-md"
-                          />
-                        )}
-                        <Input
-                          type="text"
-                          defaultValue={value.name}
-                          placeholder="Input this image name"
-                          onChange={(e) => {
-                            const updatedValuesImages = [...valuesImages];
-                            if (updatedValuesImages[index]) {
-                              updatedValuesImages[index].name = e.target.value;
-                            }
-                            setValuesImages(updatedValuesImages);
-                          }}
-                          // required
-                          className="border border-gray-300 p-2 rounded-md w-48"
-                        />
-                        <Input
-                          type="text"
-                          defaultValue={value.desc}
-                          placeholder="Input this image desc"
-                          onChange={(e) => {
-                            const updatedValuesImages = [...valuesImages];
-                            if (updatedValuesImages[index]) {
-                              updatedValuesImages[index].desc = e.target.value;
-                            }
-                            setValuesImages(updatedValuesImages);
-                          }}
-                          // required
-                          className="border border-gray-300 p-2 rounded-md w-48"
-                        />
-
-                        <Select
-                          disabled={loading}
-                          value={value.priority ?? '999'}
-                          onValueChange={(val) => {
-                            const updatedValuesImages = [...valuesImages];
-                            if (updatedValuesImages[index]) {
-                              updatedValuesImages[index].priority = val;
-                            }
-                            setValuesImages(updatedValuesImages);
-                          }}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select priority" />
-                            </SelectTrigger>
-                          </FormControl>
-
-                          <SelectContent>
-                            <SelectItem value="none">
-                              No priority
-                            </SelectItem>
-
-                            {Array.from({ length: valuesImages.length + 1 }, (_, index) => index + 1).map(
-                              (priority) => {
-                                const isUsed = valuesImages.map((val) => val.priority).includes(priority.toString());
-
-                                return (
-                                  <SelectItem
-                                    key={priority}
-                                    value={priority.toString()}
-                                    disabled={isUsed}
-                                  >
-                                    {priority}
-                                  </SelectItem>
-                                );
-                              }
-                            )}
-                          </SelectContent>
-                        </Select>
-                        {/* <Input
-                          type="text"
-                          defaultValue={value.priority ?? '999'}
-                          placeholder="Input this image priority"
-                          onChange={(e) => {
-                            const updatedValuesImages = [...valuesImages];
-                            if (updatedValuesImages[index]) {
-                              updatedValuesImages[index].priority = e.target.value;
-                            }
-                            setValuesImages(updatedValuesImages);
-                          }}
-                          // required
-                          className="border border-gray-300 p-2 rounded-md w-48"
-                        /> */}
-                      </div>
-                      <Button
-                        variant={"destructive"}
-                        onClick={() => reduceValuesImagesCounter(index)}
+                <div className={`border rounded-lg p-4 shadow-lg bg-background mt-4`}>
+                  <div className="font-bold text-base pb-2">Slideshow Images</div>
+                  {valuesImages && valuesImages.length > 0 && valuesImages.sort((a, b) => Number(a.priority) - Number(b.priority)).map((value, index) => (
+                      
+                    <div className="space-y-2 rounded-lg border shadow-md p-2" key={index}>
+                      <div
+                        key={value.id}
+                        className="flex items-center justify-between rounded-md shadow-xs"
                       >
-                        <Trash width={20} height={20} />
-                      </Button>
-                    </div>      
-                  </div>
-                  ))
-                }
+                        <div className="flex items-center space-x-4">
+                          {value.url !== '' && (
+                            <Image
+                            src={value.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${value.url}` : value.url}
+                            alt={`Value Images ${index}`}
+                            width={100}
+                            height={100}
+                              className="w-32 h-fit"
+                            />
+                          )}
+                          {value.url === '' && (
+                            <Input
+                              id={`values-images-${index}`}
+                              type="file"
+                              accept="image/*"
+                              name="file"
+                              onChange={(e) =>
+                                e.target.files && handleValuesImagesFileChange(e, index)
+                              }
+                              disabled={loading}
+                              className="border border-gray-300 p-2 rounded-md"
+                            />
+                          )}
+                          <div>
+                          <div className="font-bold text-sm pb-2">Title:</div>
+                          <Input
+                            type="text"
+                            defaultValue={value.name}
+                            placeholder="Input this image name"
+                            onChange={(e) => {
+                              const updatedValuesImages = [...valuesImages];
+                              if (updatedValuesImages[index]) {
+                                updatedValuesImages[index].name = e.target.value;
+                              }
+                              setValuesImages(updatedValuesImages);
+                            }}
+                            // required
+                            className="border border-gray-300 p-2 rounded-md w-48"
+                          />
+                          </div>
+                          <div>
+                            <div className="font-bold text-sm pb-2">Description:</div>
+                            <Textarea
+                              defaultValue={value.desc}
+                              placeholder="Input this image desc"
+                              onChange={(e) => {
+                                const updatedValuesImages = [...valuesImages];
+                                if (updatedValuesImages[index]) {
+                                  updatedValuesImages[index].desc = e.target.value;
+                                }
+                                setValuesImages(updatedValuesImages);
+                              }}
+                              // required
+                              className="border border-gray-300 p-2 rounded-md min-w-[700px]"
+                            />
+                          </div>
+
+
+                          <div>
+                            <div className="font-bold text-sm pb-2">Priority:</div>
+                            <Select
+                              disabled={loading}
+                              value={value.priority ?? '999'}
+                              onValueChange={(val) => {
+                                const updatedValuesImages = [...valuesImages];
+                                if (updatedValuesImages[index]) {
+                                  updatedValuesImages[index].priority = val;
+                                }
+                                setValuesImages(updatedValuesImages);
+                              }}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select priority" />
+                                </SelectTrigger>
+                              </FormControl>
+
+                              <SelectContent>
+                                <SelectItem value="none">
+                                  No priority
+                                </SelectItem>
+
+                                {Array.from({ length: valuesImages.length + 1 }, (_, index) => index + 1).map(
+                                  (priority) => {
+                                    const isUsed = valuesImages.map((val) => val.priority).includes(priority.toString());
+
+                                    return (
+                                      <SelectItem
+                                        key={priority}
+                                        value={priority.toString()}
+                                        disabled={isUsed}
+                                      >
+                                        {priority}
+                                      </SelectItem>
+                                    );
+                                  }
+                                )}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <Button
+                          variant={"destructive"}
+                          onClick={() => reduceValuesImagesCounter(index)}
+                        >
+                          <Trash width={20} height={20} />
+                        </Button>
+                      </div>      
+                    </div>
+                    ))
+                  }
+                </div>
               </div>
             </div>
           </div>

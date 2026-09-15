@@ -96,6 +96,12 @@ export function MainNav({
       description: "Set Menu Priority and Product Priority",
       icon: ArrowDown01
     },
+    {
+      title: "Kits Finishing",
+      href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/allfinishing`,
+      description: "Edit Kits Finishing for SB Acoustics",
+      icon: Phone,
+    }
   ]
 
 
@@ -158,18 +164,12 @@ export function MainNav({
     //   description: "Edit About SB Acoustics",
     //   icon: Info,
     // },
-    {
-      title: "Contacts",
-      href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/contacts`,
-      description: "Edit Contact for SB Acoustics",
-      icon: Phone,
-    },
-    {
-      title: "Kits Finishing",
-      href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/allfinishing`,
-      description: "Edit Kits Finishing for SB Acoustics",
-      icon: Phone,
-    }
+    // {
+    //   title: "Contacts",
+    //   href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/contacts`,
+    //   description: "Edit Contact for SB Acoustics",
+    //   icon: Phone,
+    // },
   ];
 
 

@@ -89,6 +89,7 @@ model product {
   searchbox_desc String @db.Text @default("")
   sizeId      String    
   tempAllFinished Boolean  @default(false)
+  willHaveFRD   Boolean @default(true)
   size        size      @relation(fields: [sizeId], references: [id])
   images_catalogues      image_catalogues[]
   allCat      allproductcategory[]

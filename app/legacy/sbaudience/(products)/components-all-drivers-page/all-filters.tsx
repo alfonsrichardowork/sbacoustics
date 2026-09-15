@@ -120,17 +120,17 @@ useEffect(() => {
             let FinalFeatured: AllFilterProductsOnlyType[] = data
             if (!priorityLoaded) return;
             if(priority.length === 0) {
-                FinalFeatured.sort((a, b) => {
-                    // Extract the leading number from the name
-                    const numA = parseInt(a.products.name.match(/^\d+/)?.[0] || "100", 10);
-                    const numB = parseInt(b.products.name.match(/^\d+/)?.[0] || "100", 10);
+                // FinalFeatured.sort((a, b) => {
+                //     // Extract the leading number from the name
+                //     const numA = parseInt(a.products.name.match(/^\d+/)?.[0] || "100", 10);
+                //     const numB = parseInt(b.products.name.match(/^\d+/)?.[0] || "100", 10);
                 
-                    if (numA !== numB) {
-                    return numA - numB; // Sort numerically first
-                    }
+                //     if (numA !== numB) {
+                //     return numA - numB; // Sort numerically first
+                //     }
                 
-                    return a.products.name.localeCompare(b.products.name); // Sort alphabetically if numbers are the same
-                });
+                //     return a.products.name.localeCompare(b.products.name); // Sort alphabetically if numbers are the same
+                // });
                 setAllFeaturedProducts(FinalFeatured)
                 setLoadFinsihed(true)
             }

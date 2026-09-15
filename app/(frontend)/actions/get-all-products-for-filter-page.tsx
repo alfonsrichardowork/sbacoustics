@@ -22,11 +22,12 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
         }
       },
       select:{
-          productId: true
+          productId: true,
+          priority: true
       }
     })
 
-    finalProductsIds = productIdbyCat.map((value) => value.productId)
+    finalProductsIds = productIdbyCat.sort((a,b) => Number(a.priority) - Number(b.priority)).map((value) => value.productId)
   }
   else if (subslug && subslug !== 'all' && !subsubslug && !subsubsubslug) {
     const productIdbyCat =  await prismadb.allproductcategory.findMany({
@@ -39,11 +40,12 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
         }
       },
       select:{
-          productId: true
+          productId: true,
+          priority: true
       }
     })
 
-    const productIdsCat = productIdbyCat.map((value) => value.productId)
+    const productIdsCat = productIdbyCat.sort((a,b) => Number(a.priority) - Number(b.priority)).map((value) => value.productId)
 
     const productIdbySubCat =  await prismadb.allproductcategory.findMany({
       where:{
@@ -55,11 +57,12 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
         }
       },
       select:{
-          productId: true
+          productId: true,
+          priority: true
       }
     })
 
-    const productIdsSubCat = productIdbySubCat.map((value) => value.productId)
+    const productIdsSubCat = productIdbySubCat.sort((a,b) => Number(a.priority) - Number(b.priority)).map((value) => value.productId)
 
     finalProductsIds = productIdsCat.filter(id => productIdsSubCat.includes(id));
   }
@@ -74,11 +77,12 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
           }
       },
       select:{
-          productId: true
+          productId: true,
+          priority: true
       }
     })
 
-    const productIdsCat = productIdbyCat.map((value) => value.productId)
+    const productIdsCat = productIdbyCat.sort((a,b) => Number(a.priority) - Number(b.priority)).map((value) => value.productId)
 
     const productIdbySubCat =  await prismadb.allproductcategory.findMany({
       where:{
@@ -90,11 +94,12 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
         }
       },
       select:{
-          productId: true
+          productId: true,
+          priority: true
       }
     })
 
-    const productIdsSubCat = productIdbySubCat.map((value) => value.productId)
+    const productIdsSubCat = productIdbySubCat.sort((a,b) => Number(a.priority) - Number(b.priority)).map((value) => value.productId)
 
     const finalProductIds = productIdsCat.filter(id => productIdsSubCat.includes(id));
 
@@ -108,11 +113,12 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
         }
       },
       select:{
-          productId: true
+          productId: true,
+          priority: true
       }
     })
 
-    const productIdsSubSubSubCat = productIdbySubSubCat.map((value) => value.productId)
+    const productIdsSubSubSubCat = productIdbySubSubCat.sort((a,b) => Number(a.priority) - Number(b.priority)).map((value) => value.productId)
 
     finalProductsIds = finalProductIds.filter(id => productIdsSubSubSubCat.includes(id));
   }
@@ -120,18 +126,19 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
         const productIdbyCat =  await prismadb.allproductcategory.findMany({
         where:{
           category: {
-          slug: slug,
-          type: {
+            slug: slug,
+            type: {
               in: ['Category']
-          }
+            }
           }
       },
       select:{
-          productId: true
+          productId: true,
+          priority: true
       }
     })
 
-    const productIdsCat = productIdbyCat.map((value) => value.productId)
+    const productIdsCat = productIdbyCat.sort((a,b) => Number(a.priority) - Number(b.priority)).map((value) => value.productId)
 
     const productIdbySubCat =  await prismadb.allproductcategory.findMany({
       where:{
@@ -143,11 +150,12 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
         }
       },
       select:{
-          productId: true
+          productId: true,
+          priority: true
       }
     })
 
-    const productIdsSubCat = productIdbySubCat.map((value) => value.productId)
+    const productIdsSubCat = productIdbySubCat.sort((a,b) => Number(a.priority) - Number(b.priority)).map((value) => value.productId)
 
     const finalProductIds = productIdsCat.filter(id => productIdsSubCat.includes(id));
 
@@ -161,11 +169,12 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
         }
       },
       select:{
-          productId: true
+          productId: true,
+          priority: true
       }
     })
 
-    const productIdsSubSubSubCat = productIdbySubSubCat.map((value) => value.productId)
+    const productIdsSubSubSubCat = productIdbySubSubCat.sort((a,b) => Number(a.priority) - Number(b.priority)).map((value) => value.productId)
 
     const tempfinalProductsIds = finalProductIds.filter(id => productIdsSubSubSubCat.includes(id));
     
@@ -179,11 +188,12 @@ export async function getAllProductsForFilterPage (brand: string | undefined, sl
         }
       },
       select:{
-          productId: true
+          productId: true,
+          priority: true
       }
     })
 
-    const productIdsSubSubSubSubCat = productIdbySubSubSubCat.map((value) => value.productId)
+    const productIdsSubSubSubSubCat = productIdbySubSubSubCat.sort((a,b) => Number(a.priority) - Number(b.priority)).map((value) => value.productId)
 
     finalProductsIds = tempfinalProductsIds.filter(id => productIdsSubSubSubSubCat.includes(id));
   }

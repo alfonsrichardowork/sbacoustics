@@ -34,6 +34,7 @@ export default async function SingleProductSBAudience(props: Props) {
             drawing_img_url: true,
             graph_img_url: true,
             isKits: true,
+            willHaveFRD: true,
             allCat: {
                 select: {
                     id: true,
@@ -390,7 +391,7 @@ export default async function SingleProductSBAudience(props: Props) {
                                 }
 
 
-                                {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.length > 0 &&
+                                {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.length > 0 ?
                                     <>
                                         {
                                         product.multipleFRDZMAFiles.length===1 && product.multipleFRDZMAFiles[0]?.url!=''?
@@ -468,6 +469,42 @@ export default async function SingleProductSBAudience(props: Props) {
                                             </div>    
                                         }            
                                     </>
+                                    :
+                                    product.willHaveFRD && 
+                                    <div style={{ display: "flex", justifyContent: "flex-start", paddingTop: "16px" }}>
+                                        <div className="single-product-page-all-data-desc-1" 
+                                        style={{
+                                            fontStyle: 'italic',
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }}>
+                                        
+                                            <div style={{
+                                                position: "relative",
+                                                display: 'inline-flex',
+                                                width: '32px',
+                                                height: '32px',
+                                                alignItems: 'center'
+                                            }}>
+                                                <img
+                                                    src={'/images/sbacoustics/FRD-ZMA-download-ver2.png'} 
+                                                    alt="FRD ZMA Files Download"
+                                                    width={100}
+                                                    height={100}
+                                                    style={{
+                                                        maxHeight: '32px',
+                                                        width: "auto",
+                                                        flexShrink: 0,
+                                                    }}
+                                                    loading="eager"
+                                                />
+                                            </div>
+                                                
+                                            <h3 style={{ paddingLeft: '8px'}}>
+                                                Uploading soon
+                                            </h3>
+                                        </div>
+                                    </div>
                                 }
 
 

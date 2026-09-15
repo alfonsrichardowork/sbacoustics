@@ -31,7 +31,7 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
 
     const body = await req.json();
 
-    const { name, sizeId,  description, isFeatured, isArchived, isKits, isNewProduct, images_catalogues, cover_img_url, drawing_img_url, graph_img_url, multipleDatasheetProduct, multipleFRDZMAFiles, multiple3DModels, navbarNotes, searchbox_desc } = body;
+    const { name, sizeId,  description, isFeatured, isArchived, isKits, isNewProduct, images_catalogues, cover_img_url, drawing_img_url, graph_img_url, multipleDatasheetProduct, multipleFRDZMAFiles, multiple3DModels, navbarNotes, searchbox_desc, willHaveFRD } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -71,6 +71,7 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
         sizeId,
         navbarNotes,
         searchbox_desc,
+        willHaveFRD,
         updatedBy: session.name,
         createdAt: new Date(),
         updatedAt: new Date(),
