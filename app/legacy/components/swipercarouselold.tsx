@@ -307,6 +307,8 @@ const SwiperCarouselOld: React.FC<PropType> = ({ slides, brand }) => {
                 swiperRef.current.slideToLoop(index);
               }
             }}
+            id="next button"
+            title="next button"
             style={{
               width: '16px',
               height: '16px',

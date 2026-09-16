@@ -34,8 +34,8 @@ const FrequencyResponseSection: React.FC<PropType> = (props) => {
               <LazyImageCustom
                 src={frequencyres.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${frequencyres}` : frequencyres}
                 alt={`${name} - Frequency Response`}
-                width={1000}
-                height={1000}
+                width={500}
+                height={500}
                 classname={`object-contain px-10 transition-transform duration-300 ${hoverImage ? 'scale-105' : ''}`}
                 lazy={false}
                 testid='frequency-response-image-single-product-page'

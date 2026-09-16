@@ -158,7 +158,7 @@ const onSubmit = async (
                     {isLoadingLoader &&
                       <Skeleton className="w-full h-full" />
                     }
-                    <iframe src={oneBrand.maps} className='absolute w-full h-full' onLoad={() => setIsLoadingLoader(false)} ></iframe>
+                    <iframe title='Sinar Baja Electric Location' src={oneBrand.maps} className='absolute w-full h-full' onLoad={() => setIsLoadingLoader(false)} ></iframe>
                   </div>
                   :
                   <Empty className='w-full min-h-96 z-10 bg-foreground/20'>

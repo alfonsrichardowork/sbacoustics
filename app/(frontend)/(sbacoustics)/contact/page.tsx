@@ -53,9 +53,10 @@ export default async function ContactUsJsonLd() {
             <img 
                 src={brand.cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brand.cover}` : brand.cover } 
                 alt="Sinar Baja Electric Facility" 
-                width={1000} 
-                height={1000} 
+                width={750} 
+                height={750} 
                 className="w-screen h-[600px] object-cover object-center"
+                loading="eager"
             />
             :
             <Empty className='w-screen min-h-[600px] z-10 bg-foreground/20'>

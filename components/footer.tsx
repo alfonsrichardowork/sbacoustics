@@ -138,8 +138,8 @@ export default function Footer() {
                   <LazyImageClickable
                     src={'/images/sbacoustics/logo SBE-white.webp'}
                     alt={"Sinar Baja Electric Logo"}
-                    width={500}
-                    height={500}
+                    width={300}
+                    height={300}
                   />
                 </Link>
               </div>

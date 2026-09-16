@@ -121,8 +121,8 @@ export default async function Layout({
                   <Image
                     src="/images/sbacoustics/logo_sbacoustics_white_catchphrase.webp"
                     alt="SB Acoustics Logo"
-                    width={1000}
-                    height={1000}
+                    width={350}
+                    height={350}
                     className="w-1/4"
                     priority
                   />

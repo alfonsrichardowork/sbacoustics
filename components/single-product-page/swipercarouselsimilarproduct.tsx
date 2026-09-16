@@ -80,7 +80,7 @@ const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar, brand }) =>
                 <CardHeader className="p-2 h-[200px]">
                   <LazyImageCustom
                     src={sim.similarProduct.cover_img_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${sim.similarProduct.cover_img_url}` : sim.similarProduct.cover_img_url}
-                    alt={sim.similarProduct.name}
+                    alt={`${sim.similarProduct.name} - Similar Product`}
                     width={500}
                     height={500}
                     classname="aspect-auto h-full w-fit object-contain self-center"
@@ -103,6 +103,8 @@ const SwiperCarouselSimilarProduct: React.FC<PropType> = ({ similar, brand }) =>
           {similar.map((_, index) => (
             <button
               key={index}
+              id='similarProductButton'
+              title='Similar Product Button' 
               onClick={() => swiperRef.current?.slideToLoop(index)}
               className={`w-2 h-2 rounded-full transition-all duration-300 hover:cursor-pointer hover:scale-110 ${
                 realIndex === index ? 'bg-primary scale-125' : 'bg-zinc-700'

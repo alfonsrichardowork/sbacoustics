@@ -192,7 +192,7 @@ const ComparisonPageSBAcoustics = () => {
             <div className="relative flex items-center w-full mx-auto">
 
                     <div className="absolute -left-4">
-                        <Button variant="outline" size="icon" className="rounded-full shadow-lg bg-background" onClick={scrollLeft20}>
+                        <Button variant="outline" size="icon" id='slideLeft' title='slideLeft' className="rounded-full shadow-lg bg-background" onClick={scrollLeft20}>
                             <ArrowLeft className="h-4 w-4" />
                         </Button>
                     </div>
@@ -202,6 +202,8 @@ const ComparisonPageSBAcoustics = () => {
                         <Button
                             variant="outline"
                             size="icon"
+                            id='slideRight'
+                            title='slideRight'
                             className="rounded-full shadow-lg bg-background"
                             onClick={scrollRight20}
                         >
@@ -252,7 +254,7 @@ const ComparisonPageSBAcoustics = () => {
                             ? `${process.env.NEXT_PUBLIC_ROOT_URL}${product.coverImg}`
                             : product.coverImg
                         }
-                        alt={product.name}
+                        alt={`${product.name} - Comparison`}
                         width={100}
                         height={100}
                         className="

@@ -308,7 +308,7 @@ const SwiperCarouselSimilarProductOld: React.FC<PropType> = ({ similar, brand })
             paddingTop: '8px'
           }} > 
             {similar.map((_, index) => ( 
-              <button key={index} onClick={() => swiperRef.current?.slideToLoop(index)} style={{ 
+              <button title='next product' id='next product' key={index} onClick={() => swiperRef.current?.slideToLoop(index)} style={{ 
                 width: '8px', 
                 height: '8px', 
                 marginTop: '0px',

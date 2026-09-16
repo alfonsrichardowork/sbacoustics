@@ -1,7 +1,7 @@
 import { AllFilterProductsOnlyType, CheckBoxData, ChildSpecificationProp, SliderData } from '@/app/(frontend)/types';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
-import AllDriversandFiltersProducts from '@/app/legacy/(sbacoustics)/(products)/components-all-drivers-page/all-filters';
 import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
+import AllDriversandFiltersProducts from '../components-all-drivers-page/all-filters';
 
 function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSliderFilter[] {
   return Array.from(new Set(arr));

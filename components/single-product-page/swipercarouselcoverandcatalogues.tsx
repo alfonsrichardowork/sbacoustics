@@ -188,8 +188,8 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
               <LazyImageCustom 
                 src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
                 alt={name} 
-                width={1000}
-                height={1000}
+                width={300}
+                height={300}
                 classname="object-cover h-full w-fit"
                 lazy={false}
               />
@@ -210,8 +210,8 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                 <LazyImageCustom
                   src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
                   alt={item.name} 
-                  width={1000}
-                  height={1000}
+                  width={300}
+                  height={300}
                   classname="object-cover h-full w-fit"
                   lazy={false}
                 />
