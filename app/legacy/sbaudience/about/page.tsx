@@ -1,11 +1,14 @@
-
 import '@/app/legacy/(sbacoustics)/about/about.css'
 import SwiperCarouselAboutUsOld from "../../components/swipercarouselaboutusold";
-import DOMPurify from 'isomorphic-dompurify'; 
+import DOMPurify from 'isomorphic-dompurify';
 import prismadb from "@/lib/prismadb";
 import "@/app/css/styles.scss";
+import { cacheLife } from 'next/cache';
+import { Suspense } from 'react';
 
-export default async function AboutUsSBAudience() {
+async function getAboutUsData(){
+  // 'use cache'
+  // cacheLife('minutes')
   const allData = await prismadb.brand.findFirst({
     where: {
       id: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
@@ -17,7 +20,12 @@ export default async function AboutUsSBAudience() {
       mission_values_desc: true
     }
   })
+  return allData;
+}
+export default async function AboutUsSBAudience() {
+  
 
+  const allData = await getAboutUsData();
   if(!allData) {
     return null
   }
@@ -41,6 +49,7 @@ export default async function AboutUsSBAudience() {
                   marginBlockEnd: '24px',
                   color: '#475569'
                 }}>
+                <Suspense fallback={<></>}>
                   <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.brand_desc, {
                       ALLOWED_TAGS: [
                           'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
@@ -49,6 +58,7 @@ export default async function AboutUsSBAudience() {
                           'href', 'target', 'rel', 'class', 'id', 'style'
                       ],
                   }) }}></h3>
+                </Suspense>
                 </div>
               </div>
               <div className="about-us-section-second-relative">
@@ -152,14 +162,16 @@ export default async function AboutUsSBAudience() {
                   <h3>
                     We continue to invest in cutting-edge R&D, quality control, and mass production — pushing the boundaries of what's possible in transducer design and manufacturing.
                   </h3> */}
-                  <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.sbe_desc, {
-                    ALLOWED_TAGS: [
-                        'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                    ],
-                    ALLOWED_ATTR: [
-                        'href', 'target', 'rel', 'class', 'id', 'style'
-                    ],
-                  }) }}></h3>
+                  <Suspense fallback={<></>}>
+                    <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.sbe_desc, {
+                      ALLOWED_TAGS: [
+                          'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
+                      ],
+                      ALLOWED_ATTR: [
+                          'href', 'target', 'rel', 'class', 'id', 'style'
+                      ],
+                    }) }}></h3>
+                  </Suspense>
                 </div>
                 <div style={{
                   marginTop: '32px'
@@ -182,14 +194,16 @@ export default async function AboutUsSBAudience() {
               {/* <p>
                 We dedicate passion and purpose to create and deliver high-valued products, where end user and OEM customer expectation are exceeded
               </p> */}
-              <p className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.mission_values_desc, {
-                  ALLOWED_TAGS: [
-                      'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                  ],
-                  ALLOWED_ATTR: [
-                      'href', 'target', 'rel', 'class', 'id', 'style'
-                  ],
-              }) }}></p>
+              <Suspense fallback={<></>}>
+                <p className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.mission_values_desc, {
+                ALLOWED_TAGS: [
+                    'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
+                ],
+                ALLOWED_ATTR: [
+                    'href', 'target', 'rel', 'class', 'id', 'style'
+                ],
+            }) }}></p>
+              </Suspense>
             </div>
 
             <div className="about-us-cards">

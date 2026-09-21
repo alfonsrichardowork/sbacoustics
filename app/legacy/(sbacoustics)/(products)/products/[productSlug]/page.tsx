@@ -1,7 +1,7 @@
 
 import "@/app/css/styles.scss";
-import DOMPurify from 'isomorphic-dompurify'; 
-import React from "react";
+import DOMPurify from 'isomorphic-dompurify';
+import React, { Suspense } from "react";
 import prismadb from "@/lib/prismadb";
 import { AllCategory, ChildSpecificationProp, SpecificationProp } from "@/app/(frontend)/types";
 import SwiperCarouselOneProductOld from "@/app/legacy/components/swipercarouselcoverandcataloguesold";
@@ -11,17 +11,15 @@ import SwiperCarouselOneProductMobileOld from "@/app/legacy/components/swipercar
 import SpecificationTableOld from "@/app/legacy/components/spec-tableold";
 import SwiperCarouselSimilarProductOld from "@/app/legacy/components/swipercarouselsimilarproductold";
 import "./singleproduct.css"
+import { cacheLife } from "next/cache";
 
 type Props = {
   params: Promise<{ productSlug?: string }>
 }
 
-export const revalidate = 60
-
-
-export default async function SingleProductSBAcoustics(props: Props) {
-    const { productSlug = '' } = await props.params;
-
+async function getOneDriverData(productSlug: string){
+    'use cache'
+    cacheLife('minutes')
     const product = await prismadb.product.findFirst({
         where: {
         slug: productSlug,
@@ -169,6 +167,26 @@ export default async function SingleProductSBAcoustics(props: Props) {
         }
     });
 
+    return product;
+}
+
+export default function Page({ params }: Props) {
+  return (
+    <Suspense fallback={<></>}>
+      <ProductContent params={params} />
+    </Suspense>
+  )
+}
+
+async function ProductContent({ params }: Props) {
+  const { productSlug = "" } = await params
+  return <SingleProductSBAcoustics productSlug={productSlug} />
+}
+
+async function SingleProductSBAcoustics({ productSlug }: { productSlug: string }) {
+
+    
+    const product = await getOneDriverData(productSlug)    
     if(!product){
         return null
     }
@@ -281,7 +299,7 @@ export default async function SingleProductSBAcoustics(props: Props) {
     });
 
     return (
-        <div className="single-product-page-outer-parent">
+        (<div className="single-product-page-outer-parent">
             <div className="single-product-page-outer-parent-2">
             <div className="single-product-page-parent">   
                 <div className="single-product-page-child-1">
@@ -679,13 +697,11 @@ export default async function SingleProductSBAcoustics(props: Props) {
                     </div>
                 </div>
             </div>
-
             <div style={{ width: "100%", height: "100%", paddingBottom: "16px" }} className="single-product-page-kits-finishing-display">
                 {product.kitsFinishing && product.kitsFinishing.length > 1 &&
                     <SwiperCarouselKitsFinishingOld name={product.name} kits_finishing={product.kitsFinishing}/>
                 }    
             </div>
-
             {product.similarProducts && product.similarProducts.length > 0 &&
                 <div className="single-product-page-all-data-h1" 
                 style={{ paddingTop: '112px', textAlign: 'center', width: '100%', }} >
@@ -695,8 +711,6 @@ export default async function SingleProductSBAcoustics(props: Props) {
                     <SwiperCarouselSimilarProductOld similar={product.similarProducts} brand={'sbacoustics'}/>
                 </div>
             }
-    
-        </div>
-
+        </div>)
     );
 }

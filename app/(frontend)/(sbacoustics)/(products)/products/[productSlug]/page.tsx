@@ -1,19 +1,21 @@
 import Link from "next/link";
 
 import "@/app/css/styles.scss";
-import DOMPurify from 'isomorphic-dompurify'; 
- 
+import DOMPurify from 'isomorphic-dompurify';
+
 import SpecificationTable from "@/components/single-product-page/spec-table";
 import SwiperCarouselKitsFinishing from "@/components/single-product-page/swipercarouselkitsfinishing";
 import { Dot } from "lucide-react";
 import { LightboxOneProduct } from "@/components/drawingOneProduct";
-import React from "react";
+import React, { Suspense } from "react";
 import prismadb from "@/lib/prismadb";
 import { AllCategory, ChildSpecificationProp, SpecificationProp } from "@/app/(frontend)/types";
 import SwiperCarouselOneProductSkeleton from "@/components/single-product-page/swipercarouselcoverandcataloguesskeleton";
 import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
 import SwiperCarouselSimilarProductLoading from "@/components/single-product-page/swipercarouselsimilarproductloading";
 import SwiperCarouselOneProductLoading from "@/components/single-product-page/swipercarouseloneproductloading";
+import { cacheLife } from "next/cache";
+import { ProductSkeleton } from "@/components/productskeleton";
 
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-black p-0 py-1"
 const all_sub_title_style = "text-left font-bold xl:text-2xl lg:text-xl md:text-lg sm:text-md text-black"
@@ -21,8 +23,6 @@ const all_sub_title_style = "text-left font-bold xl:text-2xl lg:text-xl md:text-
 type Props = {
   params: Promise<{ productSlug?: string }>
 }
-
-export const revalidate = 60
 
 // export async function generateStaticParams(){
 //   const products = await prismadb.product.findMany({
@@ -39,11 +39,10 @@ export const revalidate = 60
 //   }));
 // }
 
-export default async function SingleProductSBAcoustics(props: Props) {
-    const { productSlug = '' } = await props.params;
-    const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-    // const data = await getProduct("", productSlug);
 
+async function getOneDriverData(productSlug: string){
+    'use cache'
+    cacheLife('minutes')
     const product = await prismadb.product.findFirst({
         where: {
         slug: productSlug,
@@ -190,7 +189,27 @@ export default async function SingleProductSBAcoustics(props: Props) {
             }
         }
     });
+    return product;
+}
 
+export default function Page({ params }: Props) {
+  return (
+    <Suspense fallback={<ProductSkeleton />}>
+      <ProductContent params={params} />
+    </Suspense>
+  )
+}
+
+async function ProductContent({ params }: Props) {
+  const { productSlug = "" } = await params
+  return <SingleProductSBAcoustics productSlug={productSlug} />
+}
+
+async function SingleProductSBAcoustics({ productSlug }: { productSlug: string }) {
+  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? "http://localhost:3000"
+    // const data = await getProduct("", productSlug);
+
+    const product = await getOneDriverData(productSlug)    
     if(!product){
         return null
     }
@@ -330,22 +349,23 @@ export default async function SingleProductSBAcoustics(props: Props) {
                 {/* Left Column for Images */}
                 <div className="md:flex md:w-1/2 justify-center md:h-1/2 block w-full h-full">
                     <div className="flex-col w-full md:flex hidden pr-10">
-                        <div className="w-full h-full pb-4">
-                            <SwiperCarouselOneProductSkeleton name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues}/>
-                        </div>
-                        {product.drawing_img_url !== '' &&
-                            <LightboxOneProduct name={product.name} url={product.drawing_img_url} type={"drawing"}/>
-                        }
-                        {product.graph_img_url !== '' &&
-                            <LightboxOneProduct name={product.name} url={product.graph_img_url} type={"graph"}/>
-                        }          
-
-                        {product.kitsFinishing && product.kitsFinishing.length > 0 &&
-                            <SwiperCarouselKitsFinishing name={product.name} kits_finishing={product.kitsFinishing}/>
-                        }             
+                            {product.cover_img_url !== '' &&
+                                <div className="w-full h-full pb-4">
+                                    <SwiperCarouselOneProductSkeleton name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues}/>
+                                </div>
+                            }
+                            {product.drawing_img_url !== '' &&
+                                <LightboxOneProduct name={product.name} url={product.drawing_img_url} type={"drawing"}/>
+                            }
+                            {product.graph_img_url !== '' &&
+                                <LightboxOneProduct name={product.name} url={product.graph_img_url} type={"graph"}/>
+                            }      
+                            {product.kitsFinishing && product.kitsFinishing.length > 0 &&
+                                <SwiperCarouselKitsFinishing name={product.name} kits_finishing={product.kitsFinishing}/>
+                            }
                     </div>
                     <div className="w-full h-full md:hidden pb-4">
-                        <SwiperCarouselOneProductLoading name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>        
+                            <SwiperCarouselOneProductLoading name={product.name} cover={product.cover_img_url} image_catalogues={product.images_catalogues} drawing={product.drawing_img_url} graph={product.graph_img_url}/>
                     </div>
 
                     
@@ -354,232 +374,228 @@ export default async function SingleProductSBAcoustics(props: Props) {
                 {/* Right Column for Typography */}
                 <div className="md:flex md:w-1/2 justify-center md:h-1/2 block w-full h-full">
                     <div className="flex flex-col w-full">
-                        <h1 className={all_sub_title_style}
-                        data-testid="main-title-single-product-page"
-                        >
-                            {(
-                                prod_cat.some((c) => c.name.toLowerCase().includes("satori")) ||
-                                prod_sub_cat.some((s) => s.name.toLowerCase().includes("satori")) ||
-                                prod_sub_sub_cat.some((ss) => ss.name.toLowerCase().includes("satori"))
-                            ) && "SATORI "}
-                            {product.name}
-                        </h1>
-                        <div className={all_desc_style}>
-                            {(prod_sub_cat.length !== 0 || prod_sub_sub_cat.length !== 0) &&
-                                <div className="flex flex-wrap gap-2">
-                                    <h2>Categories:</h2> 
-                                    {prod_sub_cat.length !== 0 &&
-                                        prod_sub_cat.map((subcategory, index) => (
-                                        <React.Fragment key={index}>
+                            <h1 className={all_sub_title_style}
+                            data-testid="main-title-single-product-page"
+                            >
+                                {(
+                                    prod_cat.some((c) => c.name.toLowerCase().includes("satori")) ||
+                                    prod_sub_cat.some((s) => s.name.toLowerCase().includes("satori")) ||
+                                    prod_sub_sub_cat.some((ss) => ss.name.toLowerCase().includes("satori"))
+                                ) && "SATORI "}
+                                {product.name}
+                            </h1>
+                            <div className={all_desc_style}>
+                                {(prod_sub_cat.length !== 0 || prod_sub_sub_cat.length !== 0) &&
+                                    <div className="flex flex-wrap gap-2">
+                                        <h2>Categories:</h2> 
+                                        {prod_sub_cat.length !== 0 &&
+                                            prod_sub_cat.map((subcategory, index) => (
+                                            <React.Fragment key={index}>
+                                                <Link
+                                                href={`/${prod_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${subcategory.slug.toLowerCase().replace(/\s+/g, '-')}`}
+                                                className="hover:text-primary"
+                                                >
+                                                <u>{subcategory.name}</u>
+                                                </Link>
+                                            </React.Fragment>
+                                            ))
+                                        }
+                                        {prod_sub_sub_cat.length !== 0 &&
+                                            prod_sub_sub_cat.map((subsubcategory, index) => (
+                                            <React.Fragment key={index}>
+                                                <Link
+                                                href={`/${prod_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${prod_sub_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${subsubcategory.slug.toLowerCase().replace(/\s+/g, '-')}`}
+                                                className="hover:text-primary"
+                                                >
+                                                <u><h3>{subsubcategory.name}</h3></u>
+                                                </Link>
+                                            </React.Fragment>
+                                            ))
+                                        }
+                                    </div>
+                                }
+                            </div>
+
+                            {product.description && product.description != '<p></p>' && product.description != '' && product.description != '<></>' &&
+                                <>
+                                    <div className={`${all_sub_title_style} pt-8`}>
+                                        <h2>Features:</h2>
+                                    </div>
+                                    <h3 className={`${all_desc_style} tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description, {
+                                        ALLOWED_TAGS: [
+                                            'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
+                                        ],
+                                        ALLOWED_ATTR: [
+                                            'href', 'target', 'rel', 'class', 'id', 'style'
+                                        ],
+                                    }) }}>
+                                    </h3>
+                                </>
+                            }
+
+                            {product.productsKits && product.productsKits.length > 0 &&
+                                <>
+                                    <div className={`${all_desc_style} font-bold pt-4`}>
+                                        <h2>{product.slug === 'dw50' ? 'Compatible Drivers:' : 'Drivers:'}</h2>
+                                    </div>
+                                    {product.productsKits.map((value, index) => (
+                                        <div key={index} className={`${all_desc_style} font-semibold flex items-center py-0`}>
+                                            <div className="pr-2">
+                                                <Dot size={10} strokeWidth={10} />
+                                            </div>
                                             <Link
-                                            href={`/${prod_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${subcategory.slug.toLowerCase().replace(/\s+/g, '-')}`}
-                                            className="hover:text-primary"
+                                                data-testid={`product-in-kits-${index}-single-product-page`}
+                                                href={`/products/${value.productUsedInKits.slug}`}
+                                                className="hover:text-primary text-primary/80 underline text-sm"
                                             >
-                                            <u>{subcategory.name}</u>
+                                                {value.productUsedInKits.name}
                                             </Link>
-                                        </React.Fragment>
-                                        ))
-                                    }
-                                    {prod_sub_sub_cat.length !== 0 &&
-                                        prod_sub_sub_cat.map((subsubcategory, index) => (
-                                        <React.Fragment key={index}>
-                                            <Link
-                                            href={`/${prod_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${prod_sub_cat[0]?.slug.toLowerCase().replace(/\s+/g, '-')}/${subsubcategory.slug.toLowerCase().replace(/\s+/g, '-')}`}
-                                            className="hover:text-primary"
-                                            >
-                                            <u><h3>{subsubcategory.name}</h3></u>
+                                        </div>
+                                    ))}
+                                </>
+                            }
+
+
+                                
+                            {product.multipleDatasheetProduct && product.multipleDatasheetProduct.length > 0 &&
+                                <>
+                                    <h2 className="sr-only">Datasheet:</h2>
+                                    {product.multipleDatasheetProduct.length===1 && product.multipleDatasheetProduct[0]?.url!=''?
+                                        <div className="flex justify-start pt-8">
+                                            <Link href={product.multipleDatasheetProduct[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-0-single-product-page`}>
+                                                    <LazyImageCustomNavbar src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                                <h3 className="pl-2">
+                                                    {product.multipleDatasheetProduct[0]?.name}
+                                                </h3>
                                             </Link>
-                                        </React.Fragment>
-                                        ))
+                                        </div>
+                                    : product.multipleDatasheetProduct[0]?.url!='' &&
+                                        <div className="justify-start pt-8">
+                                            {product.multipleDatasheetProduct && product.multipleDatasheetProduct.map((value, index) => (
+                                                value.url!=''&&
+                                                    <div key={index} className={`${index !== 0 && 'pt-4'}`}>
+                                                            <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-${index}-single-product-page`}> 
+                                                            <LazyImageCustomNavbar src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                                        <h3 className="pl-2">
+                                                            {product.multipleDatasheetProduct[index]?.name}
+                                                        </h3>
+                                                        </Link>
+                                                    </div>
+                                            ))}
+                                        </div>                
                                     }
+                                </>
+                            }
+
+
+                            {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.length > 0 ?
+                                <>
+                                    <h2 className="sr-only">FRD & ZMA Files:</h2>
+                                    {
+                                    product.multipleFRDZMAFiles.length===1 && product.multipleFRDZMAFiles[0]?.url!=''?
+                                        <div className="flex justify-start pt-4">
+                                            <a download href={product.multipleFRDZMAFiles[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-0-single-product-page`}>
+                                                {/* <div className="pr-2"> */}
+                                                    {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
+                                                    <LazyImageCustomNavbar src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                                {/* </div> */}
+                                                <h3 className="pl-2">
+                                                    {product.multipleFRDZMAFiles[0]?.name}
+                                                </h3>
+                                            </a>
+                                        </div>
+                                    : product.multipleFRDZMAFiles[0]?.url!='' &&
+                                        <div className="justify-start pt-4">
+                                            {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.map((value, index) => (
+                                                value.url!=''&&
+                                                    <div key={index} className={`${index !== 0 && 'pt-4'}`}>
+                                                            <a download href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-${index}-single-product-page`}> 
+                                                            {/* <div className="pr-2"> */}
+                                                            {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
+                                                            <LazyImageCustomNavbar src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                                        {/* </div> */}
+                                                        <h3 className="pl-2">
+                                                            {product.multipleFRDZMAFiles[index]?.name}
+                                                        </h3>
+                                                        </a>
+                                                    </div>
+                                            ))}
+                                        </div>    
+                                    }            
+                                </>
+                                :
+                                product.willHaveFRD &&
+                                <div className="flex justify-start pt-4">
+                                    <div className={`${all_desc_style} italic flex items-center`} data-testid={`multiple-frd-zma-0-single-product-page`}>
+                                        <LazyImageCustomNavbar src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                        {/* </div> */}
+                                        <h3 className="pl-2">
+                                            Uploading soon
+                                        </h3>
+                                    </div>
                                 </div>
                             }
-                        </div>
 
-                        {product.description && product.description != '<p></p>' && product.description != '' && product.description != '<></>' &&
-                            <>
-                                <div className={`${all_sub_title_style} pt-8`}>
-                                    <h2>Features:</h2>
-                                </div>
-                                <h3 className={`${all_desc_style} tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description, {
-                                    ALLOWED_TAGS: [
-                                        'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                                    ],
-                                    ALLOWED_ATTR: [
-                                        'href', 'target', 'rel', 'class', 'id', 'style'
-                                    ],
-                                }) }}>
-                                </h3>
-                            </>
-                        }
 
-                        {product.productsKits && product.productsKits.length > 0 &&
-                            <>
-                                <div className={`${all_desc_style} font-bold pt-4`}>
-                                    <h2>{product.slug === 'dw50' ? 'Compatible Drivers:' : 'Drivers:'}</h2>
-                                </div>
-                                {product.productsKits.map((value, index) => (
-                                    <div key={index} className={`${all_desc_style} font-semibold flex items-center py-0`}>
-                                        <div className="pr-2">
-                                            <Dot size={10} strokeWidth={10} />
+
+                            {product.multiple3DModels && product.multiple3DModels.length > 0 &&
+                                <>
+                                    <h2 className="sr-only">3D Models:</h2>
+                                    {product.multiple3DModels.length===1 && product.multiple3DModels[0]?.url!=''?
+                                        <div className="flex justify-start pt-4">
+                                            <a download href={product.multiple3DModels[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-0-single-product-page`}>
+                                                {/* <div className="pr-2"> */}
+                                                    {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
+                                                    <LazyImageCustomNavbar src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                                {/* </div> */}
+                                                <h3 className="pl-2">
+                                                    {product.multiple3DModels[0]?.name}
+                                                </h3>
+                                            </a>
                                         </div>
-                                        <Link
-                                            data-testid={`product-in-kits-${index}-single-product-page`}
-                                            href={`/products/${value.productUsedInKits.slug}`}
-                                            className="hover:text-primary text-primary/80 underline text-sm"
-                                        >
-                                            {value.productUsedInKits.name}
-                                        </Link>
-                                    </div>
-                                ))}
-                            </>
-                        }
+                                    : product.multiple3DModels[0]?.url!='' &&
+                                        <div className="justify-start pt-4">
+                                            {product.multiple3DModels && product.multiple3DModels.map((value, index) => (
+                                                value.url!=''&&
+                                                    <div key={index} className={`${index !== 0 && 'pt-4'}`}>
+                                                            <a download href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-${index}-single-product-page`}> 
+                                                            {/* <div className="pr-2"> */}
+                                                            {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
+                                                            <LazyImageCustomNavbar src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                                                        {/* </div> */}
+                                                        <h3 className="pl-2">
+                                                            {product.multiple3DModels[index]?.name}
+                                                        </h3>
+                                                        </a>
+                                                    </div>
+                                            ))}
+                                        </div>                
+                                    }
+                                </>
+                            }
 
 
-                            
-                        {product.multipleDatasheetProduct && product.multipleDatasheetProduct.length > 0 &&
-                            <>
-                                <h2 className="sr-only">Datasheet:</h2>
-                                {product.multipleDatasheetProduct.length===1 && product.multipleDatasheetProduct[0]?.url!=''?
-                                    <div className="flex justify-start pt-8">
-                                        <Link href={product.multipleDatasheetProduct[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-0-single-product-page`}>
-                                                <LazyImageCustomNavbar src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
-                                            <h3 className="pl-2">
-                                                {product.multipleDatasheetProduct[0]?.name}
-                                            </h3>
-                                        </Link>
-                                    </div>
-                                : product.multipleDatasheetProduct[0]?.url!='' &&
-                                    <div className="justify-start pt-8">
-                                        {product.multipleDatasheetProduct && product.multipleDatasheetProduct.map((value, index) => (
-                                            value.url!=''&&
-                                                <div key={index} className={`${index !== 0 && 'pt-4'}`}>
-                                                        <Link href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-datasheet-${index}-single-product-page`}> 
-                                                        <LazyImageCustomNavbar src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="PDF Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
-                                                    <h3 className="pl-2">
-                                                        {product.multipleDatasheetProduct[index]?.name}
-                                                    </h3>
-                                                    </Link>
-                                                </div>
-                                        ))}
-                                    </div>                
-                                }
-                            </>
-                        }
-
-
-                        {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.length > 0 ?
-                            <>
-                                <h2 className="sr-only">FRD & ZMA Files:</h2>
-                                {
-                                product.multipleFRDZMAFiles.length===1 && product.multipleFRDZMAFiles[0]?.url!=''?
-                                    <div className="flex justify-start pt-4">
-                                        <a download href={product.multipleFRDZMAFiles[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-0-single-product-page`}>
-                                            {/* <div className="pr-2"> */}
-                                                {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                <LazyImageCustomNavbar src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
-                                            {/* </div> */}
-                                            <h3 className="pl-2">
-                                                {product.multipleFRDZMAFiles[0]?.name}
-                                            </h3>
-                                        </a>
-                                    </div>
-                                : product.multipleFRDZMAFiles[0]?.url!='' &&
-                                    <div className="justify-start pt-4">
-                                        {product.multipleFRDZMAFiles && product.multipleFRDZMAFiles.map((value, index) => (
-                                            value.url!=''&&
-                                                <div key={index} className={`${index !== 0 && 'pt-4'}`}>
-                                                        <a download href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-frd-zma-${index}-single-product-page`}> 
-                                                        {/* <div className="pr-2"> */}
-                                                        {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                        <LazyImageCustomNavbar src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
-                                                    {/* </div> */}
-                                                    <h3 className="pl-2">
-                                                        {product.multipleFRDZMAFiles[index]?.name}
-                                                    </h3>
-                                                    </a>
-                                                </div>
-                                        ))}
-                                    </div>    
-                                }            
-                            </>
-                            :
-                            product.willHaveFRD &&
-                            <div className="flex justify-start pt-4">
-                                <div className={`${all_desc_style} italic flex items-center`} data-testid={`multiple-frd-zma-0-single-product-page`}>
-                                    <LazyImageCustomNavbar src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
-                                    {/* </div> */}
-                                    <h3 className="pl-2">
-                                        Uploading soon
-                                    </h3>
+                            {specsCombined && specsCombined.length > 0 &&
+                                <div className="justify-start pt-4">
+                                    <SpecificationTable  spec={specsCombined} styling={all_desc_style} stylingTitle={all_sub_title_style}/>
                                 </div>
-                            </div>
-                        }
-
-
-
-                        {product.multiple3DModels && product.multiple3DModels.length > 0 &&
-                            <>
-                                <h2 className="sr-only">3D Models:</h2>
-                                {product.multiple3DModels.length===1 && product.multiple3DModels[0]?.url!=''?
-                                    <div className="flex justify-start pt-4">
-                                        <a download href={product.multiple3DModels[0]?.url ?? '/'} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-0-single-product-page`}>
-                                            {/* <div className="pr-2"> */}
-                                                {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                <LazyImageCustomNavbar src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
-                                            {/* </div> */}
-                                            <h3 className="pl-2">
-                                                {product.multiple3DModels[0]?.name}
-                                            </h3>
-                                        </a>
-                                    </div>
-                                : product.multiple3DModels[0]?.url!='' &&
-                                    <div className="justify-start pt-4">
-                                        {product.multiple3DModels && product.multiple3DModels.map((value, index) => (
-                                            value.url!=''&&
-                                                <div key={index} className={`${index !== 0 && 'pt-4'}`}>
-                                                        <a download href={value.url} target="_blank" className={`${all_desc_style} font-bold flex items-center hover:text-primary`} data-testid={`multiple-3d-model-${index}-single-product-page`}> 
-                                                        {/* <div className="pr-2"> */}
-                                                        {/* <Download strokeWidth={3} size={15} className="text-white"/> */}
-                                                        <LazyImageCustomNavbar src={'/images/sbacoustics/3D-download-ver2.webp'} alt="3D Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
-                                                    {/* </div> */}
-                                                    <h3 className="pl-2">
-                                                        {product.multiple3DModels[index]?.name}
-                                                    </h3>
-                                                    </a>
-                                                </div>
-                                        ))}
-                                    </div>                
-                                }
-                            </>
-                        }
-
-
-                        {specsCombined && specsCombined.length > 0 &&
-                            <div className="justify-start pt-4">
-                                <SpecificationTable  spec={specsCombined} styling={all_desc_style} stylingTitle={all_sub_title_style}/>
-                            </div>
-                        }
-                        
+                            }
                     </div>
                 </div>
             </div>
-
             <div className="w-full h-full md:hidden pb-4">
-                {product.kitsFinishing && product.kitsFinishing.length > 1 &&
-                    <SwiperCarouselKitsFinishing name={product.name} kits_finishing={product.kitsFinishing}/>
-                }    
+                    {product.kitsFinishing && product.kitsFinishing.length > 1 &&
+                        <SwiperCarouselKitsFinishing name={product.name} kits_finishing={product.kitsFinishing}/>
+                    }
             </div>
-
-            {product.similarProducts && product.similarProducts.length > 0 &&
-                <div className={`${all_sub_title_style} pt-28 justify-center items-center text-center w-full`}>
-                    <h2 className="pb-4">
-                        Similar Products
-                    </h2>
-                    <SwiperCarouselSimilarProductLoading similar={product.similarProducts} brand={'sbacoustics'}/>
-                </div>
-            }
-    
+                {product.similarProducts && product.similarProducts.length > 0 &&
+                    <div className={`${all_sub_title_style} pt-28 justify-center items-center text-center w-full`}>
+                        <h2 className="pb-4">
+                            Similar Products
+                        </h2>
+                        <SwiperCarouselSimilarProductLoading similar={product.similarProducts} brand={'sbacoustics'}/>
+                    </div>
+                }
         </div>
     );
 }

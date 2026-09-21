@@ -1,7 +1,7 @@
 import prismadb from '@/lib/prismadb';
 import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
+import { cacheLife } from 'next/cache';
 
-export const revalidate = 60;
 
 function shortenMaterial(name: string): string {
   return name
@@ -9,7 +9,9 @@ function shortenMaterial(name: string): string {
     .replace(/Aluminum/gi, "Alu");
 }
 
-export default async function NewProductsSBAcousticsPage() {
+async function getNewProductData(){
+  'use cache'
+  cacheLife('minutes')
   const products = await prismadb.product.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
@@ -28,6 +30,12 @@ export default async function NewProductsSBAcousticsPage() {
     }
   });
 
+  return products;
+}
+
+export default async function NewProductsSBAcousticsPage() {
+  
+  const products = await getNewProductData();
   if(!products) {
     return null;
   }

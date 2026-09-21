@@ -1,15 +1,21 @@
 import prismadb from '@/lib/prismadb';
 import { TechnicalClient } from './accordionOld';
 import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
+import { cacheLife } from 'next/cache';
 
-export const revalidate = 60;
-
-export default async function TechnicalJsonLd() {
+async function getTechnicalData(){
+  'use cache'
+  cacheLife('minutes')
   let pdfFiles = await prismadb.technicals.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
     }
   });
+  return pdfFiles;
+}
+
+export default async function TechnicalJsonLd() {
+  let pdfFiles = await getTechnicalData();
   if (!pdfFiles) {
     return null;
   }
@@ -147,4 +153,4 @@ export default async function TechnicalJsonLd() {
       </div>
     </>
   );
-};
+}

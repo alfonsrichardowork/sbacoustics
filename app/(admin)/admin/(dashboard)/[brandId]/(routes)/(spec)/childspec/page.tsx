@@ -7,6 +7,11 @@ import { redirect } from "next/navigation";
 import { ChildSpecColumn } from "./components/columns";
 import { ChildSpecClient } from "./components/client";
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 const ChildSpecPage = async (
 ) => {
   const session = await getSession();

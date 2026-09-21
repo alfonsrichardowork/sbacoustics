@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
@@ -61,7 +61,9 @@ export default function AboutUsLayout({
       backgroundColor: '#ffffff',
       paddingTop: '96px'
     }}>
-      {children}
+      <Suspense fallback={<></>}>
+        {children}
+      </Suspense>
     </div>
   )
 }

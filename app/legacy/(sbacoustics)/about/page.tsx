@@ -1,11 +1,15 @@
-
 import '@/app/legacy/(sbacoustics)/about/about.css'
 import SwiperCarouselAboutUsOld from '../../components/swipercarouselaboutusold';
-import DOMPurify from 'isomorphic-dompurify'; 
+import DOMPurify from 'isomorphic-dompurify';
 import prismadb from "@/lib/prismadb";
 import "@/app/css/styles.scss";
+import { cacheLife } from 'next/cache';
+import { Suspense } from 'react';
 
-export default async function AboutUsPage() {
+
+async function getAboutUsData(){
+  // 'use cache'
+  // cacheLife('minutes')
   const allData = await prismadb.brand.findFirst({
     where: {
       id: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
@@ -17,6 +21,12 @@ export default async function AboutUsPage() {
       mission_values_desc: true
     }
   })
+  return allData;
+}
+
+export default async function AboutUsPage() {
+  
+  const allData = await getAboutUsData();
 
   if(!allData) {
     return null
@@ -39,14 +49,16 @@ export default async function AboutUsPage() {
                   marginBlockEnd: '24px',
                   color: '#475569'
                 }}>
-                  <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.brand_desc, {
-                      ALLOWED_TAGS: [
-                          'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                      ],
-                      ALLOWED_ATTR: [
-                          'href', 'target', 'rel', 'class', 'id', 'style'
-                      ],
-                  }) }}></h3>
+                  <Suspense fallback={<></>}>
+                    <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.brand_desc, {
+                        ALLOWED_TAGS: [
+                            'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
+                        ],
+                        ALLOWED_ATTR: [
+                            'href', 'target', 'rel', 'class', 'id', 'style'
+                        ],
+                    }) }}></h3>
+                  </Suspense>
                 </div>
               </div>
               <div className="about-us-section-second-relative">
@@ -100,14 +112,16 @@ export default async function AboutUsPage() {
                   marginBlockEnd: '24px',
                   color: '#475569'
                 }}>
-                  <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.sbe_desc, {
-                    ALLOWED_TAGS: [
-                        'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                    ],
-                    ALLOWED_ATTR: [
-                        'href', 'target', 'rel', 'class', 'id', 'style'
-                    ],
-                  }) }}></h3>
+                  <Suspense fallback={<></>}>
+                    <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.sbe_desc, {
+                      ALLOWED_TAGS: [
+                          'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
+                      ],
+                      ALLOWED_ATTR: [
+                          'href', 'target', 'rel', 'class', 'id', 'style'
+                      ],
+                    }) }}></h3>
+                  </Suspense>
                 </div>
                 <div style={{
                   marginTop: '32px'
@@ -128,6 +142,7 @@ export default async function AboutUsPage() {
               <h2 className="about-us-title">
                 Our Mission &amp; Values
               </h2>
+              <Suspense fallback={<></>}>
                 <p className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.mission_values_desc, {
                     ALLOWED_TAGS: [
                         'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
@@ -136,6 +151,7 @@ export default async function AboutUsPage() {
                         'href', 'target', 'rel', 'class', 'id', 'style'
                     ],
                 }) }}></p>
+              </Suspense>
             </div>
             <div className="about-us-cards">
               {allData.aboutUsImages

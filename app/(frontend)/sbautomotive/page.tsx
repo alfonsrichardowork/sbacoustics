@@ -1,29 +1,13 @@
 import prismadb from '@/lib/prismadb';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import SwiperCarousel from '@/components/swipercarousel';
-import { SocialIcon } from 'react-social-icons'
 import { FeaturedProducts } from '../types';
 import BrandChoice from './components-homescreen/BrandChoice';
 import SwiperCarouselSBAutomotive from '@/components/swipercarouselsbautomotive';
+import { cacheLife } from 'next/cache';
 
-export const revalidate = 60;
-
-export default async function LandingPageSBAutomotive() {
-  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-  
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "SB Automotive | Beyond Sound",
-    "url": `${baseUrl}`,
-    "logo": `${baseUrl}/images/sbautomotive/logo_sbautomotive_white.webp`,
-    // "sameAs": [
-    //   "https://www.instagram.com/sbacoustics/",
-    //   "https://www.facebook.com/sbacoustics/",
-    // ]
-  };
-
+async function getSBAutomotiveLandingPageData(){
+  'use cache'
+  cacheLife('minutes')
   const [productsResult, brandImagesResult] = await Promise.allSettled([
       await prismadb.product.findMany({
       where: {
@@ -57,6 +41,25 @@ export default async function LandingPageSBAutomotive() {
       }
     })
   ])
+  return [productsResult, brandImagesResult] as const;
+}
+
+export default async function LandingPageSBAutomotive() {
+  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+  
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SB Automotive | Beyond Sound",
+    "url": `${baseUrl}`,
+    "logo": `${baseUrl}/images/sbautomotive/logo_sbautomotive_white.webp`,
+    // "sameAs": [
+    //   "https://www.instagram.com/sbacoustics/",
+    //   "https://www.facebook.com/sbacoustics/",
+    // ]
+  };
+
+  const [productsResult, brandImagesResult] = await getSBAutomotiveLandingPageData();
 
   const products = productsResult.status === 'fulfilled' ? productsResult.value : null
   const brandImages = brandImagesResult.status === 'fulfilled' ? brandImagesResult.value : null
@@ -279,7 +282,7 @@ export default async function LandingPageSBAutomotive() {
 
 // export default async function LandingPageSBAutomotive() {
 //   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-  
+
 //   const jsonLd = {
 //     "@context": "https://schema.org",
 //     "@type": "Organization",
@@ -328,7 +331,7 @@ export default async function LandingPageSBAutomotive() {
 
 //   const products = productsResult.status === 'fulfilled' ? productsResult.value : null
 //   const brandImages = brandImagesResult.status === 'fulfilled' ? brandImagesResult.value : null
-  
+
 
 //   let allFeaturedProducts: Array<FeaturedProducts> = []
 //   if(products){
@@ -350,7 +353,7 @@ export default async function LandingPageSBAutomotive() {
 //   if(!brandImages) {
 //     return null
 //   }
-  
+
 //   return (
 //     <>      
 //       <script
@@ -407,7 +410,7 @@ export default async function LandingPageSBAutomotive() {
 //             </div>
 //           </div>
 //         }
-      
+
 
 //         <div className="relative min-h-screen">
 //           {brandImages.homepage_open_source_kits_url !== '' &&

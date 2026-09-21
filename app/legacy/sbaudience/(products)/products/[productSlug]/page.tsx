@@ -1,5 +1,5 @@
 import "@/app/css/styles.scss";
-import DOMPurify from 'isomorphic-dompurify'; 
+import DOMPurify from 'isomorphic-dompurify';
 
 import prismadb from "@/lib/prismadb";
 import { AllCategory, ChildSpecificationProp, SpecificationProp } from "@/app/(frontend)/types";
@@ -9,17 +9,19 @@ import SwiperCarouselOneProductMobileOld from "@/app/legacy/components/swipercar
 import "@/app/legacy/(sbacoustics)/(products)/products/[productSlug]/singleproduct.css"
 import SpecificationTableOld from "@/app/legacy/components/spec-tableold";
 import SwiperCarouselSimilarProductOld from "@/app/legacy/components/swipercarouselsimilarproductold";
+import { cacheLife } from "next/cache";
+import { Suspense } from "react";
 
-export const revalidate = 60;
 
 type Props = {
   params: Promise<{ productSlug?: string }>
 }
 
-export default async function SingleProductSBAudience(props: Props) {
-    const { productSlug = '' } = await props.params;
-    
-    const product = await prismadb.product.findFirst({
+
+async function getOneDriverData(productSlug: string){
+    'use cache'
+    cacheLife('minutes')
+        const product = await prismadb.product.findFirst({
         where: {
         slug: productSlug,
         brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
@@ -135,7 +137,24 @@ export default async function SingleProductSBAudience(props: Props) {
             }
         }
     });
+    return product;
+}
 
+export default function Page({ params }: Props) {
+  return (
+    <Suspense fallback={<></>}>
+      <ProductContent params={params} />
+    </Suspense>
+  )
+}
+
+async function ProductContent({ params }: Props) {
+  const { productSlug = "" } = await params
+  return <SingleProductSBAudience productSlug={productSlug} />
+}
+
+async function SingleProductSBAudience({ productSlug }: { productSlug: string }) {
+    const product = await getOneDriverData(productSlug)    
     if(!product){
         return null
     }
@@ -236,7 +255,7 @@ export default async function SingleProductSBAudience(props: Props) {
     }
 
     return (
-        <div className="single-product-page-outer-parent">
+        (<div className="single-product-page-outer-parent">
             <div className="single-product-page-outer-parent-2">
             <div className="single-product-page-parent">   
                 <div className="single-product-page-child-1">
@@ -615,6 +634,6 @@ export default async function SingleProductSBAudience(props: Props) {
                     <SwiperCarouselSimilarProductOld similar={product.similarProducts} brand={'sbacoustics'}/>
                 </div>
             }
-        </div>
+        </div>)
     );
 }

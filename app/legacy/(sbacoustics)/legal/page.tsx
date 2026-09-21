@@ -400,7 +400,6 @@
 
 
 import "./legal.css"
-
 type TermsSection = {
   title: string
   paragraphs?: string[]

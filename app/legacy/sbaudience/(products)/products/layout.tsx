@@ -1,5 +1,4 @@
 import { Metadata } from "next"
-
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
   const logo_URL = `${baseUrl}/images/sbaudience/logo_sbaudience.webp`

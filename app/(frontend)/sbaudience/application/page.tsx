@@ -1,11 +1,12 @@
 import prismadb from "@/lib/prismadb";
 import Link from "next/link";
 import { LazyImageClickable } from "@/components/lazyImageclickable";
+import { cacheLife } from "next/cache";
 
-export const revalidate = 60;
 
-export default async function AllApplicationJsonLd() {
-  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+async function getAllApplicationData(){
+  'use cache'
+  cacheLife('minutes')
   const app = await prismadb.sbaudienceapplication.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
@@ -14,7 +15,13 @@ export default async function AllApplicationJsonLd() {
       updatedAt: 'desc'
     }
   });
+  return app;
+}
 
+export default async function AllApplicationJsonLd() {
+  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+  
+  const app = await getAllApplicationData()
 
   const jsonLd = {
     "@context": "https://schema.org",

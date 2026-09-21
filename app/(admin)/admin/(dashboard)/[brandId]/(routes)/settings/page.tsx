@@ -5,6 +5,11 @@ import prismadb from "@/lib/prismadb";
 import { SettingsForm } from "./components/settings-form";
 import { getSession } from "@/lib/actions";
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 const SettingsPage = async (
   props: {
     params: Promise<{ brandId: string }>

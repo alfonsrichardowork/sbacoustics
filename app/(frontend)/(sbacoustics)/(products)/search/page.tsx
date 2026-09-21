@@ -1,10 +1,16 @@
 import { AllFilterProductsOnlyType, CheckBoxData, ChildSpecificationProp, SliderData } from '@/app/(frontend)/types';
 import AllDriversandFiltersProducts from '../components-all-drivers-page/all-filters';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
+import { cacheLife } from 'next/cache';
+import { Suspense } from 'react';
+import ProductCard from '../components-all-drivers-page/product-card';
+
+export const instant = false
 
 function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSliderFilter[] {
   return Array.from(new Set(arr));
 }
+
 
 export default async function SearchDriversKitsPage() {
     const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
@@ -16,9 +22,8 @@ export default async function SearchDriversKitsPage() {
         "description": "Search Your Drivers and Kits!",
     };
     
-
     let [tempData, allSpecsCombined]: [AllFilterProductsOnlyType[], Record<string, ChildSpecificationProp[]>] = await getAllProductsForFilterPage(process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID, 'search', null, null, null);
-
+    
     let sliderRows: SliderData[] = [];
     let checkboxRows: CheckBoxData[] = [];
 
@@ -82,13 +87,27 @@ export default async function SearchDriversKitsPage() {
       
       <h1 className='sr-only'>Search Drivers and Kits</h1>
       
-      {tempData &&
-        <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
-            <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
-                <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
+        <Suspense fallback={
+            <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
+                <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
+                    <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-8">
+                        {Array.from({ length: 12 }).map((_, index) => (
+                            <div key={index} className="px-2 pt-4">
+                                <ProductCard data={null} hovered={false}/>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
-        </div>
-      }
+        }>
+            {tempData &&
+                <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
+                    <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
+                        <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
+                    </div>
+                </div>
+            }
+        </Suspense>
     </>
   );
 }

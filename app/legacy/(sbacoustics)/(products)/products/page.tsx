@@ -1,10 +1,10 @@
 import prismadb from '@/lib/prismadb';
 import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
-export const revalidate = 60;
+import { cacheLife } from 'next/cache';
 
-export default async function SBAcousticsProductPage() {
-    
-
+async function getAllDriversData(){
+    'use cache'
+    cacheLife('minutes')
     const allDriver = await prismadb.allcategory.findMany({
     where: {
         type: 'Category',
@@ -19,6 +19,11 @@ export default async function SBAcousticsProductPage() {
     })
 
 
+    return allDriver
+}
+
+export default async function SBAcousticsProductPage() {
+    const allDriver = await getAllDriversData()
     return(
             <div className="all-driver-page-parent">
                 <div className="all-driver-page-child-grid">

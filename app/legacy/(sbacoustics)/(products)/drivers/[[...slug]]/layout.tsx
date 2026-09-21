@@ -1,5 +1,63 @@
 import prismadb from "@/lib/prismadb";
 import { Metadata } from "next";
+import { cacheLife } from "next/cache";
+
+async function getGenerateMetadatasubslugData(subslug: string){
+    'use cache'
+    cacheLife('minutes')
+    const [subCatNameResult] = await Promise.allSettled([
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subslug ?? '',
+                type: 'Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+    ]);
+    return subCatNameResult
+}
+
+async function getGenerateMetadatasubsubslugData(subsubslug: string){
+    'use cache'
+    cacheLife('minutes')
+    const [subSubCatNameResult] = await Promise.allSettled([
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+    ]);
+    return subSubCatNameResult
+}
+
+async function getGenerateMetadatasubsubsubslugData(subsubsubslug: string){
+    'use cache'
+    cacheLife('minutes')
+    const [subSubsubCatNameResult] = await Promise.allSettled([
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+    ]);
+    return subSubsubCatNameResult
+}
 
 export async function generateMetadata({
   params,
@@ -101,19 +159,7 @@ export async function generateMetadata({
         };
     }
     else if (subslug && !subsubslug && !subsubsubslug) {
-        const [subCatNameResult] = await Promise.allSettled([
-            await prismadb.allcategory.findFirst({
-                where: {
-                    slug: subslug ?? '',
-                    type: 'Sub Category',
-                    brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-                },
-                select:{
-                    name: true,
-                    description: true
-                }
-            }),
-        ]);
+        const subCatNameResult = await getGenerateMetadatasubslugData(subslug)
         const subCatName = subCatNameResult.status === 'fulfilled' ? subCatNameResult.value : { name: '' };
         return {
             title: `${subCatName?.name}`,
@@ -159,19 +205,7 @@ export async function generateMetadata({
         };
     }
     else if (subslug && subsubslug && !subsubsubslug) {
-        const [subSubCatNameResult] = await Promise.allSettled([
-            await prismadb.allcategory.findFirst({
-                where: {
-                    slug: subsubslug ?? '',
-                    type: 'Sub Sub Category',
-                    brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-                },
-                select:{
-                    name: true,
-                    description: true
-                }
-            }),
-        ]);
+        const subSubCatNameResult = await getGenerateMetadatasubsubslugData(subsubslug)
         const subSubCatName = subSubCatNameResult.status === 'fulfilled' ? subSubCatNameResult.value : { name: '' };
         return {
             title: `${subSubCatName?.name}`,
@@ -219,19 +253,7 @@ export async function generateMetadata({
         }
     }
     else if (subslug && subsubslug && subsubsubslug) {
-        const [subSubsubCatNameResult] = await Promise.allSettled([
-            await prismadb.allcategory.findFirst({
-                where: {
-                    slug: subsubsubslug ?? '',
-                    type: 'Sub Sub Category',
-                    brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-                },
-                select:{
-                    name: true,
-                    description: true
-                }
-            }),
-        ]);
+        const subSubsubCatNameResult = await getGenerateMetadatasubsubsubslugData(subsubsubslug)
         const subSubsubCatName = subSubsubCatNameResult.status === 'fulfilled' ? subSubsubCatNameResult.value : { name: '' };
         return {
             title: `${subSubsubCatName?.name}`,

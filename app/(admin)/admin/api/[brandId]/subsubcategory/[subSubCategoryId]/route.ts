@@ -5,6 +5,7 @@ import { checkAuth, checkBearerAPI, getSession } from "@/lib/actions";
 import { revalidatePath } from "next/cache";
 import path from 'path';
 import fs from 'fs/promises';
+import { uploadsprefix } from "@/app/(admin)/admin/lib";
 
 const slugify = (str: string): string => str.toLowerCase()
                             .replace(/[^a-z0-9]+/g, '-')
@@ -90,11 +91,19 @@ export async function DELETE(
     })
 
     if(deletedSubSubCat){
-      const thumbnailImgPath = path.join(process.cwd(), deletedSubSubCat.thumbnail_url);
-      try {
-        await fs.unlink(thumbnailImgPath);
-      } catch (error) {
-        console.warn(`Could not delete file ${deletedSubSubCat.thumbnail_url}:`, error);
+      if(deletedSubSubCat.thumbnail_url.startsWith(uploadsprefix)){
+        const filename = deletedSubSubCat.thumbnail_url.slice(uploadsprefix.length)
+        // if (filename && path.basename(filename) === filename) {
+          const imgPath = path.join(process.cwd(), 'uploads', filename);
+          try {
+            await fs.unlink(imgPath);
+          } catch (error) {
+            console.warn(`Could not delete file ${deletedSubSubCat.thumbnail_url}:`, error);
+          } 
+        // }
+      }
+      else{
+        console.warn(`Not inside uploads folder`);
       }
     }
 
@@ -169,11 +178,19 @@ export async function PATCH(
 
     if(initial){
       if(initial.thumbnail_url && initial.thumbnail_url !== thumbnail_url) {
-        const ImgPath = path.join(process.cwd(), initial.thumbnail_url);
-        try {
-          await fs.unlink(ImgPath);
-        } catch (error) {
-          console.warn(`Could not delete file ${initial.thumbnail_url}:`, error);
+        if(initial.thumbnail_url.startsWith(uploadsprefix)){
+          const filename = initial.thumbnail_url.slice(uploadsprefix.length)
+          // if (filename && path.basename(filename) === filename) {
+            const imgPath = path.join(process.cwd(), 'uploads', filename);
+            try {
+              await fs.unlink(imgPath);
+            } catch (error) {
+              console.warn(`Could not delete file ${initial.thumbnail_url}:`, error);
+            } 
+          // }
+        }
+        else{
+          console.warn(`Not inside uploads folder`);
         }
       }
       const updatedSubSubCat = await prismadb.allcategory.update({

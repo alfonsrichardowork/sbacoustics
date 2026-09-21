@@ -5,6 +5,7 @@ import { checkAuth, checkBearerAPI, getSession } from '@/lib/actions';
 import path from 'path';
 import fs from 'fs/promises';
 import { revalidatePath } from 'next/cache';
+import { uploadsprefix } from '@/app/(admin)/admin/lib';
 
 export async function GET(
   req: Request,
@@ -77,11 +78,19 @@ export async function PATCH(
 
     //Delete physical files
     if(oldUrl && oldUrl.featured_img_url && (oldUrl.featured_img_url !== featured_img_url || !isFeatured)) {
-      const ImgPath = path.join(process.cwd(), oldUrl.featured_img_url);
-      try {
-        await fs.unlink(ImgPath);
-      } catch (error) {
-        console.warn(`Could not delete file ${oldUrl.featured_img_url}:`, error);
+      if(oldUrl.featured_img_url.startsWith(uploadsprefix)){
+        const filename = oldUrl.featured_img_url.slice(uploadsprefix.length)
+        // if (filename && path.basename(filename) === filename) {
+          const imgPath = path.join(process.cwd(), 'uploads', filename);
+          try {
+            await fs.unlink(imgPath);
+          } catch (error) {
+            console.warn(`Could not delete file ${oldUrl.featured_img_url}:`, error);
+          } 
+        // }
+      }
+      else{
+        console.warn(`Not inside uploads folder`);
       }
     }
 

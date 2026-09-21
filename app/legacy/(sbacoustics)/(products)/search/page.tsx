@@ -3,6 +3,8 @@ import AllDriversandFiltersProducts from '../components-all-drivers-page/all-fil
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
 import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
 
+export const instant = false;
+
 function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSliderFilter[] {
   return Array.from(new Set(arr));
 }

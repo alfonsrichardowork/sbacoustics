@@ -1,9 +1,10 @@
 import prismadb from "@/lib/prismadb";
 import "./application.css"
+import { cacheLife } from "next/cache";
 
-export const revalidate = 60;
-
-export default async function AllApplicationJsonLd() {
+async function getAllApplicationData(){
+  'use cache'
+  cacheLife('minutes')
   const app = await prismadb.sbaudienceapplication.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
@@ -12,6 +13,12 @@ export default async function AllApplicationJsonLd() {
       updatedAt: 'desc'
     }
   });
+  return app;
+}
+
+export default async function AllApplicationJsonLd() {
+
+  const app = await getAllApplicationData()
 
   return (
       <div className="application-all-parent"> 

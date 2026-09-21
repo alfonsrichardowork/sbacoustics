@@ -53,7 +53,7 @@
 //       }
 //     }]
 //   };
-  
+
 //   const rows = [
 //     createData('Discover SB Acoustics Drivers', "/images/sbacoustics/drivercover/DiscoverSBAcousticsdrivers.webp", '/drivers'),
 //     createData('Discover SB Acoustics Kits', "/images/sbacoustics/kitscover/DiscoverSBAcousticskits.webp", '/kits'),
@@ -80,7 +80,7 @@
 //                   height={1000}
 //                 />
 //               </div>
-              
+
 //               <h2 className="font-bold text-xl text-center pt-4">{item.value}</h2>
 //             </Link>
 //           </div>
@@ -100,26 +100,32 @@
 
 import { LazyImageClickable } from '@/components/lazyImageclickable';
 import prismadb from '@/lib/prismadb';
+import { cacheLife } from 'next/cache';
 import Link from "next/link";
 
-export const revalidate = 60;
+async function getAllDriversData(){
+    'use cache'
+    cacheLife('minutes')
+    const allDriver = await prismadb.allcategory.findMany({
+        where: {
+            type: 'Category',
+            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+            shown_on_all_drivers_page: true,
+        },
+        select: {
+            name: true,
+            slug: true,
+            thumbnail_url: true,
+        },
+    })
+
+    return allDriver
+}
 
 export default async function SBAcousticsProductPage() {
     const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
 
-    const allDriver = await prismadb.allcategory.findMany({
-    where: {
-        type: 'Category',
-        brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-        shown_on_all_drivers_page: true,
-    },
-    select: {
-        name: true,
-        slug: true,
-        thumbnail_url: true,
-    },
-    })
-
+    const allDriver = await getAllDriversData()
 
     const itemListElement = [
         ...allDriver.map((val) => ({

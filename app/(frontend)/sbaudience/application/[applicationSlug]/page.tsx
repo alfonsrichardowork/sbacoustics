@@ -2,17 +2,32 @@
 import prismadb from "@/lib/prismadb";
 //@ts-ignore
 import "@/app/css/styles.scss";
-import DOMPurify from 'isomorphic-dompurify'; 
+import DOMPurify from 'isomorphic-dompurify';
 import Link from "next/link";
 import Image from "next/image";
 import { LazyImageCustom } from "@/components/lazyImageCustom";
 import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
+import { cacheLife } from "next/cache";
+
+async function getSingleApplicationData(applicationSlug: string){
+  'use cache'
+  cacheLife('minutes')
+  const data = await prismadb.sbaudienceapplication.findFirst({
+        where: {
+        brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+        slug: applicationSlug
+        },
+        include: {
+            datasheet: true,
+            images_catalogues: true,
+        }
+    });
+  return data;
+}
 
 type Props = {
   params: Promise<{ applicationSlug?: string }>
 }
-
-export const revalidate = 60;
 
 // export async function generateStaticParams(){
 //   const app = await prismadb.sbaudienceapplication.findMany({
@@ -31,17 +46,9 @@ export const revalidate = 60;
 export default async function SingleAppJsonLd(props: Props) {
     const { applicationSlug = '' } = await props.params;
     const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-    const data = await prismadb.sbaudienceapplication.findFirst({
-        where: {
-        brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-        slug: applicationSlug
-        },
-        include: {
-            datasheet: true,
-            images_catalogues: true,
-        }
-    });
-
+    
+    const data = await getSingleApplicationData(applicationSlug);
+    
     if(!data){
         return null
     }

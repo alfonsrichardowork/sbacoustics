@@ -22,3 +22,5 @@ export const sessionOptions: SessionOptions ={
     maxAge: 60 * 60 * 8
   }
 }
+
+export const uploadsprefix = '/uploads'

@@ -5,6 +5,7 @@ import { checkAuth, checkBearerAPI, getSession } from "@/lib/actions";
 import { revalidatePath } from "next/cache";
 import path from 'path';
 import fs from 'fs/promises';
+import { uploadsprefix } from "@/app/(admin)/admin/lib";
 
 const slugify = (str: string): string => str.toLowerCase()
                             .replace(/[^a-z0-9]+/g, '-')
@@ -80,11 +81,19 @@ export async function DELETE(
     })
     
     if(deletedSubCat){
-      const thumbnailImgPath = path.join(process.cwd(), deletedSubCat.thumbnail_url);
-      try {
-        await fs.unlink(thumbnailImgPath);
-      } catch (error) {
-        console.warn(`Could not delete file ${deletedSubCat.thumbnail_url}:`, error);
+      if(deletedSubCat.thumbnail_url.startsWith(uploadsprefix)){
+        const filename = deletedSubCat.thumbnail_url.slice(uploadsprefix.length)
+        // if (filename && path.basename(filename) === filename) {
+          const imgPath = path.join(process.cwd(), 'uploads', filename);
+          try {
+            await fs.unlink(imgPath);
+          } catch (error) {
+            console.warn(`Could not delete file ${deletedSubCat.thumbnail_url}:`, error);
+          } 
+        // }
+      }
+      else{
+        console.warn(`Not inside uploads folder`);
       }
       revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}${deletedSubCat.slug}`);
     }
@@ -152,11 +161,19 @@ export async function PATCH(
 
     if(initial){
       if(initial.thumbnail_url && initial.thumbnail_url !== thumbnail_url) {
-        const ImgPath = path.join(process.cwd(), initial.thumbnail_url);
-        try {
-          await fs.unlink(ImgPath);
-        } catch (error) {
-          console.warn(`Could not delete file ${initial.thumbnail_url}:`, error);
+        if(initial.thumbnail_url.startsWith(uploadsprefix)){
+          const filename = initial.thumbnail_url.slice(uploadsprefix.length)
+          // if (filename && path.basename(filename) === filename) {
+            const imgPath = path.join(process.cwd(), 'uploads', filename);
+            try {
+              await fs.unlink(imgPath);
+            } catch (error) {
+              console.warn(`Could not delete file ${initial.thumbnail_url}:`, error);
+            } 
+          // }
+        }
+        else{
+          console.warn(`Not inside uploads folder`);
         }
       }
       await prismadb.allcategory.update({

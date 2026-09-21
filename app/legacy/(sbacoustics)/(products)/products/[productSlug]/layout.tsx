@@ -1,14 +1,15 @@
 import prismadb from "@/lib/prismadb"
 import { Metadata } from "next"
+import { cacheLife } from "next/cache"
 
 type Props = {
   params: Promise<{ productSlug: string }>
 }
- 
 
-export async function generateMetadata(props: Props): Promise<Metadata> {
-  const { productSlug = '' } = await props.params
-  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+async function getOneDriverMetadataData(productSlug: string){
+  'use cache'
+  cacheLife('minutes')
+
   const product = await prismadb.product.findFirst({
     where: {
       slug: productSlug,
@@ -22,6 +23,15 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       slug: true,
     },
   })
+
+  return product;
+}
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { productSlug = '' } = await props.params
+  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+  
+  const product = await getOneDriverMetadataData(productSlug)
 
   if(!product){
     return {

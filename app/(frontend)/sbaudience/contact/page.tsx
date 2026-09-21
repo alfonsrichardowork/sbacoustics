@@ -3,8 +3,18 @@ import { Empty, EmptyContent, EmptyDescription, EmptyMedia, EmptyTitle } from "@
 import { Image } from "lucide-react";
 import Contact from "@/components/contact";
 import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
+import { cacheLife } from "next/cache";
 
-export const revalidate = 60;
+async function getContactData(){
+  'use cache'
+  cacheLife('minutes')
+   const brand = await prismadb.brand.findFirst({
+    where: {
+      id: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
+    }
+  });
+  return brand;
+}
 
 export function extractIframeSrc(html: string): string | undefined {
   const match = html.match(/<iframe[^>]+src="([^"]+)"/i);
@@ -12,11 +22,7 @@ export function extractIframeSrc(html: string): string | undefined {
 }
 
 export default async function ContactUsJsonLd() {
-  const brand = await prismadb.brand.findFirst({
-    where: {
-      id: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
-    }
-  });
+  const brand = await getContactData();
   if(!brand){
     return null;
   }

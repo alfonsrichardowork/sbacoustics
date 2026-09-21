@@ -1,13 +1,22 @@
 import prismadb from "@/lib/prismadb";
 import '@/app/legacy/(sbacoustics)/catalogues/catalogues.css'
-export const revalidate = 60;
+import { cacheLife } from "next/cache";
 
-export default async function CataloguesPage() {
+async function getCataloguesData(){
+  'use cache'
+  cacheLife('minutes')
   const pdfFiles = await prismadb.catalogues.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
     }
   });
+  return pdfFiles;
+}
+
+export default async function CataloguesPage() {
+  
+
+  const pdfFiles = await getCataloguesData();
   return (
     <div className="catalogues-parent-page">
       <h1 style={{

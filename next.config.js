@@ -6,7 +6,7 @@ const nextConfig = {
     },
     proxyClientMaxBodySize: '20mb'
   },
-  
+  cacheComponents: true,
   poweredByHeader: false,
   compress: true,
   trailingSlash: false,

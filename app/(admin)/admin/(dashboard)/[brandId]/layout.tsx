@@ -1,6 +1,11 @@
 import LogoutButtonNoBrands from '@/app/(admin)/admin/components/logout-no-brands';
 import Navbar from '@/app/(admin)/admin/components/navbar'
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export default async function DashboardLayout(
   props: {
     children: React.ReactNode
@@ -32,4 +37,4 @@ export default async function DashboardLayout(
     )}
     </div>
   );
-};
+}

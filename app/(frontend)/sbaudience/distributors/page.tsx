@@ -1,10 +1,11 @@
 
 import { DistributorMapWrapper } from "@/components/distributorMapWrapper";
 import prismadb from "@/lib/prismadb";
+import { cacheLife } from "next/cache";
 
-export const revalidate = 60;
-
-export default async function DistributorPage() {
+async function getDistributorsData(){
+  'use cache'
+  cacheLife('minutes')
   const asianDistributors = await prismadb.distributors.findMany({
     where: { continent: "Asia", brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID },
     orderBy: [
@@ -52,6 +53,12 @@ export default async function DistributorPage() {
       { name: "asc" },
     ],
   });
+  return [asianDistributors, europeDistributors, americaDistributors, oceaniaDistributors, africaDistributors, antarticaDistributors] as const;
+}
+
+
+export default async function DistributorPage() {
+  const [asianDistributors, europeDistributors, americaDistributors, oceaniaDistributors, africaDistributors, antarticaDistributors] = await getDistributorsData();
 
   return (
     <DistributorMapWrapper

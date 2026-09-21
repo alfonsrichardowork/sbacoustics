@@ -1,6 +1,7 @@
 import React from 'react'
 import { Metadata } from 'next';
 
+
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
   return {

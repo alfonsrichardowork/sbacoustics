@@ -2,18 +2,14 @@
 import prismadb from "@/lib/prismadb";
 //@ts-ignore
 import "@/app/css/styles.scss";
-import DOMPurify from 'isomorphic-dompurify'; 
+import DOMPurify from 'isomorphic-dompurify';
 import '../application.css'
+import { cacheLife } from "next/cache";
 
-type Props = {
-  params: Promise<{ applicationSlug?: string }>
-}
-
-export const revalidate = 60;
-
-export default async function SingleAppJsonLd(props: Props) {
-    const { applicationSlug = '' } = await props.params;
-    const data = await prismadb.sbaudienceapplication.findFirst({
+async function getSingleApplicationData(applicationSlug: string){
+  'use cache'
+  cacheLife('minutes')
+  const data = await prismadb.sbaudienceapplication.findFirst({
         where: {
         brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
         slug: applicationSlug
@@ -23,6 +19,17 @@ export default async function SingleAppJsonLd(props: Props) {
             images_catalogues: true,
         }
     });
+  return data;
+}
+
+type Props = {
+  params: Promise<{ applicationSlug?: string }>
+}
+
+export default async function SingleAppJsonLd(props: Props) {
+    const { applicationSlug = '' } = await props.params;
+    
+    const data = await getSingleApplicationData(applicationSlug);
 
     if(!data){
         return null

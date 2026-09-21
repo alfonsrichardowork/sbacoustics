@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import prismadb from '@/lib/prismadb';
+import { cacheLife } from 'next/cache';
 
-export default async function BrandChoice() {
+async function getBrandChoiceData(){
+  'use cache'
+  cacheLife('minutes')
   const brandImagesSBAcoustics = await prismadb.brand.findFirst({
     where: {
       id: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
@@ -21,6 +24,12 @@ export default async function BrandChoice() {
       homepage_brand_choice_text: true
     }
   })
+  return [brandImagesSBAcoustics, brandImagesSBAudience] as const
+}
+
+export default async function BrandChoice() {
+  const [brandImagesSBAcoustics, brandImagesSBAudience] = await getBrandChoiceData()
+  
   if(!brandImagesSBAcoustics || brandImagesSBAcoustics.homepage_brand_choice_url === ''){
     return null
   }

@@ -5,11 +5,116 @@ import AllDriversProducts from '../../components-all-drivers-page/all-product';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
 import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
 import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-filters';
+import { cacheLife } from 'next/cache';
 
-export const revalidate = 60;
+export const instant = false
 
 function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSliderFilter[] {
   return Array.from(new Set(arr));
+}
+
+
+async function getAllKitsData(){
+    'use cache'
+    cacheLife('minutes')
+
+    const Kits = await prismadb.allproductcategory.findMany({
+        where: {
+            category: {
+            shown_on_all_drivers_page: true,
+            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+            type: { not: 'Category' }
+            },
+            product: {
+            slug: {
+                not: 'dw50'
+            },
+            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+            allCat: {
+                some: {
+                category: {
+                    slug: 'kits',
+                },
+                },
+            },
+            },
+        },
+        select: {
+            category: {
+            select: {
+                name: true,
+                thumbnail_url: true,
+                slug: true,
+                priority: true,
+            },
+            },
+        }
+    })
+    const allKitsImage = await prismadb.allproductcategory.findFirst({
+        where: {
+            category: {
+                shown_on_all_drivers_page: true,
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+                type: 'Category',
+                slug: 'kits'
+            },
+        },
+        select: {
+            category: {
+                select: {
+                    name: true,
+                    thumbnail_url: true,
+                    slug: true,
+                    priority: true,
+                },
+            },
+        }
+    })
+
+    return [Kits, allKitsImage] as const
+}
+
+
+async function getKitsData(subslug: string | null, subsubslug: string | null, subsubsubslug: string | null){
+    'use cache'
+    cacheLife('minutes')
+    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subslug ?? '',
+                type: 'Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+    ]);
+
+    return [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] as const
 }
 
 export default async function KitsPage({
@@ -26,58 +131,7 @@ export default async function KitsPage({
 
     if(!subslug && !subsubslug && !subsubsubslug){
 
-        const Kits = await prismadb.allproductcategory.findMany({
-            where: {
-                category: {
-                shown_on_all_drivers_page: true,
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-                type: { not: 'Category' }
-                },
-                product: {
-                slug: {
-                    not: 'dw50'
-                },
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-                allCat: {
-                    some: {
-                    category: {
-                        slug: 'kits',
-                    },
-                    },
-                },
-                },
-            },
-            select: {
-                category: {
-                select: {
-                    name: true,
-                    thumbnail_url: true,
-                    slug: true,
-                    priority: true,
-                },
-                },
-            }
-        })
-        const allKitsImage = await prismadb.allproductcategory.findFirst({
-            where: {
-                category: {
-                    shown_on_all_drivers_page: true,
-                    brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-                    type: 'Category',
-                    slug: 'kits'
-                },
-            },
-            select: {
-                category: {
-                    select: {
-                        name: true,
-                        thumbnail_url: true,
-                        slug: true,
-                        priority: true,
-                    },
-                },
-            }
-        })
+        const [Kits, allKitsImage] = await getAllKitsData()
         const allKitsImageCategories = allKitsImage ? [allKitsImage.category] : []
         const uniqueCategories = [
             ...new Map(
@@ -160,42 +214,8 @@ export default async function KitsPage({
         )
     }
 
-    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subslug ?? '',
-                type: 'Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        }),
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subsubslug ?? '',
-                type: 'Sub Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        }),
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subsubsubslug ?? '',
-                type: 'Sub Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        }),
-    ]);
-
+    
+    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await getKitsData(subslug, subsubslug, subsubsubslug)
     const subCatName = subCatNameResult.status === 'fulfilled' ? subCatNameResult.value : { name: '' };
     const subSubCatName = subsubCatNameResult.status === 'fulfilled' ? subsubCatNameResult.value : { name: '' };
     const subSubsubCatName = subsubsubCatNameResult.status === 'fulfilled' ? subsubsubCatNameResult.value : { name: '' };

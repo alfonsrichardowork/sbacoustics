@@ -7,6 +7,11 @@ import {
   PriorityProductRecord,
 } from './components/priority-form'
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 function sortByPriority<T extends { priority: string }>(items: T[]) {
   const value = (raw: string) => {
     const n = Number(raw?.trim())

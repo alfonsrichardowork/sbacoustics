@@ -5,24 +5,13 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import SwiperCarousel from '@/components/swipercarousel';
 import { SocialIcon } from 'react-social-icons'
+import { cacheLife } from 'next/cache';
+import { Suspense } from 'react';
+import { Loader2 } from 'lucide-react';
 
-export const revalidate = 60;
-
-export default async function LandingPageSBAcoustics() {
-  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-  
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "SB Acoustics | Building Your Sound",
-    "url": `${baseUrl}`,
-    "logo": `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`,
-    "sameAs": [
-      "https://www.instagram.com/sbacoustics/",
-      "https://www.facebook.com/sbacoustics/",
-    ]
-  };
-
+async function getHomepageData(){
+  'use cache'
+  cacheLife('minutes')
   const [productsResult, brandImagesResult] = await Promise.allSettled([
       await prismadb.product.findMany({
       where: {
@@ -56,6 +45,25 @@ export default async function LandingPageSBAcoustics() {
       }
     })
   ])
+  return [productsResult, brandImagesResult] as const
+}
+
+export default async function LandingPageSBAcoustics() {
+  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+  
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SB Acoustics | Building Your Sound",
+    "url": `${baseUrl}`,
+    "logo": `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`,
+    "sameAs": [
+      "https://www.instagram.com/sbacoustics/",
+      "https://www.facebook.com/sbacoustics/",
+    ]
+  };
+
+  const [productsResult, brandImagesResult] = await getHomepageData()
 
   const products = productsResult.status === 'fulfilled' ? productsResult.value : null
   const brandImages = brandImagesResult.status === 'fulfilled' ? brandImagesResult.value : null
@@ -92,7 +100,13 @@ export default async function LandingPageSBAcoustics() {
         <h1 className='sr-only'>Welcome to SB Acoustics Official Website!</h1>
         <div className="sticky top-0 w-full h-dvh flex items-center justify-center">
           <div className="top-0 left-0 w-full z-10">
-            <SwiperCarousel slides={allFeaturedProducts} brand='sbacoustics'/>
+            <Suspense fallback={
+              <div className={`w-full h-screen absolute top-0 left-0 flex items-center justify-center bg-white z-0`}>
+                <Loader2 className="animate-spin text-gray-500" size={40} />
+              </div>
+            }>
+              <SwiperCarousel slides={allFeaturedProducts} brand='sbacoustics'/>
+            </Suspense>
           </div>
         </div>
 

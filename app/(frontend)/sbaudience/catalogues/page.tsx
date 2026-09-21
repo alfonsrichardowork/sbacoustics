@@ -4,15 +4,21 @@ import Link from "next/link";
 import Image from "next/image";
 import { Empty, EmptyContent, EmptyDescription, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { FileText } from "lucide-react";
+import { cacheLife } from "next/cache";
 
-export const revalidate = 60;
-
-export default async function CataloguesSBAudienceJsonLd() {
+async function getCataloguesData(){
+  'use cache'
+  cacheLife('minutes')
   const pdfFiles = await prismadb.catalogues.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
     }
   });
+  return pdfFiles;
+}
+
+export default async function CataloguesSBAudienceJsonLd() {
+  const pdfFiles = await getCataloguesData();
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
 
 

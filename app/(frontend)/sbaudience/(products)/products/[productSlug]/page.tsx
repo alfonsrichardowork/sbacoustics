@@ -1,11 +1,11 @@
 import Image from "next/image";
-import React from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
 import SwiperCarouselOneProduct from "@/components/single-product-page/swipercarouseloneproduct";
 import SwiperCarouselCoverandCatalogues from "@/components/single-product-page/swipercarouselcoverandcatalogues";
 //@ts-ignore
 import "@/app/css/styles.scss";
-import DOMPurify from 'isomorphic-dompurify'; 
+import DOMPurify from 'isomorphic-dompurify';
 
 import SwiperCarouselSimilarProduct from "@/components/single-product-page/swipercarouselsimilarproduct";
 import SpecificationTable from "@/components/single-product-page/spec-table";
@@ -16,35 +16,20 @@ import SwiperCarouselOneProductSkeleton from "@/components/single-product-page/s
 import SwiperCarouselOneProductLoading from "@/components/single-product-page/swipercarouseloneproductloading";
 import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
 import SwiperCarouselSimilarProductLoading from "@/components/single-product-page/swipercarouselsimilarproductloading";
+import { cacheLife } from "next/cache";
+import { ProductSkeleton } from "@/components/productskeleton";
 
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-foreground p-0 py-1"
 const all_sub_title_style = "text-left font-bold xl:text-2xl lg:text-xl md:text-lg sm:text-md text-foreground"
-
-export const revalidate = 60;
 
 type Props = {
   params: Promise<{ productSlug?: string }>
 }
 
-// export async function generateStaticParams(){
-//   const products = await prismadb.product.findMany({
-//     where: {
-//       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-//       isArchived: false
-//     },
-//     select: {
-//       slug: true,
-//     },
-//   });
-//   return products.map((product: { slug: string }) => ({
-//     productSlug: product.slug
-//   }));
-// }
 
-export default async function SingleProductSBAudience(props: Props) {
-    const { productSlug = '' } = await props.params;
-    const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-    
+async function getOneDriverData(productSlug: string){
+    'use cache'
+    cacheLife('minutes')
     const product = await prismadb.product.findFirst({
         where: {
         slug: productSlug,
@@ -161,7 +146,43 @@ export default async function SingleProductSBAudience(props: Props) {
             }
         }
     });
+    return product;
+}
 
+// export async function generateStaticParams(){
+//   const products = await prismadb.product.findMany({
+//     where: {
+//       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+//       isArchived: false
+//     },
+//     select: {
+//       slug: true,
+//     },
+//   });
+//   return products.map((product: { slug: string }) => ({
+//     productSlug: product.slug
+//   }));
+// }
+
+export default function Page({ params }: Props) {
+  return (
+    <Suspense fallback={<ProductSkeleton />}>
+      <ProductContent params={params} />
+    </Suspense>
+  )
+}
+
+async function ProductContent({ params }: Props) {
+  const { productSlug = "" } = await params
+  return <SingleProductSBAudience productSlug={productSlug} />
+}
+
+async function SingleProductSBAudience({ productSlug }: { productSlug: string }) {
+    const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+    
+    
+
+    const product = await getOneDriverData(productSlug)    
     if(!product){
         return null
     }
@@ -289,13 +310,15 @@ export default async function SingleProductSBAudience(props: Props) {
                 {/* Left Column for Images */}
                 <div className="md:flex md:w-1/2 justify-center md:h-1/2 block w-full h-full">
                     <div className="flex-col w-full md:flex hidden pr-10">
-                        <div className="w-full h-full pb-4">
-                            <SwiperCarouselOneProductSkeleton 
-                            name={product.name}
-                            cover={product.cover_img_url}
-                            image_catalogues={product.images_catalogues}
-                            />
-                        </div>
+                        {product.cover_img_url !== '' &&
+                            <div className="w-full h-full pb-4">
+                                <SwiperCarouselOneProductSkeleton 
+                                name={product.name}
+                                cover={product.cover_img_url}
+                                image_catalogues={product.images_catalogues}
+                                />
+                            </div>
+                        }
                         {product.drawing_img_url !== '' &&
                             <LightboxOneProduct name={product.name} url={product.drawing_img_url} type={"drawing"}/>
                         }
@@ -518,7 +541,6 @@ export default async function SingleProductSBAudience(props: Props) {
                     </div>
                 </div>
             }
-
         </div>
     );
 }

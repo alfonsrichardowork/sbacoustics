@@ -37,7 +37,7 @@
 //       }
 //     }]
 //   };
-  
+
 //   const rows = [
 //     createData('Discover SB Audience Drivers', "/images/sbaudience/drivercover/subwoofercover.webp", '/sbaudience/drivers')
 //   ];
@@ -63,7 +63,7 @@
 //                   height={1000}
 //                 />
 //               </div>
-              
+
 //               <h2 className="font-bold text-xl text-center pt-4 text-foreground">{item.value}</h2>
 //             </Link>
 //           </div>
@@ -82,26 +82,32 @@
 
 import { LazyImageClickable } from '@/components/lazyImageclickable';
 import prismadb from '@/lib/prismadb';
+import { cacheLife } from 'next/cache';
 import Link from "next/link";
 
-export const revalidate = 60;
+async function getAllDriversData(){
+    'use cache'
+    cacheLife('minutes')
+    const allDriver = await prismadb.allcategory.findMany({
+        where: {
+            type: 'Category',
+            brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+            shown_on_all_drivers_page: true,
+        },
+        select: {
+            name: true,
+            slug: true,
+            thumbnail_url: true,
+        },
+    })
+
+    return allDriver
+}
 
 export default async function SBAudienceProductPage() {
     const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
 
-    const allDriver = await prismadb.allcategory.findMany({
-    where: {
-        type: 'Category',
-        brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-        shown_on_all_drivers_page: true,
-    },
-    select: {
-        name: true,
-        slug: true,
-        thumbnail_url: true,
-    },
-    })
-
+    const allDriver = await getAllDriversData()
 
     const itemListElement = [
         ...allDriver.map((val) => ({

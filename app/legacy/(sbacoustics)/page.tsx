@@ -4,10 +4,13 @@ import BrandChoiceOld from "../components/homepage/BrandChoiceOld";
 import { FeaturedProducts } from "@/app/(frontend)/types";
 import '../components/style/all-style.css'
 import { SocialIcon } from "react-social-icons";
+import { cacheLife } from "next/cache";
+import { Suspense } from "react";
 
-
-export default async function oldPage() {
-const [productsResult, brandImagesResult] = await Promise.allSettled([
+async function getHomepageData(){
+  'use cache'
+  cacheLife('minutes')
+  const [productsResult, brandImagesResult] = await Promise.allSettled([
       await prismadb.product.findMany({
       where: {
         brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
@@ -40,6 +43,13 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
       }
     })
   ])
+  return [productsResult, brandImagesResult] as const
+}
+
+
+export default async function oldPage() {
+
+  const [productsResult, brandImagesResult] = await getHomepageData()
 
   const products = productsResult.status === 'fulfilled' ? productsResult.value : null
   const brandImages = brandImagesResult.status === 'fulfilled' ? brandImagesResult.value : null
@@ -66,120 +76,50 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
     return null
   }
 
-  return (
-    <>
-  <div
-    style={{
-      position: "relative",
-      width: "100%",
-    }}
-  >
-
+  return (<>
     <div
       style={{
-        position: "sticky",
-        top: 0,
+        position: "relative",
         width: "100%",
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
       }}
     >
+
       <div
         style={{
+          position: "sticky",
           top: 0,
-          left: 0,
-          width: "100%",
-          zIndex: 10,
-        }}
-      >
-        <SwiperCarouselOld slides={allFeaturedProducts} brand='sbacoustics'/>
-      </div>
-    </div>
-
-    <div
-      style={{
-        height: "50vh",
-      }}
-    >
-      <BrandChoiceOld />
-    </div>
-
-    {brandImages.homepage_open_source_kits_url !== "" && (
-      <div
-        style={{
-          position: "relative",
           width: "100%",
           height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <img
-          src={
-            brandImages.homepage_open_source_kits_url.startsWith(
-              "/uploads/"
-            )
-              ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_open_source_kits_url}`
-              : brandImages.homepage_open_source_kits_url
-          }
-          alt="SB Acoustics Open Source Kits"
+        <div
           style={{
-            display: "block",
+            top: 0,
+            left: 0,
             width: "100%",
-            height: "100%",
-            objectFit: "cover",
+            zIndex: 10,
           }}
-        />
-      
-        <div className="open-source-kits-parent"
-        >
-          <div
-            style={{
-              display: "block",
-              width: "fit-content",
-            }}
-          >
-            <h2 className="open-source-kits-title">
-              Open Source Kits
-            </h2>
-
-              <div className="open-source-kits-text"
-              >
-                {brandImages.homepage_open_source_kits_text}
-              </div>
-
-            <div
-              style={{
-                display: "block",
-                marginBottom: "16px",
-              }}
-            >
-              <a
-                href="/legacy/kits/open-source-kits"
-                style={{
-                  display: "inline-block",
-                  padding: "8px 16px",
-
-                  backgroundColor: "#e6001b",
-                  color: "#ffffff",
-
-                  borderRadius: "4px",
-
-                  fontSize: "14px",
-                  lineHeight: "20px",
-
-                  textDecoration: "none",
-                }}
-              >
-                Learn More
-              </a>
+  >       <Suspense fallback={
+            <div className={`w-full h-screen absolute top-0 left-0 flex items-center justify-center bg-white z-0`}>
             </div>
-          </div>
+          }>
+            <SwiperCarouselOld slides={allFeaturedProducts} brand='sbacoustics'/>
+          </Suspense>
         </div>
       </div>
-    )}
 
-      {brandImages.homepage_about_us_url !== "" && (
+      <div
+        style={{
+          height: "50vh",
+        }}
+      >
+        <BrandChoiceOld />
+      </div>
+
+      {brandImages.homepage_open_source_kits_url !== "" && (
         <div
           style={{
             position: "relative",
@@ -189,13 +129,13 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
         >
           <img
             src={
-              brandImages.homepage_about_us_url.startsWith("/uploads/")
-                ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_about_us_url}`
-                : brandImages.homepage_about_us_url
+              brandImages.homepage_open_source_kits_url.startsWith(
+                "/uploads/"
+              )
+                ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_open_source_kits_url}`
+                : brandImages.homepage_open_source_kits_url
             }
-            alt="Sinar Baja Electric Facility"
-            width={1000}
-            height={1000}
+            alt="SB Acoustics Open Source Kits"
             style={{
               display: "block",
               width: "100%",
@@ -203,20 +143,23 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
               objectFit: "cover",
             }}
           />
-
-          <div className="about-us-parent">
+        
+          <div className="open-source-kits-parent"
+          >
             <div
               style={{
                 display: "block",
                 width: "fit-content",
               }}
             >
-              <h2 className="about-us-title">
-                About Us
+              <h2 className="open-source-kits-title">
+                Open Source Kits
               </h2>
-              <div className="about-us-text">
-                {brandImages.homepage_about_us_text}
-              </div>
+
+                <div className="open-source-kits-text"
+                >
+                  {brandImages.homepage_open_source_kits_text}
+                </div>
 
               <div
                 style={{
@@ -225,7 +168,7 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
                 }}
               >
                 <a
-                  href="/legacy/about"
+                  href="/legacy/kits/open-source-kits"
                   style={{
                     display: "inline-block",
                     padding: "8px 16px",
@@ -249,7 +192,7 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
         </div>
       )}
 
-    {brandImages.homepage_catalogues_url !== "" && (
+        {brandImages.homepage_about_us_url !== "" && (
           <div
             style={{
               position: "relative",
@@ -259,33 +202,34 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
           >
             <img
               src={
-                brandImages.homepage_catalogues_url.startsWith("/uploads/")
-                  ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_catalogues_url}`
-                  : brandImages.homepage_catalogues_url
+                brandImages.homepage_about_us_url.startsWith("/uploads/")
+                  ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_about_us_url}`
+                  : brandImages.homepage_about_us_url
               }
-              alt="SB Acoustics Catalogues"
+              alt="Sinar Baja Electric Facility"
+              width={1000}
+              height={1000}
               style={{
                 display: "block",
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
               }}
-            />        
-            <div className="catalogues-parent">
+            />
+
+            <div className="about-us-parent">
               <div
                 style={{
                   display: "block",
                   width: "fit-content",
                 }}
               >
-                <h2 className="catalogues-title">
-                  Catalogues
+                <h2 className="about-us-title">
+                  About Us
                 </h2>
-
-                  <div className="catalogues-text"
-                  >
-                    {brandImages.homepage_catalogues_text}
-                  </div>
+                <div className="about-us-text">
+                  {brandImages.homepage_about_us_text}
+                </div>
 
                 <div
                   style={{
@@ -294,7 +238,7 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
                   }}
                 >
                   <a
-                    href="/legacy/catalogues"
+                    href="/legacy/about"
                     style={{
                       display: "inline-block",
                       padding: "8px 16px",
@@ -310,55 +254,123 @@ const [productsResult, brandImagesResult] = await Promise.allSettled([
                       textDecoration: "none",
                     }}
                   >
-                    View Catalogues
+                    Learn More
                   </a>
                 </div>
               </div>
             </div>
           </div>
-        // </div>
+        )}
 
-        
-      // </div>
-    )}
-
-    <div
-      style={{
-        position: "relative",
-        width: "100%",
-      }}
-    >
-      {brandImages.socialmedia.length > 0 && (
-        <div className="social-parent">
-          <h2 className="social-title">
-            Social:
-          </h2>
-    
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-    
-              gap: "8px",
-              width: "100%",
-    
-              paddingBottom: "16px",
-            }}
-          >
-            {brandImages.socialmedia.map((logo, index) => (
-              <SocialIcon
-                network={logo.type}
-                className="social-icon"
-                url={logo.value}
-                key={index}
+      {brandImages.homepage_catalogues_url !== "" && (
+            (<div
+              style={{
+                position: "relative",
+                width: "100%",
+                height: "100vh",
+              }}
+            >
+              <img
+                src={
+                  brandImages.homepage_catalogues_url.startsWith("/uploads/")
+                    ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_catalogues_url}`
+                    : brandImages.homepage_catalogues_url
+                }
+                alt="SB Acoustics Catalogues"
+                style={{
+                  display: "block",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
               />
-            ))}
-          </div>
-        </div>
+              <div className="catalogues-parent">
+                <div
+                  style={{
+                    display: "block",
+                    width: "fit-content",
+                  }}
+                >
+                  <h2 className="catalogues-title">
+                    Catalogues
+                  </h2>
+
+                    <div className="catalogues-text"
+                    >
+                      {brandImages.homepage_catalogues_text}
+                    </div>
+
+                  <div
+                    style={{
+                      display: "block",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <a
+                      href="/legacy/catalogues"
+                      style={{
+                        display: "inline-block",
+                        padding: "8px 16px",
+
+                        backgroundColor: "#e6001b",
+                        color: "#ffffff",
+
+                        borderRadius: "4px",
+
+                        fontSize: "14px",
+                        lineHeight: "20px",
+
+                        textDecoration: "none",
+                      }}
+                    >
+                      View Catalogues
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>)
+          // </div>
+
+          
+        // </div>
       )}
+
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+        }}
+      >
+        {brandImages.socialmedia.length > 0 && (
+          <div className="social-parent">
+            <h2 className="social-title">
+              Social:
+            </h2>
+      
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                alignItems: "center",
+      
+                gap: "8px",
+                width: "100%",
+      
+                paddingBottom: "16px",
+              }}
+            >
+              {brandImages.socialmedia.map((logo, index) => (
+                <SocialIcon
+                  network={logo.type}
+                  className="social-icon"
+                  url={logo.value}
+                  key={index}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
-  </div>
-</>
-  )
+  </>);
 }

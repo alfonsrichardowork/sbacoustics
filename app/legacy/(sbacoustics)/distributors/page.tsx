@@ -1,10 +1,11 @@
 import prismadb from "@/lib/prismadb";
 import { DistributorMapWrapper } from "../../components/distributorMapWrapper";
+import { cacheLife } from "next/cache";
 
-export const revalidate = 60;
-
-export default async function DistributorPage() {
-  const asianDistributors = await prismadb.distributors.findMany({
+async function getDistributorsData(){
+  'use cache'
+  cacheLife('minutes')
+const asianDistributors = await prismadb.distributors.findMany({
   where: {
     continent: "Asia",
     brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
@@ -54,7 +55,11 @@ export default async function DistributorPage() {
       { name: "asc" },
     ],
   });
+  return [asianDistributors, europeDistributors, americaDistributors, oceaniaDistributors, africaDistributors, antarticaDistributors] as const;
+}
 
+export default async function DistributorPage() {
+  const [asianDistributors, europeDistributors, americaDistributors, oceaniaDistributors, africaDistributors, antarticaDistributors] = await getDistributorsData();
   return (
     <DistributorMapWrapper
       asianDistributors={asianDistributors}

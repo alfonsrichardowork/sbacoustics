@@ -1,6 +1,11 @@
 import prismadb from "@/lib/prismadb";
 import { FeaturedProductForm } from "./components/featured-product-form";
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 const FeaturedProductPage = async (
   props: {
     params: Promise<{ brandId: string, featuredProductId: string }>

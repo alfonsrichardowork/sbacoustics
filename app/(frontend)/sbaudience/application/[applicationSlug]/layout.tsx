@@ -1,16 +1,15 @@
 
 import { Metadata } from "next"
 import prismadb from "@/lib/prismadb";
+import { cacheLife } from "next/cache";
 
 type Props = {
   params: Promise<{ applicationSlug: string }>
 }
 
-export async function generateMetadata(props: Props): Promise<Metadata> {
-  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-  const logo_URL = `${baseUrl}/images/sbaudience/logo_sbaudience.webp`
-  const { applicationSlug = '' } = await props.params
-
+async function getGenerateMetadataApplicationData(applicationSlug: string){
+  'use cache'
+  cacheLife('minutes')
   const app = await prismadb.sbaudienceapplication.findFirst({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
@@ -21,6 +20,16 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       slug: true,
     }
   });
+  return app;
+}
+
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+  const logo_URL = `${baseUrl}/images/sbaudience/logo_sbaudience.webp`
+  const { applicationSlug = '' } = await props.params
+
+  const app = await getGenerateMetadataApplicationData(applicationSlug);
 
   if(!app) {
     return {

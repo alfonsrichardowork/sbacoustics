@@ -1,11 +1,12 @@
 import prismadb from '@/lib/prismadb';
 import Link from "next/link";
 import { LazyImageClickable } from "@/components/lazyImageclickable";
+import { cacheLife } from 'next/cache';
 
-export const revalidate = 60;
 
-export default async function NewProductsSBAudiencePage() {
-  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+async function getNewProductData(){
+  'use cache'
+  cacheLife('minutes')
   const products = await prismadb.product.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
@@ -22,6 +23,13 @@ export default async function NewProductsSBAudiencePage() {
       slug: true,
     }
   });
+  return products;
+}
+
+export default async function NewProductsSBAudiencePage() {
+  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+  
+  const products = await getNewProductData();
   if(!products) {
     return null;
   }

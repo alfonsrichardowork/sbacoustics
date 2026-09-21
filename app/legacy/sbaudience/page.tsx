@@ -4,11 +4,12 @@ import { FeaturedProducts } from "@/app/(frontend)/types";
 import SwiperCarouselOld from "../components/swipercarouselold";
 import BrandChoiceOldSBAudience from "./components/homepage/BrandChoiceoldsbaudience";
 import '../components/style/all-style.css'
+import { cacheLife } from "next/cache";
 
-export const revalidate = 60;
 
-export default async function LandingPageSBAudience() {
-
+async function getSBAudienceLandingPageData(){
+  'use cache'
+  cacheLife('minutes')
   const [productsResult, brandImagesResult] = await Promise.allSettled([
       await prismadb.product.findMany({
       where: {
@@ -42,6 +43,13 @@ export default async function LandingPageSBAudience() {
       }
     })
   ])
+  return [productsResult, brandImagesResult] as const;
+}
+
+export default async function LandingPageSBAudience() {
+
+  
+  const [productsResult, brandImagesResult] = await getSBAudienceLandingPageData();
 
   const products = productsResult.status === 'fulfilled' ? productsResult.value : null
   const brandImages = brandImagesResult.status === 'fulfilled' ? brandImagesResult.value : null

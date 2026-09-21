@@ -3,20 +3,26 @@ import { Empty, EmptyContent, EmptyDescription, EmptyMedia, EmptyTitle } from "@
 import { Image } from "lucide-react";
 import Contact from "@/components/contact";
 import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
-
-export const revalidate = 60;
+import { cacheLife } from "next/cache";
 
 export function extractIframeSrc(html: string): string | undefined {
   const match = html.match(/<iframe[^>]+src="([^"]+)"/i);
   return match?.[1];
 }
 
-export default async function ContactUsJsonLd() {
+async function getContactData(){
+  'use cache'
+  cacheLife('minutes')
   const brand = await prismadb.brand.findFirst({
     where: {
       id: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
     }
   });
+  return brand;
+}
+
+export default async function ContactUsJsonLd() {
+  const brand = await getContactData();
   if(!brand){
     return null;
   }

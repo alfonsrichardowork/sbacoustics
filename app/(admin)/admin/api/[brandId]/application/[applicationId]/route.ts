@@ -5,6 +5,7 @@ import { image_catalogues,  multipledatasheetproduct } from "@prisma/client";
 import path from 'path';
 import fs from 'fs/promises';
 import { revalidatePath } from "next/cache";
+import { uploadsprefix } from "@/app/(admin)/admin/lib";
 
 const slugify = (str: string): string => {
   const normalizedStr = str.replace(/["“”‟″‶〃״˝ʺ˶ˮײ]/g, "'");
@@ -77,11 +78,19 @@ export async function DELETE(
       }
     })
     if(oldCover){
-      const imagePath = path.join(process.cwd(), oldCover.cover_img_url);
-      try {
-        await fs.unlink(imagePath);
-      } catch (error) {
-        console.warn(`Could not delete file ${oldCover.cover_img_url}:`, error);
+      if(oldCover.cover_img_url.startsWith(uploadsprefix)){
+        const filename = oldCover.cover_img_url.slice(uploadsprefix.length)
+        // if (filename && path.basename(filename) === filename) {
+          const imgPath = path.join(process.cwd(), 'uploads', filename);
+          try {
+            await fs.unlink(imgPath);
+          } catch (error) {
+            console.warn(`Could not delete file ${oldCover.cover_img_url}:`, error);
+          } 
+        // }
+      }
+      else{
+        console.warn(`Not inside uploads folder`);
       }
     }
       
@@ -95,12 +104,19 @@ export async function DELETE(
     //Delete physical files
     for (const image of cataloguesImages) {
       if (image.url) {
-        const imagePath = path.join(process.cwd(), image.url);
-
-        try {
-          await fs.unlink(imagePath);
-        } catch (error) {
-          console.warn(`Could not delete file ${image.url}:`, error);
+        if(image.url.startsWith(uploadsprefix)){
+          const filename = image.url.slice(uploadsprefix.length)
+          // if (filename && path.basename(filename) === filename) {
+            const imgPath = path.join(process.cwd(), 'uploads', filename);
+            try {
+              await fs.unlink(imgPath);
+            } catch (error) {
+              console.warn(`Could not delete file ${image.url}:`, error);
+            } 
+          // }
+        }
+        else{
+          console.warn(`Not inside uploads folder`);
         }
       }
     }
@@ -121,12 +137,19 @@ export async function DELETE(
     //Delete physical files
     for (const pdf of multipleDatasheet) {
       if (pdf.url) {
-        const pdfPath = path.join(process.cwd(), pdf.url);
-
-        try {
-          await fs.unlink(pdfPath);
-        } catch (error) {
-          console.warn(`Could not delete file ${pdf.url}:`, error);
+        if(pdf.url.startsWith(uploadsprefix)){
+          const filename = pdf.url.slice(uploadsprefix.length)
+          // if (filename && path.basename(filename) === filename) {
+            const imgPath = path.join(process.cwd(), 'uploads', filename);
+            try {
+              await fs.unlink(imgPath);
+            } catch (error) {
+              console.warn(`Could not delete file ${pdf.url}:`, error);
+            } 
+          // }
+        }
+        else{
+          console.warn(`Not inside uploads folder`);
         }
       }
     }
@@ -210,11 +233,19 @@ export async function PATCH(
       if(initial.name ===  name){
 
         if (initial.cover_img_url !== cover_img_url) {
-          const coverImgPath = path.join(process.cwd(), initial.cover_img_url);
-          try {
-            await fs.unlink(coverImgPath);
-          } catch (error) {
-            console.warn(`Could not delete file ${initial.cover_img_url}:`, error);
+          if(initial.cover_img_url.startsWith(uploadsprefix)){
+            const filename = initial.cover_img_url.slice(uploadsprefix.length)
+            // if (filename && path.basename(filename) === filename) {
+              const imgPath = path.join(process.cwd(), 'uploads', filename);
+              try {
+                await fs.unlink(imgPath);
+              } catch (error) {
+                console.warn(`Could not delete file ${initial.cover_img_url}:`, error);
+              } 
+            // }
+          }
+          else{
+            console.warn(`Not inside uploads folder`);
           }
         }
 
@@ -239,12 +270,19 @@ export async function PATCH(
           if (isInFinal) continue;
 
           if (image.url) {
-            const imagePath = path.join(process.cwd(), image.url);
-
-            try {
-              await fs.unlink(imagePath);
-            } catch (error) {
-              console.warn(`Could not delete file ${image.url}:`, error);
+            if(image.url.startsWith(uploadsprefix)){
+              const filename = image.url.slice(uploadsprefix.length)
+              // if (filename && path.basename(filename) === filename) {
+                const imgPath = path.join(process.cwd(), 'uploads', filename);
+                try {
+                  await fs.unlink(imgPath);
+                } catch (error) {
+                  console.warn(`Could not delete file ${image.url}:`, error);
+                } 
+              // }
+            }
+            else{
+              console.warn(`Not inside uploads folder`);
             }
           }
         }
@@ -323,12 +361,19 @@ export async function PATCH(
           if (isInFinal) continue;
 
           if (datasheet.url) {
-            const datasheetPath = path.join(process.cwd(), datasheet.url);
-
-            try {
-              await fs.unlink(datasheetPath);
-            } catch (error) {
-              console.warn(`Could not delete file ${datasheet.url}:`, error);
+            if(datasheet.url.startsWith(uploadsprefix)){
+              const filename = datasheet.url.slice(uploadsprefix.length)
+              // if (filename && path.basename(filename) === filename) {
+                const imgPath = path.join(process.cwd(), 'uploads', filename);
+                try {
+                  await fs.unlink(imgPath);
+                } catch (error) {
+                  console.warn(`Could not delete file ${datasheet.url}:`, error);
+                } 
+              // }
+            }
+            else{
+              console.warn(`Not inside uploads folder`);
             }
           }
         }
@@ -445,12 +490,19 @@ export async function PATCH(
       if (isInFinal) continue;
 
       if (image.url) {
-        const imagePath = path.join(process.cwd(), image.url);
-
-        try {
-          await fs.unlink(imagePath);
-        } catch (error) {
-          console.warn(`Could not delete file ${image.url}:`, error);
+        if(image.url.startsWith(uploadsprefix)){
+          const filename = image.url.slice(uploadsprefix.length)
+          // if (filename && path.basename(filename) === filename) {
+            const imgPath = path.join(process.cwd(), 'uploads', filename);
+            try {
+              await fs.unlink(imgPath);
+            } catch (error) {
+              console.warn(`Could not delete file ${image.url}:`, error);
+            } 
+          // }
+        }
+        else{
+          console.warn(`Not inside uploads folder`);
         }
       }
     }
@@ -529,12 +581,19 @@ export async function PATCH(
       if (isInFinal) continue;
 
       if (datasheet.url) {
-        const datasheetPath = path.join(process.cwd(), datasheet.url);
-
-        try {
-          await fs.unlink(datasheetPath);
-        } catch (error) {
-          console.warn(`Could not delete file ${datasheet.url}:`, error);
+        if(datasheet.url.startsWith(uploadsprefix)){
+          const filename = datasheet.url.slice(uploadsprefix.length)
+          // if (filename && path.basename(filename) === filename) {
+            const imgPath = path.join(process.cwd(), 'uploads', filename);
+            try {
+              await fs.unlink(imgPath);
+            } catch (error) {
+              console.warn(`Could not delete file ${datasheet.url}:`, error);
+            } 
+          // }
+        }
+        else{
+          console.warn(`Not inside uploads folder`);
         }
       }
     }

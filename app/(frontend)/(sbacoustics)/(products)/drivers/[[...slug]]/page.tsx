@@ -4,9 +4,13 @@ import prismadb from '@/lib/prismadb';
 import Link from "next/link";
 import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-filters';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
-import { buildNavbarMenus, NavbarMenus } from '@/components/build-navbar-menu';
-import { buildHierarchy, serializeCategory, SerializedCategory } from '@/app/(frontend)/actions/get-all-navbar-content';
+import { NavbarMenus } from '@/components/build-navbar-menu';
+import { cacheLife } from 'next/cache';
+import { Suspense } from 'react';
+import ProductCard from '../../components-all-drivers-page/product-card';
+import { Loader2 } from 'lucide-react';
 
+export const instant = false
 
 export function getNavbarRoutes(menus: NavbarMenus): string[][] {
   const allRoutes = [
@@ -36,10 +40,8 @@ export function getNavbarRoutes(menus: NavbarMenus): string[][] {
 }
 
 
-export const revalidate = 60;
-
 // export async function generateStaticParams() {
-    
+
 //     const categories = await prismadb.allcategory.findMany({
 //         where: {
 //         brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
@@ -145,7 +147,7 @@ export const revalidate = 60;
 //         continue
 //         }
 
-        
+
 //         const descendantCategoryIds = categories
 //         .filter((possibleDescendant) => {
 //             if (
@@ -295,6 +297,114 @@ function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSli
   return Array.from(new Set(arr));
 }
 
+async function getAllDriversData(){
+    'use cache'
+    cacheLife('minutes')
+    const Drivers = await prismadb.allproductcategory.findMany({
+        where: {
+            category: {
+            shown_on_all_drivers_page: true,
+            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+            type: { not: 'Category' }
+            },
+            product: {
+            slug: {
+                not: 'dw50'
+            },
+            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+            allCat: {
+                some: {
+                category: {
+                    slug: 'drivers',
+                },
+                },
+            },
+            },
+        },
+        select: {
+            category: {
+            select: {
+                id: true,
+                name: true,
+                thumbnail_url: true,
+                slug: true,
+                priority: true,
+                under_categoryId: true,
+            },
+            },
+        },
+    });
+
+    const allCategories = await prismadb.allcategory.findMany({
+        where: {
+            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+        },
+        select: {
+            id: true,
+            slug: true,
+            under_categoryId: true,
+        },
+    });
+
+    const allDriver = await prismadb.allcategory.findFirst({
+        where: {
+            slug: 'drivers',
+            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+            shown_on_all_drivers_page: true,
+        },
+        select: {
+            name: true,
+            slug: true,
+            thumbnail_url: true,
+        },
+    })
+
+    return [Drivers, allCategories, allDriver] as const
+}
+
+async function getDriversData(subslug: string | null, subsubslug: string | null, subsubsubslug: string | null){
+    'use cache'
+    cacheLife('minutes')
+    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subslug ?? '',
+                type: 'Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+    ]);
+
+    return [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] as const
+}
+
+
 export default async function DriversPage({
   params,
 }: {
@@ -308,52 +418,7 @@ export default async function DriversPage({
     const subsubsubslug = slug[2] || null;
 
     if(!subslug && !subsubslug && !subsubsubslug){
-        const Drivers = await prismadb.allproductcategory.findMany({
-            where: {
-                category: {
-                shown_on_all_drivers_page: true,
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-                type: { not: 'Category' }
-                },
-                product: {
-                slug: {
-                    not: 'dw50'
-                },
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-                allCat: {
-                    some: {
-                    category: {
-                        slug: 'drivers',
-                    },
-                    },
-                },
-                },
-            },
-            select: {
-                category: {
-                select: {
-                    id: true,
-                    name: true,
-                    thumbnail_url: true,
-                    slug: true,
-                    priority: true,
-                    under_categoryId: true,
-                },
-                },
-            },
-        });
-
-        const allCategories = await prismadb.allcategory.findMany({
-            where: {
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-            },
-            select: {
-                id: true,
-                slug: true,
-                under_categoryId: true,
-            },
-        });
-
+        const [Drivers, allCategories, allDriver] = await getAllDriversData()
         const categoryMap = new Map(
             allCategories.map(category => [
                 category.id,
@@ -412,18 +477,7 @@ export default async function DriversPage({
             return Number(a.priority) - Number(b.priority);
         });
 
-        const allDriver = await prismadb.allcategory.findFirst({
-        where: {
-            slug: 'drivers',
-            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-            shown_on_all_drivers_page: true,
-        },
-        select: {
-            name: true,
-            slug: true,
-            thumbnail_url: true,
-        },
-        })
+        
 
         const itemListElement = [
             ...(allDriver
@@ -504,65 +558,47 @@ export default async function DriversPage({
                 }
 
 
-                {uniqueCategories.map((item, i) => (
-                    <div key={i}>
-                    <Link 
-                        href={item.url}
-                        className=" group cursor-pointer space-y-4 block"
-                    >
-                        <div className="relative aspect-square">
-                        <LazyImageClickable
-                            src={item.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}` : item.thumbnail_url} 
-                            alt={`${item.name} by SB Acoustics`}
-                            width={1000}
-                            height={1000}
-                        />
+                <Suspense fallback={
+                    Array.from({ length: 8 }, (_, index) => index + 1).map((i) => {
+                    return (
+                        <div key={i}>
+                        <div className=" group cursor-pointer space-y-4 block">
+                            <div className="relative aspect-square">
+                            <Loader2 />
+                            </div>
+                            
+                            <h2 className="font-bold text-xl text-center">...</h2>
                         </div>
-                        
-                        <h2 className="font-bold text-xl text-center">{item.name}</h2>
-                    </Link>
-                    </div>
-                ))}
+                        </div>
+                    );
+                    }
+                )}>
+                    {uniqueCategories.map((item, i) => (
+                        <div key={i}>
+                        <Link 
+                            href={item.url}
+                            className=" group cursor-pointer space-y-4 block"
+                        >
+                            <div className="relative aspect-square">
+                            <LazyImageClickable
+                                src={item.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}` : item.thumbnail_url} 
+                                alt={`${item.name} by SB Acoustics`}
+                                width={1000}
+                                height={1000}
+                            />
+                            </div>
+                            
+                            <h2 className="font-bold text-xl text-center">{item.name}</h2>
+                        </Link>
+                        </div>
+                    ))}
+                </Suspense>
                 </div>
             </div>
         );
     }
 
-    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subslug ?? '',
-                type: 'Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        }),
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subsubslug ?? '',
-                type: 'Sub Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        }),
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subsubsubslug ?? '',
-                type: 'Sub Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        }),
-    ]);
+    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await getDriversData(subslug, subsubslug, subsubsubslug)
 
     const subCatName = subCatNameResult.status === 'fulfilled' ? subCatNameResult.value : { name: '' };
     const subSubCatName = subsubCatNameResult.status === 'fulfilled' ? subsubCatNameResult.value : { name: '' };
@@ -660,13 +696,27 @@ export default async function DriversPage({
       <h1 className='sr-only'>{!subslug || subslug === 'all' ? `All Drivers` 
         : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Drivers`} | SB Acoustics</h1>
       
-      {tempData &&
-        <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
-            <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
-                <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
+        <Suspense fallback={
+            <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
+                <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
+                    <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-8">
+                        {Array.from({ length: 12 }).map((_, index) => (
+                            <div key={index} className="px-2 pt-4">
+                                <ProductCard data={null} hovered={false}/>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
-        </div>
-      }
+        }>
+            {tempData &&
+                <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
+                    <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
+                            <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
+                    </div>
+                </div>
+            }
+        </Suspense>
     </>
   );
 }

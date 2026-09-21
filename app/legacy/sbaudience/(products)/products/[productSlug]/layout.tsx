@@ -4,7 +4,7 @@ import { Metadata } from "next"
 type Props = {
   params: Promise<{ productSlug: string }>
 }
- 
+
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const { productSlug = '' } = await props.params

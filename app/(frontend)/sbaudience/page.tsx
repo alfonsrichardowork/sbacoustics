@@ -5,20 +5,13 @@ import SwiperCarousel from "@/components/swipercarousel";
 import prismadb from "@/lib/prismadb";
 import { FeaturedProducts } from "../types";
 import { SocialIcon } from 'react-social-icons';
+import { cacheLife } from "next/cache";
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
-export const revalidate = 60;
-
-export default async function LandingPageSBAudience() {
-  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
-  
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "SB Audience | Pro Speakers",
-    "url": `${baseUrl}/sbaudience`,
-    "logo": `${baseUrl}/images/sbaudience/logo_sbaudience.webp`,
-  };
-
+async function getSBAudienceLandingPageData(){
+  'use cache'
+  cacheLife('minutes')
   const [productsResult, brandImagesResult] = await Promise.allSettled([
       await prismadb.product.findMany({
       where: {
@@ -52,6 +45,21 @@ export default async function LandingPageSBAudience() {
       }
     })
   ])
+  return [productsResult, brandImagesResult] as const;
+}
+
+export default async function LandingPageSBAudience() {
+  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+  
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SB Audience | Pro Speakers",
+    "url": `${baseUrl}/sbaudience`,
+    "logo": `${baseUrl}/images/sbaudience/logo_sbaudience.webp`,
+  };
+
+  const [productsResult, brandImagesResult] = await getSBAudienceLandingPageData();
 
   const products = productsResult.status === 'fulfilled' ? productsResult.value : null
   const brandImages = brandImagesResult.status === 'fulfilled' ? brandImagesResult.value : null
@@ -87,7 +95,13 @@ export default async function LandingPageSBAudience() {
         
         <div className="sticky top-0 w-full h-dvh flex items-center justify-center">
           <div className="top-0 left-0 w-full z-10">
-            <SwiperCarousel slides={allFeaturedProducts}  brand='sbaudience'/>
+            <Suspense fallback={
+              <div className={`w-full h-screen absolute top-0 left-0 flex items-center justify-center bg-white z-0`}>
+                <Loader2 className="animate-spin text-gray-500" size={40} />
+              </div>
+            }>
+              <SwiperCarousel slides={allFeaturedProducts}  brand='sbaudience'/>
+            </Suspense>
           </div>
         </div>
 

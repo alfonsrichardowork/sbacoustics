@@ -504,7 +504,7 @@ export default function FooterOld() {
                 textAlign: "right",
               }}
             >
-              © {new Date().getFullYear()}{" "}
+              © 2026{" "}
               {loading ? "..." : finalData && finalData.name}. All rights
               reserved.
             </div>
@@ -570,7 +570,7 @@ export default function FooterOld() {
             marginTop: "16px",
           }}
         >
-          © {new Date().getFullYear()}{" "}
+          © 2026{" "}
           {!loading && finalData && finalData.name}. All rights reserved.
         </div>
 

@@ -1,20 +1,24 @@
-import { LazyImage } from "@/components/lazyImage";
-import Image from "next/image";
 import prismadb from "@/lib/prismadb";
 import Link from "next/link";
 import { LazyImageCustom } from "@/components/lazyImageCustom";
 import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
+import { cacheLife } from "next/cache";
 
-export const revalidate = 60;
-
-export default async function CataloguesPage() {
+async function getCataloguesData(){
+  'use cache'
+  cacheLife('minutes')
   const pdfFiles = await prismadb.catalogues.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
     }
   });
+  return pdfFiles;
+}
+
+export default async function CataloguesPage() {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
 
+  const pdfFiles = await getCataloguesData();
   const mediaObjects = pdfFiles.map((file) => {
     return {
       "@type": "MediaObject",

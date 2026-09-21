@@ -5,6 +5,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { revalidatePath } from 'next/cache';
 import { checkAuth, checkBearerAPI, getSession } from '@/lib/actions';
+import { uploadsprefix } from '@/app/(admin)/admin/lib';
 
 export async function GET(
   req: Request,
@@ -78,11 +79,19 @@ export async function PATCH(
       if(oldUrl && oldUrl.length > 0) {
         oldUrl.map( async (val) => {
           if(val.pdf != pdf) {
-            const technicalPDFPath = path.join(process.cwd(), val.pdf);
-            try {
-              await fs.unlink(technicalPDFPath);
-            } catch (error) {
-              console.warn(`Could not delete file ${val.pdf}:`, error);
+            if(val.pdf.startsWith(uploadsprefix)){
+              const filename = val.pdf.slice(uploadsprefix.length)
+              // if (filename && path.basename(filename) === filename) {
+                const imgPath = path.join(process.cwd(), 'uploads', filename);
+                try {
+                  await fs.unlink(imgPath);
+                } catch (error) {
+                  console.warn(`Could not delete file ${val.pdf}:`, error);
+                } 
+              // }
+            }
+            else{
+              console.warn(`Not inside uploads folder`);
             }
           }
         })
@@ -93,6 +102,7 @@ export async function PATCH(
           id: params.technicalId
         },
         data: {
+          brandId: params.brandId,
           name, 
           desc, 
           pdf, 
@@ -118,6 +128,7 @@ export async function PATCH(
 
       await prismadb.technicals.create({
         data: {
+          brandId: params.brandId,
           name, 
           desc, 
           pdf, 
@@ -172,12 +183,19 @@ export async function PATCH(
 
       if (toBeDeleted) {
         toBeDeleted.map( async (val) => {
-          const pdfPath = path.join(process.cwd(), val.pdf);
-
-          try {
-            await fs.unlink(pdfPath);
-          } catch (error) {
-            console.warn(`Could not delete file ${val.pdf}:`, error);
+          if(val.pdf.startsWith(uploadsprefix)){
+            const filename = val.pdf.slice(uploadsprefix.length)
+            // if (filename && path.basename(filename) === filename) {
+              const imgPath = path.join(process.cwd(), 'uploads', filename);
+              try {
+                await fs.unlink(imgPath);
+              } catch (error) {
+                console.warn(`Could not delete file ${val.pdf}:`, error);
+              } 
+            // }
+          }
+          else{
+            console.warn(`Not inside uploads folder`);
           }
         })
       }

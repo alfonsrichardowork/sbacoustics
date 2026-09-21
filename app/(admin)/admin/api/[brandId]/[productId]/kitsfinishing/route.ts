@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import path from 'path';
 import fs from 'fs/promises';
+import { uploadsprefix } from "@/app/(admin)/admin/lib";
 
 type KitsFinishingRow = {
   id: string
@@ -54,12 +55,19 @@ export async function POST(
 
     for (const image of coverImages) {
       if (!newUrls.has(image.url)) {
-        const imagePath = path.join(process.cwd(), image.url);
-
-        try {
-          await fs.unlink(imagePath);
-        } catch (error) {
-          console.warn(`Could not delete file ${image.url}:`, error);
+        if(image.url.startsWith(uploadsprefix)){
+          const filename = image.url.slice(uploadsprefix.length)
+          // if (filename && path.basename(filename) === filename) {
+            const imgPath = path.join(process.cwd(), 'uploads', filename);
+            try {
+              await fs.unlink(imgPath);
+            } catch (error) {
+              console.warn(`Could not delete file ${image.url}:`, error);
+            } 
+          // }
+        }
+        else{
+          console.warn(`Not inside uploads folder`);
         }
       }
     }

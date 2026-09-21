@@ -721,27 +721,27 @@ export const DistributorMap: React.FC<DistributorProps> = ({
                   <div className="md:text-xl text-base font-bold md:mb-4 mb-2 w-full text-center">{activeMap.name}</div>
                   <div className="grid md:grid-cols-2 grid-cols-1 md:space-y-2 space-y-1 text-sm">
                     {activeMap.country && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
+                      <div className="flex items-center md:text-base text-xs gap-2">
                         <MapPin size={14} className='min-w-4' />
                           <p className='line-clamp-1'>{activeMap.country}</p>
-                      </p>
+                      </div>
                     )}
                     {activeMap.phone && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
+                      <div className="flex items-center md:text-base text-xs gap-2">
                         <Phone size={14} className='min-w-4' />
                           <p className='line-clamp-1'>{activeMap.phone}</p>
-                      </p>
+                      </div>
                     )}
                     {activeMap.email && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
+                      <div className="flex items-center md:text-base text-xs gap-2">
                         <Mail size={14} className='min-w-4' />
                         <Link href={`mailto:${activeMap.email}`} className="underline line-clamp-1">
                           {activeMap.email}
                         </Link>
-                      </p>
+                      </div>
                     )}
                     {activeMap.website && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
+                      <div className="flex items-center md:text-base text-xs gap-2">
                         <Globe size={14} className='min-w-4' />
                         <Link
                           href={activeMap.website}
@@ -751,27 +751,27 @@ export const DistributorMap: React.FC<DistributorProps> = ({
                         >
                           {activeMap.website}
                         </Link>
-                      </p>
+                      </div>
                     )}
                     {activeMap.facebook && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
+                      <div className="flex items-center md:text-base text-xs gap-2">
                         <Facebook size={14} className='min-w-4'/>
                         <Link href={`${activeMap.facebook}`} target="_blank" rel="noopener noreferrer" className="underline">Visit Facebook</Link>
-                      </p>
+                      </div>
                     )}
                     {activeMap.instagram && (
-                      <p className="flex items-center md:text-base text-xs gap-2">
+                      <div className="flex items-center md:text-base text-xs gap-2">
                         <Instagram size={14} className='min-w-4' />
                         <Link href={`${activeMap.instagram}`} target="_blank" rel="noopener noreferrer" className="underline">Visit Instagram</Link>
-                      </p>
+                      </div>
                     )}
                     {activeMap.address && (
-                      <p className="flex items-start md:text-base text-xs gap-2">
+                      <div className="flex items-start md:text-base text-xs gap-2">
                         <MapPin size={14} className="min-w-4 mt-1" />
                         <Link href={activeMap.address} target='blank' className="block underline">
                           Location
                         </Link>
-                      </p>
+                      </div>
                     )}
                   </div>
                 </CardContent>

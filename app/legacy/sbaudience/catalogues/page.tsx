@@ -1,8 +1,18 @@
 import prismadb from "@/lib/prismadb";
 import { CSSProperties, ReactNode } from "react";
 import '@/app/legacy/(sbacoustics)/catalogues/catalogues.css'
-export const revalidate = 60;
+import { cacheLife } from "next/cache";
 
+async function getCataloguesData(){
+  'use cache'
+  cacheLife('minutes')
+  const pdfFiles = await prismadb.catalogues.findMany({
+    where: {
+      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
+    }
+  });
+  return pdfFiles;
+}
 
 type EmptyProps = {
   children: ReactNode
@@ -76,11 +86,8 @@ export function EmptyDescription({ children }: EmptyDescriptionProps) {
 
 
 export default async function CataloguesSBAudienceJsonLd() {
-  const pdfFiles = await prismadb.catalogues.findMany({
-    where: {
-      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
-    }
-  });
+
+  const pdfFiles = await getCataloguesData();
 
   return (
       <div className="catalogues-parent-page">

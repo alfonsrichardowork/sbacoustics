@@ -41,7 +41,7 @@ export default function AboutUsPage() {
                   <h3>
                     Marrying the design talents of Danesian Audio (Denmark), a company filled with industry veterans,
                     responsible for many well known and revolutionary designs, and manufacturing expert Sinar Baja
-                    Electric (Indonesia), a vertically integrated company with more than {new Date().getFullYear() - 1981} years of transducer
+                    Electric (Indonesia), a vertically integrated company with more than 45 years of transducer
                     manufacturing experience. We feel we have been able to create an exciting line of products, without
                     compromising acoustic performance for cost. Ultimately, we invite you to judge.
                   </h3>
@@ -131,7 +131,7 @@ export default function AboutUsPage() {
                     High-End, Automotive to Professional Audio, and much more.
                   </h3>
                   <h3>
-                    With more than {new Date().getFullYear() - 1981} years of history in loudspeaker manufacturing and innovation, we continues to expand
+                    With more than 45 years of history in loudspeaker manufacturing and innovation, we continues to expand
                     in both quality, capacity, as well as services. With in-house Research & Development through the
                     latest technologies as well as extensive experience in quality control and mass production we are
                     confident we can deliver what you are searching for.
@@ -191,7 +191,7 @@ export default function AboutUsPage() {
                 <CardContent className="p-8 text-center bg-zinc-100">
                   <h3 className="text-xl font-bold mb-4 text-black">Innovation</h3>
                   <p className="text-slate-600 leading-relaxed">
-                    Over {new Date().getFullYear() - 1981} years of manufacturing experience combined with cutting-edge R&D to continuously push the
+                    Over 45 years of manufacturing experience combined with cutting-edge R&D to continuously push the
                     boundaries of transducer technology.
                   </p>
                 </CardContent>

@@ -1,10 +1,14 @@
 import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
 import NewsletterClient from "./pageClient";
+import { Suspense } from "react";
+
 
 export default function Newsletter() {
   return (
-    <GoogleCaptchaWrapper>
-      <NewsletterClient />
-    </GoogleCaptchaWrapper>
+    <Suspense fallback={<></>}>
+      <GoogleCaptchaWrapper>
+        <NewsletterClient />
+      </GoogleCaptchaWrapper>
+    </Suspense>
   )
 }

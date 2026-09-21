@@ -5,6 +5,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { revalidatePath } from 'next/cache';
 import { checkAuth, checkBearerAPI, getSession } from '@/lib/actions';
+import { uploadsprefix } from '@/app/(admin)/admin/lib';
 
 export async function GET(
   req: Request,
@@ -79,11 +80,19 @@ export async function PATCH(
         oldUrl.map( async (val) => {
 
           if(val.url != url) {
-            const finishingImagePath = path.join(process.cwd(), val.url);
-            try {
-              await fs.unlink(finishingImagePath);
-            } catch (error) {
-              console.warn(`Could not delete image ${val.url}:`, error);
+            if(val.url.startsWith(uploadsprefix)){
+              const filename = val.url.slice(uploadsprefix.length)
+              // if (filename && path.basename(filename) === filename) {
+                const imgPath = path.join(process.cwd(), 'uploads', filename);
+                try {
+                  await fs.unlink(imgPath);
+                } catch (error) {
+                  console.warn(`Could not delete file ${val.url}:`, error);
+                } 
+              // }
+            }
+            else{
+              console.warn(`Not inside uploads folder`);
             }
           }
            
@@ -168,12 +177,19 @@ export async function PATCH(
 
       if (toBeDeleted) {
         toBeDeleted.map( async (val) => {
-          const imagePath = path.join(process.cwd(), val.url);
-
-          try {
-            await fs.unlink(imagePath);
-          } catch (error) {
-            console.warn(`Could not delete image ${val.url}:`, error);
+          if(val.url.startsWith(uploadsprefix)){
+            const filename = val.url.slice(uploadsprefix.length)
+            // if (filename && path.basename(filename) === filename) {
+              const imgPath = path.join(process.cwd(), 'uploads', filename);
+              try {
+                await fs.unlink(imgPath);
+              } catch (error) {
+                console.warn(`Could not delete file ${val.url}:`, error);
+              } 
+            // }
+          }
+          else{
+            console.warn(`Not inside uploads folder`);
           }
         })
       }

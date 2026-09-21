@@ -1,8 +1,7 @@
 import prismadb from '@/lib/prismadb';
 import Link from "next/link";
 import { LazyImageClickable } from "@/components/lazyImageclickable";
-
-export const revalidate = 60;
+import { cacheLife } from 'next/cache';
 
 function shortenMaterial(name: string): string {
   return name
@@ -10,8 +9,9 @@ function shortenMaterial(name: string): string {
     .replace(/Aluminum/gi, "Alu");
 }
 
-export default async function NewProductsSBAcousticsPage() {
-  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+async function getNewProductData(){
+  'use cache'
+  cacheLife('minutes')
   const products = await prismadb.product.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
@@ -29,7 +29,12 @@ export default async function NewProductsSBAcousticsPage() {
       isKits: true,
     }
   });
+  return products;
+}
 
+export default async function NewProductsSBAcousticsPage() {
+  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+  const products = await getNewProductData();
   if(!products) {
     return null;
   }

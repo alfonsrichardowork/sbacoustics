@@ -8,11 +8,13 @@ import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-pr
 import { buildHierarchy, serializeCategory, SerializedCategory } from '@/app/(frontend)/actions/get-all-navbar-content';
 import { buildNavbarMenus } from '@/components/build-navbar-menu';
 import { getNavbarRoutes } from '@/app/(frontend)/(sbacoustics)/(products)/drivers/[[...slug]]/page';
+import { cacheLife } from 'next/cache';
+import { Suspense } from 'react';
+import ProductCard from '../../components-all-drivers-page/product-card';
 
-export const revalidate = 60;
 
 // export async function generateStaticParams() {
-    
+
 //     const categories = await prismadb.allcategory.findMany({
 //         where: {
 //         brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
@@ -118,7 +120,7 @@ export const revalidate = 60;
 //         continue
 //         }
 
-        
+
 //         const descendantCategoryIds = categories
 //         .filter((possibleDescendant) => {
 //             if (
@@ -258,14 +260,120 @@ export const revalidate = 60;
 //     const menus = buildNavbarMenus(navbarData)
 //     const y = getNavbarRoutes(menus)
 //     const firstRouteGroup = y[0] ?? []
-    
+
 //     return firstRouteGroup.map((path) => ({
 //         slug: path.split('/').slice(2),
 //     }))
 // }
 
+
+
 function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSliderFilter[] {
   return Array.from(new Set(arr));
+}
+
+
+async function getAllDriversData(){
+    'use cache'
+    cacheLife('minutes')
+    const Drivers = await prismadb.allproductcategory.findMany({
+        where: {
+            category: {
+            shown_on_all_drivers_page: true,
+            brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+            type: { not: 'Category' }
+            },
+            product: {
+            brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+            allCat: {
+                some: {
+                category: {
+                    slug: 'drivers',
+                },
+                },
+            },
+            },
+        },
+        select: {
+            category: {
+            select: {
+                id: true,
+                name: true,
+                thumbnail_url: true,
+                slug: true,
+                priority: true,
+                under_categoryId: true,
+            },
+            },
+        }
+    })
+
+    const allCategories = await prismadb.allcategory.findMany({
+        where: {
+            brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+        },
+        select: {
+            id: true,
+            slug: true,
+            under_categoryId: true,
+        },
+    });
+
+    const allDriver = await prismadb.allcategory.findFirst({
+        where: {
+            slug: 'drivers',
+            brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+            shown_on_all_drivers_page: true,
+        },
+        select: {
+            name: true,
+            slug: true,
+            thumbnail_url: true,
+        },
+    })
+
+    return [Drivers, allCategories, allDriver] as const
+}
+
+async function getDriversData(subslug: string | null, subsubslug: string | null, subsubsubslug: string | null){
+    'use cache'
+    cacheLife('minutes')
+    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subslug ?? '',
+                type: 'Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        })
+    ]);
+    return [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] as const
 }
 
 export default async function SBAudienceDriversPage({
@@ -281,48 +389,7 @@ export default async function SBAudienceDriversPage({
     const subsubsubslug = slug[2] || null;
 
     if(!subslug && !subsubslug && !subsubsubslug){
-        const Drivers = await prismadb.allproductcategory.findMany({
-            where: {
-                category: {
-                shown_on_all_drivers_page: true,
-                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-                type: { not: 'Category' }
-                },
-                product: {
-                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-                allCat: {
-                    some: {
-                    category: {
-                        slug: 'drivers',
-                    },
-                    },
-                },
-                },
-            },
-            select: {
-                category: {
-                select: {
-                    id: true,
-                    name: true,
-                    thumbnail_url: true,
-                    slug: true,
-                    priority: true,
-                    under_categoryId: true,
-                },
-                },
-            }
-        })
-
-        const allCategories = await prismadb.allcategory.findMany({
-            where: {
-                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-            },
-            select: {
-                id: true,
-                slug: true,
-                under_categoryId: true,
-            },
-        });
+        const [Drivers, allCategories, allDriver] = await getAllDriversData()
 
         const categoryMap = new Map(
             allCategories.map(category => [
@@ -384,18 +451,6 @@ export default async function SBAudienceDriversPage({
         });
 
 
-        const allDriver = await prismadb.allcategory.findFirst({
-        where: {
-            slug: 'drivers',
-            brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-            shown_on_all_drivers_page: true,
-        },
-        select: {
-            name: true,
-            slug: true,
-            thumbnail_url: true,
-        },
-        })
 
 
         const itemListElement = [
@@ -498,42 +553,8 @@ export default async function SBAudienceDriversPage({
             </div>
         );
     }
-
-    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subslug ?? '',
-                type: 'Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        }),
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subsubslug ?? '',
-                type: 'Sub Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        }),
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subsubsubslug ?? '',
-                type: 'Sub Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        })
-    ]);
+    
+    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await getDriversData(subslug, subsubslug, subsubsubslug)
 
     const subCatName = subCatNameResult.status === 'fulfilled' ? subCatNameResult.value : { name: '' };
     const subSubCatName = subsubCatNameResult.status === 'fulfilled' ? subsubCatNameResult.value : { name: '' };
@@ -624,13 +645,27 @@ export default async function SBAudienceDriversPage({
       <h1 className='sr-only'>{!subslug || subslug === 'all' ? `All Drivers` 
         : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Drivers`} | SB Audience</h1>
       
-      {tempData &&
-        <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
-            <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
-                <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
+        <Suspense fallback={
+            <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
+                <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
+                    <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-8">
+                        {Array.from({ length: 12 }).map((_, index) => (
+                            <div key={index} className="px-2 pt-4">
+                                <ProductCard data={null} hovered={false}/>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
-        </div>
-      }
+        }>
+            {tempData &&
+                <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
+                    <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
+                        <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
+                    </div>
+                </div>
+            }
+        </Suspense>
     </>
   );
 }

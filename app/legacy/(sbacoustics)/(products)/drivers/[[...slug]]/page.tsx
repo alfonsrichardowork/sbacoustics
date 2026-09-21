@@ -3,11 +3,129 @@ import prismadb from '@/lib/prismadb';
 import AllDriversandFiltersProducts from '../../components-all-drivers-page/all-filters';
 import { getAllProductsForFilterPage } from '@/app/(frontend)/actions/get-all-products-for-filter-page';
 import '@/app/legacy/(sbacoustics)/(products)/drivers/driverpage.css'
+import { cacheLife } from 'next/cache';
 
-export const revalidate = 60;
 
 function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSliderFilter[] {
   return Array.from(new Set(arr));
+}
+
+async function getAllDriversData(){
+    'use cache'
+    cacheLife('minutes')
+    const Drivers = await prismadb.allproductcategory.findMany({
+        where: {
+            category: {
+            shown_on_all_drivers_page: true,
+            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+            type: { not: 'Category' }
+            },
+            product: {
+            slug: {
+                not: 'dw50'
+            },
+            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+            allCat: {
+                some: {
+                category: {
+                    slug: 'drivers',
+                },
+                },
+            },
+            },
+        },
+        select: {
+            category: {
+            select: {
+                id: true,
+                name: true,
+                thumbnail_url: true,
+                slug: true,
+                priority: true,
+                under_categoryId: true,
+            },
+            },
+        }
+    })
+
+    
+    const allCategories = await prismadb.allcategory.findMany({
+        where: {
+            brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+        },
+        select: {
+            id: true,
+            slug: true,
+            under_categoryId: true,
+        },
+    });
+
+    const allDriverImage = await prismadb.allproductcategory.findFirst({
+        where: {
+            category: {
+                shown_on_all_drivers_page: true,
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+                type: 'Category',
+                slug: 'drivers'
+            },
+        },
+        select: {
+            category: {
+                select: {
+                    id: true,
+                    name: true,
+                    thumbnail_url: true,
+                    slug: true,
+                    priority: true,
+                    under_categoryId: true,
+                },
+            },
+        }
+    })
+
+    return [Drivers, allCategories, allDriverImage] as const
+}
+
+async function getDriversData(subslug: string | null, subsubslug: string | null, subsubsubslug: string | null){
+    'use cache'
+    cacheLife('minutes')
+   const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subslug ?? '',
+                type: 'Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+        await prismadb.allcategory.findFirst({
+            where: {
+                slug: subsubsubslug ?? '',
+                type: 'Sub Sub Category',
+                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+            },
+            select:{
+                name: true,
+                description: true
+            }
+        }),
+    ]);
+
+    return [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] as const
 }
 
 export default async function DriversPage({
@@ -21,52 +139,7 @@ export default async function DriversPage({
     const subsubsubslug = slug[2] || null;
 
     if(!subslug && !subsubslug && !subsubsubslug){
-        const Drivers = await prismadb.allproductcategory.findMany({
-            where: {
-                category: {
-                shown_on_all_drivers_page: true,
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-                type: { not: 'Category' }
-                },
-                product: {
-                slug: {
-                    not: 'dw50'
-                },
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-                allCat: {
-                    some: {
-                    category: {
-                        slug: 'drivers',
-                    },
-                    },
-                },
-                },
-            },
-            select: {
-                category: {
-                select: {
-                    id: true,
-                    name: true,
-                    thumbnail_url: true,
-                    slug: true,
-                    priority: true,
-                    under_categoryId: true,
-                },
-                },
-            }
-        })
-
-        
-        const allCategories = await prismadb.allcategory.findMany({
-            where: {
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-            },
-            select: {
-                id: true,
-                slug: true,
-                under_categoryId: true,
-            },
-        });
+        const [Drivers, allCategories, allDriverImage] = await getAllDriversData();
 
         const categoryMap = new Map(
             allCategories.map(category => [
@@ -100,28 +173,7 @@ export default async function DriversPage({
             return '/' + slugs.reverse().join('/');
         };
 
-        const allDriverImage = await prismadb.allproductcategory.findFirst({
-            where: {
-                category: {
-                    shown_on_all_drivers_page: true,
-                    brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
-                    type: 'Category',
-                    slug: 'drivers'
-                },
-            },
-            select: {
-                category: {
-                    select: {
-                        id: true,
-                        name: true,
-                        thumbnail_url: true,
-                        slug: true,
-                        priority: true,
-                        under_categoryId: true,
-                    },
-                },
-            }
-        })
+        
         const allDriverImageCategories = allDriverImage ? [allDriverImage.category] : []
         const uniqueCategories = [
             ...new Map(
@@ -207,41 +259,8 @@ export default async function DriversPage({
         );
     }
 
-    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await Promise.allSettled([
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subslug ?? '',
-                type: 'Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        }),
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subsubslug ?? '',
-                type: 'Sub Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        }),
-        await prismadb.allcategory.findFirst({
-            where: {
-                slug: subsubsubslug ?? '',
-                type: 'Sub Sub Category',
-                brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
-            },
-            select:{
-                name: true,
-                description: true
-            }
-        }),
-    ]);
+    
+    const [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] = await getDriversData(subslug, subsubslug, subsubsubslug)
 
     const subCatName = subCatNameResult.status === 'fulfilled' ? subCatNameResult.value : { name: '' };
     const subSubCatName = subsubCatNameResult.status === 'fulfilled' ? subsubCatNameResult.value : { name: '' };

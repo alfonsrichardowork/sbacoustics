@@ -2,9 +2,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import SwiperCarouselAboutUs from "@/components/single-product-page/swipercarouselaboutus";
-import DOMPurify from 'isomorphic-dompurify'; 
+import DOMPurify from 'isomorphic-dompurify';
 import prismadb from "@/lib/prismadb";
 import "@/app/css/styles.scss";
+import { cacheLife } from "next/cache";
+import { Suspense } from "react";
+
+
+async function getAboutUsData(){
+  // 'use cache'
+  // cacheLife('minutes')
+  const allData = await prismadb.brand.findFirst({
+    where: {
+      id: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
+    },
+    select: {
+      aboutUsImages: true,
+      sbe_desc: true,
+      brand_desc: true,
+      mission_values_desc: true
+    }
+  })
+  return allData;
+}
 
 export default async function AboutUsSBAudience() {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
@@ -17,17 +37,7 @@ export default async function AboutUsSBAudience() {
     "logo": `${baseUrl}/images/sbaudience/logo_sbaudience.webp`,
   };
   
-  const allData = await prismadb.brand.findFirst({
-    where: {
-      id: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
-    },
-    select: {
-      aboutUsImages: true,
-      sbe_desc: true,
-      brand_desc: true,
-      mission_values_desc: true
-    }
-  })
+  const allData = await getAboutUsData();
 
   if(!allData) {
     return null
@@ -53,14 +63,16 @@ export default async function AboutUsSBAudience() {
                   <h2 className="text-3xl md:text-4xl font-bold text-black">SB Audience</h2>
                 </div>
                 <div className="space-y-6 text-slate-600">
-                  <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.brand_desc, {
-                    ALLOWED_TAGS: [
-                        'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                    ],
-                    ALLOWED_ATTR: [
-                        'href', 'target', 'rel', 'class', 'id', 'style'
-                    ],
-                }) }}></h3>
+                  <Suspense fallback={<></>}>
+                    <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.brand_desc, {
+                      ALLOWED_TAGS: [
+                          'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
+                      ],
+                      ALLOWED_ATTR: [
+                          'href', 'target', 'rel', 'class', 'id', 'style'
+                      ],
+                  }) }}></h3>
+                  </Suspense>
                 </div>
               </div>
               <div className="relative md:order-2 order-1">
@@ -161,14 +173,16 @@ export default async function AboutUsSBAudience() {
                     We continue to invest in cutting-edge R&D, quality control, and mass production — pushing the boundaries of what's possible in transducer design and manufacturing.
                   </h3> */}
                   
-                  <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.sbe_desc, {
-                    ALLOWED_TAGS: [
-                        'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                    ],
-                    ALLOWED_ATTR: [
-                        'href', 'target', 'rel', 'class', 'id', 'style'
-                    ],
-                }) }}></h3>
+                  <Suspense fallback={<></>}>
+                    <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.sbe_desc, {
+                      ALLOWED_TAGS: [
+                          'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
+                      ],
+                      ALLOWED_ATTR: [
+                          'href', 'target', 'rel', 'class', 'id', 'style'
+                      ],
+                  }) }}></h3>
+                  </Suspense>
                 </div>
                 <div className="mt-8">
                   <Button variant={"default"} asChild>
@@ -189,14 +203,16 @@ export default async function AboutUsSBAudience() {
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">Our Mission & Values</h2>
-              <p className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.mission_values_desc, {
-                  ALLOWED_TAGS: [
-                      'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                  ],
-                  ALLOWED_ATTR: [
-                      'href', 'target', 'rel', 'class', 'id', 'style'
-                  ],
-              }) }}></p>
+              <Suspense fallback={<></>}>
+                <p className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.mission_values_desc, {
+                    ALLOWED_TAGS: [
+                        'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
+                    ],
+                    ALLOWED_ATTR: [
+                        'href', 'target', 'rel', 'class', 'id', 'style'
+                    ],
+                }) }}></p>
+              </Suspense>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">

@@ -1,83 +1,4 @@
-
-// import React from 'react'
-// import { Toaster } from '@/components/ui/toaster';
-// import ScrollToTop from '@/components/scrollToTop';
-// import NextTopLoader from 'nextjs-toploader';
-// import Image from 'next/image';
-// import Navbar from '@/components/navbar';
-// import Footer from '@/components/footer';
-// import ThemeWrapper from './providers/themeWrapper';
-// import { GoogleAnalytics } from '@next/third-parties/google';
-// import { Noto_Sans } from 'next/font/google';
-// import LoadingWrapper from '@/components/loadingWrapper';
-// import { CookieProvider } from '@/lib/cookies-context';
-// import CookieBanner from '@/components/cookie-banner';
-// import { headers } from 'next/headers';
-
-// const font = Noto_Sans({ subsets: ['latin'] })
-
-// export default async function Layout({
-//   children,
-// }: {
-//   children: React.ReactNode
-// }) {
-//   const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? 'G-XYZ'
-//   const h = await headers();
-
-//   const osName = h.get('x-os-name');
-//   const osVersion = h.get('x-os-version');
-  
-//   const unsupported =
-//     osName === 'iOS' && osVersion
-//       ? parseFloat(osVersion) < 16.4
-//       : false
-//   return (
-//     <html lang="en">
-//       <body 
-//         className={font.className.concat(" overflow-x-hidden")}
-//       >      
-//           <CookieProvider>
-//             <ThemeWrapper>
-//               <LoadingWrapper
-//                 unsupported={unsupported}
-//               >
-//                 <ScrollToTop />
-//                   <NextTopLoader color="#e60013" showSpinner={false} />
-//                   {/* PLACEHOLDER BACKGROUND IMAGE PALING BELAKANG */}
-//                   <div className="fixed inset-0 w-dvw h-dvh bg-black z-[-1]">
-//                     <div className='flex items-center justify-center h-full w-full'>   
-//                       <Image
-//                         src='/images/sbacoustics/logo_sbacoustics_white_catchphrase.webp'
-//                         alt='SB Acoustics Logo'
-//                         width={1000}
-//                         height={1000}
-//                         className="w-1/4"
-//                         priority
-//                       /> 
-//                     </div> 
-//                   </div>
-//                   <Navbar
-//                     unsupported={unsupported}
-//                   />
-//                   <div className="contents">
-//                     {children}
-//                   </div>
-//                   <Footer />
-//                   <Toaster />
-//                 </LoadingWrapper>
-//               </ThemeWrapper>
-//             <CookieBanner />
-//           </CookieProvider>
-//       </body>
-//       <GoogleAnalytics gaId={GA_ID} />
-//     </html>
-//   )
-// }
-
-
-
-
-import React from 'react'
+import React, { Suspense } from 'react'
 import { Toaster } from '@/components/ui/toaster';
 import ScrollToTop from '@/components/scrollToTop';
 import NextTopLoader from 'nextjs-toploader';
@@ -91,25 +12,110 @@ import LoadingWrapper from '@/components/loadingWrapper';
 import { CookieProvider } from '@/lib/cookies-context';
 import CookieBanner from '@/components/cookie-banner';
 import { cookies } from 'next/headers';
+import { Loader2 } from 'lucide-react';
+import { Metadata, Viewport } from 'next';
+
 const font = Noto_Sans({ subsets: ['latin'] })
+
+
+export const viewport : Viewport = {
+  width: 'device-width',
+  initialScale: 1.0,
+  maximumScale: 1,
+  userScalable: false,
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
+  return {
+    title: 'SB Acoustics | Building Your Sound',
+    description: 'Explore premium speaker drivers, tweeters, woofers, subwoofers, and open-source DIY speaker kits from SB Acoustics. Browse our full catalogue and build exceptional sound systems!',
+    keywords: [
+      "SB Acoustics",
+      "speaker drivers",
+      "diy speaker kits",
+      "hifi drivers",
+      "widebanders",
+      "full ranges",
+      "midranges",
+      "midwoofers",
+      "shallow subwoofers",
+      "tweeters",
+      "woofers",
+      "subwoofers",
+      "passive radiators",
+      "coaxials",
+      "oem drivers",
+      "speaker components",
+      "diy speakers",
+      "audio drivers",
+      "speaker catalogue",
+      "premium speaker drivers",
+      "building your sound"
+    ],
+    openGraph: {
+      title: 'SB Acoustics | Building Your Sound',
+      description: 'Explore premium speaker drivers, tweeters, woofers, subwoofers, and open-source DIY speaker kits from SB Acoustics. Browse our full catalogue and build exceptional sound systems!',
+      url: `${baseUrl}`,
+      siteName: 'SB Acoustics',
+      images: [
+        {
+          url: `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`,
+          width: 1200,
+          height: 630,
+          alt: 'SB Acoustics Logo',
+        },
+        {
+          url: `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`,
+          width: 800,
+          height: 800,
+          alt: 'SB Acoustics Logo',
+        },
+      ],
+      locale: 'id_ID',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'SB Acoustics | Building Your Sound',
+      description: 'Explore premium speaker drivers, tweeters, woofers, subwoofers, and open-source DIY speaker kits from SB Acoustics. Browse our full catalogue and build exceptional sound systems!',
+      images: [
+        {
+          url: `${baseUrl}/images/sbacoustics/logo_sbacoustics_white_clean.webp`,
+          width: 800,
+          height: 800,
+          alt: 'SB Acoustics Logo',
+        }
+      ],
+    },
+    alternates: {
+      canonical: `${baseUrl}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
+    },
+    icons: {
+      icon: `${baseUrl}/favicon.ico`,
+      shortcut: `${baseUrl}/favicon.ico`,
+      apple: `${baseUrl}/apple-touch-icon.png`,
+    },
+  }
+}
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  // const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? 'G-XYZ'
-  // const cookieStore = await cookies();
-
-  // const raw = cookieStore.get('cookie-preferences')?.value;
-
-  // const preferences = raw
-  //   ? JSON.parse(raw)
-  //   : null;
-
   return (
     <html lang="en" className="overflow-x-hidden">
       <body className={`${font.className} overflow-x-hidden`}>
+        <Suspense fallback={<></>}>
         <CookieProvider>
           <ThemeWrapper>
             <LoadingWrapper>
@@ -129,19 +135,46 @@ export default async function Layout({
                 </div>
               </div>
 
-              <Navbar />
+              <Suspense fallback={
+                <div
+                  className={`
+                    fixed
+                    left-0
+                    z-40
+                    bg-transparent
+                    transition-all
+                    duration-300
+                    ease-in-out
+                    top-0 
+                    border-none
+                  `}
+                >
+                  <nav className={`w-dvw xl:px-16 lg:px-12 px-8 py-4 h-fit transition-all duration-200 ease-in-out`}>
+                    <Loader2 className="animate-spin text-gray-500" size={20} />
+                  </nav>
+                </div>
+              }>
+                <Navbar />
+              </Suspense>
 
               <div className="contents">
                 {children}
               </div>
 
-              <Footer />
+              <Suspense fallback={
+                <div className={`w-full h-1/2 flex items-center justify-center bg-black text-white z-0`}>
+                  <Loader2 className="animate-spin text-gray-500" size={40} />
+                </div>
+              }>
+                <Footer />
+              </Suspense>
               <Toaster />
             </LoadingWrapper>
           </ThemeWrapper>
 
           <CookieBanner />
         </CookieProvider>
+        </Suspense>
       </body>
 
       {/* {preferences['analytics'] && <GoogleAnalytics gaId={GA_ID} />} */}

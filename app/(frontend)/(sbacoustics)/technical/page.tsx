@@ -3,17 +3,23 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import Link from 'next/link';
 import Image from 'next/image';
 import { LazyImageCustomNavbar } from '@/components/lazyImageCustomNavbar';
-
-export const revalidate = 60;
+import { cacheLife } from 'next/cache';
 
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-black p-0 py-1"
 
-export default async function TechnicalJsonLd() {
+async function getTechnicalData(){
+  'use cache'
+  cacheLife('minutes')
   let pdfFiles = await prismadb.technicals.findMany({
     where: {
       brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
     }
   });
+  return pdfFiles;
+}
+
+export default async function TechnicalJsonLd() {
+  let pdfFiles = await getTechnicalData();
   if (!pdfFiles) {
     return null;
   }
@@ -112,4 +118,4 @@ export default async function TechnicalJsonLd() {
         </div>
     </>
   );
-};
+}
