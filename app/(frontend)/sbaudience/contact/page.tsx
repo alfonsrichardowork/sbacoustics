@@ -4,6 +4,7 @@ import { Image } from "lucide-react";
 import Contact from "@/components/contact";
 import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
 import { cacheLife } from "next/cache";
+import { extractIframeSrc } from "@/lib/iframesrc";
 
 async function getContactData(){
   'use cache'
@@ -14,11 +15,6 @@ async function getContactData(){
     }
   });
   return brand;
-}
-
-export function extractIframeSrc(html: string): string | undefined {
-  const match = html.match(/<iframe[^>]+src="([^"]+)"/i);
-  return match?.[1];
 }
 
 export default async function ContactUsJsonLd() {

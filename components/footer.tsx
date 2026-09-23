@@ -21,19 +21,21 @@ export default function Footer() {
   const [finalData, setFinalData] = useState<brand>()
   const [showSettings, setShowSettings] = useState(false)
   const [loading, setLoading] = useState<boolean>(true)
+  const [yearNow, setYearNow] = useState<string>('2026')
   useEffect(() => {
     const fetchData = async () => {
       const brand: brand = await getOneBrand(pathname);
-      setFinalData(brand)
       const allSM: socialmedia[] = await getAllSocialMedia(pathname);
+      setFinalData(brand)
       setAllSocialMedia(allSM)
+      setYearNow(new Date().getFullYear().toString())
       setLoading(false) 
     };
-  
+    
     fetchData().catch((error) => {
       console.error("Error fetching data: ", error);
     });
-    
+  
   }, [pathname]); 
   
   if (showSettings) {
@@ -240,7 +242,7 @@ export default function Footer() {
           <div className='w-1/3 md:flex hidden justify-end'>
             <div className='block'>
               <div className="text-sm text-white text-center md:text-right">
-                © {new Date().getFullYear()}{' '}
+                © {yearNow}{' '}
                 {loading ?
                   <div className='px-2'>
                     <Skeleton className="h-4 w-18 bg-background/20"/>
@@ -277,7 +279,7 @@ export default function Footer() {
           </div>
           
           <div className="text-xs text-white text-center w-full md:hidden block">
-            © {new Date().getFullYear()} {!loading && finalData && finalData.name}. All rights reserved.
+            © {yearNow} {!loading && finalData && finalData.name}. All rights reserved.
           </div>
           
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-gray-400 md:hidden">

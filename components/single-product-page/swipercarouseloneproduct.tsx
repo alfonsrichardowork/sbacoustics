@@ -126,7 +126,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                         >
                           <Eye size={25} />
                         </div> */}
-                        <div className='z-10 w-full h-fit'>
+                        <div className='z-10 w-full h-full'>
                           <LazyImageCustom 
                             src={cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${cover}` : cover} 
                             alt={name} 
@@ -156,7 +156,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                         >
                           <Eye size={25} />
                         </div> */}
-                        <div className='z-10 w-full h-fit'>
+                        <div className='z-10 w-full h-full'>
                         <LazyImageCustom 
                           src={item.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.url}` : item.url} 
                           alt={`${item.name} - ${index.toString()}`} 
@@ -186,7 +186,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                     >
                       <Eye size={25} />
                     </div> */}
-                    <div className='z-10 w-full h-fit'>
+                    <div className='z-10 w-full h-full'>
                     <LazyImageCustom 
                       src={drawing.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${drawing}` : drawing} 
                       alt={`${name} - Drawing`} 
@@ -216,7 +216,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
                     >
                       <Eye size={25} />
                     </div> */}
-                    <div className='z-10 w-full h-fit'>
+                    <div className='z-10 w-full h-full'>
                     <LazyImageCustom 
                       src={graph.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${graph}` : graph} 
                       alt={`${name} - Frequency Response`} 

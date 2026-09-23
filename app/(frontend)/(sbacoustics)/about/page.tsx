@@ -2,16 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import SwiperCarouselAboutUs from "@/components/single-product-page/swipercarouselaboutus";
-import DOMPurify from 'isomorphic-dompurify';
 import prismadb from "@/lib/prismadb";
 import "@/app/css/styles.scss";
 import { cacheLife } from "next/cache";
 import { Suspense } from "react";
+import { Dompurifyclient } from "@/components/dompurify-content";
 
 
 async function getAboutUsData(){
-  // 'use cache'
-  // cacheLife('minutes')
+  'use cache'
+  cacheLife('minutes')
   const allData = await prismadb.brand.findFirst({
     where: {
       id: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
@@ -61,6 +61,9 @@ export default async function AboutUsPage() {
                 </div>
                 <div className="space-y-6 text-slate-600">
                   <Suspense fallback={<></>}>
+                    <Dompurifyclient content={allData.brand_desc}/>
+                  </Suspense>
+                  {/* <Suspense fallback={<></>}>
                     <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.brand_desc, {
                       ALLOWED_TAGS: [
                           'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
@@ -69,22 +72,24 @@ export default async function AboutUsPage() {
                           'href', 'target', 'rel', 'class', 'id', 'style'
                       ],
                   }) }}></h3>
-                  </Suspense>
+                  </Suspense> */}
                 </div>
               </div>
               <div className="relative md:order-2 order-1">
                 <div className="md:hidden flex items-start mb-6">
                   <div className="text-3xl md:text-4xl font-bold text-black">SB Acoustics</div>
-                </div>                
-                <SwiperCarouselAboutUs
-                  images={allData.aboutUsImages
-                    .filter((val) => val.type === 'BRAND').sort((a,b) => Number(a.priority) - Number(b.priority))
-                    .map((val, index) => ({
-                      src: val.url,
-                      alt: `SB Acoustics About Us ${index + 1}`,
-                    }))
-                  }
-                />
+                </div>
+                <Suspense fallback={<></>}>       
+                  <SwiperCarouselAboutUs
+                    images={allData.aboutUsImages
+                      .filter((val) => val.type === 'BRAND').sort((a,b) => Number(a.priority) - Number(b.priority))
+                      .map((val, index) => ({
+                        src: val.url,
+                        alt: `SB Acoustics About Us ${index + 1}`,
+                      }))
+                    }
+                  />
+                </Suspense>
               </div>
             </div>
           </div>
@@ -100,22 +105,27 @@ export default async function AboutUsPage() {
                   <div className="text-3xl md:text-4xl font-bold text-black">Sinar Baja Electric</div>
                 </div>
                 
-                <SwiperCarouselAboutUs
-                  images={allData.aboutUsImages
-                    .filter((val) => val.type === 'SBE').sort((a,b) => Number(a.priority) - Number(b.priority))
-                    .map((val, index) => ({
-                      src: val.url,
-                      alt: `Sinar Baja Electric About Us ${index + 1}`,
-                    }))
-                  }
-                />
+                <Suspense fallback={<></>}>
+                  <SwiperCarouselAboutUs
+                    images={allData.aboutUsImages
+                      .filter((val) => val.type === 'SBE').sort((a,b) => Number(a.priority) - Number(b.priority))
+                      .map((val, index) => ({
+                        src: val.url,
+                        alt: `Sinar Baja Electric About Us ${index + 1}`,
+                      }))
+                    }
+                  />
+                </Suspense>
               </div>
               <div className="order-1 md:order-2">
                 <div className="md:flex hidden items-center mb-6">
                   <h2 className="text-3xl md:text-4xl font-bold text-black">Sinar Baja Electric</h2>
                 </div>
                 <div className="space-y-6 text-slate-600">
-                <Suspense fallback={<></>}>
+                  <Suspense fallback={<></>}>
+                    <Dompurifyclient content={allData.sbe_desc}/>
+                  </Suspense>
+                {/* <Suspense fallback={<></>}>
                   <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.sbe_desc, {
                     ALLOWED_TAGS: [
                         'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
@@ -124,7 +134,7 @@ export default async function AboutUsPage() {
                         'href', 'target', 'rel', 'class', 'id', 'style'
                     ],
                 }) }}></h3>
-                </Suspense>
+                </Suspense> */}
                 </div>
                 <div className="mt-8">
                   <Button variant={"default"} asChild>
@@ -146,6 +156,9 @@ export default async function AboutUsPage() {
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">Our Mission & Values</h2>
               <div className="text-lg text-slate-600 max-w-3xl mx-auto">
                 <Suspense fallback={<></>}>
+                  <Dompurifyclient content={allData.mission_values_desc}/>
+                </Suspense>
+                {/* <Suspense fallback={<></>}>
                   <p className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.mission_values_desc, {
                       ALLOWED_TAGS: [
                           'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
@@ -154,7 +167,7 @@ export default async function AboutUsPage() {
                           'href', 'target', 'rel', 'class', 'id', 'style'
                       ],
                   }) }}></p>
-                </Suspense>
+                </Suspense> */}
               </div>
             </div>
 

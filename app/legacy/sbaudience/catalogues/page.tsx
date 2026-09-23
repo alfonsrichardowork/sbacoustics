@@ -68,19 +68,19 @@ const styles = {
   } satisfies CSSProperties,
 }
 
-export function Empty({ children, style }: EmptyProps) {
+function Empty({ children, style }: EmptyProps) {
   return <div style={{ ...styles.empty, ...style }}>{children}</div>
 }
 
-export function EmptyContent({ children }: EmptyContentProps) {
+function EmptyContent({ children }: EmptyContentProps) {
   return <div style={styles.content}>{children}</div>
 }
 
-export function EmptyTitle({ children }: EmptyTitleProps) {
+function EmptyTitle({ children }: EmptyTitleProps) {
   return <h3 style={styles.title}>{children}</h3>
 }
 
-export function EmptyDescription({ children }: EmptyDescriptionProps) {
+function EmptyDescription({ children }: EmptyDescriptionProps) {
   return children ? <p style={styles.description}>{children}</p> : null
 }
 

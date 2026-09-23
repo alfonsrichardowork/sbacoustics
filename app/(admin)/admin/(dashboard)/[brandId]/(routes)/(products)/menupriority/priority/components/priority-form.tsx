@@ -17,10 +17,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
-import { normalizeTree } from '../page'
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useRouter } from 'next/navigation'
+import { normalizeTree } from '@/lib/priority-admin'
 
 export type PriorityProduct = {
   id: string

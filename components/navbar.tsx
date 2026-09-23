@@ -7,13 +7,13 @@ import Image from 'next/image';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from './ui/navigation-menu';
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from './ui/sheet';
 import { Button } from './ui/button';
-import { ChevronRight, Menu } from 'lucide-react';
+import { ChevronRight, Loader2, Menu } from 'lucide-react';
 import { NavbarComponents, NewProduct } from '@/app/(frontend)/types';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordionmobilemenu';
 import getAllNewProducts from '@/app/(frontend)/actions/get-all-new-products';
 import SearchBoxNavbar from './searchboxnavbar';
 import { EmptyMenu } from '@/app/(frontend)/utils/navbar-content';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { getHref } from '@/app/(frontend)/utils/getHref';
 import getAllNavbarContent, { SerializedCategory } from '@/app/(frontend)/actions/get-all-navbar-content';
 import SearchLightbox from './searchligthbox';
@@ -247,7 +247,7 @@ useEffect(() => {
   };
 }, [handleScroll]);
 
-// Memoize className computation
+// Memoize className
 const navClasses = useMemo(() => {
   const isFixed = height > 600;
   const baseClasses = `${isFixed ? 'fixed' : ''} w-dvw xl:px-16 lg:px-12 px-8 py-4 h-fit transition-all duration-200 ease-in-out`;

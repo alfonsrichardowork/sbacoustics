@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import React, { Suspense } from 'react'
+import React from 'react'
 
 export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';

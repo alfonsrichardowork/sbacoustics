@@ -2,16 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import SwiperCarouselAboutUs from "@/components/single-product-page/swipercarouselaboutus";
-import DOMPurify from 'isomorphic-dompurify';
 import prismadb from "@/lib/prismadb";
 import "@/app/css/styles.scss";
 import { cacheLife } from "next/cache";
 import { Suspense } from "react";
+import { Dompurifyclient } from "@/components/dompurify-content";
 
 
 async function getAboutUsData(){
-  // 'use cache'
-  // cacheLife('minutes')
+  'use cache'
+  cacheLife('minutes')
   const allData = await prismadb.brand.findFirst({
     where: {
       id: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
@@ -64,14 +64,7 @@ export default async function AboutUsSBAudience() {
                 </div>
                 <div className="space-y-6 text-slate-600">
                   <Suspense fallback={<></>}>
-                    <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.brand_desc, {
-                      ALLOWED_TAGS: [
-                          'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                      ],
-                      ALLOWED_ATTR: [
-                          'href', 'target', 'rel', 'class', 'id', 'style'
-                      ],
-                  }) }}></h3>
+                    <Dompurifyclient content={allData.brand_desc}/>
                   </Suspense>
                 </div>
               </div>
@@ -101,6 +94,7 @@ export default async function AboutUsSBAudience() {
                     alt:"SB Audience About Us 5"
                   }
                 ]} /> */}
+              <Suspense fallback={<></>}>
                 <SwiperCarouselAboutUs
                   images={allData.aboutUsImages
                     .filter((val) => val.type === 'BRAND').sort((a,b) => Number(a.priority) - Number(b.priority))
@@ -110,6 +104,7 @@ export default async function AboutUsSBAudience() {
                     }))
                   }
                 />
+              </Suspense>
               </div>
             </div>
           </div>
@@ -148,6 +143,7 @@ export default async function AboutUsSBAudience() {
                   }
                 ]} /> */}
                 
+              <Suspense fallback={<></>}>
                 <SwiperCarouselAboutUs
                   images={allData.aboutUsImages
                     .filter((val) => val.type === 'SBE').sort((a,b) => Number(a.priority) - Number(b.priority))
@@ -157,6 +153,7 @@ export default async function AboutUsSBAudience() {
                     }))
                   }
                 />
+              </Suspense>
               </div>
               <div className="order-1 md:order-2">
                 <div className="md:flex hidden items-center mb-6">
@@ -174,14 +171,7 @@ export default async function AboutUsSBAudience() {
                   </h3> */}
                   
                   <Suspense fallback={<></>}>
-                    <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.sbe_desc, {
-                      ALLOWED_TAGS: [
-                          'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                      ],
-                      ALLOWED_ATTR: [
-                          'href', 'target', 'rel', 'class', 'id', 'style'
-                      ],
-                  }) }}></h3>
+                    <Dompurifyclient content={allData.sbe_desc}/>
                   </Suspense>
                 </div>
                 <div className="mt-8">
@@ -204,14 +194,7 @@ export default async function AboutUsSBAudience() {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">Our Mission & Values</h2>
               <Suspense fallback={<></>}>
-                <p className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.mission_values_desc, {
-                    ALLOWED_TAGS: [
-                        'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                    ],
-                    ALLOWED_ATTR: [
-                        'href', 'target', 'rel', 'class', 'id', 'style'
-                    ],
-                }) }}></p>
+                <Dompurifyclient content={allData.mission_values_desc}/>
               </Suspense>
             </div>
 

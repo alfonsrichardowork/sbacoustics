@@ -2,6 +2,7 @@ import prismadb from "@/lib/prismadb";
 import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
 import Contact from "../../components/contact";
 import { cacheLife } from "next/cache";
+import { extractIframeSrc } from "@/lib/iframesrc";
 
 async function getContactData(){
   'use cache'
@@ -12,11 +13,6 @@ async function getContactData(){
     }
   });
   return brand;
-}
-
-export function extractIframeSrc(html: string): string | undefined {
-  const match = html.match(/<iframe[^>]+src="([^"]+)"/i);
-  return match?.[1];
 }
 
 export default async function ContactUsJsonLd() {

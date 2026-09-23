@@ -3,6 +3,8 @@ import Link from "next/link";
 import { LazyImageCustom } from "@/components/lazyImageCustom";
 import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
 import { cacheLife } from "next/cache";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 async function getCataloguesData(){
   'use cache'
@@ -51,30 +53,52 @@ export default async function CataloguesPage() {
       <h1 className='text-3xl font-bold mb-6 text-center'>
         Catalogues
       </h1>
-      {pdfFiles.map((item, index) => (
-        <div className="md:grid md:grid-cols-2 block gap-4 pt-8" key={index}>
-          <div>
-            <LazyImageCustom
-              src={item.cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.cover}` : item.cover}
-              alt={item.pdfname}
-              width={500}
-              height={500}
-              classname="h-fit w-full object-contain"
-              lazy
-            />
-          </div>
-          <div className="flex md:justify-start justify-center md:pl-20 pl-0">
-            <Link href={`${item.pdf}`} target="_blank" className={`font-bold flex items-center hover:text-primary`}>
-              <div className="pr-2">
-                <LazyImageCustomNavbar src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="3D Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+      <Suspense fallback={
+        Array.from({ length: 2 }, (_, index) => index + 1).map((i) => {
+        return (
+          <div className="md:grid md:grid-cols-2 block gap-4 pt-8" key={i}>
+            <div>
+              <div className="h-50 w-50 object-contain animate-pulse"/>
+            </div>
+            <div className="flex md:justify-start justify-center md:pl-20 pl-0">
+              <div className={`font-bold flex items-center hover:text-primary`}>
+                <div className="pr-2">
+                  <div className="h-8 w-8 flex-shrink-0 animate-pulse" />
+                </div>
+                <div className="pl-2">
+                  <Skeleton/>
+                </div>
               </div>
-              <h2 className="pl-2">
-                {item.pdfname}
-              </h2>
-            </Link>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+        }
+      )}>
+        {pdfFiles.map((item, index) => (
+          <div className="md:grid md:grid-cols-2 block gap-4 pt-8" key={index}>
+            <div>
+              <LazyImageCustom
+                src={item.cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.cover}` : item.cover}
+                alt={item.pdfname}
+                width={500}
+                height={500}
+                classname="h-fit w-full object-contain"
+                lazy
+              />
+            </div>
+            <div className="flex md:justify-start justify-center md:pl-20 pl-0">
+              <Link href={`${item.pdf}`} target="_blank" className={`font-bold flex items-center hover:text-primary`}>
+                <div className="pr-2">
+                  <LazyImageCustomNavbar src={'/images/sbacoustics/PDF-download-ver2.webp'} alt="3D Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
+                </div>
+                <h2 className="pl-2">
+                  {item.pdfname}
+                </h2>
+              </Link>
+            </div>
+          </div>
+        ))}
+      </Suspense>
     </div>
   );
 }

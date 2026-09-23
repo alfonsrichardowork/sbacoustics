@@ -82,5 +82,3 @@ export default function PrivacyPolicy() {
     </div></div>
   </main>
 }
-
-export { PrivacyPolicy }

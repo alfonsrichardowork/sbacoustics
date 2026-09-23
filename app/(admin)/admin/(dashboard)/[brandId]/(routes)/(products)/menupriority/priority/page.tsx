@@ -6,29 +6,18 @@ import {
   PriorityProduct,
   PriorityProductRecord,
 } from './components/priority-form'
+import { normalizeTree } from '@/lib/priority-admin';
 
 // @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
 // Remove this opt-out after verifying the segment passes validation without it.
 // See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
 export const instant = false;
 
-function sortByPriority<T extends { priority: string }>(items: T[]) {
-  const value = (raw: string) => {
-    const n = Number(raw?.trim())
-    return raw?.trim() && Number.isFinite(n) ? n : Number.POSITIVE_INFINITY
-  }
-  return [...items].sort((a, b) => value(a.priority) - value(b.priority))
-}
 
-export function normalizeTree(nodes: CategoryNode[]): CategoryNode[] {
-  return sortByPriority(nodes).map((node) => ({
-    ...node,
-    children: normalizeTree(node.children),
-    products: sortByPriority(node.products),
-  }))
-}
 
-export function buildCategoryPriorityTree(
+
+
+function buildCategoryPriorityTree(
   categories: PriorityCategoryRecord[],
   products: PriorityProductRecord[],
 ): CategoryNode[] {

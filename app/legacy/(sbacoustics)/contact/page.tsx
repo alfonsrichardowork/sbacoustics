@@ -4,12 +4,8 @@ import Contact from "../../components/contact";
 import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
 import { cacheLife } from "next/cache";
 import { Suspense } from "react";
+import { extractIframeSrc } from "@/lib/iframesrc";
 
-
-export function extractIframeSrc(html: string): string | undefined {
-  const match = html.match(/<iframe[^>]+src="([^"]+)"/i);
-  return match?.[1];
-}
 
 async function getContactData(){
   'use cache'

@@ -100,8 +100,10 @@
 
 import { LazyImageClickable } from '@/components/lazyImageclickable';
 import prismadb from '@/lib/prismadb';
+import { Loader2 } from 'lucide-react';
 import { cacheLife } from 'next/cache';
 import Link from "next/link";
+import { Suspense } from 'react';
 
 async function getAllDriversData(){
     'use cache'
@@ -164,25 +166,41 @@ export default async function SBAcousticsProductPage() {
             />
             <div className={`grid sm:grid-cols-2 md:${allDriver.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
             <h1 className="sr-only">All Drivers | SB Acoustics</h1>
-            {allDriver.length > 0 && allDriver.map((val, index) => 
-                <div key={index}>
-                <Link 
-                    href='/drivers/all'
-                    className=" group cursor-pointer space-y-4 block"
-                >
-                    <div className="relative aspect-square">
-                    <LazyImageClickable
-                        src={val.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.thumbnail_url}` : val.thumbnail_url} 
-                        alt={`${val.name} by SB Acoustics`}
-                        width={1000}
-                        height={1000}
-                    />
+            <Suspense fallback={
+                Array.from({ length: 2 }, (_, index) => index + 1).map((i) => {
+                return (
+                    <div key={i}>
+                    <div className=" group cursor-pointer space-y-4 block">
+                        <div className="relative aspect-square">
+                        <Loader2 />
+                        </div>
+                        
+                        <h2 className="font-bold text-xl text-center">...</h2>
                     </div>
-                    
-                    <h2 className="font-bold text-xl text-center">All {val.name}</h2>
-                </Link>
-                </div>
-            )}
+                    </div>
+                );
+                }
+            )}>
+                {allDriver.length > 0 && allDriver.map((val, index) => 
+                    <div key={index}>
+                    <Link 
+                        href='/drivers/all'
+                        className=" group cursor-pointer space-y-4 block"
+                    >
+                        <div className="relative aspect-square">
+                        <LazyImageClickable
+                            src={val.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.thumbnail_url}` : val.thumbnail_url} 
+                            alt={`${val.name} by SB Acoustics`}
+                            width={1000}
+                            height={1000}
+                        />
+                        </div>
+                        
+                        <h2 className="font-bold text-xl text-center">All {val.name}</h2>
+                    </Link>
+                    </div>
+                )}
+            </Suspense>
             </div>
         </div>
     );

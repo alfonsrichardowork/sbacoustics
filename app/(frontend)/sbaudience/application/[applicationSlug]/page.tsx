@@ -2,12 +2,11 @@
 import prismadb from "@/lib/prismadb";
 //@ts-ignore
 import "@/app/css/styles.scss";
-import DOMPurify from 'isomorphic-dompurify';
 import Link from "next/link";
-import Image from "next/image";
 import { LazyImageCustom } from "@/components/lazyImageCustom";
 import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
 import { cacheLife } from "next/cache";
+import { Dompurifyclient } from "@/components/dompurify-content";
 
 async function getSingleApplicationData(applicationSlug: string){
   'use cache'
@@ -29,19 +28,19 @@ type Props = {
   params: Promise<{ applicationSlug?: string }>
 }
 
-// export async function generateStaticParams(){
-//   const app = await prismadb.sbaudienceapplication.findMany({
-//     where: {
-//       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-//     },
-//     select: {
-//       slug: true,
-//     },
-//   });
-//   return app.map((application: { slug: string }) => ({
-//     applicationSlug: application.slug
-//   }));
-// }
+export async function generateStaticParams(){
+  const app = await prismadb.sbaudienceapplication.findMany({
+    where: {
+      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+    },
+    select: {
+      slug: true,
+    },
+  });
+  return app.map((application: { slug: string }) => ({
+    applicationSlug: application.slug
+  }));
+}
 
 export default async function SingleAppJsonLd(props: Props) {
     const { applicationSlug = '' } = await props.params;
@@ -93,15 +92,7 @@ export default async function SingleAppJsonLd(props: Props) {
                     </h1>
                     <h2><i>by {data.author}</i></h2>
                     <div className="pt-8">
-                    <h3 className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.description, {
-                        ALLOWED_TAGS: [
-                            'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                        ],
-                        ALLOWED_ATTR: [
-                            'href', 'target', 'rel', 'class', 'id', 'style'
-                        ],
-                    }) }}>
-                    </h3>
+                        <Dompurifyclient content={data.description}/>
                     <Link href={data.datasheet[0]?.url ?? ''} target="_blank" className="text-primary underline hover:text-primary/70">read more in pdf file.</Link>
                     </div>
                     

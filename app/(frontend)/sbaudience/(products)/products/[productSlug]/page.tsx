@@ -5,7 +5,6 @@ import SwiperCarouselOneProduct from "@/components/single-product-page/swipercar
 import SwiperCarouselCoverandCatalogues from "@/components/single-product-page/swipercarouselcoverandcatalogues";
 //@ts-ignore
 import "@/app/css/styles.scss";
-import DOMPurify from 'isomorphic-dompurify';
 
 import SwiperCarouselSimilarProduct from "@/components/single-product-page/swipercarouselsimilarproduct";
 import SpecificationTable from "@/components/single-product-page/spec-table";
@@ -18,6 +17,7 @@ import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
 import SwiperCarouselSimilarProductLoading from "@/components/single-product-page/swipercarouselsimilarproductloading";
 import { cacheLife } from "next/cache";
 import { ProductSkeleton } from "@/components/productskeleton";
+import { Dompurifyclient } from "@/components/dompurify-content";
 
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-foreground p-0 py-1"
 const all_sub_title_style = "text-left font-bold xl:text-2xl lg:text-xl md:text-lg sm:text-md text-foreground"
@@ -149,20 +149,21 @@ async function getOneDriverData(productSlug: string){
     return product;
 }
 
-// export async function generateStaticParams(){
-//   const products = await prismadb.product.findMany({
-//     where: {
-//       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-//       isArchived: false
-//     },
-//     select: {
-//       slug: true,
-//     },
-//   });
-//   return products.map((product: { slug: string }) => ({
-//     productSlug: product.slug
-//   }));
-// }
+export async function generateStaticParams(){
+  const products = await prismadb.product.findMany({
+    where: {
+      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+      isArchived: false
+    },
+    select: {
+      slug: true,
+    },
+    take: 5
+  });
+  return products.map((product: { slug: string }) => ({
+    productSlug: product.slug
+  }));
+}
 
 export default function Page({ params }: Props) {
   return (
@@ -384,15 +385,7 @@ async function SingleProductSBAudience({ productSlug }: { productSlug: string })
                             <div className={`${all_sub_title_style} pt-8`}>
                                     <h2>Features:</h2>
                                 </div>
-                                <h3 className={`${all_desc_style} tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(product.description, {
-                                    ALLOWED_TAGS: [
-                                        'a', 'b', 'i', 'u', 'em', 'strong', 'p', 'div', 'span', 'ul', 'ol', 'li', 'br'
-                                    ],
-                                    ALLOWED_ATTR: [
-                                        'href', 'target', 'rel', 'class', 'id', 'style'
-                                    ],
-                                }) }}>
-                                </h3>
+                                <Dompurifyclient content={product.description} classname={all_desc_style} />
                                 </>
                             }
 

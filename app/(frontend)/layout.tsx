@@ -6,14 +6,12 @@ import Image from 'next/image';
 import Navbar from '@/components/navbar';
 import Footer from '@/components/footer';
 import ThemeWrapper from './providers/themeWrapper';
-import { GoogleAnalytics } from '@next/third-parties/google';
 import { Noto_Sans } from 'next/font/google';
 import LoadingWrapper from '@/components/loadingWrapper';
 import { CookieProvider } from '@/lib/cookies-context';
 import CookieBanner from '@/components/cookie-banner';
-import { cookies } from 'next/headers';
-import { Loader2 } from 'lucide-react';
 import { Metadata, Viewport } from 'next';
+import { LoadingScreen } from '@/components/loadingScreen';
 
 const font = Noto_Sans({ subsets: ['latin'] })
 
@@ -107,7 +105,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default async function Layout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode
@@ -115,7 +113,7 @@ export default async function Layout({
   return (
     <html lang="en" className="overflow-x-hidden">
       <body className={`${font.className} overflow-x-hidden`}>
-        <Suspense fallback={<></>}>
+        <Suspense fallback={<LoadingScreen isLoading={true}/>}>
         <CookieProvider>
           <ThemeWrapper>
             <LoadingWrapper>
@@ -134,51 +132,22 @@ export default async function Layout({
                   />
                 </div>
               </div>
-
-              <Suspense fallback={
-                <div
-                  className={`
-                    fixed
-                    left-0
-                    z-40
-                    bg-transparent
-                    transition-all
-                    duration-300
-                    ease-in-out
-                    top-0 
-                    border-none
-                  `}
-                >
-                  <nav className={`w-dvw xl:px-16 lg:px-12 px-8 py-4 h-fit transition-all duration-200 ease-in-out`}>
-                    <Loader2 className="animate-spin text-gray-500" size={20} />
-                  </nav>
-                </div>
-              }>
                 <Navbar />
-              </Suspense>
-
               <div className="contents">
                 {children}
               </div>
 
-              <Suspense fallback={
-                <div className={`w-full h-1/2 flex items-center justify-center bg-black text-white z-0`}>
-                  <Loader2 className="animate-spin text-gray-500" size={40} />
-                </div>
-              }>
                 <Footer />
-              </Suspense>
               <Toaster />
             </LoadingWrapper>
           </ThemeWrapper>
 
-          <CookieBanner />
+          <Suspense fallback={<></>}>
+            <CookieBanner />
+          </Suspense>
         </CookieProvider>
         </Suspense>
       </body>
-
-      {/* {preferences['analytics'] && <GoogleAnalytics gaId={GA_ID} />} */}
-      {/* <GoogleAnalytics gaId={GA_ID} /> */}
     </html>
   )
 }

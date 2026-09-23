@@ -438,5 +438,3 @@ export default function TermsOfUse() {
     </div></div>
   </main>
 }
-
-export { TermsOfUse }
