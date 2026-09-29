@@ -113,7 +113,9 @@
     "vaul": "^1.1.1",
     "yet-another-react-lightbox": "^3.21.7",
     "zod": "^3.21.4",
-    "zustand": "^5.0.3"
+    "zustand": "^5.0.3",
+    "@types/mapbox__point-geometry": "^1.0.87",
+    "@types/node": "^25.9.3"
   },
   "overrides": {
     "@types/react": "19.2.8",
@@ -127,8 +129,6 @@
     "ios >= 10.15"
   ],
   "devDependencies": {
-    "@playwright/test": "^1.61.0",
-    "@types/mapbox__point-geometry": "^1.0.87",
-    "@types/node": "^25.9.3"
+    "@playwright/test": "^1.61.0"
   }
 }

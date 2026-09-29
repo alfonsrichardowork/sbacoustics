@@ -113,8 +113,8 @@ export default function Layout({
   return (
     <html lang="en" className="overflow-x-hidden">
       <body className={`${font.className} overflow-x-hidden`}>
-        <Suspense fallback={<LoadingScreen isLoading={true}/>}>
         <CookieProvider>
+        <Suspense fallback={<LoadingScreen isLoading={true}/>}>
           <ThemeWrapper>
             <LoadingWrapper>
               <ScrollToTop />
@@ -142,11 +142,9 @@ export default function Layout({
             </LoadingWrapper>
           </ThemeWrapper>
 
-          <Suspense fallback={<></>}>
-            <CookieBanner />
-          </Suspense>
-        </CookieProvider>
+          <CookieBanner />
         </Suspense>
+        </CookieProvider>
       </body>
     </html>
   )

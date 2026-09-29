@@ -20,7 +20,8 @@ export async function GET(
 
     const catalogue = await prismadb.catalogues.findMany({
       where: {
-        id: params.catalogueId
+        id: params.catalogueId,
+        brandId: params.brandId
       },
       orderBy: {
         createdAt: 'desc',
@@ -69,7 +70,8 @@ export async function PATCH(
     if(params.catalogueId != 'new'){
       const oldUrl = await prismadb.catalogues.findMany({
         where: {
-          id: params.catalogueId
+          id: params.catalogueId,
+          brandId: params.brandId
         },
         select:{
           pdf: true,
@@ -121,6 +123,7 @@ export async function PATCH(
           id: params.catalogueId
         },
         data: {
+          brandId: params.brandId,
           cover,
           pdf,
           pdfname,
@@ -134,6 +137,7 @@ export async function PATCH(
 
       const duplicates = await prismadb.catalogues.findFirst({
         where:{
+          brandId: params.brandId,
           pdfname
         }
       })
@@ -144,6 +148,7 @@ export async function PATCH(
 
       await prismadb.catalogues.create({
         data: {
+          brandId: params.brandId,
           cover,
           pdf,
           pdfname,
@@ -155,6 +160,7 @@ export async function PATCH(
     }
 
     revalidatePath('/catalogues')
+    revalidatePath('/sbaudience/catalogues')
     return NextResponse.json("success");
   } catch (error) {
     console.log('[CATALOGUE_PATCH]', error);
@@ -190,7 +196,8 @@ export async function PATCH(
 
       const toBeDeleted = await prismadb.catalogues.findMany({
         where:{
-          id: params.catalogueId
+          id: params.catalogueId,
+          brandId: params.brandId
         }
       })
 

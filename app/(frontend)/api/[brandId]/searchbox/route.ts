@@ -9,18 +9,18 @@ export async function GET(req: Request, props: { params: Promise<{ brandId: stri
       return new NextResponse("Brand id is required", { status: 400 });
     }
 
-    let neededSpecs = []
+    let neededSpecs: string[] = []
     if(params.brandId === process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID) {
       neededSpecs = ['nominal-impedance', 'fs', 'sensitivity']
     }
     else if(params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID){
-      neededSpecs = ['sensitivity', 'maximum-power-handling']
+      neededSpecs = ['sensitivity', 'maximum-power-handling', 'nominal-throat-diameter']
     }
 
     const allSpecsNeeded = await prismadb.dynamicspecification.findMany({
       where: {
         slug: {
-          in : ['nominal-impedance', 'fs', 'sensitivity']
+          in : neededSpecs
         }
       },
       select: {
@@ -144,9 +144,22 @@ export async function GET(req: Request, props: { params: Promise<{ brandId: stri
                 let temp = product.allCat.find((oneCat) => oneCat.category.shown_on_all_drivers_page && oneCat.category.type === 'Sub Category')?.category.name ?? ''
                 temp !== '' && parts.push(temp)
               }
+              
+              const isHorn = product.allCat.some(
+                (valcat) => valcat.category.name === 'Horn'
+              );
+
               product.connectorSpecifications.map((val) => {
-                val.value !== '' && parts.push(`${val.value} ${val.dynamicspecification.unit}`)
-              })
+                const slug = val.dynamicspecification.slug;
+
+                const shouldPush = isHorn
+                  ? ['nominal-throat-diameter'].includes(slug)
+                  : ['sensitivity', 'maximum-power-handling'].includes(slug);
+
+                if (val.value !== '' && shouldPush) {
+                  parts.push(`${val.value} ${val.dynamicspecification.unit}`);
+                }
+              });
               if(product.searchbox_desc !== ''){
                 add_info = add_info.concat(product.searchbox_desc)
                 if(parts.length > 0){
