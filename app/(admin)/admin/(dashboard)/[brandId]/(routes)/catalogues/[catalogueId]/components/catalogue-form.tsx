@@ -19,8 +19,13 @@ import Link from "next/link"
 import { Heading } from "@/app/(admin)/admin/components/ui/heading"
 import { Form } from "@/app/(admin)/admin/components/ui/form"
 import { uploadImage } from "@/app/(admin)/admin/upload-image"
-import { MAX_SIZE } from "@/app/(admin)/admin/model/model"
 
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
+
+function formatFileSize(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 const formSchema = z.object({
   pdfname: z.string().optional(),
@@ -84,6 +89,11 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
       e.target.value = '';
       return;
     }
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error(`The PDF exceeds the 50 MB per-file limit (${formatFileSize(file.size)}).`);
+      e.target.value = '';
+      return;
+    }
     setSelectedFile(file);
     e.target.value = '';
   };
@@ -109,8 +119,8 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
       e.target.value = '';
       return;
     }
-    if (file.size > MAX_SIZE) {
-      toast.error("Image size must be less than 2MB.");
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error(`The cover image exceeds the 50 MB per-file limit (${formatFileSize(file.size)}).`);
       e.target.value = "";
       return;
     }
@@ -132,6 +142,8 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues
   });
+
+  const totalSelectedFileSize = (selectedFile?.size ?? 0) + (selectedImage?.size ?? 0);
 
   const onSubmit = async (data: CatalogueFormValues) => {
     if (submitInProgress.current) return;
@@ -265,20 +277,33 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
 
             <div className="text-left font-bold pb-2">Cover Image</div>
               <div className="flex flex-col gap-4">
-                {catalogueImage && (
-                  <Image alt={'Catalogue Image'} src={catalogueImage.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${catalogueImage}` : catalogueImage} width={200} height={200} className="w-52 h-fit" priority/>
-                )}
-                <Input
-                  id="catalogue-cover"
-                  type="file"
-                  accept="image/*"
-                  name="cover"
-                  onChange={(e) =>
-                    e.target.files && handleImageChange(e)
-                  }
-                  disabled={loading}
-                  className="border border-gray-300 p-2 rounded-md"
-                />
+                {catalogueImage ? (
+                  <div className="flex items-center gap-4">
+                    <Image alt={'Catalogue Image'} src={catalogueImage.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${catalogueImage}` : catalogueImage} width={200} height={200} className="w-52 h-fit" priority/>
+
+                    <Button
+                      type="button"
+                      variant={"destructive"}
+                      aria-label="Remove cover image"
+                      disabled={loading}
+                      onClick={() => deleteImage()}
+                    >
+                      <Trash width={20} height={20} />
+                    </Button>
+                  </div>
+                ) :
+                  <Input
+                    id="catalogue-cover"
+                    type="file"
+                    accept="image/*"
+                    name="cover"
+                    onChange={(e) =>
+                      e.target.files && handleImageChange(e)
+                    }
+                    disabled={loading}
+                    className="border border-gray-300 p-2 rounded-md"
+                  />
+                }
                 {selectedImage && (
                   <div className="flex items-center gap-2 text-sm" role="status">
                     <span>Selected: {selectedImage.name}</span>
@@ -294,17 +319,6 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
                     </Button>
                   </div>
                 )}
-                {catalogueImage && catalogueImage !== '' && (
-                <Button
-                  type="button"
-                  variant={"destructive"}
-                  aria-label="Remove cover image"
-                  disabled={loading}
-                  onClick={() => deleteImage()}
-                >
-                  <Trash width={20} height={20} />
-                </Button>
-              )}
               </div>
             </div>
 
@@ -334,7 +348,7 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
                     className="flex items-center justify-between rounded-md p-2 shadow-md mb-2 border"
                   > */}
                     <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center">
-                      {cataloguePDF && cataloguePDF !== '' && (
+                      {cataloguePDF && cataloguePDF !== '' ? (
                         <Link
                           href={cataloguePDF}
                           target="_blank"
@@ -343,18 +357,30 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
                         >
                           <FileIcon width={20} height={20}/> View File
                         </Link>
+                      ):
+                        <Input
+                          id="catalogue-pdf"
+                          type="file"
+                          accept=".pdf"
+                          name="pdf"
+                          onChange={(e) =>
+                            e.target.files && handleFileChange(e)
+                          }
+                          disabled={loading}
+                          className="w-full"
+                        />
+                      }
+                      {Boolean(cataloguePDF) && (
+                        <Button
+                          type="button"
+                          variant={"destructive"}
+                          aria-label="Remove PDF"
+                          disabled={loading}
+                          onClick={() => deletePDF()}
+                        >
+                          <Trash width={20} height={20} />
+                        </Button>
                       )}
-                      <Input
-                        id="catalogue-pdf"
-                        type="file"
-                        accept=".pdf"
-                        name="pdf"
-                        onChange={(e) =>
-                          e.target.files && handleFileChange(e)
-                        }
-                        disabled={loading}
-                        className="w-full"
-                      />
                       <Input
                         type="text"
                         value={filenamePDF}
@@ -367,17 +393,6 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
                         // className="border border-gray-300 p-2 rounded-md w-full"
                       />
                     </div>
-                    {Boolean(cataloguePDF || selectedFile) && (
-                      <Button
-                        type="button"
-                        variant={"destructive"}
-                        aria-label="Remove PDF"
-                        disabled={loading}
-                        onClick={() => deletePDF()}
-                      >
-                        <Trash width={20} height={20} />
-                      </Button>
-                    )}
                     {selectedFile && (
                       <div className="flex items-center gap-2 text-sm" role="status">
                         <span>Selected: {selectedFile.name}</span>
@@ -399,12 +414,10 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
             </div>
           </div>
 
-          {uploadStatus && (
-            <p className="flex items-center justify-center gap-2 text-sm text-muted-foreground" role="status" aria-live="polite">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {uploadStatus}
-            </p>
-          )}
+          <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
+            Selected upload size: {formatFileSize(totalSelectedFileSize)} total
+            <span className="ml-1">(50 MB maximum per file)</span>
+          </p>
           <Button disabled={loading} className="w-full flex gap-2 bg-green-500 text-white hover:bg-green-600 transition-colors" type="submit" variant={'secondary'}>
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             {loading ? uploadStatus || 'Saving…' : action}

@@ -47,6 +47,8 @@ const ALLOWED_FOLDERS = [
   "productimage"
 ];
 
+const MAX_CATALOGUE_IMAGE_SIZE = 50 * 1024 * 1024;
+
 async function getUniqueFilename(dir: string, originalName: string): Promise<string> {
   const ext = path.extname(originalName);
   const base = path.basename(originalName, ext);
@@ -74,12 +76,16 @@ async function getUniqueFilename(dir: string, originalName: string): Promise<str
 
 export async function uploadImage(formData: FormData, folder: string) {
   const file = formData.get("image") as File;
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = new Uint8Array(arrayBuffer);
 
   if (!ALLOWED_FOLDERS.includes(folder)) {
     throw new Error("Invalid folder");
   }
+  if (folder === "catalogues" && file.size > MAX_CATALOGUE_IMAGE_SIZE) {
+    throw new Error("Catalogue images must be 50 MB or smaller");
+  }
+
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = new Uint8Array(arrayBuffer);
 
   const uploadDir = path.join(process.cwd(), "uploads", folder);
 

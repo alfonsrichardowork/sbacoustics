@@ -1,10 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { UserForm } from "./components/user-role-form";
-import { cacheLife } from "next/cache";
 
 async function getData(userId: string){
-  'use cache'
-  cacheLife('minutes')
   const user_role = await prismadb.roles.findMany({
     where: {
       userId: userId

@@ -38,6 +38,8 @@ const ALLOWED_FOLDERS = [
   "other"
 ];
 
+const MAX_CATALOGUE_FILE_SIZE = 50 * 1024 * 1024;
+
 async function getUniqueFilename(dir: string, originalName: string): Promise<string> {
   const ext = path.extname(originalName);
   const base = path.basename(originalName, ext);
@@ -65,12 +67,16 @@ async function getUniqueFilename(dir: string, originalName: string): Promise<str
 
 export async function uploadFile(formData: FormData, folder: string) {
   const file = formData.get("file") as File;
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = new Uint8Array(arrayBuffer);
 
   if (!ALLOWED_FOLDERS.includes(folder)) {
     throw new Error("Invalid folder");
   }
+  if (folder === "catalogues" && file.size > MAX_CATALOGUE_FILE_SIZE) {
+    throw new Error("Catalogue files must be 50 MB or smaller");
+  }
+
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = new Uint8Array(arrayBuffer);
   
   const uploadDir = path.join(process.cwd(), "uploads", folder);
 
