@@ -52,6 +52,9 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
   const [catalogueImage, setCatalogueImage] = useState<string>(initialData?.cover ?? '')
   const [selectedImage, setSelectedImage] = useState<File>();
 
+  const [fileSize, setFileSize] = useState(0);
+  const [imageSize, setImageSize] = useState(0);
+
   const [loading, setLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('');
   const submitInProgress = useRef(false);
@@ -75,6 +78,14 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
     setSelectedFile(undefined);
     setSelectedImage(undefined);
   }, [initialData?.id, initialData?.pdf, initialData?.cover, initialData?.pdfname]);
+
+  useEffect(() => {
+    setFileSize(selectedFile?.size ?? 0);
+  }, [selectedFile]);
+
+  useEffect(() => {
+    setImageSize(selectedImage?.size ?? 0);
+  }, [selectedImage]);
 
   const deletePDF = () => {
     setCataloguePDF('');
@@ -319,7 +330,7 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
                 )}
               </div>
               <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
-                Selected size: {formatFileSize(selectedImage?.size ?? 0)} total
+                Selected size: {formatFileSize(imageSize)} total
                 <span className="ml-1">(50 MB maximum per file)</span>
               </p>
             </div>
@@ -413,7 +424,7 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
                   {/* </div> */}
                 </div>
                 <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
-                  Selected size: {formatFileSize(selectedFile?.size ?? 0)} total
+                  Selected size: {formatFileSize(fileSize)} total
                   <span className="ml-1">(50 MB maximum per file)</span>
                 </p>
               </div>
