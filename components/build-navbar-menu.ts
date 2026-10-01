@@ -45,7 +45,6 @@ function categoryToItem(
     url: '',
     imageDesc: '',
     newProd: false,
-    tempAllFinished: false,
   } as NavbarComponents
 }
 
@@ -59,7 +58,6 @@ function productToItem(
     url: clean(product.cover_img_url),
     imageDesc: clean(product.navbarNotes),
     newProd: Boolean(product.isNewProduct),
-    tempAllFinished: Boolean(product.tempAllFinished),
   } as NavbarComponents
 }
 

@@ -6,10 +6,18 @@ import { SubSubCategoriesClient } from "./components/client";
 import { getSession } from "@/lib/actions";
 import { redirect } from "next/navigation";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(brandId: string){
+  const subsubcategory = await prismadb.allcategory.findMany({
+    where: {
+      brandId: brandId,
+      type: "Sub Sub Category"
+    },
+    orderBy: {
+      updatedAt: 'desc'
+    }
+  });
+  return subsubcategory
+}
 
 const SubSubCategoryPage = async (
   props: {
@@ -23,15 +31,7 @@ const SubSubCategoryPage = async (
     redirect("/admin")
   }
 
-  const subsubcategory = await prismadb.allcategory.findMany({
-    where: {
-      brandId: params.brandId,
-      type: "Sub Sub Category"
-    },
-    orderBy: {
-      updatedAt: 'desc'
-    }
-  });
+  const subsubcategory = await getData(params.brandId)
 
   const formattedSubSubCategories: SubSubCategoryColumn[] = subsubcategory.map((item) => ({
     id: item.id,

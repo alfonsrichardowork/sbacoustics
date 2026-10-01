@@ -251,7 +251,6 @@ export async function GET(
                   isKits: true,
                   isNewProduct: true,
                   navbarNotes: true,
-                  tempAllFinished: true,
                   isArchived: true,
                 },
               },

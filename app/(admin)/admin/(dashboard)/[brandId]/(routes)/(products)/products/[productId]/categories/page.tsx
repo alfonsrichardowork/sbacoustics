@@ -1,43 +1,30 @@
 import prismadb from "@/lib/prismadb";
 import { AllProductCategoryForm } from "./components/categories-form";
 
-
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
-
-const AllProductCategoryPage = async (
-  props: {
-    params: Promise<{ productId: string, brandId: string }>
-  }
-) => {
-  const params = await props.params;
+async function getData(brandId: string, productId: string){
   const categories = await prismadb.allcategory.findMany({
     where: {
       type: "Category",
-      brandId : params.brandId
+      brandId : brandId
     },
   });
 
   const subcategories = await prismadb.allcategory.findMany({
     where: {
       type: "Sub Category",
-      brandId : params.brandId
+      brandId : brandId
     },
   });
 
   const subsubcategories = await prismadb.allcategory.findMany({
     where: {
       type: "Sub Sub Category",
-      brandId : params.brandId
+      brandId : brandId
     },
   });
-
   const allproductcategories = await prismadb.allproductcategory.findMany({
     where: {
-      productId: params.productId,
+      productId: productId,
     },
     include:{
       category: true
@@ -46,11 +33,21 @@ const AllProductCategoryPage = async (
 
   const myproduct = await prismadb.product.findFirst({
     where: {
-      id: params.productId,
-      brandId: params.brandId
+      id: productId,
+      brandId: brandId
     },
   });
-  return ( 
+  return [categories, subcategories, subsubcategories, allproductcategories, myproduct] as const;
+}
+
+const AllProductCategoryPage = async (
+  props: {
+    params: Promise<{ productId: string, brandId: string }>
+  }
+) => {
+  const params = await props.params;
+  const [categories, subcategories, subsubcategories, allproductcategories, myproduct] = await getData(params.brandId, params.productId)  
+  return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <AllProductCategoryForm 

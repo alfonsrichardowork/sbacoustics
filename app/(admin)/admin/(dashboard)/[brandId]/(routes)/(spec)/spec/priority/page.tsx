@@ -1,19 +1,18 @@
 import prismadb from "@/lib/prismadb";
 import { PriorityForm } from "./components/priority-form";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(){
+  const allParent = await prismadb.dynamicspecificationparent.findMany({})
+  const allSubParent = await prismadb.dynamicspecificationsubparent.findMany({})
+  const allChild = await prismadb.dynamicspecification.findMany({})
+  return [allParent, allSubParent, allChild] as const;
+}
 
 const DynamicSpecPriorityPage = async (props: {
     params: Promise<{ brandId: string }>
   }) => {
   let allCat: string[] = ["Parent", "SubParent", "Child"]
-  const allParent = await prismadb.dynamicspecificationparent.findMany({})
-  const allSubParent = await prismadb.dynamicspecificationsubparent.findMany({})
-  const allChild = await prismadb.dynamicspecification.findMany({})
-  
+  const [allParent, allSubParent, allChild] = await getData()
 
   return ( 
     <div className="flex-col">

@@ -5,10 +5,23 @@ import prismadb from "@/lib/prismadb";
 import { SettingsForm } from "./components/settings-form";
 import { getSession } from "@/lib/actions";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(brandId: string){
+  const brand = await prismadb.brand.findFirst({
+    where: {
+      id: brandId
+    },
+    include: {
+      aboutUsImages: true
+    }
+  });
+
+  const socialmedia = await prismadb.socialmedia.findMany({
+    where: {
+      brandId: brandId
+    }
+  });
+  return [brand, socialmedia] as const;
+}
 
 const SettingsPage = async (
   props: {
@@ -22,20 +35,7 @@ const SettingsPage = async (
     redirect("/admin")
   }
 
-  const brand = await prismadb.brand.findFirst({
-    where: {
-      id: params.brandId
-    },
-    include: {
-      aboutUsImages: true
-    }
-  });
-
-  const socialmedia = await prismadb.socialmedia.findMany({
-    where: {
-      brandId: params.brandId
-    }
-  });
+  const [brand, socialmedia] = await getData(params.brandId)
 
   if (!brand) {
     redirect(`${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/`);

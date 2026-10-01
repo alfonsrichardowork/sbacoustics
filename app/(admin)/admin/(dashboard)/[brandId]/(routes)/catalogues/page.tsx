@@ -5,11 +5,19 @@ import { redirect } from "next/navigation";
 import { CataloguesClient } from "./components/client";
 import { CataloguesColumn } from "./components/columns";
 import { getSession } from "@/lib/actions";
+import { cacheLife } from "next/cache";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(brandId: string){
+  const allCatalogues = await prismadb.catalogues.findMany({
+    where: {
+      brandId: brandId
+    },
+    orderBy: {
+      updatedAt: 'desc'
+    }
+  });
+  return allCatalogues
+}
 
 const CataloguesPage = async (
   props: {
@@ -23,14 +31,7 @@ const CataloguesPage = async (
     redirect("/admin")
   }
 
-  const allCatalogues = await prismadb.catalogues.findMany({
-    where: {
-      brandId: params.brandId
-    },
-    orderBy: {
-      updatedAt: 'desc'
-    }
-  });
+  const allCatalogues = await getData(params.brandId)
 
   const formattedCatalogues: CataloguesColumn[] = allCatalogues.map((item) => ({
     id: item.id,

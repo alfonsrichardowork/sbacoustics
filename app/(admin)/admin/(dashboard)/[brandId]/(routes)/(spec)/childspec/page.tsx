@@ -7,10 +7,14 @@ import { redirect } from "next/navigation";
 import { ChildSpecColumn } from "./components/columns";
 import { ChildSpecClient } from "./components/client";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(){
+  const childspec = await prismadb.dynamicspecification.findMany({
+    orderBy: {
+      updatedAt: 'desc'
+    }
+  });
+  return childspec
+}
 
 const ChildSpecPage = async (
 ) => {
@@ -20,11 +24,7 @@ const ChildSpecPage = async (
     redirect("/admin")
   }
 
-  const childspec = await prismadb.dynamicspecification.findMany({
-    orderBy: {
-      updatedAt: 'desc'
-    }
-  });
+  const childspec = await getData()  
 
   const formattedChildSpec: ChildSpecColumn[] = childspec.map((item) => ({
     id: item.id,

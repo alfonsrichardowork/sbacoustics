@@ -7,10 +7,21 @@ import { ProductColumn } from "./components/columns";
 import { getSession } from "@/lib/actions";
 import { redirect } from "next/navigation";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(brandId: string){
+  const products = await prismadb.product.findMany({
+    where: {
+      brandId: brandId
+    },
+    include: {
+      images_catalogues: true,
+      size: true,
+    },
+    orderBy: {
+      updatedAt: 'desc'
+    }
+  });
+  return products
+}
 
 const ProductsPage = async (
   props: {
@@ -24,18 +35,7 @@ const ProductsPage = async (
     redirect("/admin")
   }
 
-  const products = await prismadb.product.findMany({
-    where: {
-      brandId: params.brandId
-    },
-    include: {
-      images_catalogues: true,
-      size: true,
-    },
-    orderBy: {
-      updatedAt: 'desc'
-    }
-  });
+  const products = await getData(params.brandId);
 
   const formattedProducts: ProductColumn[] = products.map((item) => ({
     id: item.id,

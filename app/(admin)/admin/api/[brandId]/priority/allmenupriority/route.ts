@@ -45,7 +45,7 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
     ])
 
 
-    revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}`);
+    revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : '/'}`);
     return NextResponse.json("success");
   } catch (error) {
     console.log('[PRODUCTS_POST]', error);

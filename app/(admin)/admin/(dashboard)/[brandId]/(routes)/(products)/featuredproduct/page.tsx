@@ -6,10 +6,19 @@ import { redirect } from "next/navigation";
 import { FeaturedProductColumn } from "./components/columns";
 import { FeaturedProductClient } from "./components/client";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(brandId: string){
+  const featured = await prismadb.product.findMany({
+    where: {
+      isFeatured: true,
+      brandId: brandId
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  });
+
+  return featured
+}
 
 const FeaturedProductPage = async (
   props: {
@@ -23,16 +32,7 @@ const FeaturedProductPage = async (
     redirect("/admin")
   }
 
-  const featured = await prismadb.product.findMany({
-    where: {
-      isFeatured: true,
-      brandId: params.brandId
-    },
-    orderBy: {
-      createdAt: 'desc'
-    }
-  });
-
+  const featured = await getData(params.brandId);
   const formattedFeaturedProduct: FeaturedProductColumn[] = featured.map((item) => ({
     id: item.id,
     name: item.name,

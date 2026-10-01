@@ -613,10 +613,6 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                             : pathname.includes("sbaudience")
                                               ? "text-white"
                                               : ""
-                                        } ${
-                                          products.tempAllFinished &&
-                                          products.tempAllFinished === true &&
-                                          "text-green-500"
                                         }`}
                                         onMouseEnter={() => {
                                           setDriversSubMenuUrl(products.url);
@@ -732,10 +728,6 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                               : pathname.includes("sbaudience")
                                                 ? "text-white"
                                                 : ""
-                                          } ${
-                                            products.tempAllFinished &&
-                                            products.tempAllFinished === true &&
-                                            "text-green-500"
                                           }`}
                                           onMouseEnter={() => {
                                             setDriversSubSubMenuUrl(products.url);
@@ -882,10 +874,6 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                               : pathname.includes("sbaudience")
                                                 ? "text-white"
                                                 : ""
-                                          } ${
-                                            products.tempAllFinished &&
-                                            products.tempAllFinished === true &&
-                                            "text-green-500"
                                           }`}
                                           onMouseEnter={() => {
                                             setDriversSubSubSubMenuUrl(products.url);
@@ -1018,10 +1006,6 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                             : pathname.includes("sbaudience")
                                               ? "text-white"
                                               : ""
-                                        } ${
-                                          products.tempAllFinished &&
-                                          products.tempAllFinished === true &&
-                                          "text-green-500"
                                         }`}
                                         onMouseEnter={() => {
                                           setDriversSubSubSubSubMenuUrl(products.url);

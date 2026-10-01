@@ -1,12 +1,30 @@
 import prismadb from "@/lib/prismadb";
 import { SimiliarProductForm } from "./components/similar-product-form";
 
+async function getData(productId: string, brandId: string){
+  const allsimilarproducts = await prismadb.similarproducts.findMany({
+    where: {
+      productId: productId,
+    },
+  });
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+  const myproduct = await prismadb.product.findFirst({
+    where: {
+      id: productId,
+      brandId: brandId
+    },
+  });
 
+  const allproducts = await prismadb.product.findMany({
+    where:{
+      brandId: brandId,
+      id: {
+        not: productId
+      }
+    }
+  });
+  return [allsimilarproducts, myproduct, allproducts] as const;
+}
 
 const SimilarProductPage = async (
   props: {
@@ -14,28 +32,8 @@ const SimilarProductPage = async (
   }
 ) => {
   const params = await props.params;
-
-  const allsimilarproducts = await prismadb.similarproducts.findMany({
-    where: {
-      productId: params.productId,
-    },
-  });
-
-  const myproduct = await prismadb.product.findFirst({
-    where: {
-      id: params.productId,
-      brandId: params.brandId
-    },
-  });
-
-  const allproducts = await prismadb.product.findMany({
-    where:{
-      brandId: params.brandId,
-      id: {
-        not: params.productId
-      }
-    }
-  });
+  const [allsimilarproducts, myproduct, allproducts] = await getData(params.productId, params.brandId)
+  
 
   const updatedProducts = allproducts.map(product => ({
     ...product,

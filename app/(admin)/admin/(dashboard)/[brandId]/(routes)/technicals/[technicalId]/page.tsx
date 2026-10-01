@@ -1,20 +1,10 @@
 import prismadb from "@/lib/prismadb";
 import { TechnicalForm } from "./components/technical-form";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
-const TechnicalPage = async (
-  props: {
-    params: Promise<{ technicalId: string }>
-  }
-) => {
-  const params = await props.params;
-  const onetechnical = await prismadb.technicals.findUnique({
+async function getData(technicalId: string){
+   const onetechnical = await prismadb.technicals.findUnique({
     where: {
-      id: params.technicalId,
+      id: technicalId,
     }
   });
 
@@ -23,6 +13,15 @@ const TechnicalPage = async (
       priority: true
     }
   })
+  return [onetechnical, totalTechnical] as const;
+}
+const TechnicalPage = async (
+  props: {
+    params: Promise<{ technicalId: string }>
+  }
+) => {
+  const params = await props.params;
+  const [onetechnical, totalTechnical] = await getData(params.technicalId)
   const priority = totalTechnical.map((a) => a.priority)
 
 

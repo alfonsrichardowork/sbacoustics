@@ -5,10 +5,17 @@ import { DistributorsClient } from "./components/client";
 import { DistributorsColumn } from "./components/columns";
 import { format } from "date-fns";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(brandId: string){
+  const distributor = await prismadb.distributors.findMany({
+    where: {
+      brandId: brandId
+    },
+    orderBy: {
+      updatedAt: 'desc'
+    }
+  });
+  return distributor
+}
 
 const DistributorsPage = async (
   props: {
@@ -22,14 +29,7 @@ const DistributorsPage = async (
     redirect("/admin")
   }
 
-  const distributor = await prismadb.distributors.findMany({
-    where: {
-      brandId: params.brandId
-    },
-    orderBy: {
-      updatedAt: 'desc'
-    }
-  });
+  const distributor = await getData(params.brandId)  
 
   if (!distributor) {
     redirect(`${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/`);

@@ -1,11 +1,28 @@
 import prismadb from "@/lib/prismadb";
 import { UserForm } from "./components/user-role-form";
+import { cacheLife } from "next/cache";
 
+async function getData(userId: string){
+  'use cache'
+  cacheLife('minutes')
+  const user_role = await prismadb.roles.findMany({
+    where: {
+      userId: userId
+    }
+  });
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+  const user_name = await prismadb.users.findFirst({
+    where:{
+      id: userId
+    },
+    select:{
+      name: true
+    }
+  })
+
+  const all_brands = await prismadb.brand.findMany({})
+  return [user_role, user_name, all_brands] as const;
+}
 
 
 const UserPage = async (
@@ -14,22 +31,7 @@ const UserPage = async (
   }
 ) => {
   const params = await props.params;
-  const user_role = await prismadb.roles.findMany({
-    where: {
-      userId: params.userId
-    }
-  });
-
-  const user_name = await prismadb.users.findFirst({
-    where:{
-      id: params.userId
-    },
-    select:{
-      name: true
-    }
-  })
-
-  const all_brands = await prismadb.brand.findMany({})
+  const [user_role, user_name, all_brands] = await getData(params.userId)
 
   return ( 
     <div className="flex-col">

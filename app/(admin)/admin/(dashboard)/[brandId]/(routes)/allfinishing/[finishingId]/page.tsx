@@ -1,12 +1,14 @@
 import prismadb from "@/lib/prismadb";
 import { FinishingForm } from "./components/finishing-form";
 
-
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
+async function getData(finishingId: string){
+  const dist = await prismadb.allfinishing.findFirst({
+    where: {
+      id: finishingId
+    }
+  });
+  return dist
+}
 
 const AllFinishingPage = async (
   props: {
@@ -14,12 +16,7 @@ const AllFinishingPage = async (
   }
 ) => {
   const params = await props.params;
-  const dist = await prismadb.allfinishing.findFirst({
-    where: {
-      id: params.finishingId
-    }
-  });
-
+  const dist = await getData(params.finishingId)
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">

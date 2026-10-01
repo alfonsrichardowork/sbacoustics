@@ -1,25 +1,21 @@
 import prismadb from "@/lib/prismadb";
 import { SubParentSpecForm } from "./components/sub-parent-spec-form";
 
-
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
-
+async function getData(subParentSpecId: string){
+  const subparent = await prismadb.dynamicspecificationsubparent.findUnique({
+    where: {
+      id: subParentSpecId
+    }
+  });
+  return subparent
+}
 const SubParentSpecPage = async (
   props: {
     params: Promise<{ subParentSpecId: string, brandId: string }>
   }
 ) => {
   const params = await props.params;
-  const subparent = await prismadb.dynamicspecificationsubparent.findUnique({
-    where: {
-      id: params.subParentSpecId
-    }
-  });
-
+  const subparent = await getData(params.subParentSpecId)
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">

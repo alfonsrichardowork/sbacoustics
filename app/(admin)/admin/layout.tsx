@@ -7,6 +7,8 @@ import { Toaster } from '@/components/ui/toaster'
 
 const font = Inter({ subsets: ['cyrillic'] })
 
+export const instant = false;
+
 export const metadata = {
   title: 'Admin Dashboard',
   description: 'All Admin Dashboard',
@@ -18,7 +20,7 @@ export default function AdminRootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-hidden">
       <body className={`${font.className || ''} overflow-x-hidden bg-foreground/5 `}>
         <div className='h-screen'>
           <ToastProvider />

@@ -62,13 +62,13 @@ export default function BrandSwitcher({ className, items = [], role }: BrandSwit
           {/* <SpeakerIcon className="mr-2 h-4 w-4" /> */}
           {currentBrand ? 
             currentBrand.label === 'SB Acoustics' ? 
-              <Image src={'/images/admin/logo_sbacoustics_black_clean.webp'} alt="Logo SB Acoustics" width={120} height={50} />
+              <Image src={'/images/admin/logo_sbacoustics_black_clean.webp'} alt="Logo SB Acoustics" width={120} height={50} loading="eager" className="w-full h-fit"/>
             : 
             currentBrand.label === 'SB Audience' ? 
-              <Image src={'/images/admin/logo_sbaudience_black.webp'} alt="Logo SB Audience" width={120} height={50} />
+              <Image src={'/images/admin/logo_sbaudience_black.webp'} alt="Logo SB Audience" width={120} height={50} loading="eager" className="w-full h-fit"/>
             : 
             currentBrand.label === 'SB Automotive' ? 
-              <Image src={'/images/admin/logo_sbautomotive_black.webp'} alt="Logo SB Automotive" width={120} height={50} />
+              <Image src={'/images/admin/logo_sbautomotive_black.webp'} alt="Logo SB Automotive" width={120} height={50} loading="eager" className="w-full h-fit"/>
             :
               currentBrand.label
           :

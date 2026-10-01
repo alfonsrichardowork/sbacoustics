@@ -6,10 +6,18 @@ import { CategoriesClient } from "./components/client";
 import { getSession } from "@/lib/actions";
 import { redirect } from "next/navigation";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(brandId: string){
+  const category = await prismadb.allcategory.findMany({
+    where: {
+      brandId: brandId,
+      type: "Category"
+    },
+    orderBy: {
+      updatedAt: 'desc'
+    }
+  });
+  return category
+}
 
 const CategoryPage = async (
   props: {
@@ -22,17 +30,7 @@ const CategoryPage = async (
   if(!session.isLoggedIn){
     redirect("/admin")
   }
-
-  const category = await prismadb.allcategory.findMany({
-    where: {
-      brandId: params.brandId,
-      type: "Category"
-    },
-    orderBy: {
-      updatedAt: 'desc'
-    }
-  });
-
+  const category = await getData(params.brandId);
   const formattedCategories: CategoryColumn[] = category.map((item) => ({
     id: item.id,
     name: item.name,

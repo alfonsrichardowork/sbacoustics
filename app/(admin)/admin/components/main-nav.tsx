@@ -204,7 +204,7 @@ export function MainNav({
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger className={`flex gap-1.5 text-xs ${pathSegments[3] === 'products' || pathSegments[3] === 'size' || pathSegments[3] === 'category' || pathSegments[3] === 'subcategory' || pathSegments[3] === 'subsubcategory' || pathSegments[3] === 'featuredproduct' || pathSegments[3] === 'priority' ? 'bg-primary text-background hover:text-background' : ''}`}>
+          <NavigationMenuTrigger className={`flex gap-1.5 text-xs ${pathSegments[3] === 'products' || pathSegments[3] === 'size' || pathSegments[3] === 'category' || pathSegments[3] === 'subcategory' || pathSegments[3] === 'subsubcategory' || pathSegments[3] === 'featuredproduct' || pathSegments[3] === 'priority' || pathSegments[3] === 'allfinishing' || (pathSegments[3] === 'menupriority' && pathSegments[4] === 'priority') ? 'bg-primary text-background hover:text-background' : ''}`}>
             <Package size={16} /> Products
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -317,7 +317,7 @@ export function MainNav({
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuTrigger className={`flex gap-1.5 text-xs ${pathSegments[3] === 'superior' || pathSegments[3] === 'catalogues' || pathSegments[3] === 'distributors' || pathSegments[3] === 'about' || pathSegments[3] === 'contacts' || pathSegments[3] === 'allfinishing' ? 'bg-primary text-background hover:text-background' : ''}`}>
+              <NavigationMenuTrigger className={`flex gap-1.5 text-xs ${pathSegments[3] === 'superior' || pathSegments[3] === 'catalogues' || pathSegments[3] === 'distributors' || pathSegments[3] === 'about' || pathSegments[3] === 'contacts' ? 'bg-primary text-background hover:text-background' : ''}`}>
                 <List size={16} /> Others
               </NavigationMenuTrigger>
               <NavigationMenuContent>

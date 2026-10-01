@@ -142,6 +142,8 @@ export async function PATCH(
     }
 
     revalidatePath('/technical')
+    revalidatePath('/sbaudience/technical')
+    revalidatePath('/sbautomotive/technical')
     return NextResponse.json("success");
   } catch (error) {
     console.log('[TECHNICAL_PATCH]', error);

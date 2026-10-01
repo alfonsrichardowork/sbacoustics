@@ -1,12 +1,19 @@
 import prismadb from "@/lib/prismadb";
 import { ApplicationForm } from "./components/application-form";
 
-
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
+async function getData(applicationId: string, brandId: string){
+  const app = await prismadb.sbaudienceapplication.findUnique({
+    where: {
+      id: applicationId,
+      brandId: brandId
+    },
+    include: {
+      images_catalogues: true,
+      datasheet: true,
+    },
+  });
+  return app
+}
 
 const ApplicationPage = async (
   props: {
@@ -14,17 +21,7 @@ const ApplicationPage = async (
   }
 ) => {
   const params = await props.params;
-  const app = await prismadb.sbaudienceapplication.findUnique({
-    where: {
-      id: params.applicationId,
-      brandId: params.brandId
-    },
-    include: {
-      images_catalogues: true,
-      datasheet: true,
-    },
-  });
-
+  const app = await getData(params.applicationId, params.brandId)
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">

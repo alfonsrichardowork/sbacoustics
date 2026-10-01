@@ -357,7 +357,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { name, description, isFeatured, isArchived, isKits, isNewProduct, sizeId, images_catalogues, multipleDatasheetProduct, multipleFRDZMAFiles, multiple3DModels, cover_img_url, drawing_img_url, graph_img_url, navbarNotes, searchbox_desc, tempAllFinished, willHaveFRD } = body;
+    const { name, description, isFeatured, isArchived, isKits, isNewProduct, sizeId, images_catalogues, multipleDatasheetProduct, multipleFRDZMAFiles, multiple3DModels, cover_img_url, drawing_img_url, graph_img_url, navbarNotes, searchbox_desc, willHaveFRD } = body;
 
     if (!params.productId) {
       return new NextResponse("Product id is required", { status: 400 });
@@ -828,7 +828,6 @@ export async function PATCH(
             description: description,
             updatedAt: new Date(),
             updatedBy: session.name,
-            tempAllFinished,
             willHaveFRD
           },
         });
@@ -1347,7 +1346,6 @@ export async function PATCH(
         navbarNotes,
         searchbox_desc,
         sizeId,
-        tempAllFinished,
         willHaveFRD,
         description: description,
       },

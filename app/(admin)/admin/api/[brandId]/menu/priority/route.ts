@@ -49,7 +49,8 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
     );
 
     revalidatePath(`/`);
-    revalidatePath(`/en`);
+    revalidatePath(`/sbaudience`);
+    revalidatePath(`/sbautomotive`);
     return NextResponse.json("success");
   } catch (error) {
     console.log('[SPEC_PRIORITY_POST]', error);

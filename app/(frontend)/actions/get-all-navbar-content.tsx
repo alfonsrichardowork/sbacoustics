@@ -78,7 +78,6 @@ function serializeProduct(product: ProductRecord, priority: string | null) {
     isNewProduct: product.isNewProduct,
     navbarNotes: product.navbarNotes,
     priority: priority ?? '',
-    tempAllFinished: product.tempAllFinished,
     isArchived: product.isArchived,
   }
 }

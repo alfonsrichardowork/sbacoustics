@@ -16,9 +16,7 @@ const getAllNewProducts = async (path: string): Promise<[NewProduct[], NewProduc
   
   const brandId = path.includes('sbaudience') ? process.env.NEXT_PUBLIC_SB_AUDIENCE_ID : path.includes('sbautomotive') ? process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID : process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
   const API_EDITED = API.replace('{brandId}', brandId ?? '680c5eee-7ed7-41bc-b14b-4185f8a1c379'); //SBAcoustics ID as default
-  const response = await fetch(API_EDITED, {
-    next: { revalidate: 30 }
-  });
+  const response = await fetch(API_EDITED);
 
   if (!response.ok) {
     redirect('/');

@@ -1,29 +1,17 @@
 import prismadb from "@/lib/prismadb";
 import { KitsFinishingForm } from "./components/kits-finishing-form";
 
-
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
-
-const UserPage = async (
-    props: {
-      params: Promise<{ brandId: string, productId: string }>
-    }
-) => {
-    const params = await props.params;
+async function getData(productId: string, brandId: string){
     const kits_finishing_data = await prismadb.kitsfinishing.findMany({
         where: {
-          productId: params.productId,
+          productId: productId,
         },
     });
 
     const name_product = await prismadb.product.findFirst({
         where:{
-            id: params.productId,
-            brandId: params.brandId
+            id: productId,
+            brandId: brandId
         },
         select:{
             name: true
@@ -32,6 +20,16 @@ const UserPage = async (
 
     const all_finishing = await prismadb.allfinishing.findMany({})
 
+    return [kits_finishing_data, name_product, all_finishing] as const;
+}
+
+const UserPage = async (
+    props: {
+      params: Promise<{ brandId: string, productId: string }>
+    }
+) => {
+    const params = await props.params;
+    const [kits_finishing_data, name_product, all_finishing] = await getData(params.productId, params.brandId)
     if(!kits_finishing_data){
         return null;
     }

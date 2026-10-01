@@ -1,10 +1,14 @@
 import prismadb from "@/lib/prismadb";
 import { CatalogueForm } from "./components/catalogue-form";
-
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+import { cacheLife } from "next/cache";
+async function getData(catalogueId: string){
+  const onecatalogue = await prismadb.catalogues.findUnique({
+    where: {
+      id: catalogueId,
+    }
+  });
+  return onecatalogue
+}
 
 const CataloguePage = async (
   props: {
@@ -12,12 +16,7 @@ const CataloguePage = async (
   }
 ) => {
   const params = await props.params;
-  const onecatalogue = await prismadb.catalogues.findUnique({
-    where: {
-      id: params.catalogueId,
-    }
-  });
-
+  const onecatalogue = await getData(params.catalogueId)
 
   return ( 
     <div className="flex-col">

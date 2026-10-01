@@ -8,14 +8,32 @@ import {
 } from './components/priority-form'
 import { normalizeTree } from '@/lib/priority-admin';
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(brandId: string){
+  const allBrandCategories = await prismadb.allcategory.findMany({
+    where: { brandId },
+    select: {
+      id: true, name: true, type: true, priority: true,
+      under_categoryId: true, shown_on_all_drivers_page: true,
+    },
+  })
 
+  return allBrandCategories;
+}
 
-
-
+async function getDataProduct(brandId: string, seen: Set<string>){
+  const products = await prismadb.product.findMany({
+    where: {
+      brandId,
+      isArchived: false,
+      allCat: { some: { categoryId: { in: [...seen] } } },
+    },
+    select: {
+      id: true, name: true, slug: true, cover_img_url: true,
+      allCat: { select: { categoryId: true, priority: true } },
+    },
+  })
+  return products
+}
 
 function buildCategoryPriorityTree(
   categories: PriorityCategoryRecord[],
@@ -72,14 +90,8 @@ function buildCategoryPriorityTree(
 export default async function Page(props: { params: Promise<{ brandId: string }> }) {
   const { brandId } = await props.params
 
-  const allBrandCategories = await prismadb.allcategory.findMany({
-    where: { brandId },
-    select: {
-      id: true, name: true, type: true, priority: true,
-      under_categoryId: true, shown_on_all_drivers_page: true,
-    },
-  })
-
+  const allBrandCategories = await getData(brandId)
+  
   const shown = allBrandCategories.filter((c) => c.shown_on_all_drivers_page)
   const shownIds = new Set(shown.map((c) => c.id))
   // 'Category' type is top level; anything else shown sits under its parent
@@ -105,17 +117,9 @@ export default async function Page(props: { params: Promise<{ brandId: string }>
     stack.push(...(childrenByParent.get(current.id) ?? []))
   }
 
-  const products = await prismadb.product.findMany({
-    where: {
-      brandId,
-      isArchived: false,
-      allCat: { some: { categoryId: { in: [...seen] } } },
-    },
-    select: {
-      id: true, name: true, slug: true, cover_img_url: true,
-      allCat: { select: { categoryId: true, priority: true } },
-    },
-  })
+
+  const products = await getDataProduct(brandId, seen)
+
 
   const categories: PriorityCategoryRecord[] = included.map((c) => ({
     id: c.id,

@@ -57,7 +57,6 @@ export interface NavbarProducts {
     navbarNotes: string;
     priority: string;
     newProduct: boolean;
-    tempAllFinished?: boolean;
 }
 
 export interface FilesProp{
@@ -198,7 +197,6 @@ export interface NavbarComponents{
   priority: string,
   newProd: boolean,
   hasProduct: boolean
-  tempAllFinished?: boolean;
 }
 
 export interface PriorityMenu{

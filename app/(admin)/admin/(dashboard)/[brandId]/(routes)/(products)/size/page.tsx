@@ -6,10 +6,18 @@ import { SizesClient } from "./components/client";
 import { getSession } from "@/lib/actions";
 import { redirect } from "next/navigation";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(brandId: string){
+  const sizes = await prismadb.size.findMany({
+    where: {
+      brandId: brandId
+    },
+    orderBy: {
+      updatedAt: 'desc'
+    }
+  });
+
+  return sizes;
+}
 
 const SizePage = async (
   props: {
@@ -23,15 +31,7 @@ const SizePage = async (
     redirect("/admin")
   }
 
-  const sizes = await prismadb.size.findMany({
-    where: {
-      brandId: params.brandId
-    },
-    orderBy: {
-      updatedAt: 'desc'
-    }
-  });
-
+  const sizes = await getData(params.brandId)
   const formattedSizes: SizeColumn[] = sizes.map((item) => ({
     id: item.id,
     name: item.name,

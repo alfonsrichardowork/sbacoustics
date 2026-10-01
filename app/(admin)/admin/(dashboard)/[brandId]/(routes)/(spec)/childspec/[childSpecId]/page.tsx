@@ -1,12 +1,14 @@
 import prismadb from "@/lib/prismadb";
 import { ChildSpecForm } from "./components/child-spec-form";
 
-
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
+async function getData(childSpecId: string){
+  const child = await prismadb.dynamicspecification.findUnique({
+    where: {
+      id: childSpecId
+    }
+  });
+  return child;
+}
 
 const ChildSpecPage = async (
   props: {
@@ -14,12 +16,7 @@ const ChildSpecPage = async (
   }
 ) => {
   const params = await props.params;
-  const child = await prismadb.dynamicspecification.findUnique({
-    where: {
-      id: params.childSpecId
-    }
-  });
-
+  const child = await getData(params.childSpecId)
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">

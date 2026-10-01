@@ -5,10 +5,17 @@ import { FinishingClient } from "./components/client";
 import { FinishingColumn } from "./components/columns";
 import { format } from "date-fns";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(brandId: string){
+  const allFinish = await prismadb.allfinishing.findMany({
+    where: {
+      brandId: brandId
+    },
+    orderBy: {
+      updatedAt: 'desc'
+    }
+  });
+  return allFinish
+}
 
 const AllFinishingPage = async (
   props: {
@@ -22,14 +29,7 @@ const AllFinishingPage = async (
     redirect("/admin")
   }
 
-  const allFinish = await prismadb.allfinishing.findMany({
-    where: {
-      brandId: params.brandId
-    },
-    orderBy: {
-      updatedAt: 'desc'
-    }
-  });
+  const allFinish = await getData(params.brandId);
 
   if (!allFinish) {
     redirect(`${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/`);

@@ -78,46 +78,6 @@ export async function PATCH(
           cover: true
         }
       })
-      //Delete physical files
-      if(oldUrl && oldUrl.length > 0) {
-        oldUrl.map( async (val) => {
-          if(val.pdf != pdf) {
-            if(val.pdf.startsWith(uploadsprefix)){
-              const filename = val.pdf.slice(uploadsprefix.length)
-              // if (filename && path.basename(filename) === filename) {
-                const imgPath = path.join(process.cwd(), 'uploads', filename);
-                try {
-                  await fs.unlink(imgPath);
-                } catch (error) {
-                  console.warn(`Could not delete file ${val.pdf}:`, error);
-                } 
-              // }
-            }
-            else{
-              console.warn(`Not inside uploads folder`);
-            }
-          }
-
-          if(val.cover != cover) {
-            if(val.cover.startsWith(uploadsprefix)){
-              const filename = val.cover.slice(uploadsprefix.length)
-              // if (filename && path.basename(filename) === filename) {
-                const imgPath = path.join(process.cwd(), 'uploads', filename);
-                try {
-                  await fs.unlink(imgPath);
-                } catch (error) {
-                  console.warn(`Could not delete file ${val.cover}:`, error);
-                } 
-              // }
-            }
-            else{
-              console.warn(`Not inside uploads folder`);
-            }
-          }
-           
-        })
-      }
-
       await prismadb.catalogues.update({
         where: {
           id: params.catalogueId
@@ -131,6 +91,28 @@ export async function PATCH(
           updatedBy: session.name,
         },
       })
+
+      for (const catalogue of oldUrl) {
+        if (catalogue.pdf !== pdf && catalogue.pdf.startsWith(uploadsprefix)) {
+          const filename = catalogue.pdf.slice(uploadsprefix.length);
+          const filePath = path.join(process.cwd(), 'uploads', filename);
+          try {
+            await fs.unlink(filePath);
+          } catch (error) {
+            console.warn(`Could not delete file ${catalogue.pdf}:`, error);
+          }
+        }
+
+        if (catalogue.cover !== cover && catalogue.cover.startsWith(uploadsprefix)) {
+          const filename = catalogue.cover.slice(uploadsprefix.length);
+          const filePath = path.join(process.cwd(), 'uploads', filename);
+          try {
+            await fs.unlink(filePath);
+          } catch (error) {
+            console.warn(`Could not delete file ${catalogue.cover}:`, error);
+          }
+        }
+      }
 
     }
     else{
@@ -161,6 +143,7 @@ export async function PATCH(
 
     revalidatePath('/catalogues')
     revalidatePath('/sbaudience/catalogues')
+    revalidatePath('/sbautomotive/catalogues')
     return NextResponse.json("success");
   } catch (error) {
     console.log('[CATALOGUE_PATCH]', error);

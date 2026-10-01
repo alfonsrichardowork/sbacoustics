@@ -197,7 +197,6 @@ export async function generateStaticParams() {
                     isKits: true,
                     isNewProduct: true,
                     navbarNotes: true,
-                    tempAllFinished: true,
                     isArchived: true,
                 },
                 },

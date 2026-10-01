@@ -5,10 +5,27 @@ import { UserColumn } from "./components/columns";
 import { UsersClient } from "./components/client";
 import { getSession } from "@/lib/actions";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(username: string){
+  const user = await prismadb.users.findMany({
+    where: {
+      name: {
+        not: username
+      }
+    }
+  });
+  return user
+}
+
+async function getData2(userIds: string[]){
+  const roles: roles[] = await prismadb.roles.findMany({
+    where: {
+      userId: {
+        in: userIds
+      }
+    }
+  });
+  return roles
+}
 
 const UserSettingPage = async () => {
   const session = await getSession();
@@ -17,13 +34,7 @@ const UserSettingPage = async () => {
     redirect("/admin")
   }
 
-  const user = await prismadb.users.findMany({
-    where: {
-      name: {
-        not: session.username
-      }
-    }
-  });
+  const user = await getData(session.username ?? '')
 
   if (!user) {
     redirect(`${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/`);
@@ -31,13 +42,7 @@ const UserSettingPage = async () => {
 
   const userIds = user.map(one_user => one_user.id);
 
-  const roles: roles[] = await prismadb.roles.findMany({
-    where: {
-      userId: {
-        in: userIds
-      }
-    }
-  });
+  const roles = await getData2(userIds)
 
   let allNames: string[] = []
 

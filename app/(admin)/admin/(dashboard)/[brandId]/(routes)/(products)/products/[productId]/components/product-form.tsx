@@ -63,7 +63,6 @@ const formSchema = z.object({
   isNewProduct: z.boolean().default(false).optional(),
   navbarNotes: z.string().optional(),
   searchbox_desc: z.string().optional(),
-  tempAllFinished: z.boolean().default(false).optional(),
   willHaveFRD: z.boolean().default(true).optional(),
 });
 
@@ -140,7 +139,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     // oemQuantity: '',
     navbarNotes: '',
     searchbox_desc: '',
-    tempAllFinished: false,
     willHaveFRD: true
   }
 
@@ -1425,27 +1423,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                 </FormItem>
               )}
             />
-            </div>
-            <div>
-              <FormField
-                control={form.control}
-                name="tempAllFinished"
-                render={({ field }) => (
-                  <FormItem className={`flex flex-row items-center space-x-3 space-y-0 border rounded-lg p-4 shadow-lg duration-300 ease-in-out bg-background ${field.value ? 'shadow-primary/70' : ''}`}>
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="font-bold text-base">
-                        All Finished (Temporary untuk Mas Mirza)
-                      </FormLabel>
-                    </div>
-                  </FormItem>
-                )}
-              />
             </div>
           <Button disabled={loading} type="submit" className="w-full flex gap-2 bg-green-500 text-white hover:bg-green-600 transition-colors">
             {action}

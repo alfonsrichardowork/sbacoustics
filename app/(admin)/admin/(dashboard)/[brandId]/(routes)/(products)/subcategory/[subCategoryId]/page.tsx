@@ -2,22 +2,12 @@ import prismadb from "@/lib/prismadb";
 
 import { SubCategoryForm } from "./components/sub-category-form";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
-const SubCategoryPage = async (
-  props: {
-    params: Promise<{ brandId: string, subCategoryId: string }>
-  }
-) => {
-  const params = await props.params;
+async function getData(subCategoryId: string, brandId: string){
   const Subcategory = await prismadb.allcategory.findUnique({
     where: {
-      id: params.subCategoryId,
+      id: subCategoryId,
       type: "Sub Category",
-      brandId: params.brandId
+      brandId: brandId
     }
   });
 
@@ -26,13 +16,23 @@ const SubCategoryPage = async (
       type: {
         in: ["Category", "Sub Category"]
       },
-      brandId : params.brandId,
+      brandId : brandId,
       id: {
-        not: params.subCategoryId
+        not: subCategoryId
       }
     },
   });
 
+  return [Subcategory, categories] as const;
+}
+
+const SubCategoryPage = async (
+  props: {
+    params: Promise<{ brandId: string, subCategoryId: string }>
+  }
+) => {
+  const params = await props.params;
+  const [Subcategory, categories] = await getData(params.subCategoryId, params.brandId)
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">

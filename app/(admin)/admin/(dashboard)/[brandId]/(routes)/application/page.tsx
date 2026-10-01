@@ -7,10 +7,17 @@ import { getSession } from "@/lib/actions";
 import { redirect } from "next/navigation";
 import { AppClient } from "./components/client";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(brandId: string){
+  const app = await prismadb.sbaudienceapplication.findMany({
+    where: {
+      brandId: brandId
+    },
+    orderBy: {
+      updatedAt: 'desc'
+    }
+  });
+  return app;
+}
 
 const ApplicationPage = async (
   props: {
@@ -23,15 +30,7 @@ const ApplicationPage = async (
   if(!session.isLoggedIn){
     redirect("/admin")
   }
-
-  const app = await prismadb.sbaudienceapplication.findMany({
-    where: {
-      brandId: params.brandId
-    },
-    orderBy: {
-      updatedAt: 'desc'
-    }
-  });
+  const app = await getData(params.brandId);
 
   const formattedApps: AppColumn[] = app.map((item) => ({
     id: item.id,

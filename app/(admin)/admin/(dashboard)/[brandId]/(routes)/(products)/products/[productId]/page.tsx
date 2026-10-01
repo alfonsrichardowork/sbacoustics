@@ -2,10 +2,27 @@ import prismadb from "@/lib/prismadb";
 
 import { ProductForm } from "./components/product-form";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(productId: string, brandId: string){
+  const product = await prismadb.product.findUnique({
+    where: {
+      id: productId,
+      brandId: brandId
+    },
+    include: {
+      images_catalogues: true,
+      multipleDatasheetProduct: true,
+      multipleFRDZMAFiles: true,
+      multiple3DModels: true
+    },
+  });
+
+  const sizes = await prismadb.size.findMany({
+    where: {
+      brandId: brandId,
+    },
+  });
+  return [product, sizes] as const;
+}
 
 const ProductPage = async (
   props: {
@@ -13,49 +30,12 @@ const ProductPage = async (
   }
 ) => {
   const params = await props.params;
-  const product = await prismadb.product.findUnique({
-    where: {
-      id: params.productId,
-      brandId: params.brandId
-    },
-    include: {
-      images_catalogues: true,
-      multipleDatasheetProduct: true,
-      multipleFRDZMAFiles: true,
-      multiple3DModels: true
-      // specification: true,
-      // image_cover: true,
-      // datasheet: true,
-    },
-  });
-
-  // const local_datasheet = await prismadb.multipleDatasheetProduct.findMany({
-  //   where:{
-  //     productId: params.productId
-  //   }
-  // })
-
-  const sizes = await prismadb.size.findMany({
-    where: {
-      brandId: params.brandId,
-    },
-  });
-
-  // const specification = await prismadb.specification.findFirst({
-  //   where: {
-  //     id: params.productId,
-  //   },
-  // });
+  const [product, sizes] = await getData(params.productId, params.brandId)
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <ProductForm 
           initialData={product}
-          // datasheet_local = {local_datasheet}
-          // categories={categories} 
-          // subcategories={subcategories} 
-          // subsubcategories={subsubcategories} 
-          // specification={specification!}
           sizes={sizes}
         />
       </div>

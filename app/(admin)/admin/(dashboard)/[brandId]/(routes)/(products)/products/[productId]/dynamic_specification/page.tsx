@@ -1,20 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { SpecForm } from "./components/dynamic_specification_form";
 
-
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
-
-const SBAudienceDynamicSpecPage = async (
-  props: {
-    params: Promise<{ productId: string, brandId: string }>
-  }
-) => {
-  const params = await props.params;
-
+async function getData(brandId: string, productId: string){
   const allParentSpec = await prismadb.dynamicspecificationparent.findMany(
     {
       orderBy: {
@@ -38,20 +25,30 @@ const SBAudienceDynamicSpecPage = async (
   )
   const initial = await prismadb.specificationconnector.findMany({
     where: {
-      brandId: params.brandId,
-      productId: params.productId
+      brandId: brandId,
+      productId: productId
     }
   })
   const productName = await prismadb.product.findFirst({
     where: {
-      brandId: params.brandId,
-      id: params.productId
+      brandId: brandId,
+      id: productId
     },
     select:{
       name: true
     }
   })
 
+  return [allParentSpec, allSubParentSpec, allChildSpec, initial, productName] as const;
+}
+
+const SBAudienceDynamicSpecPage = async (
+  props: {
+    params: Promise<{ productId: string, brandId: string }>
+  }
+) => {
+  const params = await props.params;
+  const [allParentSpec, allSubParentSpec, allChildSpec, initial, productName] = await getData(params.brandId, params.productId)
   return ( 
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">

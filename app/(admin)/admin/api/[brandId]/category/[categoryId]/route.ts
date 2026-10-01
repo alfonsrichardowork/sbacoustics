@@ -95,7 +95,7 @@ export async function DELETE(
       else{
         console.warn(`Not inside uploads folder`);
       }
-      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}${deletedSubCat.slug}`);
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : '/'}${deletedSubCat.slug}`);
     }
 
     await prismadb.allcategory.deleteMany({

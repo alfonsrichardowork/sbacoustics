@@ -6,26 +6,10 @@ import { TechnicalsClient } from "./components/client";
 import { TechnicalsColumn } from "./components/columns";
 import { getSession } from "@/lib/actions";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
-const TechnicalsPage = async (
-  props: {
-    params: Promise<{ brandId: string }>
-  }
-) => {
-  const params = await props.params;
-  const session = await getSession();
-
-  if(!session.isLoggedIn){
-    redirect("/admin")
-  }
-
+async function getData(brandId: string){
   const alltechnicals = await prismadb.technicals.findMany({
     where:{
-      brandId: params.brandId
+      brandId: brandId
     },
     select: {
       id: true,
@@ -39,6 +23,21 @@ const TechnicalsPage = async (
     }
   });
 
+  return alltechnicals
+}
+const TechnicalsPage = async (
+  props: {
+    params: Promise<{ brandId: string }>
+  }
+) => {
+  const params = await props.params;
+  const session = await getSession();
+
+  if(!session.isLoggedIn){
+    redirect("/admin")
+  }
+
+  const alltechnicals = await getData(params.brandId)
   const formattedTechnicals: TechnicalsColumn[] = alltechnicals.map((item) => ({
     id: item.id,
     name: item.name,

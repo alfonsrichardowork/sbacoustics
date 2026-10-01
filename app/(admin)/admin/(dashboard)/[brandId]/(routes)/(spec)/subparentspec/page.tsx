@@ -7,10 +7,14 @@ import { redirect } from "next/navigation";
 import { SubParentSpecColumn } from "./components/columns";
 import { SubParentSpecClient } from "./components/client";
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
+async function getData(){
+  const subparentspec = await prismadb.dynamicspecificationsubparent.findMany({
+    orderBy: {
+      updatedAt: 'desc'
+    }
+  });
+  return subparentspec
+}
 
 const SubParentSpecPage = async (
 ) => {
@@ -20,11 +24,7 @@ const SubParentSpecPage = async (
     redirect("/admin")
   }
 
-  const subparentspec = await prismadb.dynamicspecificationsubparent.findMany({
-    orderBy: {
-      updatedAt: 'desc'
-    }
-  });
+  const subparentspec = await getData();
 
   const formattedSubParentSpec: SubParentSpecColumn[] = subparentspec.map((item) => ({
     id: item.id,
