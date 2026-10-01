@@ -143,8 +143,6 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
     defaultValues
   });
 
-  const totalSelectedFileSize = (selectedFile?.size ?? 0) + (selectedImage?.size ?? 0);
-
   const onSubmit = async (data: CatalogueFormValues) => {
     if (submitInProgress.current) return;
     submitInProgress.current = true;
@@ -320,6 +318,10 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
                   </div>
                 )}
               </div>
+              <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
+                Selected size: {formatFileSize(selectedImage?.size ?? 0)} total
+                <span className="ml-1">(50 MB maximum per file)</span>
+              </p>
             </div>
 
 
@@ -342,7 +344,7 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
                     )}
                   />
                 </div> */}
-                    <div className="text-left font-bold pb-2">PDF</div>
+              <div className="text-left font-bold pb-2">PDF</div>
                 <div className="flex w-full flex-col items-start gap-3">
                   {/* <div
                     className="flex items-center justify-between rounded-md p-2 shadow-md mb-2 border"
@@ -410,14 +412,14 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
                     )}
                   {/* </div> */}
                 </div>
+                <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
+                  Selected size: {formatFileSize(selectedFile?.size ?? 0)} total
+                  <span className="ml-1">(50 MB maximum per file)</span>
+                </p>
               </div>
             </div>
           </div>
 
-          <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
-            Selected upload size: {formatFileSize(totalSelectedFileSize)} total
-            <span className="ml-1">(50 MB maximum per file)</span>
-          </p>
           <Button disabled={loading} className="w-full flex gap-2 bg-green-500 text-white hover:bg-green-600 transition-colors" type="submit" variant={'secondary'}>
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
             {loading ? uploadStatus || 'Saving…' : action}
