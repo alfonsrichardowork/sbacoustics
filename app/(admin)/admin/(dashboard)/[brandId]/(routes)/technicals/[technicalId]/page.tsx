@@ -1,14 +1,18 @@
 import prismadb from "@/lib/prismadb";
 import { TechnicalForm } from "./components/technical-form";
 
-async function getData(technicalId: string){
+async function getData(technicalId: string, brandId: string){
    const onetechnical = await prismadb.technicals.findUnique({
     where: {
+      brandId,
       id: technicalId,
     }
   });
 
   const totalTechnical = await prismadb.technicals.findMany({
+    where: {
+      brandId 
+    },
     select: {
       priority: true
     }
@@ -17,11 +21,11 @@ async function getData(technicalId: string){
 }
 const TechnicalPage = async (
   props: {
-    params: Promise<{ technicalId: string }>
+    params: Promise<{ technicalId: string, brandId: string }>
   }
 ) => {
   const params = await props.params;
-  const [onetechnical, totalTechnical] = await getData(params.technicalId)
+  const [onetechnical, totalTechnical] = await getData(params.technicalId, params.brandId)
   const priority = totalTechnical.map((a) => a.priority)
 
 

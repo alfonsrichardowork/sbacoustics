@@ -23,7 +23,8 @@ import { Button } from "@/app/(admin)/admin/components/ui/button"
 import { Input } from "@/app/(admin)/admin/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/(admin)/admin/components/ui/avatar"
 import Image from "next/image"
-import { Ban, FileQuestion } from "lucide-react"
+import { Ban, File, FileQuestion, FileX } from "lucide-react"
+import Link from "next/link"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -52,6 +53,11 @@ export function DataTable<TData, TValue>({
   const indexPreview = columns.findIndex(item => item.header === 'Preview');
 
   const indexPreviewFeatured = columns.findIndex(item => item.header === 'Preview Featured');
+  
+  const indexPDF = columns.findIndex(item => item.header === 'PDF Preview');
+  
+  const indexCataloguePDF = columns.findIndex(item => item.header === 'Catalogue PDF');
+  const indexCatalogueImage = columns.findIndex(item => item.header === 'Catalogue Image');
   
   return (
     <div>
@@ -101,6 +107,21 @@ export function DataTable<TData, TValue>({
                     ) : indexcol === indexPreviewFeatured ? (
                       /* @ts-ignore */<TableCell key={cell.id}><div style={{ display: 'flex' }}>
                         {data[Number(row.id)].value!=''?<Image src={data[Number(row.id)].value.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${data[Number(row.id)].value}` : data[Number(row.id)].value} alt={data[Number(row.id)].name} width={200} height={200} className="w-3/4 h-fit"/>:<FileQuestion size={30}/>}
+                      </div>
+                      </TableCell>
+                    ) : indexcol === indexPDF ? (
+                      /* @ts-ignore */<TableCell key={cell.id}><div style={{ display: 'flex' }}>
+                        {data[Number(row.id)].pdf!=''?<Link href={data[Number(row.id)].pdf.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${data[Number(row.id)].pdf}` : data[Number(row.id)].pdf} target="_blank" className="gap-2 flex items-center justify-center text-green-500"><File size={30}/> (View file)</Link>:<div className="gap-2 flex items-center justify-center text-red-500"><FileX size={30}/>(Not shown in website)</div>}
+                      </div>
+                      </TableCell>
+                    ) : indexcol === indexCataloguePDF ? (
+                      /* @ts-ignore */<TableCell key={cell.id}><div style={{ display: 'flex' }}>
+                        {data[Number(row.id)].pdf!=''?<Link href={data[Number(row.id)].pdf.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${data[Number(row.id)].pdf}` : data[Number(row.id)].pdf} target="_blank" className="gap-2 flex items-center justify-center text-green-500"><File size={30}/> (View file)</Link>:<div className="gap-2 flex items-center justify-center text-red-500"><FileX size={30}/>(Not shown in website)</div>}
+                      </div>
+                      </TableCell>
+                    ) : indexcol === indexCatalogueImage ? (
+                      /* @ts-ignore */<TableCell key={cell.id}><div style={{ display: 'flex' }}>
+                        {data[Number(row.id)].image!=''?<Image src={data[Number(row.id)].image.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${data[Number(row.id)].image}` : data[Number(row.id)].image} alt={data[Number(row.id)].name} width={200} height={200} className="w-3/4 h-fit"/>:<div className="gap-2 flex items-center justify-center text-red-500"><FileX size={30}/>(Not shown in website)</div>}
                       </div>
                       </TableCell>
                     ) : (

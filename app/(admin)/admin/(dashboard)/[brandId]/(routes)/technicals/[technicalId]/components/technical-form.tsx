@@ -2,7 +2,7 @@
 
 import * as z from "zod"
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
@@ -13,13 +13,14 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import Image from "next/image"
-import { File, Trash } from "lucide-react"
+import { File, FileIcon, Loader2, Trash } from "lucide-react"
 import { uploadFile } from "@/app/(admin)/admin/upload-file"
 import Link from "next/link"
 import { Heading } from "@/app/(admin)/admin/components/ui/heading"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/(admin)/admin/components/ui/form"
 import { Textarea } from "@/app/(admin)/admin/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/(admin)/admin/components/ui/select"
+import { formatFileSize, MAX_FILE_SIZE } from "@/app/(admin)/admin/lib"
 
 
 const formSchema = z.object({
@@ -43,10 +44,12 @@ export const TechnicalForm: React.FC<TechnicalFormProps> = ({
   const params = useParams();
   const router = useRouter();
  
-  const [technicalPDF, setTechnicalPDF] = useState<string>()
+  const [technicalPDF, setTechnicalPDF] = useState<string>(initialData?.pdf ?? '')
   const [selectedFile, setSelectedFile] = useState<File>();
-  const [filenamePDF, setFilenamePDF] = useState<string>('')
+  const [filenamePDF, setFilenamePDF] = useState<string>(initialData?.pdfname ?? '')
   const [loading, setLoading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState('');
+  const submitInProgress = useRef(false);
 
   const title = initialData ? 'Edit Technical' : 'Add Technical';
   const toastMessage = initialData ? 'Technical updated.' : 'Technical added.';
@@ -63,47 +66,40 @@ export const TechnicalForm: React.FC<TechnicalFormProps> = ({
   }
 
   useEffect(() => {
-  const fetchData = async () => {
-    if (initialData && initialData.pdf) {
-      setTechnicalPDF(initialData.pdf);
-    }
-    else{
-      setTechnicalPDF('')
-    }
-    initialData && initialData.pdfname ? setFilenamePDF(initialData.pdfname) : setFilenamePDF('')
-  };
-  
-  fetchData().catch((error) => {
-    console.error("Error fetching technical: ", error);
-  });
-  }, [params.technicalId, initialData, initialData?.pdf]);
+    setTechnicalPDF(initialData?.pdf ?? '');
+    setFilenamePDF(initialData?.pdfname ?? '')
+    setSelectedFile(undefined)
+  }, [initialData?.id, initialData?.pdf, initialData?.pdfname]);
 
   const deletePDF = async () => {
     setTechnicalPDF('')
+    setSelectedFile(undefined);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    setSelectedFile(file);
-  };
-
-  async function handlePDFUpload (file: File): Promise<string> {
-    if (file) {
-      let updatedtechnicalPDF = technicalPDF;
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const url = await uploadFile(formData, 'technicals');
-        updatedtechnicalPDF = url
-        return updatedtechnicalPDF;
-        } catch (error) {
-        console.error("Error uploading technical PDF:", error);
-        return '';
-      }
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.pdf') || file.type !== 'application/pdf') {
+      toast.error('Please choose a PDF file.');
+      e.target.value = '';
+      return;
     }
-    return '';
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error(`The PDF exceeds the 50 MB per-file limit (${formatFileSize(file.size)}).`);
+      e.target.value = '';
+      return;
+    }
+    setSelectedFile(file);
+    e.target.value = '';
   };
+
+  async function handlePDFUpload(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const url = await uploadFile(formData, 'technicals');
+    if (!url) throw new Error('PDF upload did not return a file URL.');
+    return url;
+  }
 
 
   const form = useForm<TechnicalFormValues>({
@@ -112,21 +108,30 @@ export const TechnicalForm: React.FC<TechnicalFormProps> = ({
   });
 
   const onSubmit = async (data: TechnicalFormValues) => {
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
+    let currentStage = '';
     try {
       setLoading(true);
 
+      let pdf = technicalPDF;
       if (selectedFile) {
-        data.pdf = await handlePDFUpload(selectedFile);
+        currentStage = 'pdf';
+        setUploadStatus('Uploading PDF…');
+        pdf = await handlePDFUpload(selectedFile);
       }
-      else{
-        data.pdf = technicalPDF
-      }
-      data.pdfname = filenamePDF;
+
+      currentStage = 'saving';
+      setUploadStatus('Saving catalogue…');
 
       const API=`${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}${process.env.NEXT_PUBLIC_ADMIN_UPDATE_ADD_TECHNICALS}`;
       const API_EDITED = API.replace('{brandId}', typeof params.brandId === 'string' ? params.brandId : '')
       const API_EDITED2 = API_EDITED.replace('{technicalId}', typeof params.technicalId === 'string' ? params.technicalId : '')
-      const response = await axios.patch(API_EDITED2, data);
+      const response = await axios.patch(API_EDITED2, {
+        ...data,
+        pdf,
+        pdfname: filenamePDF,
+      });
            
       if(response.data === 'duplicate'){
         toast.error("Duplicate Technical")
@@ -152,9 +157,16 @@ export const TechnicalForm: React.FC<TechnicalFormProps> = ({
         toast.success(toastMessage);
       }
     } catch (error: any) {
-      toast.error('Something went wrong.');
+      console.error('Error saving technical:', error);
+      toast.error(currentStage === 'image'
+        ? 'Could not upload the cover image. Your image was not saved.'
+        : currentStage === 'pdf'
+          ? 'Could not upload the PDF. Your PDF was not saved.'
+          : 'Something went wrong. Your technical was not saved.');
     } finally {
       setLoading(false);
+      setUploadStatus('');
+      submitInProgress.current = false;
     }
   };
 
@@ -175,45 +187,51 @@ export const TechnicalForm: React.FC<TechnicalFormProps> = ({
                     className="flex items-center justify-between rounded-md p-2 shadow-md mb-2 border"
                   >
                     <div className="flex items-center space-x-4">
-                      {technicalPDF && technicalPDF !== '' && (
+                      {technicalPDF && technicalPDF !== '' ? (
                         <Link
                           href={technicalPDF}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-primary font-medium hover:underline transition-colors whitespace-nowrap flex items-center gap-2"
                         >
-                          <File width={20} height={20}/> View File
+                          <FileIcon width={20} height={20}/> View File
                         </Link>
-                      )}
-                      {technicalPDF === '' && (
-                        <Input
-                          id={`file`}
+                      ):
+                       <Input
+                          id="technical-pdf"
                           type="file"
                           accept=".pdf"
-                          name="file"
+                          name="pdf"
                           onChange={(e) =>
                             e.target.files && handleFileChange(e)
                           }
                           disabled={loading}
-                          // className="border border-gray-300 p-2 rounded-md"
+                          className="w-full"
                         />
+                      }
+                      {Boolean(technicalPDF) && (
+                        <Button
+                          type="button"
+                          variant={"destructive"}
+                          aria-label="Remove PDF"
+                          disabled={loading}
+                          onClick={() => deletePDF()}
+                        >
+                          <Trash width={20} height={20} />
+                        </Button>
                       )}
                       <Input
                         type="text"
-                        defaultValue={initialData?.pdfname || ''}
+                        value={filenamePDF}
                         placeholder="PDF File name"
+                        disabled={loading}
+                        className="w-full"
                         onChange={(e) => {
                           setFilenamePDF(e.target.value);
                         }}
-                        // className="border border-gray-300 p-2 rounded-md w-full"
                       />
                     </div>
-                    <Button
-                      variant={"destructive"}
-                      onClick={() => deletePDF()}
-                    >
-                      <Trash width={20} height={20} />
-                    </Button>
+                    
                   </div>
                 </div>
             </div>
@@ -310,7 +328,8 @@ export const TechnicalForm: React.FC<TechnicalFormProps> = ({
           </div>
 
           <Button disabled={loading} className="w-full flex gap-2 bg-green-500 text-white hover:bg-green-600 transition-colors" type="submit" variant={'secondary'}>
-            {action}
+            {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+            {loading ? uploadStatus || 'Saving…' : action}
           </Button>
         </form>
       </Form>

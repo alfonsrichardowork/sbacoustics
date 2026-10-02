@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
 import { checkAuth, checkBearerAPI, getSession } from "@/lib/actions";
 import { revalidatePath } from "next/cache";
+import { parseCoordinate } from "@/lib/distributor-validation";
 
 export async function GET(req: Request, props: { params: Promise<{ brandId: string, distributorId: string }> }) {
   const params = await props.params;
@@ -56,10 +57,13 @@ export async function DELETE(
     await prismadb.distributors.deleteMany({
       where: {
         id: params.distributorId,
+        brandId: params.brandId
       }
     });
 
-    revalidatePath('/sbaudience/distributors') && revalidatePath('/sbautomotive/distributors') && revalidatePath('/distributors');
+    revalidatePath('/sbaudience/distributors')
+    revalidatePath('/sbautomotive/distributors')
+    revalidatePath('/distributors');
 
     return NextResponse.json("success delete");
   } catch (error) {
@@ -102,6 +106,12 @@ export async function PATCH(
       address
      } = body;
 
+    const latitude = parseCoordinate(lat);
+    const longitude = parseCoordinate(lng);
+    if (latitude === undefined || longitude === undefined || typeof continent !== "string" || !continent.trim()) {
+      return new NextResponse("Latitude and longitude must be numbers and continent is required", { status: 400 });
+    }
+
     if (!params.distributorId) {
       return new NextResponse("Distributor id is required", { status: 400 });
     }
@@ -109,11 +119,11 @@ export async function PATCH(
     const initial = await prismadb.distributors.findFirst({
       where:{
         id: params.distributorId,
+        brandId: params.brandId
       }
     })
 
     if(initial){
-
       const duplicate = await prismadb.distributors.findFirst({
         where: {
           name,
@@ -141,15 +151,17 @@ export async function PATCH(
           website,
           facebook,
           instagram,
-          lat,
-          lng,
-          continent,
+          lat: latitude,
+          lng: longitude,
+          continent: continent.trim(),
           address,
           updatedAt: new Date(),
           updatedBy: session.name
         }
       });
-      revalidatePath('/sbaudience/distributors') && revalidatePath('/sbautomotive/distributors') && revalidatePath('/distributors');
+      revalidatePath('/sbaudience/distributors')
+      revalidatePath('/sbautomotive/distributors')
+      revalidatePath('/distributors');
       return NextResponse.json("update existing")
     }
     else{
@@ -160,7 +172,6 @@ export async function PATCH(
         }
       })
 
-      console.log("duplicates: ", duplicates)
       if(duplicates){
         return NextResponse.json("duplicate")
       }
@@ -175,16 +186,18 @@ export async function PATCH(
           website,
           facebook,
           instagram,
-          lat,
-          lng,
-          continent,
+          lat: latitude,
+          lng: longitude,
+          continent: continent.trim(),
           address,
           createdAt: new Date(),
           updatedAt: new Date(),
           updatedBy: session.name
         }
       });
-      revalidatePath('/sbaudience/distributors') && revalidatePath('/sbautomotive/distributors') && revalidatePath('/distributors');
+      revalidatePath('/sbaudience/distributors')
+      revalidatePath('/sbautomotive/distributors')
+      revalidatePath('/distributors');
       return NextResponse.json("create new")
     }
 

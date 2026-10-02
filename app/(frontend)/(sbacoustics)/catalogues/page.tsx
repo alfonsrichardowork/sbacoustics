@@ -11,7 +11,13 @@ async function getCataloguesData(){
   cacheLife('minutes')
   const pdfFiles = await prismadb.catalogues.findMany({
     where: {
-      brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+      brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+      pdf: {
+        not: ''
+      },
+      cover: {
+        not: ''
+      }
     }
   });
   return pdfFiles;

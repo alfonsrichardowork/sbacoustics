@@ -19,13 +19,9 @@ import Link from "next/link"
 import { Heading } from "@/app/(admin)/admin/components/ui/heading"
 import { Form } from "@/app/(admin)/admin/components/ui/form"
 import { uploadImage } from "@/app/(admin)/admin/upload-image"
+import { formatFileSize, MAX_FILE_SIZE } from "@/app/(admin)/admin/lib"
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
-function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 B';
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
 
 const formSchema = z.object({
   pdfname: z.string().optional(),
@@ -52,9 +48,6 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
   const [catalogueImage, setCatalogueImage] = useState<string>(initialData?.cover ?? '')
   const [selectedImage, setSelectedImage] = useState<File>();
 
-  const [fileSize, setFileSize] = useState(0);
-  const [imageSize, setImageSize] = useState(0);
-
   const [loading, setLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('');
   const submitInProgress = useRef(false);
@@ -78,14 +71,6 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
     setSelectedFile(undefined);
     setSelectedImage(undefined);
   }, [initialData?.id, initialData?.pdf, initialData?.cover, initialData?.pdfname]);
-
-  useEffect(() => {
-    setFileSize(selectedFile?.size ?? 0);
-  }, [selectedFile]);
-
-  useEffect(() => {
-    setImageSize(selectedImage?.size ?? 0);
-  }, [selectedImage]);
 
   const deletePDF = () => {
     setCataloguePDF('');
@@ -171,7 +156,7 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
       let cover = catalogueImage;
       if (selectedImage) {
         currentStage = 'image';
-        setUploadStatus('Uploading cover image…');
+        setUploadStatus('Uploading image…');
         cover = await handleImageUpload(selectedImage);
       }
 
@@ -236,54 +221,6 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="border rounded-lg p-4 shadow-lg bg-background">
-                {/* <div className="text-left font-bold pb-2">PDF</div>
-                <div className="flex space-x-4 justify-between items-center">
-                  <div
-                    className="flex items-center justify-between rounded-md p-2 shadow-md mb-2 border"
-                  >
-                    <div className="flex items-center space-x-4">
-                      {cataloguePDF && cataloguePDF !== '' && (
-                        <Link
-                          href={cataloguePDF}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary font-medium hover:underline transition-colors whitespace-nowrap flex items-center gap-2"
-                        >
-                          <File width={20} height={20}/> View File
-                        </Link>
-                      )}
-                      {cataloguePDF === '' && (
-                        <Input
-                          id={`file`}
-                          type="file"
-                          accept=".pdf"
-                          name="file"
-                          onChange={(e) =>
-                            e.target.files && handleFileChange(e)
-                          }
-                          disabled={loading}
-                          // className="border border-gray-300 p-2 rounded-md"
-                        />
-                      )}
-                      <Input
-                        type="text"
-                        defaultValue={initialData?.pdfname || ''}
-                        placeholder="PDF File name"
-                        onChange={(e) => {
-                          setFilenamePDF(e.target.value);
-                        }}
-                        // className="border border-gray-300 p-2 rounded-md w-full"
-                      />
-                    </div>
-                    <Button
-                      variant={"destructive"}
-                      onClick={() => deletePDF()}
-                    >
-                      <Trash width={20} height={20} />
-                    </Button>
-                  </div>
-                </div> */}
-
             <div className="text-left font-bold pb-2">Cover Image</div>
               <div className="flex flex-col gap-4">
                 {catalogueImage ? (
@@ -329,37 +266,13 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
                   </div>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
-                Selected size: {formatFileSize(imageSize)} total
-                <span className="ml-1">(50 MB maximum per file)</span>
-              </p>
             </div>
 
 
             <div className="border rounded-lg p-4 shadow-lg gap-4 flex items-center w-full bg-background">
               <div className="w-full">
-                {/* <div className="py-2">
-                  <FormField
-                    control={form.control}
-                    name="pdfname"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="font-bold text-base flex gap-2">
-                          PDF Name
-                        </FormLabel>
-                        <FormControl>
-                          <Input disabled={loading} placeholder="PDF Name" {...field}/>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div> */}
               <div className="text-left font-bold pb-2">PDF</div>
                 <div className="flex w-full flex-col items-start gap-3">
-                  {/* <div
-                    className="flex items-center justify-between rounded-md p-2 shadow-md mb-2 border"
-                  > */}
                     <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center">
                       {cataloguePDF && cataloguePDF !== '' ? (
                         <Link
@@ -423,10 +336,10 @@ export const CatalogueForm: React.FC<CatalogueFormProps> = ({
                     )}
                   {/* </div> */}
                 </div>
-                <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
+                {/* <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
                   Selected size: {formatFileSize(fileSize)} total
                   <span className="ml-1">(50 MB maximum per file)</span>
-                </p>
+                </p> */}
               </div>
             </div>
           </div>

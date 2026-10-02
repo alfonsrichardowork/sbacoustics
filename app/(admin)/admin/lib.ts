@@ -24,3 +24,10 @@ export const sessionOptions: SessionOptions ={
 }
 
 export const uploadsprefix = '/uploads'
+
+export const MAX_FILE_SIZE = 50 * 1024 * 1024;
+
+export function formatFileSize(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}

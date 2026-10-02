@@ -7,6 +7,7 @@ import { CellAction } from "./cell-action"
 export type TechnicalsColumn = {
   id: string
   name: string;
+  pdf: string;
   updatedAt: string;
   updatedBy: string;
   priority: string
@@ -16,6 +17,10 @@ export const columns: ColumnDef<TechnicalsColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
+  },
+  {
+    accessorKey: "pdf",
+    header: "PDF Preview",
   },
   {
     accessorKey: "updatedAt",

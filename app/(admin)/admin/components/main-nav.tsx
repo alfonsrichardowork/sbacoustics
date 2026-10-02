@@ -146,12 +146,14 @@ export function MainNav({
       description: "Show All Catalogues.",
       icon: FileText,
     },
-    {
-      title: "Technicals",
-      href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/technicals`,
-      description: "Show All Technicals.",
-      icon: FileText,
-    },
+    ...(params.brandId !== process.env.NEXT_PUBLIC_SB_AUDIENCE_ID
+      ? [{
+          title: "Technicals",
+          href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/technicals`,
+          description: "Show All Technicals.",
+          icon: FileText,
+        }]
+      : []),
     {
       title: "Distributors",
       href: `${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/${params.brandId}/distributors`,

@@ -296,7 +296,7 @@ async function verifyRecaptcha(token: string, request: NextRequest) {
     "localhost",
   ]);
 
-  if (data.hostname && !allowedHostnames.has(data.hostname)) {
+  if (!data.hostname || !allowedHostnames.has(data.hostname)) {
     return {
       valid: false,
       status: 403,
@@ -401,6 +401,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: recaptcha.reason },
         { status: recaptcha.status },
+      );
+    }
+
+    if (isRateLimited(getClientIp(request))) {
+      return NextResponse.json(
+        { error: "Too many messages. Please try again later." },
+        { status: 429 },
       );
     }
 

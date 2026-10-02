@@ -1,9 +1,10 @@
 import prismadb from "@/lib/prismadb";
 import { CatalogueForm } from "./components/catalogue-form";
 import { cacheLife } from "next/cache";
-async function getData(catalogueId: string){
+async function getData(catalogueId: string, brandId: string){
   const onecatalogue = await prismadb.catalogues.findUnique({
     where: {
+      brandId,
       id: catalogueId,
     }
   });
@@ -12,11 +13,11 @@ async function getData(catalogueId: string){
 
 const CataloguePage = async (
   props: {
-    params: Promise<{ catalogueId: string }>
+    params: Promise<{ catalogueId: string, brandId: string }>
   }
 ) => {
   const params = await props.params;
-  const onecatalogue = await getData(params.catalogueId)
+  const onecatalogue = await getData(params.catalogueId, params.brandId)
 
   return ( 
     <div className="flex-col">

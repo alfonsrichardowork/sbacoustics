@@ -20,7 +20,8 @@ export async function GET(
 
     const technical = await prismadb.technicals.findMany({
       where: {
-        id: params.technicalId
+        id: params.technicalId,
+        brandId: params.brandId
       },
       orderBy: {
         createdAt: 'desc',
@@ -62,41 +63,18 @@ export async function PATCH(
 
     if(!(await checkAuth(session.isAdmin!, params.brandId, session.userId!))){
       return NextResponse.json("unauthorized");
-    }    
-
-
+    }
 
     if(params.technicalId != 'new'){
       const oldUrl = await prismadb.technicals.findMany({
         where: {
-          id: params.technicalId
+          id: params.technicalId,
+          brandId: params.brandId
         },
         select:{
           pdf: true
         }
       })
-      //Delete physical files
-      if(oldUrl && oldUrl.length > 0) {
-        oldUrl.map( async (val) => {
-          if(val.pdf != pdf) {
-            if(val.pdf.startsWith(uploadsprefix)){
-              const filename = val.pdf.slice(uploadsprefix.length)
-              // if (filename && path.basename(filename) === filename) {
-                const imgPath = path.join(process.cwd(), 'uploads', filename);
-                try {
-                  await fs.unlink(imgPath);
-                } catch (error) {
-                  console.warn(`Could not delete file ${val.pdf}:`, error);
-                } 
-              // }
-            }
-            else{
-              console.warn(`Not inside uploads folder`);
-            }
-          }
-        })
-      }
-
       await prismadb.technicals.update({
         where: {
           id: params.technicalId
@@ -113,11 +91,22 @@ export async function PATCH(
         },
       })
 
+      for (const technical of oldUrl) {
+        if (technical.pdf !== pdf && technical.pdf.startsWith(uploadsprefix)) {
+          const filename = technical.pdf.slice(uploadsprefix.length);
+          const filePath = path.join(process.cwd(), 'uploads', filename);
+          try {
+            await fs.unlink(filePath);
+          } catch (error) {
+            console.warn(`Could not delete file ${technical.pdf}:`, error);
+          }
+        }
+      }
     }
     else{
-
       const duplicates = await prismadb.technicals.findFirst({
         where:{
+          brandId: params.brandId,
           name
         }
       })
@@ -179,7 +168,8 @@ export async function PATCH(
 
       const toBeDeleted = await prismadb.technicals.findMany({
         where:{
-          id: params.technicalId
+          id: params.technicalId,
+          brandId: params.brandId
         }
       })
 

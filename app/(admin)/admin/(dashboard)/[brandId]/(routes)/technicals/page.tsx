@@ -16,7 +16,8 @@ async function getData(brandId: string){
       name: true,
       updatedAt: true,
       updatedBy: true,
-      priority: true
+      priority: true,
+      pdf: true
     },
     orderBy: {
       updatedAt: 'desc'
@@ -41,6 +42,7 @@ const TechnicalsPage = async (
   const formattedTechnicals: TechnicalsColumn[] = alltechnicals.map((item) => ({
     id: item.id,
     name: item.name,
+    pdf: item.pdf,
     updatedAt: format(item.updatedAt, 'MMMM do, yyyy'),
     updatedBy: item.updatedBy,
     priority: item.priority

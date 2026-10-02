@@ -12,7 +12,10 @@ async function getTechnicalData(){
   cacheLife('minutes')
   let pdfFiles = await prismadb.technicals.findMany({
     where: {
-      brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+      brandId: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID,
+      pdf: {
+        not: ''
+      }
     }
   });
   return pdfFiles;

@@ -18,6 +18,7 @@ import { Check, ChevronsUpDown } from "lucide-react"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/app/(admin)/admin/components/ui/command"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { parseCoordinate } from "@/lib/distributor-validation"
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -27,9 +28,15 @@ const formSchema = z.object({
   website: z.string().optional(),
   facebook: z.string().optional(),
   instagram: z.string().optional(),
-  lat: z.string().min(1, "Latitude is required"),
-  lng: z.string().min(1, "Longitude is required"),
-  continent: z.string().optional(),
+  lat: z.string().trim().min(1, "Latitude is required").refine(
+    (value) => parseCoordinate(value) !== undefined,
+    "Latitude must be a number",
+  ),
+  lng: z.string().trim().min(1, "Longitude is required").refine(
+    (value) => parseCoordinate(value) !== undefined,
+    "Longitude must be a number",
+  ),
+  continent: z.string().trim().min(1, "Continent is required"),
   address: z.string().optional(),
 });
 
@@ -66,7 +73,6 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
   const params = useParams();
   const router = useRouter();
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState(initialData?.continent)
   const [loading, setLoading] = useState(false);
 
   const title = initialData ? 'Edit Distributor' : 'Create Distributor';
@@ -95,7 +101,6 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
     try {
       setLoading(true);
       let response: AxiosResponse;
-      data.continent = value ?? continents[0]?.label
       if (initialData) {
         response = await axios.patch(`${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/api/${params.brandId}/distributors/${params.distributorId}`, data);
       } else {
@@ -251,7 +256,7 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="font-bold text-base">Latitude *</FormLabel>
-                      <Input placeholder="40.7128" {...field} />
+                      <Input type="text" inputMode="decimal" placeholder="40.7128" {...field} />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -263,7 +268,7 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="font-bold text-base">Longitude *</FormLabel>
-                      <Input placeholder="-74.0060" {...field} />
+                      <Input type="text" inputMode="decimal" placeholder="-74.0060" {...field} />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -296,8 +301,8 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
                               aria-expanded={open}
                               className="w-[200px] justify-between"
                             >
-                              {value && value!=''
-                                ? continents.find((continent) => continent.label === value)?.label
+                              {field.value
+                                ? continents.find((continent) => continent.label === field.value)?.label
                                 : "Select continent..."}
                               <ChevronsUpDown className="opacity-50" />
                             </Button>
@@ -313,7 +318,7 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
                                       key={continent.label}
                                       value={continent.label}
                                       onSelect={(currentValue) => {
-                                        setValue(currentValue === value ? "" : currentValue)
+                                        field.onChange(currentValue)
                                         setOpen(false)
                                       }}
                                     >
@@ -321,7 +326,7 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
                                       <Check
                                         className={cn(
                                           "ml-auto",
-                                          value === continent.label ? "opacity-100" : "opacity-0"
+                                          field.value === continent.label ? "opacity-100" : "opacity-0"
                                         )}
                                       />
                                     </CommandItem>

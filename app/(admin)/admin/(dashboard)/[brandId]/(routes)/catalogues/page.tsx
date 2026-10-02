@@ -36,6 +36,8 @@ const CataloguesPage = async (
   const formattedCatalogues: CataloguesColumn[] = allCatalogues.map((item) => ({
     id: item.id,
     name: item.pdfname,
+    image: item.cover,
+    pdf: item.pdf,
     updatedAt: format(item.updatedAt, 'MMMM do, yyyy'),
     updatedBy: item.updatedBy
   }));

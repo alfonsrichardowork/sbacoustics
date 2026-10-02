@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import prismadb from '@/lib/prismadb';
 import { checkAuth, checkBearerAPI, getSession } from '@/lib/actions';
 import { revalidatePath } from 'next/cache';
+import { parseCoordinate } from '@/lib/distributor-validation';
 
 export async function POST(req: Request, props: { params: Promise<{ brandId: string }> }) {
   const params = await props.params;
@@ -37,6 +38,12 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
       continent,
       address
      } = body;
+
+    const latitude = parseCoordinate(lat);
+    const longitude = parseCoordinate(lng);
+    if (latitude === undefined || longitude === undefined || typeof continent !== 'string' || !continent.trim()) {
+      return new NextResponse("Latitude and longitude must be numbers and continent is required", { status: 400 });
+    }
     
     const duplicates = await prismadb.distributors.findFirst({
       where:{
@@ -50,26 +57,28 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
     }
 
     await prismadb.distributors.create({
-        data: {
-            name,
-            brandId: params.brandId,
-            country,
-            phone,
-            email,
-            website,
-            facebook,
-            instagram,
-            lat,
-            lng,
-            continent,
-            address,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            updatedBy: session.name
-        }
+      data: {
+        name,
+        brandId: params.brandId,
+        country,
+        phone,
+        email,
+        website,
+        facebook,
+        instagram,
+        lat: latitude,
+        lng: longitude,
+        continent: continent.trim(),
+        address,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        updatedBy: session.name
+      }
     });
 
-    revalidatePath('/sbaudience/distributors') && revalidatePath('/sbautomotive/distributors') && revalidatePath('/distributors');
+    revalidatePath('/sbaudience/distributors')
+    revalidatePath('/sbautomotive/distributors')
+    revalidatePath('/distributors');
     return NextResponse.json("success");
   } catch (error) {
     console.log('[NEW_DISTRIBUTOR_POST]', error);
@@ -79,8 +88,7 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
 
 export async function GET(req: Request) {
   try {
-    const distributor = await prismadb.distributors.findMany({    
-    });
+    const distributor = await prismadb.distributors.findMany({});
   
     return NextResponse.json(distributor);
   } catch (error) {

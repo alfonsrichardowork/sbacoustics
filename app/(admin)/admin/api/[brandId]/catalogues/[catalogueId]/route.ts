@@ -65,8 +65,6 @@ export async function PATCH(
       return NextResponse.json("unauthorized");
     }    
 
-
-
     if(params.catalogueId != 'new'){
       const oldUrl = await prismadb.catalogues.findMany({
         where: {
@@ -113,10 +111,8 @@ export async function PATCH(
           }
         }
       }
-
     }
     else{
-
       const duplicates = await prismadb.catalogues.findFirst({
         where:{
           brandId: params.brandId,
