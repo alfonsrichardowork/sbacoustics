@@ -2,7 +2,7 @@
 
 import * as z from "zod"
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
@@ -14,13 +14,10 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import Image from "next/image"
 import { File, Trash } from "lucide-react"
-import { uploadFile } from "@/app/(admin)/admin/upload-file"
-import Link from "next/link"
 import { Heading } from "@/app/(admin)/admin/components/ui/heading"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/app/(admin)/admin/components/ui/form"
-import { Textarea } from "@/app/(admin)/admin/components/ui/textarea"
 import { uploadImage } from "@/app/(admin)/admin/upload-image"
-import { MAX_SIZE } from "@/app/(admin)/admin/model/model"
+import { formatFileSize, MAX_FILE_SIZE } from "@/app/(admin)/admin/lib"
 
 
 const formSchema = z.object({
@@ -46,6 +43,7 @@ export const FinishingForm: React.FC<FinishingFormProps> = ({
   const [selectedImage, setSelectedImage] = useState<File>();
 
   const [loading, setLoading] = useState(false);
+  const submitInProgress = useRef(false);
 
   const title = initialData ? 'Edit Finishing' : 'Add Finishing';
   const toastMessage = initialData ? 'Finishing updated.' : 'Finishing added.';
@@ -59,22 +57,10 @@ export const FinishingForm: React.FC<FinishingFormProps> = ({
   }
 
   useEffect(() => {
-  const fetchData = async () => {
-    if (initialData && initialData.url) {
-      setFinishingImage(initialData.url);
-    }
-    else{
-      setFinishingImage('')
-    }
-    initialData && initialData.name ? setFinishingName(initialData.name) : setFinishingName('')
-  };
-  
-  fetchData().catch((error) => {
-    console.error("Error fetching finishing: ", error);
-  });
-  }, [params.finishingId, initialData, initialData?.url, initialData?.name]);
-
-
+    setFinishingImage(initialData?.url ?? '');
+    setSelectedImage(undefined);
+    setFinishingName(initialData?.name ?? '');
+  }, [params.finishingId, initialData?.id, initialData?.url, initialData?.name]);
 
   const deleteImage = async () => {
     setFinishingImage('')
@@ -83,31 +69,27 @@ export const FinishingForm: React.FC<FinishingFormProps> = ({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(!file) return
-    if (file.size > MAX_SIZE) {
-      alert("File size must be less than 2MB");
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please choose an image file.');
+      e.target.value = '';
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error(`The cover image exceeds the 50 MB per-file limit (${formatFileSize(file.size)}).`);
       e.target.value = "";
       return;
     }
     setSelectedImage(file);
+    e.target.value = '';
   };
 
-  async function handleImageUpload (file: File): Promise<string> {
-    if (file) {
-      let updatedFinishingImage = finishingImage;
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const url = await uploadImage(formData, 'finishing');
-        updatedFinishingImage = url
-        return updatedFinishingImage;
-        } catch (error) {
-        console.error("Error uploading finishing Image:", error);
-        return '';
-      }
-    }
-    return '';
-  };
+  async function handleImageUpload(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('image', file);
+    const url = await uploadImage(formData, 'finishing');
+    if (!url) throw new Error('Image upload did not return a file URL.');
+    return url;
+  }
   
 
 
@@ -117,6 +99,8 @@ export const FinishingForm: React.FC<FinishingFormProps> = ({
   });
 
   const onSubmit = async (data: FinishingFormValues) => {
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
       setLoading(true);
 
@@ -160,6 +144,7 @@ export const FinishingForm: React.FC<FinishingFormProps> = ({
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
+      submitInProgress.current = false;
     }
   };
 
@@ -171,15 +156,39 @@ export const FinishingForm: React.FC<FinishingFormProps> = ({
       </div>
       <Separator />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
+        <form 
+          onSubmit={form.handleSubmit(onSubmit)} 
+          onKeyDown={(event) => {
+            const target = event.target;
+            if (
+              event.key === "Enter" &&
+              !event.nativeEvent.isComposing &&
+              target instanceof HTMLInputElement &&
+              !target.hasAttribute("cmdk-input") &&
+              !["button", "checkbox", "file", "image", "radio", "reset", "submit"].includes(target.type)
+            ) {
+              event.preventDefault();
+            }
+          }}
+          className="space-y-4 w-full"
+          >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="border rounded-lg p-4 shadow-lg bg-background">
             <div className="text-left font-bold pb-2">Finishing Image</div>
               <div className="flex space-x-4 justify-between items-center">
-                {finishingImage && (
-                  <Image alt={'Finishing Image'} src={finishingImage.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${finishingImage}` : finishingImage} width={200} height={200} className="w-52 h-fit" priority/>
-                )}
-                {!finishingImage && (
+                {finishingImage ? (
+                  <div className="flex items-center gap-4">
+                    <Image alt={'Finishing Image'} src={finishingImage.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${finishingImage}` : finishingImage} width={200} height={200} className="w-52 h-fit" priority/>
+                    <Button
+                      variant={"destructive"}
+                      aria-label="Remove image"
+                      disabled={loading}
+                      onClick={() => deleteImage()}
+                    >
+                      <Trash width={20} height={20} />
+                    </Button>
+                  </div>
+                ) :
                 <Input
                   id={`file`}
                   type="file"
@@ -192,15 +201,7 @@ export const FinishingForm: React.FC<FinishingFormProps> = ({
                   disabled={loading}
                   className="border border-gray-300 p-2 rounded-md"
                 />
-                )}
-                {finishingImage && finishingImage !== '' && (
-                <Button
-                  variant={"destructive"}
-                  onClick={() => deleteImage()}
-                >
-                  <Trash width={20} height={20} />
-                </Button>
-              )}
+                }
               </div>
             </div>
 

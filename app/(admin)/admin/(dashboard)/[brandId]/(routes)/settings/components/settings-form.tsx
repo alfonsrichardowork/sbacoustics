@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { Bold, Check, ChevronsUpDown, CirclePlus, Heading1, Heading2, Heading3, Heading4, Heading5, Heading6, Italic, List, ListOrdered, LucideLink, LucideUnlink, Strikethrough, Trash, X } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 import { Input } from "@/app/(admin)/admin/components/ui/input"
 import { Button } from "@/app/(admin)/admin/components/ui/button"
@@ -32,7 +32,7 @@ import { SocialNetwork, socialNetworks } from "@/lib/all-social-media"
 import { Popover, PopoverContent, PopoverTrigger } from "@/app/(admin)/admin/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/app/(admin)/admin/components/ui/command"
 import { cn } from "@/lib/utils"
-import { MAX_SIZE } from "@/app/(admin)/admin/model/model"
+import { formatFileSize, MAX_FILE_SIZE } from "@/app/(admin)/admin/lib"
 import { Textarea } from "@/app/(admin)/admin/components/ui/textarea"
 import { Toggle } from "@/app/(admin)/admin/components/ui/toggle"
 
@@ -47,6 +47,7 @@ import Text from '@tiptap/extension-text'
 import TextStyle from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/(admin)/admin/components/ui/select"
+import { disallowedDomains } from "@/lib/security-settings"
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -88,10 +89,8 @@ interface SettingsFormProps {
 export const SettingsForm: React.FC<SettingsFormProps> = ({
   initialData, initialSocialMedia
 }) => {
-  const aboutusImageTypes = AboutUsImageType
   const params = useParams();
   const router = useRouter();
-  const origin = useOrigin();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -118,6 +117,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   const [brandImagesFile, setbrandImagesFile] = useState<File[]>([]);
   const [valuesImages, setValuesImages] = useState<multipleaboutusimages[]>([])
   const [valuesImagesFile, setvaluesImagesFile] = useState<File[]>([]);
+ 
+  const submitInProgress = useRef(false);
 
   const handleAddSocial = () => {
     if (selectedNetwork && link) {
@@ -222,8 +223,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(!file) return
-    if (file.size > MAX_SIZE) {
-      alert("File size must be less than 2MB");
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error(`The contact image exceeds the 50 MB per-file limit (${formatFileSize(file.size)}).`);
       e.target.value = "";
       return;
     }
@@ -231,21 +232,9 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   };
 
   async function handleImageUpload (file: File): Promise<string> {
-    if (file) {
-      let updatedContactImage = contactImage;
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const url = await uploadImage(formData, 'other');
-        updatedContactImage = url
-        return updatedContactImage;
-        } catch (error) {
-        console.error("Error uploading contact image:", error);
-        return '';
-      }
-    }
-    return '';
+    const formData = new FormData();
+    formData.append('image', file);
+    return uploadImage(formData, 'other');
   };
 
   
@@ -257,8 +246,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   const handleFileChangeBrandChoice = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(!file) return
-    if (file.size > MAX_SIZE) {
-      alert("File size must be less than 2MB");
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error(`The brand choice image exceeds the 50 MB per-file limit (${formatFileSize(file.size)}).`);
       e.target.value = "";
       return;
     }
@@ -266,21 +255,9 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   };
 
   async function handleImageUploadBrandChoice (file: File): Promise<string> {
-    if (file) {
-      let updatedHomepageBrandChoiceUrl = homepageBrandChoiceUrl;
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const url = await uploadImage(formData, 'other');
-        updatedHomepageBrandChoiceUrl = url
-        return updatedHomepageBrandChoiceUrl;
-        } catch (error) {
-        console.error("Error uploading brand choice image:", error);
-        return '';
-      }
-    }
-    return '';
+    const formData = new FormData();
+    formData.append('image', file);
+    return uploadImage(formData, 'other');
   };
 
 
@@ -291,8 +268,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   const handleFileChangeOpenSourceKits = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(!file) return
-    if (file.size > MAX_SIZE) {
-      alert("File size must be less than 2MB");
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error(`The open source kits image exceeds the 50 MB per-file limit (${formatFileSize(file.size)}).`);
       e.target.value = "";
       return;
     }
@@ -300,21 +277,9 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   };
 
   async function handleImageUploadOpenSourceKits (file: File): Promise<string> {
-    if (file) {
-      let updatedHomepageOpenSourceKitsUrl = homepageOpenSourceKitsUrl;
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const url = await uploadImage(formData, 'other');
-        updatedHomepageOpenSourceKitsUrl = url
-        return updatedHomepageOpenSourceKitsUrl;
-        } catch (error) {
-        console.error("Error uploading open source kits image:", error);
-        return '';
-      }
-    }
-    return '';
+    const formData = new FormData();
+    formData.append('image', file);
+    return uploadImage(formData, 'other');
   };
 
 
@@ -325,8 +290,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   const handleFileChangeAboutUs = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(!file) return
-    if (file.size > MAX_SIZE) {
-      alert("File size must be less than 2MB");
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error(`The about us image exceeds the 50 MB per-file limit (${formatFileSize(file.size)}).`);
       e.target.value = "";
       return;
     }
@@ -334,21 +299,9 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   };
 
   async function handleImageUploadAboutUs (file: File): Promise<string> {
-    if (file) {
-      let updatedHomepageAboutUsUrl = homepageAboutUsUrl;
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const url = await uploadImage(formData, 'other');
-        updatedHomepageAboutUsUrl = url
-        return updatedHomepageAboutUsUrl;
-        } catch (error) {
-        console.error("Error uploading about us image:", error);
-        return '';
-      }
-    }
-    return '';
+    const formData = new FormData();
+    formData.append('image', file);
+    return uploadImage(formData, 'other');
   };
   
 
@@ -359,8 +312,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   const handleFileChangeCatalogues = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(!file) return
-    if (file.size > MAX_SIZE) {
-      alert("File size must be less than 2MB");
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error(`The catalogues image exceeds the 50 MB per-file limit (${formatFileSize(file.size)}).`);
       e.target.value = "";
       return;
     }
@@ -368,25 +321,15 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
   };
 
   async function handleImageUploadCatalogues (file: File): Promise<string> {
-    if (file) {
-      let updatedHomepageCataloguesUrl = homepageCataloguesUrl;
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-
-        const url = await uploadImage(formData, 'other');
-        updatedHomepageCataloguesUrl = url
-        return updatedHomepageCataloguesUrl;
-        } catch (error) {
-        console.error("Error uploading catalogues image:", error);
-        return '';
-      }
-    }
-    return '';
+    const formData = new FormData();
+    formData.append('image', file);
+    return uploadImage(formData, 'other');
   };
 
 
   const onSubmit = async (data: SettingsFormValues) => {
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
       setLoading(true);
 
@@ -425,28 +368,26 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
         data.homepage_catalogues_url = homepageCataloguesUrl
       }
       
-      if (sbeImages.length > 0 || brandImages.length > 0 || valuesImages.length > 0) {
-        const uploadedSBEImages =
-          sbeImagesFile.length > 0
-            ? await handleSBEImagesFileUpload(sbeImagesFile)
-            : sbeImages;
+      const uploadedSBEImages =
+        sbeImagesFile.length > 0
+          ? await handleSBEImagesFileUpload(sbeImagesFile)
+          : sbeImages;
 
-        const uploadedBrandImages =
-          brandImagesFile.length > 0
-            ? await handleBrandImagesFileUpload(brandImagesFile)
-            : brandImages;
+      const uploadedBrandImages =
+        brandImagesFile.length > 0
+          ? await handleBrandImagesFileUpload(brandImagesFile)
+          : brandImages;
 
-        const uploadedValuesImages =
-          valuesImagesFile.length > 0
-            ? await handleValueImagesFileUpload(valuesImagesFile)
-            : valuesImages;
+      const uploadedValuesImages =
+        valuesImagesFile.length > 0
+          ? await handleValueImagesFileUpload(valuesImagesFile)
+          : valuesImages;
 
-        data.aboutUsImages = [
-          ...uploadedSBEImages,
-          ...uploadedBrandImages,
-          ...uploadedValuesImages,
-        ];
-      }
+      data.aboutUsImages = [
+        ...uploadedSBEImages,
+        ...uploadedBrandImages,
+        ...uploadedValuesImages,
+      ];
 
       if (selectedFilehomepageOpenSourceKitsUrl) {
         data.homepage_open_source_kits_url = await handleImageUploadOpenSourceKits(selectedFilehomepageOpenSourceKitsUrl);
@@ -484,10 +425,12 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
         router.refresh();
         toast.success('Brand updated.');
       }
-    } catch (error: any) {
-      toast.error('Something went wrong.');
+    } catch (error) {
+      console.error("Error saving brand settings:", error);
+      toast.error(error instanceof Error ? error.message : "Something went wrong.");
     } finally {
       setLoading(false);
+      submitInProgress.current = false;
     }
   };
 
@@ -524,45 +467,35 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 
   const reduceSBEImagesCounter = (index: number) => {
     setSbeImages((prev) => prev.filter((_, i) => i !== index));
+    setsbeImagesFile((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSBEImagesFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const tempfile = e.target.files?.[0];
     if(!tempfile) return
-    if (tempfile.size > MAX_SIZE) {
-      alert("File size must be less than 2MB");
+    if (tempfile.size > MAX_FILE_SIZE) {
+      toast.error(`The SBE image exceeds the 50 MB per-file limit (${formatFileSize(tempfile.size)}).`);
       e.target.value = "";
       return;
     }
-    let temp = sbeImagesFile
-    temp[index] = tempfile!
+    const temp = [...sbeImagesFile];
+    temp[index] = tempfile;
     setsbeImagesFile(temp);
   };
 
   async function handleSBEImagesFileUpload(file: File[]): Promise<multipleaboutusimages[]> {
-    if (file && file.length > 0) {
-      let updatedSBEImages = [...sbeImages];
-      try {
-        const uploadPromises = file.map(async (value, index) => {
-          if (value) {
-            const formData = new FormData();
-            formData.append('image', value);
-            const url = await uploadImage(formData, 'other');
-            const elementIndex = updatedSBEImages.length - (file.length - index);
-            if (updatedSBEImages[elementIndex]) {
-              updatedSBEImages[elementIndex].url = url;
-            }
-          }
-        });
-
-        await Promise.all(uploadPromises);
-        return updatedSBEImages;
-      } catch (error) {
-        console.error("Error uploading SBE images:", error);
-        return [];
+    const updatedSBEImages = sbeImages.map((image) => ({ ...image }));
+    await Promise.all(file.map(async (value, index) => {
+      if (value) {
+        const formData = new FormData();
+        formData.append('image', value);
+        const url = await uploadImage(formData, 'other');
+        if (updatedSBEImages[index]) {
+          updatedSBEImages[index].url = url;
+        }
       }
-    }  
-    return [];
+    }));
+    return updatedSBEImages;
   }
 
 
@@ -585,45 +518,35 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 
   const reduceBrandImagesCounter = (index: number) => {
     setBrandImages((prev) => prev.filter((_, i) => i !== index));
+    setbrandImagesFile((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleBrandImagesFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const tempfile = e.target.files?.[0];
     if(!tempfile) return
-    if (tempfile.size > MAX_SIZE) {
-      alert("File size must be less than 2MB");
+    if (tempfile.size > MAX_FILE_SIZE) {
+      toast.error(`The brand image exceeds the 50 MB per-file limit (${formatFileSize(tempfile.size)}).`);
       e.target.value = "";
       return;
     }
-    let temp = brandImagesFile
-    temp[index] = tempfile!
+    const temp = [...brandImagesFile];
+    temp[index] = tempfile;
     setbrandImagesFile(temp);
   };
 
   async function handleBrandImagesFileUpload(file: File[]): Promise<multipleaboutusimages[]> {
-    if (file && file.length > 0) {
-      let updatedBrandImages = [...brandImages];
-      try {
-        const uploadPromises = file.map(async (value, index) => {
-          if (value) {
-            const formData = new FormData();
-            formData.append('image', value);
-            const url = await uploadImage(formData, 'other');
-            const elementIndex = updatedBrandImages.length - (file.length - index);
-            if (updatedBrandImages[elementIndex]) {
-              updatedBrandImages[elementIndex].url = url;
-            }
-          }
-        });
-
-        await Promise.all(uploadPromises);
-        return updatedBrandImages;
-      } catch (error) {
-        console.error("Error uploading brand images:", error);
-        return [];
+    const updatedBrandImages = brandImages.map((image) => ({ ...image }));
+    await Promise.all(file.map(async (value, index) => {
+      if (value) {
+        const formData = new FormData();
+        formData.append('image', value);
+        const url = await uploadImage(formData, 'other');
+        if (updatedBrandImages[index]) {
+          updatedBrandImages[index].url = url;
+        }
       }
-    }  
-    return [];
+    }));
+    return updatedBrandImages;
   }
   
 
@@ -645,45 +568,35 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 
   const reduceValuesImagesCounter = (index: number) => {
     setValuesImages((prev) => prev.filter((_, i) => i !== index));
+    setvaluesImagesFile((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleValuesImagesFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const tempfile = e.target.files?.[0];
     if(!tempfile) return
-    if (tempfile.size > MAX_SIZE) {
-      alert("File size must be less than 2MB");
+    if (tempfile.size > MAX_FILE_SIZE) {
+      toast.error(`The values image exceeds the 50 MB per-file limit (${formatFileSize(tempfile.size)}).`);
       e.target.value = "";
       return;
     }
-    let temp = valuesImagesFile
-    temp[index] = tempfile!
+    const temp = [...valuesImagesFile];
+    temp[index] = tempfile;
     setvaluesImagesFile(temp);
   };
 
   async function handleValueImagesFileUpload(file: File[]): Promise<multipleaboutusimages[]> {
-    if (file && file.length > 0) {
-      let updatedValuesImages = [...valuesImages];
-      try {
-        const uploadPromises = file.map(async (value, index) => {
-          if (value) {
-            const formData = new FormData();
-            formData.append('image', value);
-            const url = await uploadImage(formData, 'other');
-            const elementIndex = updatedValuesImages.length - (file.length - index);
-            if (updatedValuesImages[elementIndex]) {
-              updatedValuesImages[elementIndex].url = url;
-            }
-          }
-        });
-
-        await Promise.all(uploadPromises);
-        return updatedValuesImages;
-      } catch (error) {
-        console.error("Error uploading values images:", error);
-        return [];
+    const updatedValuesImages = valuesImages.map((image) => ({ ...image }));
+    await Promise.all(file.map(async (value, index) => {
+      if (value) {
+        const formData = new FormData();
+        formData.append('image', value);
+        const url = await uploadImage(formData, 'other');
+        if (updatedValuesImages[index]) {
+          updatedValuesImages[index].url = url;
+        }
       }
-    }  
-    return [];
+    }));
+    return updatedValuesImages;
   }
 
 
@@ -733,8 +646,6 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
               return false
             }
 
-            // disallowed domains
-            const disallowedDomains = ['example-phishing.com', 'malicious-site.net']
             const domain = parsedUrl.hostname
 
             if (disallowedDomains.includes(domain)) {
@@ -752,8 +663,6 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
             // construct URL
             const parsedUrl = url.includes(':') ? new URL(url) : new URL(`https://${url}`)
 
-            // only auto-link if the domain is not in the disallowed list
-            const disallowedDomains = ['']
             const domain = parsedUrl.hostname
 
             return !disallowedDomains.includes(domain)
@@ -845,8 +754,6 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
               return false
             }
 
-            // disallowed domains
-            const disallowedDomains = ['example-phishing.com', 'malicious-site.net']
             const domain = parsedUrl.hostname
 
             if (disallowedDomains.includes(domain)) {
@@ -864,8 +771,6 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
             // construct URL
             const parsedUrl = url.includes(':') ? new URL(url) : new URL(`https://${url}`)
 
-            // only auto-link if the domain is not in the disallowed list
-            const disallowedDomains = ['']
             const domain = parsedUrl.hostname
 
             return !disallowedDomains.includes(domain)
@@ -956,8 +861,6 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
               return false
             }
 
-            // disallowed domains
-            const disallowedDomains = ['example-phishing.com', 'malicious-site.net']
             const domain = parsedUrl.hostname
 
             if (disallowedDomains.includes(domain)) {
@@ -975,8 +878,6 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
             // construct URL
             const parsedUrl = url.includes(':') ? new URL(url) : new URL(`https://${url}`)
 
-            // only auto-link if the domain is not in the disallowed list
-            const disallowedDomains = ['']
             const domain = parsedUrl.hostname
 
             return !disallowedDomains.includes(domain)
@@ -1047,7 +948,22 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
       </div>
       <Separator />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          onKeyDown={(event) => {
+            const target = event.target;
+            if (
+              event.key === "Enter" &&
+              !event.nativeEvent.isComposing &&
+              target instanceof HTMLInputElement &&
+              !target.hasAttribute("cmdk-input") &&
+              !["button", "checkbox", "file", "image", "radio", "reset", "submit"].includes(target.type)
+            ) {
+              event.preventDefault();
+            }
+          }}
+          className="space-y-4 w-full"
+        >
           <div className="border bg-background rounded-lg p-4 shadow-lg">
             <div className='grid md:grid-cols-2 grid-cols-1 gap-4'>
               <div>
@@ -1074,6 +990,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                       <>
                         <Image alt={'Contact Cover Image'} src={contactImage.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${contactImage}` : contactImage} width={200} height={200} className="w-52 h-fit" priority/>
                         <Button
+                          type="button"
                           variant={"destructive"}
                           onClick={() => deleteImage()}
                         >
@@ -1175,6 +1092,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                   <Popover open={openSocialNetwork} onOpenChange={setOpenSocialNetwork}>
                     <PopoverTrigger asChild>
                       <Button
+                        type="button"
                         variant="outline"
                         role="combobox"
                         aria-expanded={openSocialNetwork}
@@ -1260,6 +1178,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                                 </div>
                               </div>
                               <Button
+                                type="button"
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => handleDeleteSocial(social.id)}
@@ -1286,6 +1205,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                       <>
                         <Image alt={'Brand Choice Image'} src={homepageBrandChoiceUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${homepageBrandChoiceUrl}` : homepageBrandChoiceUrl} width={200} height={200} className="w-52 h-fit" priority/>
                         <Button
+                          type="button"
                           variant={"destructive"}
                           onClick={() => deleteImageBrandChoice()}
                         >
@@ -1332,6 +1252,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                       <>
                         <Image alt={'Open Source Kits Image'} src={homepageOpenSourceKitsUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${homepageOpenSourceKitsUrl}` : homepageOpenSourceKitsUrl} width={200} height={200} className="w-52 h-fit" priority/>
                         <Button
+                          type="button"
                           variant={"destructive"}
                           onClick={() => deleteImageOpenSourceKits()}
                         >
@@ -1378,6 +1299,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                       <>
                         <Image alt={'About Us Image'} src={homepageAboutUsUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${homepageAboutUsUrl}` : homepageAboutUsUrl} width={200} height={200} className="w-52 h-fit" priority/>
                         <Button
+                          type="button"
                           variant={"destructive"}
                           onClick={() => deleteImageAboutUs()}
                         >
@@ -1424,6 +1346,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                       <>
                         <Image alt={'Catalogues Image'} src={homepageCataloguesUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${homepageCataloguesUrl}` : homepageCataloguesUrl} width={200} height={200} className="w-52 h-fit" priority/>
                         <Button
+                          type="button"
                           variant={"destructive"}
                           onClick={() => deleteImageCatalogues()}
                         >
@@ -1674,6 +1597,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                           /> */}
                         </div>
                         <Button
+                          type="button"
                           variant={"destructive"}
                           onClick={() => reduceSBEImagesCounter(index)}
                         >
@@ -1896,6 +1820,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                           /> */}
                         </div>
                         <Button
+                          type="button"
                           variant={"destructive"}
                           onClick={() => reduceBrandImagesCounter(index)}
                         >
@@ -2123,6 +2048,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                           </div>
                         </div>
                         <Button
+                          type="button"
                           variant={"destructive"}
                           onClick={() => reduceValuesImagesCounter(index)}
                         >
@@ -2230,6 +2156,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                                 </div>
                               </div>
                               <Button
+                                type="button"
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => handleDeleteSocial(social.id)}

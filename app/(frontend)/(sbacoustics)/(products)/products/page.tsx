@@ -170,34 +170,35 @@ export default async function SBAcousticsProductPage() {
                 Array.from({ length: 2 }, (_, index) => index + 1).map((i) => {
                 return (
                     <div key={i}>
-                    <div className=" group cursor-pointer space-y-4 block">
-                        <div className="relative aspect-square">
-                        <Loader2 />
+                        <div className=" group cursor-pointer space-y-4 block">
+                            <div className="relative aspect-square">
+                            <Loader2 />
+                            </div>
+                            
+                            <h2 className="font-bold text-xl text-center">...</h2>
                         </div>
-                        
-                        <h2 className="font-bold text-xl text-center">...</h2>
-                    </div>
                     </div>
                 );
                 }
             )}>
                 {allDriver.length > 0 && allDriver.map((val, index) => 
+                    val.thumbnail_url !== '' &&
                     <div key={index}>
-                    <Link 
-                        href='/drivers/all'
-                        className=" group cursor-pointer space-y-4 block"
-                    >
-                        <div className="relative aspect-square">
-                        <LazyImageClickable
-                            src={val.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.thumbnail_url}` : val.thumbnail_url} 
-                            alt={`${val.name} by SB Acoustics`}
-                            width={1000}
-                            height={1000}
-                        />
-                        </div>
-                        
-                        <h2 className="font-bold text-xl text-center">All {val.name}</h2>
-                    </Link>
+                        <Link 
+                            href={val.slug}
+                            className=" group cursor-pointer space-y-4 block"
+                        >
+                            <div className="relative aspect-square">
+                            <LazyImageClickable
+                                src={val.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${val.thumbnail_url}` : val.thumbnail_url} 
+                                alt={`${val.name} by SB Acoustics`}
+                                width={1000}
+                                height={1000}
+                            />
+                            </div>
+                            
+                            <h2 className="font-bold text-xl text-center">All {val.name}</h2>
+                        </Link>
                     </div>
                 )}
             </Suspense>

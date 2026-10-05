@@ -38,6 +38,7 @@ const AllFinishingPage = async (
   const formattedAllFinishing: FinishingColumn[] = allFinish.map((oneFinish) => ({
     id: oneFinish.id,
     name: oneFinish.name,
+    productImageUrl: oneFinish.url,
     updatedBy: oneFinish.updatedBy,
     updatedAt: format(oneFinish.updatedAt, 'MMMM do, yyyy'),
   }));

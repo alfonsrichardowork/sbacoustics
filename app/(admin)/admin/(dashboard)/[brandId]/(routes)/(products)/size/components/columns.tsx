@@ -5,18 +5,13 @@ import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "./cell-action"
 
 export type SizeColumn = {
-  id: string
-  name: string;
+  id: string;
   value: string;
   updatedAt: string;
   updatedBy: string;
 }
 
 export const columns: ColumnDef<SizeColumn>[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-  },
   {
     accessorKey: "value",
     header: "Value",

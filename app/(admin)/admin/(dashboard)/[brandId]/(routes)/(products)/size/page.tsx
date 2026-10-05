@@ -34,7 +34,6 @@ const SizePage = async (
   const sizes = await getData(params.brandId)
   const formattedSizes: SizeColumn[] = sizes.map((item) => ({
     id: item.id,
-    name: item.name,
     value: item.value,
     updatedAt: format(item.updatedAt, 'MMMM do, yyyy'),
     updatedBy: item.updatedBy

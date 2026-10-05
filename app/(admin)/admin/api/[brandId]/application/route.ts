@@ -4,6 +4,7 @@ import prismadb from '@/lib/prismadb';
 import { checkAuth, checkBearerAPI, getSession } from '@/lib/actions';
 import { image_catalogues, multipledatasheetproduct } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+import { isSafeApplicationAssetList, isSafeApplicationAssetUrl } from '@/app/(admin)/admin/application-upload';
 
 const slugify = (str: string): string => {
   const normalizedStr = str.replace(/["“”‟″‶〃״˝ʺ˶ˮײ]/g, "'");
@@ -33,8 +34,16 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
 
     const { name, author, description, images_catalogues, cover_img_url, datasheet } = body;
 
-    if (!name) {
-      return new NextResponse("Name is required", { status: 400 });
+    if (
+      typeof name !== "string" ||
+      !name.trim() ||
+      typeof description !== "string" ||
+      (author !== undefined && typeof author !== "string") ||
+      !isSafeApplicationAssetUrl(cover_img_url, "applicationimage") ||
+      !isSafeApplicationAssetList(images_catalogues, "applicationimage") ||
+      !isSafeApplicationAssetList(datasheet, "applicationdatasheet")
+    ) {
+      return new NextResponse("Invalid application data or upload URL", { status: 400 });
     }
 
     if (!params.brandId) {
@@ -70,9 +79,9 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
       },
     });
 
-    if(images_catalogues.length!=0){
-      images_catalogues.map(async (value: image_catalogues) => {
-        if(value.url!=''){
+    if (images_catalogues.length > 0) {
+      await Promise.all(images_catalogues.map(async (value: image_catalogues) => {
+        if (value.url !== '') {
           await prismadb.image_catalogues.create({
             data:{
               productId: '',
@@ -84,22 +93,22 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
             }
           })
         }
-      })
+      }));
     }
 
-    if(datasheet.length!=0){
-      datasheet.map(async (datasheet: multipledatasheetproduct) => {
-        if(datasheet.url!=''){
+    if (datasheet.length > 0) {
+      await Promise.all(datasheet.map(async (value: multipledatasheetproduct) => {
+        if (value.url !== '') {
           await prismadb.multipledatasheetproduct.create({
             data:{
               applicationId: app.id,
               productId: '',
-              url:datasheet.url,
-              name: datasheet.name
+              url: value.url,
+              name: value.name
             }
           })
         }
-      })
+      }));
     }
     
 

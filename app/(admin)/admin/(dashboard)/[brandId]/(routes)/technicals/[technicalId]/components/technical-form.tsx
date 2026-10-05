@@ -302,13 +302,10 @@ export const TechnicalForm: React.FC<TechnicalFormProps> = ({
 
                             {Array.from({ length: total.length + 1 }, (_, index) => index + 1).map(
                               (priority) => {
-                                const isUsed = total.includes(priority.toString());
-
                                 return (
                                   <SelectItem
                                     key={priority}
                                     value={priority.toString()}
-                                    disabled={isUsed}
                                   >
                                     {priority}
                                   </SelectItem>
@@ -336,4 +333,3 @@ export const TechnicalForm: React.FC<TechnicalFormProps> = ({
     </>
   );
 };
-

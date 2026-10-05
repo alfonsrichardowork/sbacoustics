@@ -82,6 +82,11 @@ async function getOneDriverData(productSlug: string){
                 }
             },
             kitsFinishing: {
+                where: {
+                    url: {
+                        not: ''
+                    }
+                },
                 select: {
                     url: true,
                     order: true,

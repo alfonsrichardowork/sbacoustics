@@ -2,7 +2,7 @@
 
 import * as z from "zod"
 import axios, { AxiosResponse } from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
@@ -23,13 +23,13 @@ import {
 } from "@/app/(admin)/admin/components/ui/form"
 import { Separator } from "@/app/(admin)/admin/components/ui/separator"
 import { Heading } from "@/app/(admin)/admin/components/ui/heading"
-import { MAX_SIZE } from "@/app/(admin)/admin/model/model"
 import { uploadImage } from "@/app/(admin)/admin/upload-image"
 import Image from "next/image"
 import { Checkbox } from "@/app/(admin)/admin/components/ui/checkbox"
 import { Popover, PopoverContent, PopoverTrigger } from "@/app/(admin)/admin/components/ui/popover"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/app/(admin)/admin/components/ui/command"
 import { cn } from "@/lib/utils"
+import { formatFileSize, MAX_FILE_SIZE } from "@/app/(admin)/admin/lib"
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -61,6 +61,7 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
   const [loading, setLoading] = useState(false);
   const [openCat, setOpenCat] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<{label: string, value: string}>();
+  const submitInProgress = useRef(false);
 
   const title = initialData ? 'Edit Sub Category' : 'Create Sub Category';
   const description = initialData ? 'Edit a Sub Category.' : 'Add a new Sub Category';
@@ -84,62 +85,67 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
 
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (initialData && initialData.thumbnail_url) {
-        setCoverImgUrl(initialData.thumbnail_url);
+    setCoverImgUrl(initialData?.thumbnail_url ?? '')
+    initialData?.under_categoryId && setSelectedCategories(
+      {
+        label: categories.find(cat => cat.id === initialData.under_categoryId)?.name || '',
+        value: initialData.under_categoryId
       }
-      else{
-        setCoverImgUrl('')
-      }
-      initialData?.under_categoryId && setSelectedCategories(
-        {
-          label: categories.find(cat => cat.id === initialData.under_categoryId)?.name || '',
-          value: initialData.under_categoryId
-        }
-      );
-    };
-    
-    fetchData().catch((error) => {
-      console.error("Error fetching category: ", error);
-    });
-  }, [initialData, initialData?.thumbnail_url]);
+    );
+  }, [initialData?.id, initialData?.thumbnail_url]);
   
     //THUMBNAIL IMAGE
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if(!file) return
-      if (file.size > MAX_SIZE) {
-        alert("File size must be less than 2MB");
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please choose an image file.');
+        e.target.value = '';
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(`The cover image exceeds the 50 MB per-file limit (${formatFileSize(file.size)}).`);
         e.target.value = "";
         return;
       }
       setCoverImg(file);
+      e.target.value = '';
     };
   
     const deleteImage = async () => {
       setCoverImgUrl('')
+      setCoverImg(undefined)
     }
-  
-    async function handleCoverImageUpload(file: File): Promise<string> {
-      if (file) {
-        let updatedCoverImage = coverImgUrl ?? ''
-        try {
-          const formData = new FormData();
-          formData.append('image', file);
     
-          const url = await uploadImage(formData, 'other');
-          updatedCoverImage = url;
-          return updatedCoverImage;
-        } catch (error) {
-          console.error("Error uploading cover image:", error);
-          return '';
-        }
-      }
-      return '';
+    async function handleCoverImageUpload(file: File): Promise<string> {
+      const formData = new FormData();
+      formData.append('image', file);
+      const url = await uploadImage(formData, 'other');
+      if (!url) throw new Error('Image upload did not return a file URL.');
+      return url;
     }
+    // async function handleCoverImageUpload(file: File): Promise<string> {
+    //   if (file) {
+    //     let updatedCoverImage = coverImgUrl ?? ''
+    //     try {
+    //       const formData = new FormData();
+    //       formData.append('image', file);
+    
+    //       const url = await uploadImage(formData, 'other');
+    //       updatedCoverImage = url;
+    //       return updatedCoverImage;
+    //     } catch (error) {
+    //       console.error("Error uploading cover image:", error);
+    //       return '';
+    //     }
+    //   }
+    //   return '';
+    // }
     
   
   const onSubmit = async (data: SubCategoryFormValues) => {
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
       setLoading(true);
       if (coverImg) {
@@ -189,6 +195,7 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
+      submitInProgress.current = false;
     }
   };
   
@@ -204,7 +211,19 @@ export const SubCategoryForm: React.FC<SubCategoryFormProps> = ({
       </div>
       <Separator />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
+        <form onSubmit={form.handleSubmit(onSubmit)}
+          onKeyDown={(event) => {
+            const target = event.target;
+            if (
+              event.key === "Enter" &&
+              !event.nativeEvent.isComposing &&
+              target instanceof HTMLInputElement &&
+              !target.hasAttribute("cmdk-input") &&
+              !["button", "checkbox", "file", "image", "radio", "reset", "submit"].includes(target.type)
+            ) {
+              event.preventDefault();
+            }
+          }} className="space-y-4 w-full">
           <div className="md:gap-8 gap-4 border rounded-lg p-4 shadow-lg bg-background">
             <div className="text-center pb-2">
               <div className="text-left font-bold">Thumbnail Image</div>

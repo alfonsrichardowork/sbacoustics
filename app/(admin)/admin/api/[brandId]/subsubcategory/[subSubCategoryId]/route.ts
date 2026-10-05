@@ -214,17 +214,17 @@ export async function PATCH(
         }
       });
 
-      await prismadb.allproductcategory.updateMany({
-        where: {
-          categoryId: params.subSubCategoryId,
-          category: {
-            type: "Sub Sub Category"
-          }
-        },
-        data:{
-          updatedAt: new Date(),
-        }
-      })
+      // await prismadb.allproductcategory.updateMany({
+      //   where: {
+      //     categoryId: params.subSubCategoryId,
+      //     category: {
+      //       type: "Sub Sub Category"
+      //     }
+      //   },
+      //   data:{
+      //     updatedAt: new Date(),
+      //   }
+      // })
 
       const cat = await prismadb.allcategory.findMany({
         where: {
@@ -283,17 +283,17 @@ export async function PATCH(
         show_products
       }
     });
-    await prismadb.allproductcategory.updateMany({
-      where: {
-        categoryId: params.subSubCategoryId,
-        category: {
-          type
-        }
-      },
-      data:{
-        updatedAt: new Date(),
-      }
-    })
+    // await prismadb.allproductcategory.updateMany({
+    //   where: {
+    //     categoryId: params.subSubCategoryId,
+    //     category: {
+    //       type
+    //     }
+    //   },
+    //   data:{
+    //     updatedAt: new Date(),
+    //   }
+    // })
 
     const cat = await prismadb.allcategory.findMany({
       where: {

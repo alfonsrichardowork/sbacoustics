@@ -2,7 +2,7 @@
 
 import * as z from "zod"
 import axios, { AxiosResponse } from "axios"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
@@ -39,6 +39,7 @@ export const ChildSpecForm: React.FC<ChildSpecFormProps> = ({
   const params = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const submitInProgress = useRef(false);
 
   const title = initialData ? 'Edit Child Specification' : 'Create Child Specification';
   const description = initialData ? `For ${initialData.name}` : 'Add a new Child Specification';
@@ -59,9 +60,10 @@ export const ChildSpecForm: React.FC<ChildSpecFormProps> = ({
   });
 
   const onSubmit = async (data: ChildSpecFormValues) => {
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
       setLoading(true);
-    
       let response: AxiosResponse;
       if (initialData) {
         response = await axios.patch(`${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/api/${params.brandId}/childspec/${params.childSpecId}`, data);
@@ -95,6 +97,7 @@ export const ChildSpecForm: React.FC<ChildSpecFormProps> = ({
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
+      submitInProgress.current = false;
     }
   };
   
@@ -105,9 +108,23 @@ export const ChildSpecForm: React.FC<ChildSpecFormProps> = ({
       </div>
       <Separator />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
-          console.log("validation errors:", errors);
-        })} className="space-y-4 w-full">
+        <form 
+          onSubmit={form.handleSubmit(onSubmit, (errors) => {
+            console.log("validation errors:", errors);
+          })} 
+          onKeyDown={(event) => {
+            const target = event.target;
+            if (
+              event.key === "Enter" &&
+              !event.nativeEvent.isComposing &&
+              target instanceof HTMLInputElement &&
+              !target.hasAttribute("cmdk-input") &&
+              !["button", "checkbox", "file", "image", "radio", "reset", "submit"].includes(target.type)
+            ) {
+              event.preventDefault();
+            }
+          }}
+          className="space-y-4 w-full">
           
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 

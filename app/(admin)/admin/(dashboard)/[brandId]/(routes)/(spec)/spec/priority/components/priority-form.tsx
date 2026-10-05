@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { GripVertical } from "lucide-react";
 import { toast } from "react-hot-toast";
@@ -33,6 +33,7 @@ export const PriorityForm: React.FC<PriorityFormProps> = ({
   const [initialLoading, setInitialLoading] = useState(true);
   const [groupedProducts, setGroupedProducts] = useState<Record<string, PriorityMenu[]>>({});
   const [draggedIndex, setDraggedIndex] = useState<Record<string, number | null>>({});
+  const submitInProgress = useRef(false);
 
   const title = "Edit Spec Priority";
   const toastMessage = "Spec updated.";
@@ -161,6 +162,8 @@ export const PriorityForm: React.FC<PriorityFormProps> = ({
   };
 
   const onSubmit = async () => {
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
       setLoading(true);
       let payload: PriorityMenu[] = [];
@@ -200,6 +203,7 @@ export const PriorityForm: React.FC<PriorityFormProps> = ({
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
+      submitInProgress.current = false;
     }
   };
 

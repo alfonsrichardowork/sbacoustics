@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useRef } from "react"
 
 import { useEffect, useState } from "react"
 import { allfinishing, kitsfinishing } from "@prisma/client"
@@ -17,7 +17,13 @@ import { Plus, Trash } from "lucide-react"
 import Link from "next/link"
 import { uploadImage } from "@/app/(admin)/admin/upload-image"
 import { Input } from "@/components/ui/input"
-import { MAX_SIZE } from "@/app/(admin)/admin/model/model"
+import { MAX_FILE_SIZE } from "@/app/(admin)/admin/lib"
+
+function normalizeFinishingOrder(items: kitsfinishing[]) {
+  return [...items]
+    .sort((a, b) => a.order - b.order)
+    .map((item, index) => ({ ...item, order: index + 1 }))
+}
 
 interface KitsFinishingFormProps {
   initialData: kitsfinishing[] | null;
@@ -34,6 +40,7 @@ export const KitsFinishingForm: React.FC<KitsFinishingFormProps> = ({
   const [loading, setLoading] = useState(false);
   const [finishingImage, setFinishingImage] = useState<Record<string, string>>({})
   const [selectedImage, setSelectedImage] = useState<Record<string, File>>({});
+  const submitInProgress = useRef(false);
     
   const title = initialData ? 'Edit Kits Finishing' : 'Add Kits Finishing';
   const description = `For ${name}`;
@@ -41,7 +48,7 @@ export const KitsFinishingForm: React.FC<KitsFinishingFormProps> = ({
   const action = initialData ? 'Save changes' : 'Create';
   
   useEffect(() => {
-    setAllSelectedFinishing(initialData || []);
+    setAllSelectedFinishing(normalizeFinishingOrder(initialData || []));
     let temp: Record<string, string> = {}
     allFinishing && allFinishing.map((val) => {
       temp[val.id] = ''
@@ -64,7 +71,7 @@ export const KitsFinishingForm: React.FC<KitsFinishingFormProps> = ({
   const handleImageChange = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(!file) return
-    if (file.size > MAX_SIZE) {
+    if (file.size > MAX_FILE_SIZE) {
       alert("File size must be less than 2MB");
       e.target.value = "";
       return;
@@ -75,21 +82,14 @@ export const KitsFinishingForm: React.FC<KitsFinishingFormProps> = ({
     }))
   };
 
-  async function handleImageUpload (file: File): Promise<string> {
-    if (file) {
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
 
-        const url = await uploadImage(formData, 'finishing');
-        return url;
-        } catch (error) {
-        console.error("Error uploading finishing Image:", error);
-        return '';
-      }
-    }
-    return '';
-  };
+  async function handleImageUpload(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('image', file);
+    const url = await uploadImage(formData, 'finishing');
+    if (!url) throw new Error('Image upload did not return a file URL.');
+    return url;
+  }
     
   
   function addFinishing(newFinishing: allfinishing) {
@@ -98,10 +98,12 @@ export const KitsFinishingForm: React.FC<KitsFinishingFormProps> = ({
         const exists = prev.some(v => v.finishingId === newFinishing.id);
 
         if (exists) {
-          return prev.filter(v => v.finishingId !== newFinishing.id);
+          return normalizeFinishingOrder(
+            prev.filter(v => v.finishingId !== newFinishing.id)
+          );
         }
 
-        return [
+        return normalizeFinishingOrder([
           ...prev,
           {
             id: crypto.randomUUID(),
@@ -110,7 +112,7 @@ export const KitsFinishingForm: React.FC<KitsFinishingFormProps> = ({
             url: '',
             order: prev.length + 1
           }
-        ];
+        ]);
       });
     }
     else{
@@ -126,19 +128,31 @@ export const KitsFinishingForm: React.FC<KitsFinishingFormProps> = ({
   }
 
   const updateFinishingOrder = (finishingId: string, newOrder: number) => {
-    setAllSelectedFinishing(prev => 
-      prev.map(item => 
-        item.finishingId === finishingId 
-          ? { ...item, order: newOrder }
-          : item
-      )
-    );
-    console.log("allSelectedFinishing: ", allSelectedFinishing)
+    if (!Number.isFinite(newOrder)) return;
+
+    setAllSelectedFinishing(prev => {
+      const ordered = normalizeFinishingOrder(prev);
+      const currentIndex = ordered.findIndex(item => item.finishingId === finishingId);
+      if (currentIndex === -1) return prev;
+
+      const targetIndex = Math.max(
+        0,
+        Math.min(ordered.length - 1, Math.trunc(newOrder) - 1)
+      );
+      const movedItem = ordered[currentIndex];
+      if (!movedItem) return prev;
+
+      ordered.splice(currentIndex, 1);
+      ordered.splice(targetIndex, 0, movedItem);
+
+      return ordered.map((item, index) => ({ ...item, order: index + 1 }));
+    });
   };
  
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
       setLoading(true);
 
@@ -195,6 +209,7 @@ export const KitsFinishingForm: React.FC<KitsFinishingFormProps> = ({
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
+      submitInProgress.current = false;
     }
   };
 
@@ -206,7 +221,21 @@ export const KitsFinishingForm: React.FC<KitsFinishingFormProps> = ({
         <Heading title={title} description={description} />
       </div>
       <Separator />
-        <form onSubmit={handleSubmit} className="space-y-8 w-full">
+        <form 
+          onSubmit={handleSubmit} 
+          onKeyDown={(event) => {
+            const target = event.target;
+            if (
+              event.key === "Enter" &&
+              !event.nativeEvent.isComposing &&
+              target instanceof HTMLInputElement &&
+              !target.hasAttribute("cmdk-input") &&
+              !["button", "checkbox", "file", "image", "radio", "reset", "submit"].includes(target.type)
+            ) {
+              event.preventDefault();
+            }
+          }}
+          className="space-y-8 w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {allFinishing?.map((finishing: allfinishing, index) => (
               <div
@@ -217,7 +246,7 @@ export const KitsFinishingForm: React.FC<KitsFinishingFormProps> = ({
                     : ''
                 }`}
               >
-                <div className="gap-1.5 leading-none flex flex-col justify-center text-center" key={index}>
+                <div className="gap-1.5 leading-none flex flex-col justify-center items-center text-center" key={index}>
                     <Image src={finishing.url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${finishing.url}` : finishing.url } alt={finishing.name} width={200} height={200} onClick={() => addFinishing(finishing)}/>
                   <label
                     htmlFor={`terms${index}`}
@@ -232,8 +261,14 @@ export const KitsFinishingForm: React.FC<KitsFinishingFormProps> = ({
                       <Input
                         type="number"
                         min="1"
+                        max={allSelectedFinishing.length}
+                        step="1"
                         value={allSelectedFinishing.find(val => val.finishingId === finishing.id)?.order || 1}
-                        onChange={(e) =>  updateFinishingOrder(finishing.id, e.target.value === "" ? 1 : Number(e.target.value))}
+                        onChange={(e) => {
+                          if (e.target.value !== "") {
+                            updateFinishingOrder(finishing.id, Number(e.target.value));
+                          }
+                        }}
                         className="w-16"
                         disabled={loading}
                       />

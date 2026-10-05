@@ -1,7 +1,7 @@
 "use client"
 
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { toast } from "react-hot-toast"
 import { ChevronsUpDown, Trash, } from "lucide-react"
 import { product, productsusedinkits } from "@prisma/client"
@@ -42,6 +42,7 @@ export const ProductUsedInKitsForm: React.FC<ProductUsedInKitsFormProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [openCat, setOpenCat] = useState(false);
+  const submitInProgress = useRef(false);
 
   const title = initialData.length > 0 ? `Edit Products Used in Kits Products` : `Add Products Used in Kits Products`;
   const description = `For ${initialProduct.name}`;
@@ -90,6 +91,8 @@ export const ProductUsedInKitsForm: React.FC<ProductUsedInKitsFormProps> = ({
     event.preventDefault();
     
     const allFinalProdUsed: productsusedinkits[] = [...allProductUsedInKits];
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
       setLoading(true);
       let response = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/api/${params.brandId}/${params.productId}/productusedinkits`, allFinalProdUsed);
@@ -117,6 +120,7 @@ export const ProductUsedInKitsForm: React.FC<ProductUsedInKitsFormProps> = ({
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
+      submitInProgress.current = false;
     }
   };
 
@@ -128,7 +132,22 @@ export const ProductUsedInKitsForm: React.FC<ProductUsedInKitsFormProps> = ({
       </div>
       <Separator />
       <div className="w-full">
-      <form onSubmit={handleSubmit} className="w-full space-y-4">
+      <form 
+        onSubmit={handleSubmit}
+        onKeyDown={(event) => {
+          const target = event.target;
+          if (
+            event.key === "Enter" &&
+            !event.nativeEvent.isComposing &&
+            target instanceof HTMLInputElement &&
+            !target.hasAttribute("cmdk-input") &&
+            !["button", "checkbox", "file", "image", "radio", "reset", "submit"].includes(target.type)
+          ) {
+            event.preventDefault();
+          }
+        }}
+        className="w-full space-y-4"
+      >
         <div className="md:grid md:grid-cols-2 gap-8">
 
 

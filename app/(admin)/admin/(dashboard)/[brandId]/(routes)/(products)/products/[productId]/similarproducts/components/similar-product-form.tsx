@@ -1,7 +1,7 @@
 "use client"
 
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { toast } from "react-hot-toast"
 import { ChevronsUpDown, Trash, } from "lucide-react"
 import { product, similarproducts } from "@prisma/client"
@@ -43,6 +43,7 @@ export const SimiliarProductForm: React.FC<SimiliarProductFormProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [openCat, setOpenCat] = useState(false);
+  const submitInProgress = useRef(false);
 
   const title = initialData.length > 0 ? `Edit Similar Products` : `Add Similar Products`;
   const description = `For ${initialProduct.name}`;
@@ -91,6 +92,8 @@ export const SimiliarProductForm: React.FC<SimiliarProductFormProps> = ({
     event.preventDefault();
     
     const allFinalSimilar: similarproducts[] = [...allSimilar];
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
       setLoading(true);
       let response = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_FOLDER_URL}/api/${params.brandId}/${params.productId}/similarproducts`, allFinalSimilar);
@@ -118,6 +121,7 @@ export const SimiliarProductForm: React.FC<SimiliarProductFormProps> = ({
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
+      submitInProgress.current = false;
     }
   };
 
@@ -129,7 +133,20 @@ export const SimiliarProductForm: React.FC<SimiliarProductFormProps> = ({
       </div>
       <Separator />
       <div className="w-full">
-      <form onSubmit={handleSubmit} className="w-full space-y-4">
+      <form onSubmit={handleSubmit}
+          onKeyDown={(event) => {
+            const target = event.target;
+            if (
+              event.key === "Enter" &&
+              !event.nativeEvent.isComposing &&
+              target instanceof HTMLInputElement &&
+              !target.hasAttribute("cmdk-input") &&
+              !["button", "checkbox", "file", "image", "radio", "reset", "submit"].includes(target.type)
+            ) {
+              event.preventDefault();
+            }
+          }}
+          className="w-full space-y-4">
         <div className="md:grid md:grid-cols-2 gap-8">
 
 

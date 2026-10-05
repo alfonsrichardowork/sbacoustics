@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import {
   ChevronDown,
   ChevronRight,
@@ -221,6 +221,8 @@ export function CategoryPriorityManager({ initialTree: providedTree = [], onSave
   const [saved, setSaved] = useState(false)
   const [draggedRoot, setDraggedRoot] = useState<string | null>(null)
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const submitInProgress = useRef(false);
 
   const visibleTree = useMemo(() => query.trim() ? tree.filter((node) => node.name.toLowerCase().includes(query.toLowerCase()) || node.children.some((child) => child.name.toLowerCase().includes(query.toLowerCase()))) : tree, [query, tree])
   const updateProducts = (categoryId: string, ids: string[]) => { setTree((current) => updateProductsInTree(current, categoryId, ids)); setDirty(true); setSaved(false) }
@@ -229,7 +231,10 @@ export function CategoryPriorityManager({ initialTree: providedTree = [], onSave
     // await onSave?.(flattenPriorityTree(tree))
     // setSaved(true)
     // setDirty(false)
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
+      setLoading(true);
       let payload = flattenPriorityTree(tree)
 
       const response = await axios.post(
@@ -260,8 +265,10 @@ export function CategoryPriorityManager({ initialTree: providedTree = [], onSave
     } catch (error: any) {
       toast.error('Something went wrong.');
     } finally {
-      setDirty(false)
-      setSaved(true)
+      setLoading(false);
+      setDirty(false);
+      setSaved(true);
+      submitInProgress.current = false;
     }
   }
 
@@ -276,7 +283,7 @@ export function CategoryPriorityManager({ initialTree: providedTree = [], onSave
               </h1>
             </div>
           </div>
-          <Button onClick={save} disabled={!dirty} size="lg">
+          <Button onClick={save} disabled={!dirty || loading} className="flex gap-2 bg-green-500 text-white hover:bg-green-600 transition-colors" type="submit" variant={'secondary'} size="lg">
             {saved ? 'Saved' : 'Save Priorities'}
             </Button>
         </header>

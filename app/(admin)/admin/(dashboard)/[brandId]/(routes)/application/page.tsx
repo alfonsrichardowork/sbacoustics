@@ -35,6 +35,7 @@ const ApplicationPage = async (
   const formattedApps: AppColumn[] = app.map((item) => ({
     id: item.id,
     name: item.name,
+    image: item.cover_img_url,
     updatedAt: format(item.updatedAt, 'MMMM do, yyyy'),
     updatedBy: item.updatedBy,
   }));

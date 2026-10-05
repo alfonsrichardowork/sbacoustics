@@ -1,0 +1,1 @@
+export const disallowedDomains = ['example-phishing.com', 'malicious-site.net']

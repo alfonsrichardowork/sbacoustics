@@ -58,6 +58,8 @@ export function DataTable<TData, TValue>({
   
   const indexCataloguePDF = columns.findIndex(item => item.header === 'Catalogue PDF');
   const indexCatalogueImage = columns.findIndex(item => item.header === 'Catalogue Image');
+
+  const indexApplicationImage = columns.findIndex(item => item.header === 'Application Image');
   
   return (
     <div>
@@ -101,7 +103,7 @@ export function DataTable<TData, TValue>({
                   {row.getVisibleCells().map((cell, indexcol) => (
                     indexcol === indexPreview ? (
                       /* @ts-ignore */<TableCell key={cell.id}><div style={{ display: 'flex' }}> 
-                        {data[Number(row.id)].productImageUrl[0]!=''?<Image src={data[Number(row.id)].productImageUrl[0].startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${data[Number(row.id)].productImageUrl[0]}` : data[Number(row.id)].productImageUrl[0]} alt={data[Number(row.id)].name} width={200} height={200} className="w-56 h-fit"/>:<FileQuestion size={30}/>}
+                        {data[Number(row.id)].productImageUrl!=''?<Image src={data[Number(row.id)].productImageUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${data[Number(row.id)].productImageUrl}` : data[Number(row.id)].productImageUrl} alt={data[Number(row.id)].name} width={200} height={200} className="w-56 h-fit"/>:<FileQuestion size={30}/>}
                       </div>
                       </TableCell>
                     ) : indexcol === indexPreviewFeatured ? (
@@ -122,6 +124,11 @@ export function DataTable<TData, TValue>({
                     ) : indexcol === indexCatalogueImage ? (
                       /* @ts-ignore */<TableCell key={cell.id}><div style={{ display: 'flex' }}>
                         {data[Number(row.id)].image!=''?<Image src={data[Number(row.id)].image.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${data[Number(row.id)].image}` : data[Number(row.id)].image} alt={data[Number(row.id)].name} width={200} height={200} className="w-3/4 h-fit"/>:<div className="gap-2 flex items-center justify-center text-red-500"><FileX size={30}/>(Not shown in website)</div>}
+                      </div>
+                      </TableCell>
+                    ) : indexcol === indexApplicationImage ? (
+                      /* @ts-ignore */<TableCell key={cell.id}><div style={{ display: 'flex' }}>
+                        {data[Number(row.id)].image!=''?<Image src={data[Number(row.id)].image.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${data[Number(row.id)].image}` : data[Number(row.id)].image} alt={data[Number(row.id)].name} width={100} height={100} className="w-1/2 h-fit"/>:<div className="gap-2 flex items-center justify-center text-red-500"><FileX size={30}/>(Not shown in website)</div>}
                       </div>
                       </TableCell>
                     ) : (

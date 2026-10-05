@@ -77,8 +77,6 @@ export async function POST(
       }
     });
 
-    console.log("rows: ", rows)
-
     if(body.length!==0){
       const updatedFinishing = await prismadb.kitsfinishing.createMany({
         data: rows.map(row => ({

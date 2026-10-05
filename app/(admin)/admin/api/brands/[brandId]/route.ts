@@ -2,12 +2,56 @@ import { NextResponse } from "next/server";
 
 import prismadb from "@/lib/prismadb";
 import { checkAuth, checkBearerAPI, getSession } from "@/lib/actions";
-import path from 'path';
 import fs from 'fs/promises';
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { multipleaboutusimages } from "@prisma/client";
-import { uploadsprefix } from "../../../lib";
+import { MAX_FILE_SIZE, uploadsprefix } from "../../../lib";
+import {
+  getSafeOtherImageUploadPath,
+  isSafeSettingsImageList,
+  isSafeSettingsImageUrl,
+} from "@/app/(admin)/admin/application-upload";
+
+async function isValidSettingsImageUrl(value: unknown): Promise<boolean> {
+  if (value === undefined) return true;
+  if (!isSafeSettingsImageUrl(value)) return false;
+  if (typeof value !== "string" || !value.startsWith("/uploads/")) return true;
+
+  const filePath = getSafeOtherImageUploadPath(value);
+  if (!filePath) return false;
+
+  try {
+    const file = await fs.stat(filePath);
+    return file.isFile() && file.size <= MAX_FILE_SIZE;
+  } catch (error) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      error.code === "ENOENT"
+    ) {
+      return false;
+    }
+    throw error;
+  }
+}
+
+async function deleteSettingsImage(url: string): Promise<void> {
+  if (!url.startsWith(uploadsprefix)) return;
+
+  const filePath = getSafeOtherImageUploadPath(url);
+  if (!filePath) {
+    console.warn("Refusing to delete a settings image outside the uploads/other folder.");
+    return;
+  }
+
+  try {
+    await fs.unlink(filePath);
+  } catch (error) {
+    console.warn(`Could not delete settings image ${url}:`, error);
+  }
+}
 
 
 export async function PATCH(req: Request, props: { params: Promise<{ brandId: string }> }) {
@@ -30,29 +74,32 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
 
     const body = await req.json();
 
+    const settingsData = body?.data;
+    if (!settingsData || typeof settingsData !== "object" || Array.isArray(settingsData)) {
+      return new NextResponse("Invalid settings data", { status: 400 });
+    }
+
     const {
-      data: {
-        name,
-        telephone,
-        email,
-        address,
-        maps,
-        cover,
-        homepage_brand_choice_url,
-        homepage_open_source_kits_url,
-        homepage_about_us_url,
-        homepage_catalogues_url,
-        homepage_brand_choice_text,
-        homepage_open_source_kits_text,
-        homepage_about_us_text,
-        homepage_catalogues_text,
-        aboutUsImages,
-        brand_desc,
-        sbe_desc,
-        mission_values_desc
-      },
-      socials,
-    } = body;
+      name,
+      telephone,
+      email,
+      address,
+      maps,
+      cover,
+      homepage_brand_choice_url,
+      homepage_open_source_kits_url,
+      homepage_about_us_url,
+      homepage_catalogues_url,
+      homepage_brand_choice_text,
+      homepage_open_source_kits_text,
+      homepage_about_us_text,
+      homepage_catalogues_text,
+      aboutUsImages,
+      brand_desc,
+      sbe_desc,
+      mission_values_desc
+    } = settingsData;
+    const { socials } = body;
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
@@ -60,6 +107,32 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
 
     if (!params.brandId) {
       return new NextResponse("Brand id is required", { status: 400 });
+    }
+
+    const settingsImageUrls = [
+      cover,
+      homepage_brand_choice_url,
+      homepage_open_source_kits_url,
+      homepage_about_us_url,
+      homepage_catalogues_url,
+    ];
+    const validImageUrls = await Promise.all(settingsImageUrls.map(isValidSettingsImageUrl));
+    if (
+      typeof name !== "string" ||
+      !name.trim() ||
+      validImageUrls.some((isValid) => !isValid) ||
+      (aboutUsImages !== undefined && !isSafeSettingsImageList(aboutUsImages))
+    ) {
+      return new NextResponse("Invalid settings data or image upload", { status: 400 });
+    }
+
+    if (aboutUsImages !== undefined) {
+      const validAboutUsImageUrls = await Promise.all(
+        aboutUsImages.map((image: multipleaboutusimages) => isValidSettingsImageUrl(image.url))
+      );
+      if (validAboutUsImageUrls.some((isValid) => !isValid)) {
+        return new NextResponse("Invalid image upload", { status: 400 });
+      }
     }
 
     if (!session.isLoggedIn) {
@@ -89,85 +162,19 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
       //Delete physical files
       if(oldUrl) {
         if(oldUrl.cover != cover) {
-          if(oldUrl.cover.startsWith(uploadsprefix)){
-            const filename = oldUrl.cover.slice(uploadsprefix.length)
-            // if (filename && path.basename(filename) === filename) {
-              const imgPath = path.join(process.cwd(), 'uploads', filename);
-              try {
-                await fs.unlink(imgPath);
-              } catch (error) {
-                console.warn(`Could not delete file ${oldUrl.cover}:`, error);
-              } 
-            // }
-          }
-          else{
-            console.warn(`Not inside uploads folder`);
-          }
+          await deleteSettingsImage(oldUrl.cover);
         }
         if(oldUrl.homepage_brand_choice_url != homepage_brand_choice_url) {
-          if(oldUrl.homepage_brand_choice_url.startsWith(uploadsprefix)){
-            const filename = oldUrl.homepage_brand_choice_url.slice(uploadsprefix.length)
-            // if (filename && path.basename(filename) === filename) {
-              const imgPath = path.join(process.cwd(), 'uploads', filename);
-              try {
-                await fs.unlink(imgPath);
-              } catch (error) {
-                console.warn(`Could not delete file ${oldUrl.homepage_brand_choice_url}:`, error);
-              } 
-            // }
-          }
-          else{
-            console.warn(`Not inside uploads folder`);
-          }
+          await deleteSettingsImage(oldUrl.homepage_brand_choice_url);
         }
         if(oldUrl.homepage_open_source_kits_url != homepage_open_source_kits_url) {
-          if(oldUrl.homepage_open_source_kits_url.startsWith(uploadsprefix)){
-            const filename = oldUrl.homepage_open_source_kits_url.slice(uploadsprefix.length)
-            // if (filename && path.basename(filename) === filename) {
-              const imgPath = path.join(process.cwd(), 'uploads', filename);
-              try {
-                await fs.unlink(imgPath);
-              } catch (error) {
-                console.warn(`Could not delete file ${oldUrl.homepage_open_source_kits_url}:`, error);
-              } 
-            // }
-          }
-          else{
-            console.warn(`Not inside uploads folder`);
-          }
+          await deleteSettingsImage(oldUrl.homepage_open_source_kits_url);
         }
         if(oldUrl.homepage_about_us_url != homepage_about_us_url) {
-          if(oldUrl.homepage_about_us_url.startsWith(uploadsprefix)){
-            const filename = oldUrl.homepage_about_us_url.slice(uploadsprefix.length)
-            // if (filename && path.basename(filename) === filename) {
-              const imgPath = path.join(process.cwd(), 'uploads', filename);
-              try {
-                await fs.unlink(imgPath);
-              } catch (error) {
-                console.warn(`Could not delete file ${oldUrl.homepage_about_us_url}:`, error);
-              } 
-            // }
-          }
-          else{
-            console.warn(`Not inside uploads folder`);
-          }
+          await deleteSettingsImage(oldUrl.homepage_about_us_url);
         }
         if(oldUrl.homepage_catalogues_url != homepage_catalogues_url) {
-          
-          if(oldUrl.homepage_catalogues_url.startsWith(uploadsprefix)){
-            const filename = oldUrl.homepage_catalogues_url.slice(uploadsprefix.length)
-            // if (filename && path.basename(filename) === filename) {
-              const imgPath = path.join(process.cwd(), 'uploads', filename);
-              try {
-                await fs.unlink(imgPath);
-              } catch (error) {
-                console.warn(`Could not delete file ${oldUrl.homepage_catalogues_url}:`, error);
-              } 
-            // }
-          }
-          else{
-            console.warn(`Not inside uploads folder`);
-          }
+          await deleteSettingsImage(oldUrl.homepage_catalogues_url);
         }
         // if(oldUrl.aboutUsImages != aboutUsImages) {
         //   const aboutImages = await prismadb.multipleaboutusimages.findMany({
@@ -461,106 +468,15 @@ export async function DELETE(req: Request, props: { params: Promise<{ brandId: s
         aboutUsImages: true
       }
     })
-    //Delete physical files
-    if(oldUrl) {
-      if(oldUrl.cover != '') {
-        if(oldUrl.cover.startsWith(uploadsprefix)){
-          const filename = oldUrl.cover.slice(uploadsprefix.length)
-          // if (filename && path.basename(filename) === filename) {
-            const imgPath = path.join(process.cwd(), 'uploads', filename);
-            try {
-              await fs.unlink(imgPath);
-            } catch (error) {
-              console.warn(`Could not delete file ${oldUrl.cover}:`, error);
-            } 
-          // }
-        }
-        else{
-          console.warn(`Not inside uploads folder`);
-        }
-      }
-      if(oldUrl.homepage_brand_choice_url != '') {
-        if(oldUrl.homepage_brand_choice_url.startsWith(uploadsprefix)){
-          const filename = oldUrl.homepage_brand_choice_url.slice(uploadsprefix.length)
-          // if (filename && path.basename(filename) === filename) {
-            const imgPath = path.join(process.cwd(), 'uploads', filename);
-            try {
-              await fs.unlink(imgPath);
-            } catch (error) {
-              console.warn(`Could not delete file ${oldUrl.homepage_brand_choice_url}:`, error);
-            } 
-          // }
-        }
-        else{
-          console.warn(`Not inside uploads folder`);
-        }
-      }
-      if(oldUrl.homepage_open_source_kits_url != '') {
-        if(oldUrl.homepage_open_source_kits_url.startsWith(uploadsprefix)){
-          const filename = oldUrl.homepage_open_source_kits_url.slice(uploadsprefix.length)
-          // if (filename && path.basename(filename) === filename) {
-            const imgPath = path.join(process.cwd(), 'uploads', filename);
-            try {
-              await fs.unlink(imgPath);
-            } catch (error) {
-              console.warn(`Could not delete file ${oldUrl.homepage_open_source_kits_url}:`, error);
-            } 
-          // }
-        }
-        else{
-          console.warn(`Not inside uploads folder`);
-        }
-      }
-      if(oldUrl.homepage_about_us_url != '') {
-        if(oldUrl.homepage_about_us_url.startsWith(uploadsprefix)){
-          const filename = oldUrl.homepage_about_us_url.slice(uploadsprefix.length)
-          // if (filename && path.basename(filename) === filename) {
-            const imgPath = path.join(process.cwd(), 'uploads', filename);
-            try {
-              await fs.unlink(imgPath);
-            } catch (error) {
-              console.warn(`Could not delete file ${oldUrl.homepage_about_us_url}:`, error);
-            } 
-          // }
-        }
-        else{
-          console.warn(`Not inside uploads folder`);
-        }
-      }
-      if(oldUrl.homepage_catalogues_url != '') {
-        if(oldUrl.homepage_catalogues_url.startsWith(uploadsprefix)){
-          const filename = oldUrl.homepage_catalogues_url.slice(uploadsprefix.length)
-          // if (filename && path.basename(filename) === filename) {
-            const imgPath = path.join(process.cwd(), 'uploads', filename);
-            try {
-              await fs.unlink(imgPath);
-            } catch (error) {
-              console.warn(`Could not delete file ${oldUrl.homepage_catalogues_url}:`, error);
-            } 
-          // }
-        }
-        else{
-          console.warn(`Not inside uploads folder`);
-        }
-      }
-      if(oldUrl.aboutUsImages != null){
-        oldUrl.aboutUsImages.map( async (val) => {
-          if(val.url.startsWith(uploadsprefix)){
-            const filename = val.url.slice(uploadsprefix.length)
-            // if (filename && path.basename(filename) === filename) {
-              const imgPath = path.join(process.cwd(), 'uploads', filename);
-              try {
-                await fs.unlink(imgPath);
-              } catch (error) {
-                console.warn(`Could not delete file ${val.url}:`, error);
-              } 
-            // }
-          }
-          else{
-            console.warn(`Not inside uploads folder`);
-          }
-        })
-      }
+    if (oldUrl) {
+      await Promise.all([
+        oldUrl.cover,
+        oldUrl.homepage_brand_choice_url,
+        oldUrl.homepage_open_source_kits_url,
+        oldUrl.homepage_about_us_url,
+        oldUrl.homepage_catalogues_url,
+        ...oldUrl.aboutUsImages.map((image) => image.url),
+      ].map(deleteSettingsImage));
     }
 
     const brand = await prismadb.brand.deleteMany({

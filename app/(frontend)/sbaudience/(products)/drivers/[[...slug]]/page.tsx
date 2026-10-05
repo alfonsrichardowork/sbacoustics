@@ -510,7 +510,7 @@ export default async function SBAudienceDriversPage({
                 />
                 <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <h1 className="sr-only">All Drivers | SB Audience</h1>
-                {allDriver &&
+                {allDriver && allDriver.thumbnail_url !== '' &&
                     <div>
                     <Link 
                         href='/sbaudience/drivers/all'
@@ -530,6 +530,7 @@ export default async function SBAudienceDriversPage({
                     </div>
                 }
                 {uniqueCategories.map((item, i) => (
+                    item.thumbnail_url !== '' &&
                     <div key={i}>
                     <Link 
                         href={`/sbaudience${item.url}`} 

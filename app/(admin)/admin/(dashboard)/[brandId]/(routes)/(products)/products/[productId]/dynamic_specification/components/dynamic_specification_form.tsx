@@ -5,7 +5,7 @@ import { Button } from "@/app/(admin)/admin/components/ui/button"
 import { Input } from "@/app/(admin)/admin/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/app/(admin)/admin/components/ui/select"
 import { CirclePlus, Trash } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import axios, { AxiosResponse } from "axios"
 import { useParams, useRouter } from "next/navigation"
 import toast from "react-hot-toast"
@@ -55,6 +55,7 @@ export const SpecForm: React.FC<SBAudienceCompressionDimensionSpecFormProps> = (
   const params = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true)
+  const submitInProgress = useRef(false);
 
 
   const title = initialData ? 'Edit Specification' : 'Create Specification';
@@ -187,8 +188,10 @@ export const SpecForm: React.FC<SBAudienceCompressionDimensionSpecFormProps> = (
         notes: r.notes,
       })),
     )
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
-      // setLoading(true);
+      setLoading(true);
 
       // let response: AxiosResponse;
       // if (payloads) {
@@ -222,7 +225,8 @@ export const SpecForm: React.FC<SBAudienceCompressionDimensionSpecFormProps> = (
     } catch (error: any) {
       toast.error('Something went wrong.');
     } finally {
-      // setLoading(false);
+      submitInProgress.current = false;
+      setLoading(false);
     }
     
   }
@@ -232,17 +236,27 @@ export const SpecForm: React.FC<SBAudienceCompressionDimensionSpecFormProps> = (
   }
 
   return (
-      loading ? 
-      <div className="w-screen h-screen flex justify-center items-center">
-        <Loader/>
-      </div> 
-      :
       <>
         <div className="flex items-center justify-between">
           <Heading title={title} description={description} />
         </div>
         <Separator />
-        <form onSubmit={onSubmit} className="space-y-8">
+        <form 
+          onSubmit={onSubmit} 
+          onKeyDown={(event) => {
+            const target = event.target;
+            if (
+              event.key === "Enter" &&
+              !event.nativeEvent.isComposing &&
+              target instanceof HTMLInputElement &&
+              !target.hasAttribute("cmdk-input") &&
+              !["button", "checkbox", "file", "image", "radio", "reset", "submit"].includes(target.type)
+            ) {
+              event.preventDefault();
+            }
+          }}
+          className="space-y-8"
+        >
             <Button
               type="button"
               onClick={addGroup}
@@ -427,7 +441,7 @@ export const SpecForm: React.FC<SBAudienceCompressionDimensionSpecFormProps> = (
       
 
             <div className="flex items-center gap-3 w-full">
-              <Button type="submit" className="w-screen bg-green-500 text-primary-foreground hover:opacity-90 hover:bg-green-600">
+              <Button disabled={loading} type="submit" className="w-screen bg-green-500 text-primary-foreground hover:opacity-90 hover:bg-green-600">
                 {action}
               </Button>
             </div>

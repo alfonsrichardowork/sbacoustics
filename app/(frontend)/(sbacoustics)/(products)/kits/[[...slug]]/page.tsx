@@ -527,7 +527,7 @@ export default async function KitsPage({
                     );
                     }
                 )}>
-                 {allKit &&
+                 {allKit && allKit.thumbnail_url !== '' &&
                     <div>
                     <Link 
                         href='/kits/all'
@@ -547,6 +547,7 @@ export default async function KitsPage({
                     </div>
                 }
                  {uniqueCategories.map((item, i) => (
+                    item.thumbnail_url !== '' &&
                     <div key={i}>
                     <Link 
                         href={item.url}

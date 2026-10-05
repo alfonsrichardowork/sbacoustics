@@ -2,10 +2,26 @@ import { NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
 import { checkAuth, checkBearerAPI, getSession } from "@/lib/actions";
 import { image_catalogues,  multipledatasheetproduct } from "@prisma/client";
-import path from 'path';
 import fs from 'fs/promises';
 import { revalidatePath } from "next/cache";
 import { uploadsprefix } from "@/app/(admin)/admin/lib";
+import { getSafeApplicationUploadPath, isSafeApplicationAssetList, isSafeApplicationAssetUrl, type ApplicationUploadFolder } from '@/app/(admin)/admin/application-upload';
+
+async function deleteApplicationUpload(url: string, folder: ApplicationUploadFolder) {
+  if (!url.startsWith(uploadsprefix)) return;
+
+  const filePath = getSafeApplicationUploadPath(url, folder);
+  if (!filePath) {
+    console.warn("Refusing to delete an application upload outside its allowed folder.");
+    return;
+  }
+
+  try {
+    await fs.unlink(filePath);
+  } catch (error) {
+    console.warn(`Could not delete application upload ${url}:`, error);
+  }
+}
 
 const slugify = (str: string): string => {
   const normalizedStr = str.replace(/["“”‟″‶〃״˝ʺ˶ˮײ]/g, "'");
@@ -71,28 +87,17 @@ export async function DELETE(
 
     const oldCover = await prismadb.sbaudienceapplication.findFirst({
       where: {
-        id: params.applicationId
+        id: params.applicationId,
+        brandId: params.brandId
       },
       select:{ 
         cover_img_url: true
       }
     })
-    if(oldCover){
-      if(oldCover.cover_img_url.startsWith(uploadsprefix)){
-        const filename = oldCover.cover_img_url.slice(uploadsprefix.length)
-        // if (filename && path.basename(filename) === filename) {
-          const imgPath = path.join(process.cwd(), 'uploads', filename);
-          try {
-            await fs.unlink(imgPath);
-          } catch (error) {
-            console.warn(`Could not delete file ${oldCover.cover_img_url}:`, error);
-          } 
-        // }
-      }
-      else{
-        console.warn(`Not inside uploads folder`);
-      }
+    if (!oldCover) {
+      return new NextResponse("Application not found", { status: 404 });
     }
+    await deleteApplicationUpload(oldCover.cover_img_url, "applicationimage");
       
 
     //DELETE IMAGE CATALOGUES
@@ -104,20 +109,7 @@ export async function DELETE(
     //Delete physical files
     for (const image of cataloguesImages) {
       if (image.url) {
-        if(image.url.startsWith(uploadsprefix)){
-          const filename = image.url.slice(uploadsprefix.length)
-          // if (filename && path.basename(filename) === filename) {
-            const imgPath = path.join(process.cwd(), 'uploads', filename);
-            try {
-              await fs.unlink(imgPath);
-            } catch (error) {
-              console.warn(`Could not delete file ${image.url}:`, error);
-            } 
-          // }
-        }
-        else{
-          console.warn(`Not inside uploads folder`);
-        }
+        await deleteApplicationUpload(image.url, "applicationimage");
       }
     }
     //Delete Image_catalogues records
@@ -137,20 +129,7 @@ export async function DELETE(
     //Delete physical files
     for (const pdf of multipleDatasheet) {
       if (pdf.url) {
-        if(pdf.url.startsWith(uploadsprefix)){
-          const filename = pdf.url.slice(uploadsprefix.length)
-          // if (filename && path.basename(filename) === filename) {
-            const imgPath = path.join(process.cwd(), 'uploads', filename);
-            try {
-              await fs.unlink(imgPath);
-            } catch (error) {
-              console.warn(`Could not delete file ${pdf.url}:`, error);
-            } 
-          // }
-        }
-        else{
-          console.warn(`Not inside uploads folder`);
-        }
+        await deleteApplicationUpload(pdf.url, "applicationdatasheet");
       }
     }
     //Delete multipleDatasheetProduct records
@@ -210,8 +189,16 @@ export async function PATCH(
       return new NextResponse("Application id is required", { status: 400 });
     }
 
-    if (!name) {
-      return new NextResponse("Name is required", { status: 400 });
+    if (
+      typeof name !== "string" ||
+      !name.trim() ||
+      typeof description !== "string" ||
+      (author !== undefined && typeof author !== "string") ||
+      !isSafeApplicationAssetUrl(cover_img_url, "applicationimage") ||
+      !isSafeApplicationAssetList(images_catalogues, "applicationimage") ||
+      !isSafeApplicationAssetList(datasheet, "applicationdatasheet")
+    ) {
+      return new NextResponse("Invalid application data or upload URL", { status: 400 });
     }
     
     if(!(await checkAuth(session.isAdmin!, params.brandId, session.userId!))){
@@ -229,24 +216,15 @@ export async function PATCH(
       }
     })
 
+    if (!initial) {
+      return new NextResponse("Application not found", { status: 404 });
+    }
+
     if(initial){
       if(initial.name ===  name){
 
         if (initial.cover_img_url !== cover_img_url) {
-          if(initial.cover_img_url.startsWith(uploadsprefix)){
-            const filename = initial.cover_img_url.slice(uploadsprefix.length)
-            // if (filename && path.basename(filename) === filename) {
-              const imgPath = path.join(process.cwd(), 'uploads', filename);
-              try {
-                await fs.unlink(imgPath);
-              } catch (error) {
-                console.warn(`Could not delete file ${initial.cover_img_url}:`, error);
-              } 
-            // }
-          }
-          else{
-            console.warn(`Not inside uploads folder`);
-          }
+          await deleteApplicationUpload(initial.cover_img_url, "applicationimage");
         }
 
         //IMAGE CATALOGUES
@@ -270,20 +248,7 @@ export async function PATCH(
           if (isInFinal) continue;
 
           if (image.url) {
-            if(image.url.startsWith(uploadsprefix)){
-              const filename = image.url.slice(uploadsprefix.length)
-              // if (filename && path.basename(filename) === filename) {
-                const imgPath = path.join(process.cwd(), 'uploads', filename);
-                try {
-                  await fs.unlink(imgPath);
-                } catch (error) {
-                  console.warn(`Could not delete file ${image.url}:`, error);
-                } 
-              // }
-            }
-            else{
-              console.warn(`Not inside uploads folder`);
-            }
+            await deleteApplicationUpload(image.url, "applicationimage");
           }
         }
         //Delete Image_catalogues records
@@ -361,20 +326,7 @@ export async function PATCH(
           if (isInFinal) continue;
 
           if (datasheet.url) {
-            if(datasheet.url.startsWith(uploadsprefix)){
-              const filename = datasheet.url.slice(uploadsprefix.length)
-              // if (filename && path.basename(filename) === filename) {
-                const imgPath = path.join(process.cwd(), 'uploads', filename);
-                try {
-                  await fs.unlink(imgPath);
-                } catch (error) {
-                  console.warn(`Could not delete file ${datasheet.url}:`, error);
-                } 
-              // }
-            }
-            else{
-              console.warn(`Not inside uploads folder`);
-            }
+            await deleteApplicationUpload(datasheet.url, "applicationdatasheet");
           }
         }
         //Delete oldDatasheet records
@@ -490,20 +442,7 @@ export async function PATCH(
       if (isInFinal) continue;
 
       if (image.url) {
-        if(image.url.startsWith(uploadsprefix)){
-          const filename = image.url.slice(uploadsprefix.length)
-          // if (filename && path.basename(filename) === filename) {
-            const imgPath = path.join(process.cwd(), 'uploads', filename);
-            try {
-              await fs.unlink(imgPath);
-            } catch (error) {
-              console.warn(`Could not delete file ${image.url}:`, error);
-            } 
-          // }
-        }
-        else{
-          console.warn(`Not inside uploads folder`);
-        }
+        await deleteApplicationUpload(image.url, "applicationimage");
       }
     }
     //Delete Image_catalogues records
@@ -581,20 +520,7 @@ export async function PATCH(
       if (isInFinal) continue;
 
       if (datasheet.url) {
-        if(datasheet.url.startsWith(uploadsprefix)){
-          const filename = datasheet.url.slice(uploadsprefix.length)
-          // if (filename && path.basename(filename) === filename) {
-            const imgPath = path.join(process.cwd(), 'uploads', filename);
-            try {
-              await fs.unlink(imgPath);
-            } catch (error) {
-              console.warn(`Could not delete file ${datasheet.url}:`, error);
-            } 
-          // }
-        }
-        else{
-          console.warn(`Not inside uploads folder`);
-        }
+        await deleteApplicationUpload(datasheet.url, "applicationdatasheet");
       }
     }
     //Delete oldDatasheet records

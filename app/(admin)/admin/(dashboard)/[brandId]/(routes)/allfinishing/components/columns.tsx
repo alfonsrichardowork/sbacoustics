@@ -7,6 +7,7 @@ import { CellAction } from "./cell-action"
 export type FinishingColumn = {
   id: string
   name: string;
+  productImageUrl: string;
   updatedBy: string;
   updatedAt: string;
 }
@@ -15,6 +16,10 @@ export const columns: ColumnDef<FinishingColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
+  },
+  {
+    accessorKey: "productImageUrl",
+    header: "Preview",
   },
   {
     accessorKey: "updatedAt",

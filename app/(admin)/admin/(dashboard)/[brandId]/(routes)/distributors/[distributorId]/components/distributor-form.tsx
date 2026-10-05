@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { distributors } from "@prisma/client"
 import { useParams, useRouter } from "next/navigation"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import axios, { AxiosResponse } from "axios"
 import toast from "react-hot-toast"
 import { Heading } from "@/app/(admin)/admin/components/ui/heading"
@@ -75,6 +75,8 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false);
 
+  const submitInProgress = useRef(false);
+
   const title = initialData ? 'Edit Distributor' : 'Create Distributor';
   const description = initialData ? 'Edit a Distributor.' : 'Add a new Distributor';
   const toastMessage = initialData ? 'Distributor updated.' : 'Distributor created.';
@@ -98,6 +100,8 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
   })
 
   const onSubmit = async (data: FormValues) => {
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
       setLoading(true);
       let response: AxiosResponse;
@@ -135,6 +139,7 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
+      submitInProgress.current = false;
     }
   }
 
@@ -145,7 +150,22 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
       </div>
       <Separator />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form 
+          onSubmit={form.handleSubmit(onSubmit)}
+          onKeyDown={(event) => {
+            const target = event.target;
+            if (
+              event.key === "Enter" &&
+              !event.nativeEvent.isComposing &&
+              target instanceof HTMLInputElement &&
+              !target.hasAttribute("cmdk-input") &&
+              !["button", "checkbox", "file", "image", "radio", "reset", "submit"].includes(target.type)
+            ) {
+              event.preventDefault();
+            }
+          }}
+          className="space-y-6"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 rounded-lg shadow-lg border w-full bg-background">
               <FormField
@@ -243,11 +263,6 @@ export const DistributorForm: React.FC<DistributorFormProps> = ({
             </div>
 
             <div className="p-4 rounded-lg shadow-lg border w-full bg-background">
-
-              <div className="text-sm font-semibold">How to get lat and long value:</div>
-              <div className="text-xs">1. Go to: <Link href="https://www.itilog.com/" target="blank" className="underline text-blue-500">https://www.itilog.com/</Link></div>
-              <div className="text-xs">2. Copy paste the address and click "FIND GPS COORDINATES"</div>
-              <div className="text-xs mb-4">3. Copy paste the lat and long value from the map to here"</div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <FormField

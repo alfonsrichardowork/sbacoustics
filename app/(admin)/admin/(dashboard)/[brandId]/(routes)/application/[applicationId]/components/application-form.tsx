@@ -2,7 +2,7 @@
 
 import * as z from "zod"
 import axios, { AxiosResponse } from "axios"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
@@ -42,7 +42,8 @@ import '@/app/css/styles.scss'
 import { Toggle } from "@/app/(admin)/admin/components/ui/toggle"
 import { uploadImage } from "@/app/(admin)/admin/upload-image"
 import { uploadFile } from "@/app/(admin)/admin/upload-file"
-import { MAX_SIZE } from "@/app/(admin)/admin/model/model"
+import { formatFileSize, MAX_FILE_SIZE } from "@/app/(admin)/admin/lib"
+import { disallowedDomains } from "@/lib/security-settings"
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -50,7 +51,7 @@ const formSchema = z.object({
   images_catalogues: z.object({ url: z.string() }).array(),
   cover_img_url: z.string().optional(),
   datasheet: z.object({ url: z.string() }).array(),
-  description: z.string().min(1),
+  description: z.string().optional(),
 });
 
 type ApplicationFormValues = z.infer<typeof formSchema>
@@ -77,6 +78,7 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   
   const [imgCataloguesUrl, setImgCataloguesUrl] = useState<image_catalogues[]>([]);
   const [imgCatalogues, setImgCatalogues] = useState<File[]>([]);
+  const submitInProgress = useRef(false); 
 
 
   const title = initialData ? 'Edit Application' : 'Create Application';
@@ -141,35 +143,33 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
 
   const handleDatasheetFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const tempfile = e.target.files?.[0];
-    let temp = selectedDatasheetFile
-    temp[index] = tempfile!
+    if (!tempfile) return;
+    if (tempfile.size > MAX_FILE_SIZE) {
+      toast.error(`The datasheet exceeds the 50 MB per-file limit (${formatFileSize(tempfile.size)}).`);
+      e.target.value = "";
+      return;
+    }
+    const temp = [...selectedDatasheetFile];
+    temp[index] = tempfile
     setSelectedDatasheetFile(temp);
   };
 
   async function handleDatasheetFileUpload(file: File[]): Promise<multipledatasheetproduct[]> {
-    if (file && file.length > 0) {
-      let updatedDatasheet = [...allDatasheet];
-      try {
-        const uploadPromises = file.map(async (value, index) => {
-          if (value) {
-            const formData = new FormData();
-            formData.append('file', value);
-            const url = await uploadFile(formData, 'applicationdatasheet');
-            const elementIndex = updatedDatasheet.length - (file.length - index);
-            if (updatedDatasheet[elementIndex]) {
-              updatedDatasheet[elementIndex].url = url;
-            }
-          }
-        });
-
-        await Promise.all(uploadPromises);
-        return updatedDatasheet;
-      } catch (error) {
-        console.error("Error uploading files:", error);
-        return [];
+    const updatedDatasheet = allDatasheet.map((datasheet) => ({ ...datasheet }));
+    const uploadPromises = file.map(async (value, index) => {
+      if (value) {
+        const formData = new FormData();
+        formData.append('file', value);
+        const url = await uploadFile(formData, 'applicationdatasheet');
+        const elementIndex = updatedDatasheet.length - (file.length - index);
+        if (updatedDatasheet[elementIndex]) {
+          updatedDatasheet[elementIndex].url = url;
+        }
       }
-    }  
-    return [];
+    });
+
+    await Promise.all(uploadPromises);
+    return updatedDatasheet;
   }
 
 
@@ -177,8 +177,8 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(!file) return
-    if (file.size > MAX_SIZE) {
-      alert("File size must be less than 2MB");
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error(`The cover image exceeds the 50 MB per-file limit (${formatFileSize(file.size)}).`);
       e.target.value = "";
       return;
     }
@@ -190,21 +190,9 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   }
 
   async function handleCoverImageUpload(file: File): Promise<string> {
-    if (file) {
-      let updatedCoverImage = coverImgUrl
-      try {
-        const formData = new FormData();
-        formData.append('image', file);
-  
-        const url = await uploadImage(formData, 'applicationimage');
-        updatedCoverImage = url;
-        return updatedCoverImage;
-      } catch (error) {
-        console.error("Error uploading cover image:", error);
-        return '';
-      }
-    }
-    return '';
+    const formData = new FormData();
+    formData.append('image', file);
+    return uploadImage(formData, 'applicationimage');
   }
 
   //MULTIPLE IMAGE CATALOGUES
@@ -230,40 +218,32 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   const handleImageCataloguesFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const tempfile = e.target.files?.[0];
     if(!tempfile) return
-    if (tempfile.size > MAX_SIZE) {
-      alert("File size must be less than 2MB");
+    if (tempfile.size > MAX_FILE_SIZE) {
+      toast.error(`The image catalogue exceeds the 50 MB per-file limit (${formatFileSize(tempfile.size)}).`);
       e.target.value = "";
       return;
     }
-    let temp = imgCatalogues
-    temp[index] = tempfile!
+    const temp = [...imgCatalogues];
+    temp[index] = tempfile
     setImgCatalogues(temp);
   };
 
   async function handleImageCataloguesFileUpload(file: File[]): Promise<image_catalogues[]> {
-    if (file && file.length > 0) {
-      let updatedImageCatalogues = [...imgCataloguesUrl];
-      try {
-        const uploadPromises = file.map(async (value, index) => {
-          if (value) {
-            const formData = new FormData();
-            formData.append('image', value);
-            const url = await uploadImage(formData, 'applicationimage');  
-            const elementIndex = updatedImageCatalogues.length - (file.length - index);
-            if (updatedImageCatalogues[elementIndex]) {
-              updatedImageCatalogues[elementIndex].url = url;
-            }
-          }
-        });
-
-        await Promise.all(uploadPromises);
-        return updatedImageCatalogues;
-      } catch (error) {
-        console.error("Error uploading image catalogues:", error);
-        return [];
+    const updatedImageCatalogues = imgCataloguesUrl.map((catalogue) => ({ ...catalogue }));
+    const uploadPromises = file.map(async (value, index) => {
+      if (value) {
+        const formData = new FormData();
+        formData.append('image', value);
+        const url = await uploadImage(formData, 'applicationimage');
+        const elementIndex = updatedImageCatalogues.length - (file.length - index);
+        if (updatedImageCatalogues[elementIndex]) {
+          updatedImageCatalogues[elementIndex].url = url;
+        }
       }
-    }  
-    return [];
+    });
+
+    await Promise.all(uploadPromises);
+    return updatedImageCatalogues;
   }
 
 
@@ -273,6 +253,8 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
   });
 
   const onSubmit = async (data: ApplicationFormValues) => {
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
       setLoading(true);
         
@@ -328,10 +310,12 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
         router.refresh();
         toast.success(toastMessage);
       }
-    } catch (error: any) {
-      toast.error('Something went wrong.');
+    } catch (error) {
+      console.error("Error saving application:", error);
+      toast.error(error instanceof Error ? error.message : "Something went wrong.");
     } finally {
       setLoading(false);
+      submitInProgress.current = false;
     }
   };
 
@@ -385,8 +369,6 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
                 return false
               }
   
-              // disallowed domains
-              const disallowedDomains = ['example-phishing.com', 'malicious-site.net']
               const domain = parsedUrl.hostname
   
               if (disallowedDomains.includes(domain)) {
@@ -404,8 +386,6 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
               // construct URL
               const parsedUrl = url.includes(':') ? new URL(url) : new URL(`https://${url}`)
   
-              // only auto-link if the domain is not in the disallowed list
-              const disallowedDomains = ['']
               const domain = parsedUrl.hostname
   
               return !disallowedDomains.includes(domain)
@@ -465,7 +445,21 @@ export const ApplicationForm: React.FC<ApplicationFormProps> = ({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
           console.log("validation errors:", errors);
-        })} className="space-y-4 w-full">
+        })}
+          onKeyDown={(event) => {
+            const target = event.target;
+            if (
+              event.key === "Enter" &&
+              !event.nativeEvent.isComposing &&
+              target instanceof HTMLInputElement &&
+              !target.hasAttribute("cmdk-input") &&
+              !["button", "checkbox", "file", "image", "radio", "reset", "submit"].includes(target.type)
+            ) {
+              event.preventDefault();
+            }
+          }}
+          className="space-y-4 w-full"
+        >
           
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           

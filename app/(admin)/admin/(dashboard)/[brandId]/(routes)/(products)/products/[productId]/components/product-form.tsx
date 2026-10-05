@@ -2,7 +2,7 @@
 
 import * as z from "zod"
 import axios, { AxiosResponse } from "axios"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "react-hot-toast"
@@ -44,7 +44,8 @@ import '@/app/css/styles.scss'
 import { Toggle } from "@/app/(admin)/admin/components/ui/toggle"
 import { uploadImage } from "@/app/(admin)/admin/upload-image"
 import { uploadFile } from "@/app/(admin)/admin/upload-file"
-import { MAX_SIZE } from "@/app/(admin)/admin/model/model"
+import { disallowedDomains } from "@/lib/security-settings"
+import { MAX_FILE_SIZE } from "@/app/(admin)/admin/lib"
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -108,6 +109,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   
   const [imgCataloguesUrl, setImgCataloguesUrl] = useState<image_catalogues[]>([]);
   const [imgCatalogues, setImgCatalogues] = useState<File[]>([]);
+  const submitInProgress = useRef(false);
 
 
   const title = initialData ? 'Edit product' : 'Create product';
@@ -154,31 +156,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       if (initialData && initialData.multiple3DModels) {
         setAll3DModel(initialData.multiple3DModels);
       }
-
-      if (initialData && initialData.cover_img_url) {
-        setCoverImgUrl(initialData.cover_img_url);
-      }
-      else{
-        setCoverImgUrl('')
-      }
-
-      if (initialData && initialData.drawing_img_url) {
-        setDrawingImgUrl(initialData.drawing_img_url);
-      }
-      else{
-        setDrawingImgUrl('')
-      }
-
-      if (initialData && initialData.graph_img_url) {
-        setFreqResponseUrl(initialData.graph_img_url);
-      }
-      else{
-        setFreqResponseUrl('')
-      }
-      
       if (initialData && initialData.images_catalogues) {
         setImgCataloguesUrl(initialData.images_catalogues);
       }
+
+      setCoverImgUrl(initialData?.cover_img_url ?? '');
+      setDrawingImgUrl(initialData?.drawing_img_url ?? '');        setFreqResponseUrl(initialData?.graph_img_url ?? '');
     };
   
     fetchData().catch((error) => {
@@ -349,7 +332,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(!file) return
-    if (file.size > MAX_SIZE) {
+    if (file.size > MAX_FILE_SIZE) {
       alert("File size must be less than 2MB");
       e.target.value = "";
       return;
@@ -384,7 +367,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
    const handleDrawingImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(!file) return
-    if (file.size > MAX_SIZE) {
+    if (file.size > MAX_FILE_SIZE) {
       alert("File size must be less than 2MB");
       e.target.value = "";
       return;
@@ -419,7 +402,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const handleFrequencyResponseImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if(!file) return
-    if (file.size > MAX_SIZE) {
+    if (file.size > MAX_FILE_SIZE) {
       alert("File size must be less than 2MB");
       e.target.value = "";
       return;
@@ -473,7 +456,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const handleImageCataloguesFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const tempfile = e.target.files?.[0];
     if(!tempfile) return
-    if (tempfile.size > MAX_SIZE) {
+    if (tempfile.size > MAX_FILE_SIZE) {
       alert("File size must be less than 2MB");
       e.target.value = "";
       return;
@@ -518,6 +501,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   });
 
   const onSubmit = async (data: ProductFormValues) => {
+    if (submitInProgress.current) return;
+    submitInProgress.current = true;
     try {
       setLoading(true);
         
@@ -608,6 +593,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       toast.error('Something went wrong.');
     } finally {
       setLoading(false);
+      submitInProgress.current = false;
     }
   };
 
@@ -660,7 +646,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
               }
   
               // disallowed domains
-              const disallowedDomains = ['example-phishing.com', 'malicious-site.net']
               const domain = parsedUrl.hostname
   
               if (disallowedDomains.includes(domain)) {
@@ -677,9 +662,6 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             try {
               // construct URL
               const parsedUrl = url.includes(':') ? new URL(url) : new URL(`https://${url}`)
-  
-              // only auto-link if the domain is not in the disallowed list
-              const disallowedDomains = ['example-no-autolink.com', 'another-no-autolink.com']
               const domain = parsedUrl.hostname
   
               return !disallowedDomains.includes(domain)
@@ -740,9 +722,23 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       </div>
       <Separator />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit, (errors) => {
-          console.log("validation errors:", errors);
-        })} className="space-y-4 w-full">
+        <form 
+          onSubmit={form.handleSubmit(onSubmit, (errors) => {
+            console.log("validation errors:", errors);
+          })}
+          onKeyDown={(event) => {
+            const target = event.target;
+            if (
+              event.key === "Enter" &&
+              !event.nativeEvent.isComposing &&
+              target instanceof HTMLInputElement &&
+              !target.hasAttribute("cmdk-input") &&
+              !["button", "checkbox", "file", "image", "radio", "reset", "submit"].includes(target.type)
+            ) {
+              event.preventDefault();
+            }
+          }}
+          className="space-y-4 w-full">
           
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           

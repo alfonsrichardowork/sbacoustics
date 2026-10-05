@@ -147,6 +147,7 @@ export default async function SBAudienceProductPage() {
             <div className={`grid sm:grid-cols-2 md:${allDriver.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
             <h1 className="sr-only">All Drivers | SB Audience</h1>
             {allDriver.length > 0 && allDriver.map((val, index) => 
+                val.thumbnail_url !== '' &&
                 <div key={index}>
                 <Link 
                     href='/sbaudience/drivers/all'

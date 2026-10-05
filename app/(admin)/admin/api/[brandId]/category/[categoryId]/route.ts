@@ -194,17 +194,17 @@ export async function PATCH(
         }
       });
 
-      await prismadb.allproductcategory.updateMany({
-        where: {
-          categoryId: params.categoryId,
-          category: {
-            type
-          }
-        },
-        data:{
-          updatedAt: new Date(),
-        }
-      })
+      // await prismadb.allproductcategory.updateMany({
+      //   where: {
+      //     categoryId: params.categoryId,
+      //     category: {
+      //       type
+      //     }
+      //   },
+      //   data:{
+      //     updatedAt: new Date(),
+      //   }
+      // })
       revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/drivers`);
       revalidatePath(`/kits`); 
       return NextResponse.json("same")
@@ -241,17 +241,17 @@ export async function PATCH(
       }
     });
     
-    await prismadb.allproductcategory.updateMany({
-      where: {
-        categoryId: params.categoryId,
-        category: {
-          type,
-        }
-      },
-      data:{
-        updatedAt: new Date(),
-      }
-    })
+    // await prismadb.allproductcategory.updateMany({
+    //   where: {
+    //     categoryId: params.categoryId,
+    //     category: {
+    //       type,
+    //     }
+    //   },
+    //   data:{
+    //     updatedAt: new Date(),
+    //   }
+    // })
 
     
     revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/${updatedCat.slug}`);
