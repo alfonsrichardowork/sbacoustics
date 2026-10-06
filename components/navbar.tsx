@@ -414,53 +414,57 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
             </div>
           </Link>
         </div>
-        <div className="w-1/2 hidden xl:flex justify-center relative z-100">
-          <NavigationMenu>
-            <NavigationMenuList className="flex items-center">
-              {pathname.includes('sbautomotive') &&
-                <>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink href={getHref(pathname, 'about')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
-                      <div className="p-0 relative z-101">
-                        About Us
-                      </div>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink href={getHref(pathname, 'technology')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
-                      <div className="p-0 relative z-101">
-                        Technology
-                      </div>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                </>
-              }
-              {loading ?
-                pathname.includes("sbaudience")? 
-                  <NavigationMenuItem>
-                    <div className="p-0 relative z-101">
-                      <NavigationMenuTrigger
-                        className={navigationMenuTriggerStyle().concat(
-                          ` bg-transparent ${
-                            navbarBg && pathname.includes('sbaudience') ? 
-                              openedContentForBg ? 
-                              'text-background' 
-                              : 
-                              'text-background'
-                            : 
-                            pathname.includes('sbaudience') ? 
-                            'text-background' 
-                            :
-                            'text-foreground'
-                          } hover:text-primary z-101 relative`
-                        )}
-                      >
-                        Drivers
-                      </NavigationMenuTrigger>
-                    </div>
-                  </NavigationMenuItem>
-                :
+        {pathname.includes('sbautomotive') ? 
+        <NavigationMenu>
+          <NavigationMenuList className="flex items-center">
+            <NavigationMenuItem>
+              <NavigationMenuLink href="/sbautomotive#technology" className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                <div className="p-0 relative z-101">
+                  Technology
+                </div>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="/sbautomotive#product" className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                <div className="p-0 relative z-101">
+                  Product
+                </div>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink href="/sbautomotive#contact" className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                <div className="p-0 relative z-101">
+                  Contact Us
+                </div>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+        :
+        <>
+          <div className="w-1/2 hidden xl:flex justify-center relative z-100">
+            <NavigationMenu>
+              <NavigationMenuList className="flex items-center">
+                {pathname.includes('sbautomotive') &&
                   <>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink href={getHref(pathname, 'about')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                        <div className="p-0 relative z-101">
+                          About Us
+                        </div>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink href={getHref(pathname, 'technology')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                        <div className="p-0 relative z-101">
+                          Technology
+                        </div>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  </>
+                }
+                {loading ?
+                  pathname.includes("sbaudience")? 
                     <NavigationMenuItem>
                       <div className="p-0 relative z-101">
                         <NavigationMenuTrigger
@@ -483,240 +487,542 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                         </NavigationMenuTrigger>
                       </div>
                     </NavigationMenuItem>
-                    <NavigationMenuItem>
-                      <div className="p-0 relative z-101">
-                        <NavigationMenuTrigger
-                          className={navigationMenuTriggerStyle().concat(
-                            ` bg-transparent ${
-                              navbarBg && pathname.includes('sbaudience') ? 
-                                openedContentForBg ? 
-                                'text-background' 
+                  :
+                    <>
+                      <NavigationMenuItem>
+                        <div className="p-0 relative z-101">
+                          <NavigationMenuTrigger
+                            className={navigationMenuTriggerStyle().concat(
+                              ` bg-transparent ${
+                                navbarBg && pathname.includes('sbaudience') ? 
+                                  openedContentForBg ? 
+                                  'text-background' 
+                                  : 
+                                  'text-background'
                                 : 
-                                'text-background'
-                              : 
-                              pathname.includes('sbaudience') ? 
-                              'text-background' 
-                              :
-                              'text-foreground'
-                            } hover:text-primary z-101 relative`
-                          )}
-                        >
-                          Kits
-                        </NavigationMenuTrigger>
-                      </div>
-                    </NavigationMenuItem>
-                  </>
-              : firstMenu && firstMenu.length > 0 && firstMenu.map((val, index) =>
-              <NavigationMenuItem key={index}>
-                <Link href={getHref(pathname, val.href)} passHref>
-                  <div className="p-0 relative z-101">
-                    <NavigationMenuTrigger
-                      className={navigationMenuTriggerStyle().concat(
-                        ` bg-transparent ${
-                          navbarBg && pathname.includes('sbaudience') ? 
-                            openedContentForBg ? 
-                            'text-background' 
-                            : 
-                            'text-background'
-                          : 
-                          pathname.includes('sbaudience') ? 
-                          'text-background' 
-                          :
-                          'text-foreground'
-                        } hover:text-primary z-101 relative`
-                      )}
-                      onMouseLeave={() => setOpenedContentForBg(false)}
-                      onMouseEnter={() => {
-                        if (val) {
-                          searchSubMenu(val.title, val.parent)
-                          setDriversSubMenu(driverSubMenuMapping[val.title.concat('-', val.parent)] || EmptyMenu);
-                        } else {
-                          setDriversSubMenu(EmptyMenu);
-                        }
-                        setHoveredDriverSubMenu("");
-                        setHoveredDriverSubSubMenu("");
-                        setHoveredDriverSubSubSubMenu("");
-                        setactivedriverhovered("");
-                        setDriversSubSubMenu(EmptyMenu);
-                        setDriversSubSubSubMenu(EmptyMenu);
-                        setDriversSubSubSubSubMenu(EmptyMenu);
-                        setDriversSubMenuUrl("");
-                        setDriversSubSubMenuUrl("");
-                        setDriversSubSubSubMenuUrl("");
-                        setDriversSubSubSubSubMenuUrl("");
-                        setOpenedContentForBg(true);
-                      }}
-                    >
-                      {pathname.includes('sbautomotive') ? 'Products' : val.title}
-                    </NavigationMenuTrigger>
-                  </div>
-                </Link>
-
-                  <NavigationMenuContent
-                    className={`relative z-40 ${
-                      pathname.includes('sbaudience') ? 'bg-foreground' : 'bg-background'
-                    }`}
-                    onMouseLeave={() => setOpenedContentForBg(false)}
-                    onMouseEnter={() => setOpenedContentForBg(true)}
-                  >
-                    <div className="xl:pl-[72px] xl:pr-[72px] lg:pl-[56px] lg:pr-[56px] px-8 py-4 pt-20">
-                      <SearchBoxNavbar changeBrand />
-                    </div>
-
-                    <div className="grid grid-cols-5 w-screen xl:px-16 lg:px-12 px-8 py-4 h-[550px]">
-
-                      {/* FIRST MENU
-                          driversubMenu
-                      */}
-                      {driversubMenu &&
-                        driversubMenu.length > 0 &&
-                        driversubsubMenu &&
-                        driversubsubMenu.length > 0 && (
-                          <div
-                            className={`overflow-y-auto overflow-x-hidden border-r-2 transform transition-all z-30 ${
-                              pathname.includes("sbaudience")
-                                ? "bg-foreground"
-                                : "bg-background"
-                            } ${
-                              driversubMenu[0]?.title === ""
-                                ? "-translate-x-1/2"
-                                : "translate-x-0"
-                            } ${
-                              driversubsubMenu[0]?.title !== ""
-                                ? ""
-                                : driversubMenuUrl === ""
-                                  ? "border-transparent"
-                                  : ""
-                            }`}
+                                pathname.includes('sbaudience') ? 
+                                'text-background' 
+                                :
+                                'text-foreground'
+                              } hover:text-primary z-101 relative`
+                            )}
                           >
-                            <ul className="gap-1 p-1">
-                              {driversubMenu.map((products, index) => (
-                                <div
-                                  key={index}
-                                  onMouseEnter={() =>
-                                    searchSubSubMenu(products.title, products.parent)
-                                  }
-                                  className={`px-2 transform duration-200 ${
-                                    hoveredDriverSubMenu === products.title
-                                      ? "translate-x-2"
-                                      : ""
-                                  }`}
-                                >
-                                  {products.parent === "" ? (
-                                    <NavigationMenuLink
-                                      href={getHref(pathname, products.href)}
-                                    >
-                                      <div
-                                        className={`${styledDropdown} hover:text-primary ${
-                                          activedriverhovered === products.title
-                                            ? "text-primary"
-                                            : pathname.includes("sbaudience")
-                                              ? "text-white"
-                                              : ""
-                                        }`}
-                                        onMouseEnter={() => {
-                                          setDriversSubMenuUrl(products.url);
-                                          setPictureSlugUrl(products.href);
-                                          setPictureDesc(products.imageDesc);
-                                          setactivedriverhovered(products.title);
-                                          setDriversSubSubMenu(EmptyMenu);
-                                          setHoveredDriverSubMenu("");
-                                          setDriversSubSubMenuUrl("");
-                                          setDriversSubSubSubMenuUrl("");
-                                          setDriversSubSubSubSubMenuUrl("");
-                                        }}
+                            Drivers
+                          </NavigationMenuTrigger>
+                        </div>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem>
+                        <div className="p-0 relative z-101">
+                          <NavigationMenuTrigger
+                            className={navigationMenuTriggerStyle().concat(
+                              ` bg-transparent ${
+                                navbarBg && pathname.includes('sbaudience') ? 
+                                  openedContentForBg ? 
+                                  'text-background' 
+                                  : 
+                                  'text-background'
+                                : 
+                                pathname.includes('sbaudience') ? 
+                                'text-background' 
+                                :
+                                'text-foreground'
+                              } hover:text-primary z-101 relative`
+                            )}
+                          >
+                            Kits
+                          </NavigationMenuTrigger>
+                        </div>
+                      </NavigationMenuItem>
+                    </>
+                : firstMenu && firstMenu.length > 0 && firstMenu.map((val, index) =>
+                <NavigationMenuItem key={index}>
+                  <Link href={getHref(pathname, val.href)} passHref>
+                    <div className="p-0 relative z-101">
+                      <NavigationMenuTrigger
+                        className={navigationMenuTriggerStyle().concat(
+                          ` bg-transparent ${
+                            navbarBg && pathname.includes('sbaudience') ? 
+                              openedContentForBg ? 
+                              'text-background' 
+                              : 
+                              'text-background'
+                            : 
+                            pathname.includes('sbaudience') ? 
+                            'text-background' 
+                            :
+                            'text-foreground'
+                          } hover:text-primary z-101 relative`
+                        )}
+                        onMouseLeave={() => setOpenedContentForBg(false)}
+                        onMouseEnter={() => {
+                          if (val) {
+                            searchSubMenu(val.title, val.parent)
+                            setDriversSubMenu(driverSubMenuMapping[val.title.concat('-', val.parent)] || EmptyMenu);
+                          } else {
+                            setDriversSubMenu(EmptyMenu);
+                          }
+                          setHoveredDriverSubMenu("");
+                          setHoveredDriverSubSubMenu("");
+                          setHoveredDriverSubSubSubMenu("");
+                          setactivedriverhovered("");
+                          setDriversSubSubMenu(EmptyMenu);
+                          setDriversSubSubSubMenu(EmptyMenu);
+                          setDriversSubSubSubSubMenu(EmptyMenu);
+                          setDriversSubMenuUrl("");
+                          setDriversSubSubMenuUrl("");
+                          setDriversSubSubSubMenuUrl("");
+                          setDriversSubSubSubSubMenuUrl("");
+                          setOpenedContentForBg(true);
+                        }}
+                      >
+                        {pathname.includes('sbautomotive') ? 'Products' : val.title}
+                      </NavigationMenuTrigger>
+                    </div>
+                  </Link>
+
+                    <NavigationMenuContent
+                      className={`relative z-40 ${
+                        pathname.includes('sbaudience') ? 'bg-foreground' : 'bg-background'
+                      }`}
+                      onMouseLeave={() => setOpenedContentForBg(false)}
+                      onMouseEnter={() => setOpenedContentForBg(true)}
+                    >
+                      <div className="xl:pl-[72px] xl:pr-[72px] lg:pl-[56px] lg:pr-[56px] px-8 py-4 pt-20">
+                        <SearchBoxNavbar changeBrand />
+                      </div>
+
+                      <div className="grid grid-cols-5 w-screen xl:px-16 lg:px-12 px-8 py-4 h-[550px]">
+
+                        {/* FIRST MENU
+                            driversubMenu
+                        */}
+                        {driversubMenu &&
+                          driversubMenu.length > 0 &&
+                          driversubsubMenu &&
+                          driversubsubMenu.length > 0 && (
+                            <div
+                              className={`overflow-y-auto overflow-x-hidden border-r-2 transform transition-all z-30 ${
+                                pathname.includes("sbaudience")
+                                  ? "bg-foreground"
+                                  : "bg-background"
+                              } ${
+                                driversubMenu[0]?.title === ""
+                                  ? "-translate-x-1/2"
+                                  : "translate-x-0"
+                              } ${
+                                driversubsubMenu[0]?.title !== ""
+                                  ? ""
+                                  : driversubMenuUrl === ""
+                                    ? "border-transparent"
+                                    : ""
+                              }`}
+                            >
+                              <ul className="gap-1 p-1">
+                                {driversubMenu.map((products, index) => (
+                                  <div
+                                    key={index}
+                                    onMouseEnter={() =>
+                                      searchSubSubMenu(products.title, products.parent)
+                                    }
+                                    className={`px-2 transform duration-200 ${
+                                      hoveredDriverSubMenu === products.title
+                                        ? "translate-x-2"
+                                        : ""
+                                    }`}
+                                  >
+                                    {products.parent === "" ? (
+                                      <NavigationMenuLink
+                                        href={getHref(pathname, products.href)}
                                       >
-                                        {products.newProd ? (
-                                          <>
-                                            {products.title.split(" / ")[0]}{" "}
-                                            <div className="inline-flex text-primary">
-                                              NEW
-                                            </div>
-                                          </>
-                                        ) : (
-                                          products.title
-                                        )}
-                                      </div>
-                                    </NavigationMenuLink>
-                                  ) : (
-                                    <NavigationMenuLink
-                                      href={getHref(pathname, products.href)}
-                                    >
-                                      <div
-                                        className={`${styledDropdown} flex justify-between items-center align-middle ${
-                                          hoveredDriverSubMenu === products.title
-                                            ? "text-primary"
-                                            : pathname.includes("sbaudience")
-                                              ? "text-white"
-                                              : ""
-                                        }`}
-                                        onMouseEnter={() => {
-                                          setDriversSubSubMenuUrl("");
-                                          setDriversSubSubSubMenuUrl("");
-                                          setDriversSubSubSubSubMenuUrl("");
-                                          setHoveredDriverSubSubMenu("")
-                                          setactivedriverhovered("");
-                                        }}
+                                        <div
+                                          className={`${styledDropdown} hover:text-primary ${
+                                            activedriverhovered === products.title
+                                              ? "text-primary"
+                                              : pathname.includes("sbaudience")
+                                                ? "text-white"
+                                                : ""
+                                          }`}
+                                          onMouseEnter={() => {
+                                            setDriversSubMenuUrl(products.url);
+                                            setPictureSlugUrl(products.href);
+                                            setPictureDesc(products.imageDesc);
+                                            setactivedriverhovered(products.title);
+                                            setDriversSubSubMenu(EmptyMenu);
+                                            setHoveredDriverSubMenu("");
+                                            setDriversSubSubMenuUrl("");
+                                            setDriversSubSubSubMenuUrl("");
+                                            setDriversSubSubSubSubMenuUrl("");
+                                          }}
+                                        >
+                                          {products.newProd ? (
+                                            <>
+                                              {products.title.split(" / ")[0]}{" "}
+                                              <div className="inline-flex text-primary">
+                                                NEW
+                                              </div>
+                                            </>
+                                          ) : (
+                                            products.title
+                                          )}
+                                        </div>
+                                      </NavigationMenuLink>
+                                    ) : (
+                                      <NavigationMenuLink
+                                        href={getHref(pathname, products.href)}
                                       >
-                                        {products.title}
-                                        <ChevronRight
-                                          size={15}
-                                          className={`pb-1 ${
+                                        <div
+                                          className={`${styledDropdown} flex justify-between items-center align-middle ${
                                             hoveredDriverSubMenu === products.title
                                               ? "text-primary"
-                                              : ""
+                                              : pathname.includes("sbaudience")
+                                                ? "text-white"
+                                                : ""
                                           }`}
-                                        />
-                                      </div>
-                                    </NavigationMenuLink>
-                                  )}
-                                </div>
-                              ))} 
-                              {/* Length: {driversubMenu.length} */}
-                            </ul>
-                          </div>
-                        )}
+                                          onMouseEnter={() => {
+                                            setDriversSubSubMenuUrl("");
+                                            setDriversSubSubSubMenuUrl("");
+                                            setDriversSubSubSubSubMenuUrl("");
+                                            setHoveredDriverSubSubMenu("")
+                                            setactivedriverhovered("");
+                                          }}
+                                        >
+                                          {products.title}
+                                          <ChevronRight
+                                            size={15}
+                                            className={`pb-1 ${
+                                              hoveredDriverSubMenu === products.title
+                                                ? "text-primary"
+                                                : ""
+                                            }`}
+                                          />
+                                        </div>
+                                      </NavigationMenuLink>
+                                    )}
+                                  </div>
+                                ))} 
+                                {/* Length: {driversubMenu.length} */}
+                              </ul>
+                            </div>
+                          )}
 
-                      {/* SECOND MENU
-                          driversubsubMenu
-                      */}
-                      {driversubsubMenu &&
-                        driversubsubMenu.length > 0 && (
-                          <div
-                            className={`overflow-y-auto overflow-x-hidden border-r-2 transform transition-all z-20 ${
-                              pathname.includes("sbaudience")
-                                ? "bg-foreground"
-                                : "bg-background"
-                            } ${
-                              driversubMenuUrl === ""
-                                ? "-translate-x-1/2"
-                                : "translate-x-0"
-                            } ${
-                              driversubsubMenu[0]?.title === ""
-                                ? "-translate-x-1/2"
-                                : "translate-x-0"
-                            } ${
-                              driversubsubsubMenu[0]?.title !== ""
-                                ? ""
-                                : driversubsubMenuUrl === ""
-                                  ? "border-transparent"
-                                  : ""
-                            }`}
-                          >
-                            <ul className="gap-1 p-1">
-                              {driversubsubMenu.map((products, index) => (
-                                <div
-                                  key={index}
-                                  onMouseEnter={() =>
-                                    searchSubSubSubMenu(products.title, products.parent)
-                                  }
-                                  className={`px-2 transform duration-200 ${
-                                    hoveredDriverSubSubMenu === products.title
-                                      ? "translate-x-2"
-                                      : ""
-                                  }`}
-                                >
-                                  {products.parent === "" ? (
+                        {/* SECOND MENU
+                            driversubsubMenu
+                        */}
+                        {driversubsubMenu &&
+                          driversubsubMenu.length > 0 && (
+                            <div
+                              className={`overflow-y-auto overflow-x-hidden border-r-2 transform transition-all z-20 ${
+                                pathname.includes("sbaudience")
+                                  ? "bg-foreground"
+                                  : "bg-background"
+                              } ${
+                                driversubMenuUrl === ""
+                                  ? "-translate-x-1/2"
+                                  : "translate-x-0"
+                              } ${
+                                driversubsubMenu[0]?.title === ""
+                                  ? "-translate-x-1/2"
+                                  : "translate-x-0"
+                              } ${
+                                driversubsubsubMenu[0]?.title !== ""
+                                  ? ""
+                                  : driversubsubMenuUrl === ""
+                                    ? "border-transparent"
+                                    : ""
+                              }`}
+                            >
+                              <ul className="gap-1 p-1">
+                                {driversubsubMenu.map((products, index) => (
+                                  <div
+                                    key={index}
+                                    onMouseEnter={() =>
+                                      searchSubSubSubMenu(products.title, products.parent)
+                                    }
+                                    className={`px-2 transform duration-200 ${
+                                      hoveredDriverSubSubMenu === products.title
+                                        ? "translate-x-2"
+                                        : ""
+                                    }`}
+                                  >
+                                    {products.parent === "" ? (
+                                      products.title !== "" ? (
+                                        <NavigationMenuLink
+                                          href={getHref(pathname, products.href)}
+                                        >
+                                          <div
+                                            className={`${styledDropdown} hover:text-primary ${
+                                              activedriverhovered === products.title
+                                                ? "text-primary"
+                                                : pathname.includes("sbaudience")
+                                                  ? "text-white"
+                                                  : ""
+                                            }`}
+                                            onMouseEnter={() => {
+                                              setDriversSubSubMenuUrl(products.url);
+                                              setPictureSlugUrl(products.href);
+                                              setPictureDesc(products.imageDesc);
+                                              setactivedriverhovered(products.title);
+                                              setDriversSubSubSubMenu(EmptyMenu);
+                                              setDriversSubSubSubSubMenu(EmptyMenu);
+                                              setDriversSubSubSubSubMenuUrl("");
+                                              setHoveredDriverSubSubMenu("");
+                                              setnameForHoveredPicture(products.title);
+                                            }}
+                                          >
+                                            {products.newProd ? (
+                                              <>
+                                                {products.title.split(" / ")[0]}{" "}
+                                                <div className="inline-flex text-primary">
+                                                  NEW
+                                                </div>
+                                              </>
+                                            ) : (
+                                              products.title
+                                            )}
+                                          </div>
+                                        </NavigationMenuLink>
+                                      ) : (
+                                        driversubMenuUrl !== "" && (
+                                          <NavigationMenuLink
+                                            href={getHref(pathname, pictureSlugUrl)}
+                                            className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}
+                                          >
+                                            <div
+                                              onMouseEnter={() =>
+                                                setactivedriverhovered(
+                                                  nameForHoveredPicture
+                                                )
+                                              }
+                                            >
+                                              <LazyImageCustomNavbar
+                                                src={
+                                                  driversubMenuUrl.startsWith("/uploads/")
+                                                    ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubMenuUrl}`
+                                                    : driversubMenuUrl
+                                                }
+                                                alt={activedriverhovered}
+                                                classname="object-contain max-h-40 w-auto"
+                                                width={500}
+                                                height={500}
+                                                lazy
+                                                containerheight="h-40"
+                                                containerwidth="w-40"
+                                                pathname={pathname}
+                                              />
+                                            </div>
+                                            {pictureDesc}
+                                          </NavigationMenuLink>
+                                        )
+                                      )
+                                    ) : (
+                                      <NavigationMenuLink
+                                        href={getHref(pathname, products.href)}
+                                      >
+                                        <div
+                                          className={`${styledDropdown} flex justify-between items-center align-middle ${
+                                            hoveredDriverSubSubMenu === products.title
+                                              ? "text-primary"
+                                              : pathname.includes("sbaudience")
+                                                ? "text-white"
+                                                : ""
+                                          }`}
+                                          onMouseEnter={() => {
+                                            setDriversSubSubSubMenuUrl("");
+                                            setDriversSubSubSubSubMenuUrl("");
+                                            setHoveredDriverSubSubSubMenu("")
+                                            setactivedriverhovered("");
+                                          }}
+                                        >
+                                          {products.title}
+                                          <ChevronRight
+                                            size={15}
+                                            className={`pb-1 ${
+                                              hoveredDriverSubSubMenu === products.title
+                                                ? "text-primary"
+                                                : ""
+                                            }`}
+                                          />
+                                        </div>
+                                      </NavigationMenuLink>
+                                    )}
+                                  </div>
+                                ))} 
+                                {/* Length: {driversubsubMenu.length} */}
+                              </ul>
+                            </div>
+                          )}
+
+                        {/* THIRD MENU
+                            driversubsubsubMenu
+                        */}
+                        {driversubsubsubMenu &&
+                          driversubsubsubMenu.length > 0 && (
+                            <div
+                              className={`overflow-y-auto overflow-x-hidden px-2 transform transition-all border-r-2 z-10 ${
+                                pathname.includes("sbaudience")
+                                  ? "bg-foreground"
+                                  : "bg-background"
+                              } ${
+                                driversubsubMenuUrl === ""
+                                  ? "-translate-x-1/2"
+                                  : "translate-x-0"
+                              } ${
+                                driversubsubsubMenu[0]?.title === ""
+                                  ? "-translate-x-1/2"
+                                  : "translate-x-0"
+                              } ${
+                                driversubsubsubsubMenu[0]?.title !== ""
+                                  ? ""
+                                  : driversubsubsubMenuUrl === ""
+                                    ? "border-transparent"
+                                    : ""
+                              }`}
+
+                            >
+                              <ul className="gap-1 p-1">
+                                {driversubsubsubMenu.map((products, index) => (
+                                  <div
+                                    key={index}
+                                    onMouseEnter={() =>
+                                      searchSubSubSubSubMenu(products.title, products.parent)
+                                    }
+                                    className={`px-2 transform duration-200 ${
+                                      hoveredDriverSubSubSubMenu === products.title
+                                        ? "translate-x-2"
+                                        : ""
+                                    }`}
+                                  >
+                                    {products.parent === "" ? (
+                                      products.title !== "" ? (
+                                        <NavigationMenuLink href={getHref(pathname, products.href)}>
+                                          <div
+                                            className={`${styledDropdown} hover:text-primary ${
+                                              activedriverhovered === products.title
+                                                ? "text-primary"
+                                                : pathname.includes("sbaudience")
+                                                  ? "text-white"
+                                                  : ""
+                                            }`}
+                                            onMouseEnter={() => {
+                                              setDriversSubSubSubMenuUrl(products.url);
+                                              setPictureSlugUrl(products.href);
+                                              setPictureDesc(products.imageDesc);
+                                              setactivedriverhovered(products.title);
+                                              setDriversSubSubSubSubMenu(EmptyMenu);
+                                              setDriversSubSubSubSubMenuUrl("");
+                                              setHoveredDriverSubSubSubMenu("");
+                                              setnameForHoveredPicture(products.title);
+                                            }}
+                                          >
+                                            {products.newProd ? (
+                                              <>
+                                                {products.title.split(" / ")[0]}{" "}
+                                                <div className="inline-flex text-primary">NEW</div>
+                                              </>
+                                            ) : (
+                                              products.title
+                                            )}
+                                          </div>
+                                        </NavigationMenuLink>
+                                      ) : (
+                                        driversubsubMenuUrl !== "" && (
+                                          <NavigationMenuLink
+                                            href={getHref(pathname, pictureSlugUrl)}
+                                            className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}
+                                          >
+                                            <div
+                                              onMouseEnter={() => setactivedriverhovered(nameForHoveredPicture)}
+                                            >
+                                              <LazyImageCustomNavbar
+                                                src={
+                                                  driversubsubMenuUrl.startsWith("/uploads/")
+                                                    ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubsubMenuUrl}`
+                                                    : driversubsubMenuUrl
+                                                }
+                                                alt={activedriverhovered}
+                                                classname="object-contain max-h-40 w-auto"
+                                                width={500}
+                                                height={500}
+                                                lazy
+                                                containerheight="h-40"
+                                                containerwidth="w-40"
+                                                pathname={pathname}
+                                              />
+                                            </div>
+                                            {pictureDesc}
+                                          </NavigationMenuLink>
+                                        )
+                                      )
+                                    ) : (
+                                      <NavigationMenuLink href={getHref(pathname, products.href)}>
+                                        <div
+                                          className={`${styledDropdown} flex justify-between items-center align-middle ${
+                                            hoveredDriverSubSubSubMenu === products.title
+                                              ? "text-primary"
+                                              : pathname.includes("sbaudience")
+                                                ? "text-white"
+                                                : ""
+                                          }`}
+                                          onMouseEnter={() => {
+                                            setDriversSubSubSubSubMenuUrl("");
+                                            setactivedriverhovered("");
+                                          }}
+                                        >
+                                          {products.title}
+                                          <ChevronRight
+                                            size={15}
+                                            className={`pb-1 ${
+                                              hoveredDriverSubSubSubMenu === products.title
+                                                ? "text-primary"
+                                                : ""
+                                            }`}
+                                          />
+                                        </div>
+                                      </NavigationMenuLink>
+                                    )}
+                                  </div>
+                                ))} 
+                                {/* Length: {driversubsubsubMenu.length} */}
+                              </ul>
+
+                            </div>
+                          )}
+
+                        {/* FOURTH MENU
+                            driverSubSubSubSubMenu
+                        */}
+                        {driversubsubsubsubMenu &&
+                          driversubsubsubsubMenu.length > 0 && (
+                            <div
+                              className={`overflow-y-auto overflow-x-hidden border-r-2 transform transition-all z-5 ${
+                                pathname.includes("sbaudience") ? "bg-foreground" : "bg-background"
+                              } ${
+                                driversubsubsubMenuUrl === ""
+                                  ? "-translate-x-1/2"
+                                  : "translate-x-0"
+                              } ${
+                                driversubsubsubsubMenu[0]?.title === ""
+                                  ? "-translate-x-1/2"
+                                  : "translate-x-0"
+                              } ${driversubsubsubsubMenuUrl === ""
+                                    ? "border-transparent"
+                                    : ""
+                              }`}
+                            >
+                              <ul className="gap-1 p-1">
+                                {driversubsubsubsubMenu.map((products, index) =>(
+                                  <div
+                                    key={index}
+                                    onMouseEnter={() =>
+                                      searchSubSubSubSubMenu(products.title, products.parent)
+                                    }
+                                    className={`px-2 transform duration-200 ${
+                                      hoveredDriverSubSubSubMenu === products.title
+                                        ? "translate-x-2"
+                                        : ""
+                                    }`}
+                                  >
+                                    {products.parent === "" ? (
                                     products.title !== "" ? (
                                       <NavigationMenuLink
                                         href={getHref(pathname, products.href)}
@@ -730,14 +1036,10 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                                 : ""
                                           }`}
                                           onMouseEnter={() => {
-                                            setDriversSubSubMenuUrl(products.url);
+                                            setDriversSubSubSubSubMenuUrl(products.url);
                                             setPictureSlugUrl(products.href);
                                             setPictureDesc(products.imageDesc);
                                             setactivedriverhovered(products.title);
-                                            setDriversSubSubSubMenu(EmptyMenu);
-                                            setDriversSubSubSubSubMenu(EmptyMenu);
-                                            setDriversSubSubSubSubMenuUrl("");
-                                            setHoveredDriverSubSubMenu("");
                                             setnameForHoveredPicture(products.title);
                                           }}
                                         >
@@ -754,7 +1056,7 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                         </div>
                                       </NavigationMenuLink>
                                     ) : (
-                                      driversubMenuUrl !== "" && (
+                                      driversubsubsubMenuUrl !== "" && (
                                         <NavigationMenuLink
                                           href={getHref(pathname, pictureSlugUrl)}
                                           className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}
@@ -768,9 +1070,9 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                           >
                                             <LazyImageCustomNavbar
                                               src={
-                                                driversubMenuUrl.startsWith("/uploads/")
-                                                  ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubMenuUrl}`
-                                                  : driversubMenuUrl
+                                                driversubsubsubMenuUrl.startsWith("/uploads/")
+                                                  ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubsubsubMenuUrl}`
+                                                  : driversubsubsubMenuUrl
                                               }
                                               alt={activedriverhovered}
                                               classname="object-contain max-h-40 w-auto"
@@ -792,523 +1094,251 @@ const searchSubSubSubSubMenu = useCallback((title: string, parent: string) => {
                                     >
                                       <div
                                         className={`${styledDropdown} flex justify-between items-center align-middle ${
-                                          hoveredDriverSubSubMenu === products.title
-                                            ? "text-primary"
-                                            : pathname.includes("sbaudience")
-                                              ? "text-white"
-                                              : ""
+                                          pathname.includes("sbaudience")
+                                            ? "text-white"
+                                            : ""
                                         }`}
                                         onMouseEnter={() => {
-                                          setDriversSubSubSubMenuUrl("");
-                                          setDriversSubSubSubSubMenuUrl("");
-                                          setHoveredDriverSubSubSubMenu("")
                                           setactivedriverhovered("");
                                         }}
                                       >
                                         {products.title}
-                                        <ChevronRight
-                                          size={15}
-                                          className={`pb-1 ${
-                                            hoveredDriverSubSubMenu === products.title
-                                              ? "text-primary"
-                                              : ""
-                                          }`}
-                                        />
+                                        <ChevronRight size={15} className="pb-1" />
                                       </div>
                                     </NavigationMenuLink>
-                                  )}
-                                </div>
-                              ))} 
-                              {/* Length: {driversubsubMenu.length} */}
-                            </ul>
-                          </div>
-                        )}
-
-                      {/* THIRD MENU
-                          driversubsubsubMenu
-                      */}
-                      {driversubsubsubMenu &&
-                        driversubsubsubMenu.length > 0 && (
-                          <div
-                            className={`overflow-y-auto overflow-x-hidden px-2 transform transition-all border-r-2 z-10 ${
-                              pathname.includes("sbaudience")
-                                ? "bg-foreground"
-                                : "bg-background"
-                            } ${
-                              driversubsubMenuUrl === ""
-                                ? "-translate-x-1/2"
-                                : "translate-x-0"
-                            } ${
-                              driversubsubsubMenu[0]?.title === ""
-                                ? "-translate-x-1/2"
-                                : "translate-x-0"
-                            } ${
-                              driversubsubsubsubMenu[0]?.title !== ""
-                                ? ""
-                                : driversubsubsubMenuUrl === ""
-                                  ? "border-transparent"
-                                  : ""
-                            }`}
-
-                          >
-                            <ul className="gap-1 p-1">
-                              {driversubsubsubMenu.map((products, index) => (
-                                <div
-                                  key={index}
-                                  onMouseEnter={() =>
-                                    searchSubSubSubSubMenu(products.title, products.parent)
-                                  }
-                                  className={`px-2 transform duration-200 ${
-                                    hoveredDriverSubSubSubMenu === products.title
-                                      ? "translate-x-2"
-                                      : ""
-                                  }`}
-                                >
-                                  {products.parent === "" ? (
-                                    products.title !== "" ? (
-                                      <NavigationMenuLink href={getHref(pathname, products.href)}>
-                                        <div
-                                          className={`${styledDropdown} hover:text-primary ${
-                                            activedriverhovered === products.title
-                                              ? "text-primary"
-                                              : pathname.includes("sbaudience")
-                                                ? "text-white"
-                                                : ""
-                                          }`}
-                                          onMouseEnter={() => {
-                                            setDriversSubSubSubMenuUrl(products.url);
-                                            setPictureSlugUrl(products.href);
-                                            setPictureDesc(products.imageDesc);
-                                            setactivedriverhovered(products.title);
-                                            setDriversSubSubSubSubMenu(EmptyMenu);
-                                            setDriversSubSubSubSubMenuUrl("");
-                                            setHoveredDriverSubSubSubMenu("");
-                                            setnameForHoveredPicture(products.title);
-                                          }}
-                                        >
-                                          {products.newProd ? (
-                                            <>
-                                              {products.title.split(" / ")[0]}{" "}
-                                              <div className="inline-flex text-primary">NEW</div>
-                                            </>
-                                          ) : (
-                                            products.title
-                                          )}
-                                        </div>
-                                      </NavigationMenuLink>
-                                    ) : (
-                                      driversubsubMenuUrl !== "" && (
-                                        <NavigationMenuLink
-                                          href={getHref(pathname, pictureSlugUrl)}
-                                          className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}
-                                        >
-                                          <div
-                                            onMouseEnter={() => setactivedriverhovered(nameForHoveredPicture)}
-                                          >
-                                            <LazyImageCustomNavbar
-                                              src={
-                                                driversubsubMenuUrl.startsWith("/uploads/")
-                                                  ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubsubMenuUrl}`
-                                                  : driversubsubMenuUrl
-                                              }
-                                              alt={activedriverhovered}
-                                              classname="object-contain max-h-40 w-auto"
-                                              width={500}
-                                              height={500}
-                                              lazy
-                                              containerheight="h-40"
-                                              containerwidth="w-40"
-                                              pathname={pathname}
-                                            />
-                                          </div>
-                                          {pictureDesc}
-                                        </NavigationMenuLink>
-                                      )
-                                    )
-                                  ) : (
-                                    <NavigationMenuLink href={getHref(pathname, products.href)}>
-                                      <div
-                                        className={`${styledDropdown} flex justify-between items-center align-middle ${
-                                          hoveredDriverSubSubSubMenu === products.title
-                                            ? "text-primary"
-                                            : pathname.includes("sbaudience")
-                                              ? "text-white"
-                                              : ""
-                                        }`}
-                                        onMouseEnter={() => {
-                                          setDriversSubSubSubSubMenuUrl("");
-                                          setactivedriverhovered("");
-                                        }}
-                                      >
-                                        {products.title}
-                                        <ChevronRight
-                                          size={15}
-                                          className={`pb-1 ${
-                                            hoveredDriverSubSubSubMenu === products.title
-                                              ? "text-primary"
-                                              : ""
-                                          }`}
-                                        />
-                                      </div>
-                                    </NavigationMenuLink>
-                                  )}
-                                </div>
-                              ))} 
-                              {/* Length: {driversubsubsubMenu.length} */}
-                            </ul>
-
-                          </div>
-                        )}
-
-                      {/* FOURTH MENU
-                          driverSubSubSubSubMenu
-                      */}
-                      {driversubsubsubsubMenu &&
-                        driversubsubsubsubMenu.length > 0 && (
-                          <div
-                            className={`overflow-y-auto overflow-x-hidden border-r-2 transform transition-all z-5 ${
-                              pathname.includes("sbaudience") ? "bg-foreground" : "bg-background"
-                            } ${
-                              driversubsubsubMenuUrl === ""
-                                ? "-translate-x-1/2"
-                                : "translate-x-0"
-                            } ${
-                              driversubsubsubsubMenu[0]?.title === ""
-                                ? "-translate-x-1/2"
-                                : "translate-x-0"
-                            } ${driversubsubsubsubMenuUrl === ""
-                                  ? "border-transparent"
-                                  : ""
-                            }`}
-                          >
-                            <ul className="gap-1 p-1">
-                              {driversubsubsubsubMenu.map((products, index) =>(
-                                <div
-                                  key={index}
-                                  onMouseEnter={() =>
-                                    searchSubSubSubSubMenu(products.title, products.parent)
-                                  }
-                                  className={`px-2 transform duration-200 ${
-                                    hoveredDriverSubSubSubMenu === products.title
-                                      ? "translate-x-2"
-                                      : ""
-                                  }`}
-                                >
-                                  {products.parent === "" ? (
-                                  products.title !== "" ? (
-                                    <NavigationMenuLink
-                                      href={getHref(pathname, products.href)}
-                                    >
-                                      <div
-                                        className={`${styledDropdown} hover:text-primary ${
-                                          activedriverhovered === products.title
-                                            ? "text-primary"
-                                            : pathname.includes("sbaudience")
-                                              ? "text-white"
-                                              : ""
-                                        }`}
-                                        onMouseEnter={() => {
-                                          setDriversSubSubSubSubMenuUrl(products.url);
-                                          setPictureSlugUrl(products.href);
-                                          setPictureDesc(products.imageDesc);
-                                          setactivedriverhovered(products.title);
-                                          setnameForHoveredPicture(products.title);
-                                        }}
-                                      >
-                                        {products.newProd ? (
-                                          <>
-                                            {products.title.split(" / ")[0]}{" "}
-                                            <div className="inline-flex text-primary">
-                                              NEW
-                                            </div>
-                                          </>
-                                        ) : (
-                                          products.title
-                                        )}
-                                      </div>
-                                    </NavigationMenuLink>
-                                  ) : (
-                                    driversubsubsubMenuUrl !== "" && (
-                                      <NavigationMenuLink
-                                        href={getHref(pathname, pictureSlugUrl)}
-                                        className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}
-                                      >
-                                        <div
-                                          onMouseEnter={() =>
-                                            setactivedriverhovered(
-                                              nameForHoveredPicture
-                                            )
-                                          }
-                                        >
-                                          <LazyImageCustomNavbar
-                                            src={
-                                              driversubsubsubMenuUrl.startsWith("/uploads/")
-                                                ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubsubsubMenuUrl}`
-                                                : driversubsubsubMenuUrl
-                                            }
-                                            alt={activedriverhovered}
-                                            classname="object-contain max-h-40 w-auto"
-                                            width={500}
-                                            height={500}
-                                            lazy
-                                            containerheight="h-40"
-                                            containerwidth="w-40"
-                                            pathname={pathname}
-                                          />
-                                        </div>
-                                        {pictureDesc}
-                                      </NavigationMenuLink>
-                                    )
-                                  )
-                                ) : (
-                                  <NavigationMenuLink
-                                    href={getHref(pathname, products.href)}
-                                  >
-                                    <div
-                                      className={`${styledDropdown} flex justify-between items-center align-middle ${
-                                        pathname.includes("sbaudience")
-                                          ? "text-white"
-                                          : ""
-                                      }`}
-                                      onMouseEnter={() => {
-                                        setactivedriverhovered("");
-                                      }}
-                                    >
-                                      {products.title}
-                                      <ChevronRight size={15} className="pb-1" />
-                                    </div>
-                                  </NavigationMenuLink>
-                                  )}
-                                </div>
-                              ))} 
-                              {/* Length: {driversubsubsubsubMenu.length} */}
-                            </ul>
-                          </div>
-                        )}
-
-                      {/* FIFTH MENU
-                          driversubsubsubsubMenuUrl
-                      */}
-                        {driversubsubsubsubMenuUrl !== "" && (
-                          <div
-                            className={`overflow-y-auto overflow-x-hidden transform transition-all z-2 ${
-                              pathname.includes("sbaudience") ? "bg-foreground" : "bg-background"
-                            } ${
-                              driversubsubsubsubMenuUrl === ""
-                                ? "-translate-x-1/2"
-                                : "translate-x-0"
-                            }`}
-                          >
-                            <ul className="gap-1 p-1">
-                          <NavigationMenuLink
-                            href={getHref(pathname, pictureSlugUrl)}
-                            className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}
-                          >
-                            <div
-                              onMouseEnter={() =>
-                                setactivedriverhovered(
-                                  nameForHoveredPicture
-                                )
-                              }
-                            >
-                              <LazyImageCustomNavbar
-                                src={
-                                  driversubsubsubsubMenuUrl.startsWith("/uploads/")
-                                    ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubsubsubsubMenuUrl}`
-                                    : driversubsubsubsubMenuUrl
-                                }
-                                alt={activedriverhovered}
-                                classname="object-contain max-h-40 w-auto"
-                                width={500}
-                                height={500}
-                                lazy
-                                containerheight="h-40"
-                                containerwidth="w-40"
-                                pathname={pathname}
-                              />
+                                    )}
+                                  </div>
+                                ))} 
+                                {/* Length: {driversubsubsubsubMenu.length} */}
+                              </ul>
                             </div>
-                            {pictureDesc}
-                          </NavigationMenuLink>
-                            </ul>
-                          </div>
-                        )
-                      }
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              )}
+                          )}
+
+                        {/* FIFTH MENU
+                            driversubsubsubsubMenuUrl
+                        */}
+                          {driversubsubsubsubMenuUrl !== "" && (
+                            <div
+                              className={`overflow-y-auto overflow-x-hidden transform transition-all z-2 ${
+                                pathname.includes("sbaudience") ? "bg-foreground" : "bg-background"
+                              } ${
+                                driversubsubsubsubMenuUrl === ""
+                                  ? "-translate-x-1/2"
+                                  : "translate-x-0"
+                              }`}
+                            >
+                              <ul className="gap-1 p-1">
+                            <NavigationMenuLink
+                              href={getHref(pathname, pictureSlugUrl)}
+                              className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}
+                            >
+                              <div
+                                onMouseEnter={() =>
+                                  setactivedriverhovered(
+                                    nameForHoveredPicture
+                                  )
+                                }
+                              >
+                                <LazyImageCustomNavbar
+                                  src={
+                                    driversubsubsubsubMenuUrl.startsWith("/uploads/")
+                                      ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubsubsubsubMenuUrl}`
+                                      : driversubsubsubsubMenuUrl
+                                  }
+                                  alt={activedriverhovered}
+                                  classname="object-contain max-h-40 w-auto"
+                                  width={500}
+                                  height={500}
+                                  lazy
+                                  containerheight="h-40"
+                                  containerwidth="w-40"
+                                  pathname={pathname}
+                                />
+                              </div>
+                              {pictureDesc}
+                            </NavigationMenuLink>
+                              </ul>
+                            </div>
+                          )
+                        }
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                )}
 
 
-            {!pathname.includes('sbautomotive') &&
-              <NavigationMenuItem>
-                  <NavigationMenuLink href={getHref(pathname, 'new-products')}>
-                    <div className="p-0 relative z-101">
-                      <NavigationMenuTrigger className={navigationMenuTriggerStyle().concat(` bg-transparent hover:text-primary ${
-                        navbarBg && pathname.includes('sbaudience') ? 
-                          openedContentForBg ? 
+              {!pathname.includes('sbautomotive') &&
+                <NavigationMenuItem>
+                    <NavigationMenuLink href={getHref(pathname, 'new-products')}>
+                      <div className="p-0 relative z-101">
+                        <NavigationMenuTrigger className={navigationMenuTriggerStyle().concat(` bg-transparent hover:text-primary ${
+                          navbarBg && pathname.includes('sbaudience') ? 
+                            openedContentForBg ? 
+                              'text-background' 
+                              : 
+                              'text-background'
+                            :
+                            pathname.includes('sbaudience') ? 
                             'text-background' 
-                            : 
-                            'text-background'
-                          :
-                          pathname.includes('sbaudience') ? 
-                          'text-background' 
-                          :
-                          'text-foreground'} `)
-                        } onMouseLeave={() => setOpenedContentForBg(false)} onMouseEnter={() => {
-                        setHoveredDriverSubMenu("");
-                        setHoveredDriverSubSubMenu("");
-                        setDriversSubMenu(EmptyMenu);
-                        setDriversSubSubMenu(EmptyMenu);
-                        setDriversSubSubSubMenu(EmptyMenu);
-                        setPictureSlugUrl('');
-                        setPictureDesc('');
-                        setactivedriverhovered('');
-                        setDriversSubMenuUrl('');
-                        setDriversSubSubMenuUrl('');
-                        setDriversSubSubSubMenuUrl('');
-                        setOpenedContentForBg(true);
-                      }}>
-                        New Products
-                      </NavigationMenuTrigger>
-                    </div>
-                  </NavigationMenuLink>
-                  <NavigationMenuContent onMouseLeave={() => setOpenedContentForBg(false)} onMouseEnter={() => setOpenedContentForBg(true)} className={`${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'}`}>
-                  <div className='xl:pl-[72px] xl:pr-[72px] lg:pl-[56px] lg:pr-[56px] py-4 pt-20'>
-                      <SearchBoxNavbar changeBrand/>
-                    </div>
-                    <div className='grid grid-cols-5 w-screen xl:px-16 lg:px-12 px-8 py-4 h-[550px]'>
-                      <div className={`overflow-y-auto border-r-2 z-40 ${pathname.includes("sbaudience") ? 'text-background' : 'text-foreground'}`}>
-                        <ul className="gap-1 p-1">
-                          <div className='font-bold pl-1'>
-                            Drivers
-                          </div>
-                          {newProductsMenu.length>0 && newProductsMenu.map((products, index) => (
-                              <NavigationMenuLink key={index} href={getHref(pathname, products.href)}>
-                                <div className={`${styledDropdown} hover:text-primary ${activedriverhovered === products.name? 'text-primary': pathname.includes("sbaudience") ? 'text-white' : ''}`} onMouseEnter={() => (setDriversSubMenuUrl(products.image_url), setPictureSlugUrl(products.href), setPictureDesc(products.navbarNotes), setactivedriverhovered(products.name),setnameForHoveredPicture(products.name))}>
-                                  {products.name.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div>
-                                </div>
-                              </NavigationMenuLink>
-                          ))}
-                        </ul>
-                        {pathname.includes('sbaudience') || pathname.includes('sbautomotive') ? null :
+                            :
+                            'text-foreground'} `)
+                          } onMouseLeave={() => setOpenedContentForBg(false)} onMouseEnter={() => {
+                          setHoveredDriverSubMenu("");
+                          setHoveredDriverSubSubMenu("");
+                          setDriversSubMenu(EmptyMenu);
+                          setDriversSubSubMenu(EmptyMenu);
+                          setDriversSubSubSubMenu(EmptyMenu);
+                          setPictureSlugUrl('');
+                          setPictureDesc('');
+                          setactivedriverhovered('');
+                          setDriversSubMenuUrl('');
+                          setDriversSubSubMenuUrl('');
+                          setDriversSubSubSubMenuUrl('');
+                          setOpenedContentForBg(true);
+                        }}>
+                          New Products
+                        </NavigationMenuTrigger>
+                      </div>
+                    </NavigationMenuLink>
+                    <NavigationMenuContent onMouseLeave={() => setOpenedContentForBg(false)} onMouseEnter={() => setOpenedContentForBg(true)} className={`${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'}`}>
+                    <div className='xl:pl-[72px] xl:pr-[72px] lg:pl-[56px] lg:pr-[56px] py-4 pt-20'>
+                        <SearchBoxNavbar changeBrand/>
+                      </div>
+                      <div className='grid grid-cols-5 w-screen xl:px-16 lg:px-12 px-8 py-4 h-[550px]'>
+                        <div className={`overflow-y-auto border-r-2 z-40 ${pathname.includes("sbaudience") ? 'text-background' : 'text-foreground'}`}>
                           <ul className="gap-1 p-1">
                             <div className='font-bold pl-1'>
-                              Kits
+                              Drivers
                             </div>
-                            {newKitsMenu.length>0 && newKitsMenu.map((products, index) => (
+                            {newProductsMenu.length>0 && newProductsMenu.map((products, index) => (
                                 <NavigationMenuLink key={index} href={getHref(pathname, products.href)}>
-                                  <div className={`${styledDropdown} hover:text-primary ${activedriverhovered === products.name? 'text-primary': pathname.includes("sbaudience") ? 'text-white' : ''}`} onMouseEnter={() => (setDriversSubMenuUrl(products.image_url), setPictureSlugUrl(products.href), setPictureDesc(products.navbarNotes), setactivedriverhovered(''), setactivedriverhovered(products.name),setnameForHoveredPicture(products.name))}>
+                                  <div className={`${styledDropdown} hover:text-primary ${activedriverhovered === products.name? 'text-primary': pathname.includes("sbaudience") ? 'text-white' : ''}`} onMouseEnter={() => (setDriversSubMenuUrl(products.image_url), setPictureSlugUrl(products.href), setPictureDesc(products.navbarNotes), setactivedriverhovered(products.name),setnameForHoveredPicture(products.name))}>
                                     {products.name.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div>
                                   </div>
                                 </NavigationMenuLink>
                             ))}
                           </ul>
-                        }
+                          {pathname.includes('sbaudience') || pathname.includes('sbautomotive') ? null :
+                            <ul className="gap-1 p-1">
+                              <div className='font-bold pl-1'>
+                                Kits
+                              </div>
+                              {newKitsMenu.length>0 && newKitsMenu.map((products, index) => (
+                                  <NavigationMenuLink key={index} href={getHref(pathname, products.href)}>
+                                    <div className={`${styledDropdown} hover:text-primary ${activedriverhovered === products.name? 'text-primary': pathname.includes("sbaudience") ? 'text-white' : ''}`} onMouseEnter={() => (setDriversSubMenuUrl(products.image_url), setPictureSlugUrl(products.href), setPictureDesc(products.navbarNotes), setactivedriverhovered(''), setactivedriverhovered(products.name),setnameForHoveredPicture(products.name))}>
+                                      {products.name.split(" / ")[0]} <div className="inline-flex text-primary">NEW</div>
+                                    </div>
+                                  </NavigationMenuLink>
+                              ))}
+                            </ul>
+                          }
+                        </div>
+                        <div className={`overflow-y-auto transform transition-all z-30 ${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'} ${driversubMenuUrl === ''? '-translate-x-1/2' : 'translate-x-0'}`}>
+                          <ul className="gap-1 p-1">
+                            {driversubMenuUrl != '' &&   
+                                <NavigationMenuLink href={getHref(pathname, pictureSlugUrl)} className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}>
+                                  <div onMouseEnter={() => (setactivedriverhovered(nameForHoveredPicture))}>
+                                    <LazyImageCustomNavbar 
+                                      src={driversubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubMenuUrl}` : driversubMenuUrl}
+                                      alt={activedriverhovered}
+                                      classname="object-contain max-h-40 w-auto" 
+                                      width={500} 
+                                      height={500} 
+                                      lazy
+                                      containerheight='h-40'
+                                      containerwidth='w-40'
+                                      pathname={pathname}/>
+                                  </div>
+                                  {pictureDesc}
+                                </NavigationMenuLink>
+                            }    
+                          </ul>
+                        </div>
+                        <div className={`overflow-y-auto z-20 ${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'}`}>
+                        </div>
+                        <div className={`overflow-y-auto z-10 ${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'}`}>
+                        </div>
+                        <div className={`overflow-y-auto transform transition-all z-0 ${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'} ${driversubsubsubMenuUrl === ''? '-translate-x-1/2' : 'translate-x-0'}`}>
+                        </div>
                       </div>
-                      <div className={`overflow-y-auto transform transition-all z-30 ${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'} ${driversubMenuUrl === ''? '-translate-x-1/2' : 'translate-x-0'}`}>
-                        <ul className="gap-1 p-1">
-                          {driversubMenuUrl != '' &&   
-                              <NavigationMenuLink href={getHref(pathname, pictureSlugUrl)} className={`${pathname.includes("sbaudience") ? "text-white" : ""} relative overflow-hidden block text-center items-center justify-center h-full w-50`}>
-                                <div onMouseEnter={() => (setactivedriverhovered(nameForHoveredPicture))}>
-                                  <LazyImageCustomNavbar 
-                                    src={driversubMenuUrl.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${driversubMenuUrl}` : driversubMenuUrl}
-                                    alt={activedriverhovered}
-                                    classname="object-contain max-h-40 w-auto" 
-                                    width={500} 
-                                    height={500} 
-                                    lazy
-                                    containerheight='h-40'
-                                    containerwidth='w-40'
-                                    pathname={pathname}/>
-                                </div>
-                                {pictureDesc}
-                              </NavigationMenuLink>
-                          }    
-                        </ul>
-                      </div>
-                      <div className={`overflow-y-auto z-20 ${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'}`}>
-                      </div>
-                      <div className={`overflow-y-auto z-10 ${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'}`}>
-                      </div>
-                      <div className={`overflow-y-auto transform transition-all z-0 ${pathname.includes("sbaudience") ? 'bg-foreground' : 'bg-background'} ${driversubsubsubMenuUrl === ''? '-translate-x-1/2' : 'translate-x-0'}`}>
-                      </div>
-                    </div>
-                  </NavigationMenuContent>
-              </NavigationMenuItem>
-              }
+                    </NavigationMenuContent>
+                </NavigationMenuItem>
+                }
 
-              
-              {pathname.includes('sbaudience') &&
-              <NavigationMenuItem>
-                  <NavigationMenuLink href={getHref(pathname, 'application')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
-                    <div className="p-0 relative z-101">
-                      Application
-                    </div>
-                  </NavigationMenuLink>
-              </NavigationMenuItem>
-              }
-
-              {(!pathname.includes('sbaudience') && !pathname.includes('sbautomotive')) &&
-              <NavigationMenuItem>
-                  <NavigationMenuLink href={getHref(pathname, 'technical')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
-                    <div className="p-0 relative z-101">
-                      Technical
-                    </div>
-                  </NavigationMenuLink>
-              </NavigationMenuItem>
-              }
-
-              {!pathname.includes('sbautomotive') &&
+                
+                {pathname.includes('sbaudience') &&
                 <NavigationMenuItem>
-                    <NavigationMenuLink href={getHref(pathname, 'distributors')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                    <NavigationMenuLink href={getHref(pathname, 'application')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
                       <div className="p-0 relative z-101">
-                        Distributors
+                        Application
                       </div>
                     </NavigationMenuLink>
                 </NavigationMenuItem>
-              }
+                }
 
-              {!pathname.includes('sbautomotive') &&
-              <NavigationMenuItem>
-                  <NavigationMenuLink href={getHref(pathname, 'contact')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
-                    <div className="p-0 relative z-101">
-                      Contact
-                    </div>
-                  </NavigationMenuLink>
-              </NavigationMenuItem>
-              }
+                {(!pathname.includes('sbaudience') && !pathname.includes('sbautomotive')) &&
+                <NavigationMenuItem>
+                    <NavigationMenuLink href={getHref(pathname, 'technical')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                      <div className="p-0 relative z-101">
+                        Technical
+                      </div>
+                    </NavigationMenuLink>
+                </NavigationMenuItem>
+                }
 
-              {pathname.includes('sbautomotive') &&
-                <>
+                {!pathname.includes('sbautomotive') &&
                   <NavigationMenuItem>
-                    <NavigationMenuLink href={getHref(pathname, 'blog')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                      <NavigationMenuLink href={getHref(pathname, 'distributors')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                        <div className="p-0 relative z-101">
+                          Distributors
+                        </div>
+                      </NavigationMenuLink>
+                  </NavigationMenuItem>
+                }
+
+                {!pathname.includes('sbautomotive') &&
+                <NavigationMenuItem>
+                    <NavigationMenuLink href={getHref(pathname, 'contact')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
                       <div className="p-0 relative z-101">
-                        Blog
+                        Contact
                       </div>
                     </NavigationMenuLink>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink href={getHref(pathname, 'projects')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
-                      <div className="p-0 relative z-101">
-                        Projects
-                      </div>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink href={getHref(pathname, 'dealer')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
-                      <div className="p-0 relative z-101">
-                        Dealer
-                      </div>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                </>
-              }
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
-        <div className={`w-1/4 hidden xl:flex justify-end`}>
-          <SearchBox changeBrand/>
-        </div>
+                </NavigationMenuItem>
+                }
+
+                {pathname.includes('sbautomotive') &&
+                  <>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink href={getHref(pathname, 'blog')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                        <div className="p-0 relative z-101">
+                          Blog
+                        </div>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink href={getHref(pathname, 'projects')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                        <div className="p-0 relative z-101">
+                          Projects
+                        </div>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <NavigationMenuLink href={getHref(pathname, 'dealer')} className={navigationMenuTriggerStyle().concat(" bg-transparent")}>
+                        <div className="p-0 relative z-101">
+                          Dealer
+                        </div>
+                      </NavigationMenuLink>
+                    </NavigationMenuItem>
+                  </>
+                }
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
+          <div className={`w-1/4 hidden xl:flex justify-end`}>
+            <SearchBox changeBrand/>
+          </div>
+        </>
+        }
 
 
         <div className="flex xl:hidden overflow-x-hidden">

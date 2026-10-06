@@ -421,7 +421,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await resend.emails.send(
       {
         from:
-          brand === process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID ? "SB Acoustics Contact Form <noreply@webdemosbe.xyz>" : "SB Audience Contact Form <noreply@webdemosbe.xyz>",
+          brand === process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID ? "SB Acoustics Contact Form <noreply@webdemosbe.xyz>" : process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? "SB Automotive Contact Form <noreply@webdemosbe.xyz>" : "SB Audience Contact Form <noreply@webdemosbe.xyz>",
         replyTo: email,
         to: [
           "alfonskerja@gmail.com",

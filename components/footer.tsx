@@ -42,7 +42,7 @@ export default function Footer() {
     return <CookieSettings onClose={() => setShowSettings(false)} />
   }
   return (
-    <footer className="bg-black text-white">
+    <footer className="bg-black text-white scroll-mt-20">
       <h2 className='sr-only'>{!loading && finalData && `${finalData.name} Footer Navigation`}</h2>
       <div className="w-dvw xl:px-16 lg:px-12 px-8 py-12">
       <div className="md:grid-cols-2 grid pb-6 items-center justify-center">
