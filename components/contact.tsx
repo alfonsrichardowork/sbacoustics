@@ -44,10 +44,11 @@ const formSchema = z.object({
 });
 
 type Props = {
-  oneBrand: brand | undefined
+  oneBrand: brand | undefined;
+  inlineRecaptchaBadge?: boolean;
 };
 
-export default function Contact({ oneBrand }: Props) {
+export default function Contact({ oneBrand, inlineRecaptchaBadge = false }: Props) {
   // const [success, setSuccess] = useState(false);
   // const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -308,7 +309,14 @@ const onSubmit = async (
             </form>
           </Form>
         </CardContent>
-        <CardFooter className='md:px-6 px-3'>
+        <CardFooter
+          className={`md:px-6 px-3 ${inlineRecaptchaBadge ? "flex-col items-stretch" : ""}`}
+        >
+          {inlineRecaptchaBadge && (
+            <div className="mb-3 w-full text-xs text-foreground/60 flex justify-end">
+              <div id="recaptcha-badge-container" className="min-h-[60px]" />
+            </div>
+          )}
           <Button 
             onClick={form.handleSubmit(onSubmit)}
             disabled={loading} 

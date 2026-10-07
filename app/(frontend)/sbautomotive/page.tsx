@@ -120,8 +120,8 @@ export default async function LandingPageSBAutomotive() {
         <h1 className='sr-only'>Welcome to SB Automotive Official Website!</h1>
 
         
-          <div className="relative min-h-screen">
-            <div className="relative w-full h-[calc(100vh)]">
+        <div className="relative min-h-screen bg-black">
+          <div className="relative w-full h-[calc(100vh)]">
             <img
               src={'/images/sbautomotive/homepage_sbautomotive.png'}
               alt='Beyond Sound - SB Automotive'
@@ -132,9 +132,8 @@ export default async function LandingPageSBAutomotive() {
           </div>
         </div>
 
-        <div className="sticky top-0 w-full h-dvh flex items-center justify-center">
+        <div className="sticky top-0 w-full h-dvh flex items-center justify-center bg-black">
           <div className="top-0 left-0 w-full z-10">
-            {/* <SwiperCarousel slides={allFeaturedProducts} brand='sbautomotive'/> */}
             <div className="relative w-full min-h-dvh h-dvh">
               <video
                 autoPlay
@@ -153,9 +152,6 @@ export default async function LandingPageSBAutomotive() {
                   <h3 className="text-left font-bold xl:text-5xl text-3xl text-white pb-4 lg:text-white">
                     Beyond Sound
                   </h3>
-                  {/* <div className="text-left text-sm text-white pb-4 hidden md:block lg:text-white">
-                    Desc
-                  </div> */}
                   <div className="items-start pb-5">
                     <Button size="sm" disabled>
                       Overview  
@@ -167,12 +163,12 @@ export default async function LandingPageSBAutomotive() {
           </div>
         </div>
 
-        <div className="relative h-[50vh]">
+        <div className="relative h-[50vh] bg-black">
           <BrandChoice />
         </div>
 
 
-        <div className="relative min-h-screen scroll-mt-20">
+        <div className="relative min-h-screen scroll-mt-20 bg-black">
           <div className="relative w-full h-[calc(100vh)]">
           <SwiperCarouselSBAutomotive slides={['/images/sbautomotive/1.webp', '/images/sbautomotive/2.webp', '/images/sbautomotive/3.webp']} />
             <div className="absolute z-11 inset-x-0 bottom-0 xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 h-fit flex items-end w-full">
@@ -188,7 +184,7 @@ export default async function LandingPageSBAutomotive() {
 
 
 {brandImages.homepage_catalogues_url !== '' &&
-            <div id="technology" className="relative min-h-screen scroll-mt-20">
+            <div id="technology" className="relative min-h-screen scroll-mt-20 bg-black">
               <div className="relative w-full h-[calc(100vh)]">
               <img
                 src={brandImages.homepage_catalogues_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_catalogues_url}` : brandImages.homepage_catalogues_url}
@@ -224,7 +220,7 @@ export default async function LandingPageSBAutomotive() {
 
 
           {brandImages.homepage_open_source_kits_url !== '' &&
-            <div id="product" className="relative min-h-screen">
+            <div id="product" className="relative min-h-screen bg-black">
               <div className="relative w-full h-[calc(100vh)]">
               <img
                 src={brandImages.homepage_open_source_kits_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_open_source_kits_url}` : brandImages.homepage_open_source_kits_url}
@@ -251,7 +247,7 @@ export default async function LandingPageSBAutomotive() {
 
 
      {tempproducts.map((val, index) => (
-      <div key={val.slug} className="relative min-h-screen">
+      <div key={val.slug} className="relative min-h-screen bg-black">
         <div className="relative w-full h-screen">
           <img
             src={`/images/sbautomotive/${val.slug}/homepage.png`}
@@ -343,8 +339,8 @@ export default async function LandingPageSBAutomotive() {
               }
             </div>
             <div className="relative z-10 top-96">
-              <GoogleCaptchaWrapper>
-                <Contact oneBrand={brand}/>
+              <GoogleCaptchaWrapper inlineBadge>
+                <Contact oneBrand={brand} inlineRecaptchaBadge />
               </GoogleCaptchaWrapper>
             </div>
           </div>
