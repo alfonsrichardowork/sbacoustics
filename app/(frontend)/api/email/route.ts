@@ -151,14 +151,7 @@ function cleanupStores() {
 }
 
 function getClientIp(request: NextRequest) {
-  // Only use forwarded headers when they are set by your trusted hosting proxy.
-  const forwardedFor = request.headers.get("x-forwarded-for");
-
-  if (forwardedFor) {
-    return forwardedFor.split(",")[0]?.trim() || "unknown";
-  }
-
-  return request.headers.get("x-real-ip") || "unknown";
+  return request.headers.get("x-sba-client-ip");
 }
 
 function isRateLimited(ip: string) {
@@ -231,6 +224,16 @@ async function verifyRecaptcha(token: string, request: NextRequest) {
     };
   }
 
+  const verificationParams = new URLSearchParams({
+    secret,
+    response: token,
+  });
+  const clientIp = getClientIp(request);
+
+  if (clientIp) {
+    verificationParams.set("remoteip", clientIp);
+  }
+
   const response = await fetch(
     "https://www.google.com/recaptcha/api/siteverify",
     {
@@ -238,11 +241,7 @@ async function verifyRecaptcha(token: string, request: NextRequest) {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: new URLSearchParams({
-        secret,
-        response: token,
-        remoteip: getClientIp(request),
-      }),
+      body: verificationParams,
       cache: "no-store",
     },
   );
@@ -392,6 +391,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response);
     }
 
+    const clientIp = getClientIp(request);
+
+    if (!clientIp) {
+      return NextResponse.json(
+        { error: "Unable to process this request." },
+        { status: 503 },
+      );
+    }
+
     const recaptcha = await verifyRecaptcha(
       gRecaptchaToken,
       request,
@@ -404,7 +412,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (isRateLimited(getClientIp(request))) {
+    if (isRateLimited(clientIp)) {
       return NextResponse.json(
         { error: "Too many messages. Please try again later." },
         { status: 429 },

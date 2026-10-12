@@ -511,7 +511,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import Link from 'next/link'
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, AttributionControl } from "react-leaflet";
 //@ts-ignore
 import "leaflet/dist/leaflet.css";
 import { LatLngExpression } from "leaflet";
@@ -690,7 +690,9 @@ export const DistributorMap: React.FC<DistributorProps> = ({
           {/* <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           /> */}
+          <AttributionControl position="bottomleft" prefix={false} />
           <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
             url={`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${process.env.NEXT_PUBLIC_CARTO_MAPS_API_KEY}`}
           />
           {/* <TileLayer
