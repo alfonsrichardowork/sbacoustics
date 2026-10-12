@@ -14,9 +14,9 @@ export default function CookieBanner() {
   const pathname = usePathname()
   const [showBanner, setShowBanner] = useState<boolean>(true)
 
-  useEffect(() => {
+  // useEffect(() => {
     
-  }, [pathname]);
+  // }, [pathname]);
 
 
 useEffect(() => {

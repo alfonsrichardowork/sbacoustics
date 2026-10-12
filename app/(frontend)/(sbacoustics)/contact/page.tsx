@@ -58,7 +58,7 @@ export default async function ContactUsJsonLd() {
                 width={750} 
                 height={750} 
                 className="w-screen h-[600px] object-cover object-center"
-                loading="eager"
+                fetchPriority="high"
             />
             :
             <Empty className='w-screen min-h-[600px] z-10 bg-foreground/20'>

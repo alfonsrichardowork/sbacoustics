@@ -128,6 +128,7 @@ export default async function LandingPageSBAutomotive() {
               width={1000}
               height={1000}
               className="object-cover w-full h-full"
+              fetchPriority='high'
             />
           </div>
         </div>
@@ -322,7 +323,7 @@ export default async function LandingPageSBAutomotive() {
                       width={750} 
                       height={750} 
                       className="w-screen h-[600px] object-cover object-center"
-                      loading="eager"
+                      fetchPriority='high'
                   />
                   <div className="absolute inset-0 h-[600px] bg-gradient-to-b from-transparent via-transparent to-black" />
                 </>

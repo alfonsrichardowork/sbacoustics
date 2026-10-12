@@ -116,7 +116,7 @@ export default function Layout({
         <CookieProvider>
         <Suspense fallback={<LoadingScreen isLoading={true}/>}>
           <ThemeWrapper>
-            {/* <LoadingWrapper> */}
+            <LoadingWrapper>
               <ScrollToTop />
               <NextTopLoader color="#e60013" showSpinner={false} />
 
@@ -139,11 +139,11 @@ export default function Layout({
 
                 <Footer />
               <Toaster />
-            {/* </LoadingWrapper> */}
+            </LoadingWrapper>
           </ThemeWrapper>
 
-          <CookieBanner />
         </Suspense>
+          <CookieBanner />
         </CookieProvider>
       </body>
     </html>
