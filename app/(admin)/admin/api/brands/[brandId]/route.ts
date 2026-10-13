@@ -327,15 +327,9 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
       }
       
 
-      revalidatePath('/contact');
-      revalidatePath('/');
-      revalidatePath('/sbaudience');
-      revalidatePath('/sbaudience/contact');
-      revalidatePath('/sbautomotive');
-      revalidatePath('/sbautomotive/contact');
-      revalidatePath('/about');
-      revalidatePath('/sbaudience/about');
-      revalidatePath('/sbautomotive/about');
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : '/'}`);
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/contact`);
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/about`);
 
     }
     else{
@@ -404,15 +398,9 @@ export async function PATCH(req: Request, props: { params: Promise<{ brandId: st
       }
 
 
-      revalidatePath('/contact');
-      revalidatePath('/');
-      revalidatePath('/sbaudience');
-      revalidatePath('/sbaudience/contact');
-      revalidatePath('/sbautomotive');
-      revalidatePath('/sbautomotive/contact');
-      revalidatePath('/about');
-      revalidatePath('/sbaudience/about');
-      revalidatePath('/sbautomotive/about');
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : '/'}`);
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/contact`);
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/about`);
 
     }
 

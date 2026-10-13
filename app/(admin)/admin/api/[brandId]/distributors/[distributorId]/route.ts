@@ -61,9 +61,7 @@ export async function DELETE(
       }
     });
 
-    revalidatePath('/sbaudience/distributors')
-    revalidatePath('/sbautomotive/distributors')
-    revalidatePath('/distributors');
+    revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/distributors`)
 
     return NextResponse.json("success delete");
   } catch (error) {
@@ -159,9 +157,7 @@ export async function PATCH(
           updatedBy: session.name
         }
       });
-      revalidatePath('/sbaudience/distributors')
-      revalidatePath('/sbautomotive/distributors')
-      revalidatePath('/distributors');
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/distributors`)
       return NextResponse.json("update existing")
     }
     else{
@@ -195,9 +191,7 @@ export async function PATCH(
           updatedBy: session.name
         }
       });
-      revalidatePath('/sbaudience/distributors')
-      revalidatePath('/sbautomotive/distributors')
-      revalidatePath('/distributors');
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/distributors`)
       return NextResponse.json("create new")
     }
 

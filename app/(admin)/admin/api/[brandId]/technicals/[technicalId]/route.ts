@@ -187,9 +187,7 @@ export async function PATCH(
       }
     }
 
-    revalidatePath('/technical')
-    revalidatePath('/sbaudience/technical')
-    revalidatePath('/sbautomotive/technical')
+    revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/technical`);
     return NextResponse.json("success");
   } catch (error) {
     console.log('[TECHNICAL_PATCH]', error);

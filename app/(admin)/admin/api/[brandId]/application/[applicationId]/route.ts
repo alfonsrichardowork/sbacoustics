@@ -146,7 +146,10 @@ export async function DELETE(
       }
     })
 
-    deletedApp && revalidatePath(`/sbaudience/application/${deletedApp.slug}`);
+    if(deletedApp) {
+      revalidatePath(`/sbaudience/application/${deletedApp.slug}`);
+      revalidatePath(`/sbaudience/application`);
+    } 
 
     await prismadb.sbaudienceapplication.deleteMany({
       where: { 
@@ -401,6 +404,7 @@ export async function PATCH(
 
 
         revalidatePath(`/sbaudience/application/${updatedApp.slug}`);
+        revalidatePath(`/sbaudience/application`);
         return NextResponse.json("same")
       }
     }
@@ -414,6 +418,7 @@ export async function PATCH(
 
     if(duplicates){
       revalidatePath(`/sbaudience/application/${duplicates.slug}`);
+      revalidatePath(`/sbaudience/application`);
       return NextResponse.json("duplicate")
     }
 
@@ -593,6 +598,7 @@ export async function PATCH(
 
     
     revalidatePath(`/sbaudience/application/${updatedApp.slug}`);
+    revalidatePath(`/sbaudience/application`);
 
    
     return NextResponse.json("success");

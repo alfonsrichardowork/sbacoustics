@@ -137,9 +137,11 @@ export async function PATCH(
       })
     }
 
-    revalidatePath('/catalogues')
-    revalidatePath('/sbaudience/catalogues')
-    revalidatePath('/sbautomotive/catalogues')
+    params.brandId === process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID ? 
+      revalidatePath('/catalogues') :
+    params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? 
+      revalidatePath('/sbaudience/catalogues') :
+      revalidatePath('/sbautomotive/catalogues')
     return NextResponse.json("success");
   } catch (error) {
     console.log('[CATALOGUE_PATCH]', error);
@@ -221,6 +223,11 @@ export async function PATCH(
         },
       });
   
+      params.brandId === process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID ? 
+        revalidatePath('/catalogues') :
+      params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? 
+        revalidatePath('/sbaudience/catalogues') :
+        revalidatePath('/sbautomotive/catalogues')
       return NextResponse.json(deleted);
     } catch (error) {
       console.log('[CATALOGUE_DELETE]', error);

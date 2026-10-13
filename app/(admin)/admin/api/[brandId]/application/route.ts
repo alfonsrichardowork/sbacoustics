@@ -113,6 +113,7 @@ export async function POST(req: Request, props: { params: Promise<{ brandId: str
     
 
     revalidatePath(`/sbaudience/application/${app.slug}`);
+    revalidatePath(`/sbaudience/application`);
   
     return NextResponse.json("success");
   } catch (error) {
