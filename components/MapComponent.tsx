@@ -503,7 +503,7 @@
 
 "use client"
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 //@ts-ignore
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { Facebook, Globe, Instagram, Loader2, Mail, MapPin, Phone } from "lucide-react"
@@ -566,14 +566,17 @@ export const DistributorMap: React.FC<DistributorProps> = ({
   const [icons, setIcons] = useState<{ defaultIcon: L.Icon; activeIcon: L.Icon } | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const pathname = usePathname();
-  const allDistributors = [
-    ...americaDistributors,
-    ...oceaniaDistributors,
-    ...europeDistributors,
-    ...asianDistributors,
-    ...africaDistributors,
-    ...antarticaDistributors
-  ]
+  const allDistributors = useMemo(
+    () => [
+      ...americaDistributors,
+      ...oceaniaDistributors,
+      ...europeDistributors,
+      ...asianDistributors,
+      ...africaDistributors,
+      ...antarticaDistributors
+    ],
+    [americaDistributors, oceaniaDistributors, europeDistributors, asianDistributors, africaDistributors, antarticaDistributors]
+  );
 
   const allD = [
     americaDistributors,
@@ -592,46 +595,94 @@ export const DistributorMap: React.FC<DistributorProps> = ({
   }, []);
 
   useEffect(() => {
-    const fetchIpAndSetMap = async () => {
-      try {
-        const res = await fetch('/api/ip');
-        const data = await res.json();
-        const res_2 = await fetch(`https://ipapi.co/${data.ip}/json/`);
-        const data_2 = await res_2.json();
+    let isMounted = true;
 
-  
-        
-        const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-          const toRad = (value: number) => (value * Math.PI) / 180;
-          const R = 6371; // Earth radius in km
-        
-          const dLat = toRad(lat2 - lat1);
-          const dLon = toRad(lon2 - lon1);
-          const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        
-          return R * c;
-        };
-        
-        const closestDistributor = allDistributors.reduce((closest, distributor) => {
-          const distributorDistance = getDistance(data_2.latitude, data_2.longitude, Number(distributor.lat), Number(distributor.lng));
-          const closestDistance = getDistance(data_2.latitude, data_2.longitude, Number(closest?.lat ?? 0), Number(closest?.lng ?? 0));
-        
-          return distributorDistance < closestDistance ? distributor : closest;
-        }, asianDistributors[0]);
-        
+    const setClosestDistributor = (latitude: number, longitude: number) => {
+      if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+
+      const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+        const toRad = (value: number) => (value * Math.PI) / 180;
+        const earthRadiusKm = 6371;
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+        const a =
+          Math.sin(dLat / 2) ** 2 +
+          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+
+        return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      };
+
+      const closestDistributor = allDistributors.reduce<distributors | undefined>(
+        (closest, distributor) => {
+          const distributorLatitude = Number(distributor.lat);
+          const distributorLongitude = Number(distributor.lng);
+          if (!Number.isFinite(distributorLatitude) || !Number.isFinite(distributorLongitude)) {
+            return closest;
+          }
+
+          if (!closest) return distributor;
+
+          return getDistance(latitude, longitude, distributorLatitude, distributorLongitude) <
+            getDistance(latitude, longitude, Number(closest.lat), Number(closest.lng))
+            ? distributor
+            : closest;
+        },
+        undefined
+      );
+
+      if (isMounted && closestDistributor) {
         setActiveMap(closestDistributor);
-        setCenter([Number(closestDistributor?.lat ?? 0), Number(closestDistributor?.lng ?? 0)]);
-      } catch (error) {
-        console.error('Error fetching IP:', error);
+        setCenter([Number(closestDistributor.lat), Number(closestDistributor.lng)]);
       }
     };
-  
-    fetchIpAndSetMap();
-  }, []);
+
+    const useCloudflareLocation = async () => {
+      try {
+        const response = await fetch('/api/ip');
+        if (!response.ok) throw new Error(`Cloudflare location lookup failed: ${response.status}`);
+
+        const location: {
+          latitude: number | null;
+          longitude: number | null;
+          countryCode: string | null;
+        } = await response.json();
+
+        if (location.latitude !== null && location.longitude !== null) {
+          setClosestDistributor(location.latitude, location.longitude);
+          return;
+        }
+
+        if (location.countryCode) {
+          const countryName = new Intl.DisplayNames(['en'], { type: 'region' })
+            .of(location.countryCode);
+          const matchingDistributor = allDistributors.find(
+            (distributor) => distributor.country.toLocaleLowerCase() === countryName?.toLocaleLowerCase()
+          );
+
+          if (isMounted && matchingDistributor) {
+            setActiveMap(matchingDistributor);
+            setCenter([Number(matchingDistributor.lat), Number(matchingDistributor.lng)]);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching Cloudflare location:', error);
+      }
+    };
+
+    if (typeof navigator !== 'undefined' && 'geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => setClosestDistributor(coords.latitude, coords.longitude),
+        () => void useCloudflareLocation(),
+        { enableHighAccuracy: false, maximumAge: 300000, timeout: 10000 }
+      );
+    } else {
+      void useCloudflareLocation();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [allDistributors]);
   
   
   useEffect(() => {

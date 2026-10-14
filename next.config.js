@@ -61,7 +61,7 @@ const nextConfig = {
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          { key: 'Permissions-Policy', value: 'geolocation=(), microphone=(), camera=()' },
+          { key: 'Permissions-Policy', value: 'geolocation=(self), microphone=(), camera=()' },
           { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
           {
             key: 'Content-Security-Policy',
@@ -71,7 +71,7 @@ const nextConfig = {
               script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google.com https://www.gstatic.com https://static.cloudflareinsights.com;
               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
               font-src 'self' data: https://fonts.gstatic.com;
-              connect-src 'self' blob: https://www.google-analytics.com https://www.googletagmanager.com https://analytics.google.com https://ipapi.co https://www.google.com https://www.gstatic.com https://webdemosbe.xyz;
+              connect-src 'self' blob: https://www.google-analytics.com https://www.googletagmanager.com https://analytics.google.com https://www.google.com https://www.gstatic.com https://webdemosbe.xyz https://stats.g.doubleclick.net;
             `.replace(/\n/g, ' ')
           }
         ],

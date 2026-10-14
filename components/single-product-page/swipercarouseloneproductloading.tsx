@@ -25,7 +25,14 @@ type PropType = {
 const SwiperCarouselOneProductLoading: React.FC<PropType> = (props) => {
   return (
     <>
-      <SwiperCarouselOneProduct name={props.name} cover={props.cover} image_catalogues={props.image_catalogues} drawing={props.drawing} graph={props.graph}/>
+      <SwiperCarouselOneProduct
+        key={JSON.stringify(props)}
+        name={props.name}
+        cover={props.cover}
+        image_catalogues={props.image_catalogues}
+        drawing={props.drawing}
+        graph={props.graph}
+      />
     </>
   );
 }

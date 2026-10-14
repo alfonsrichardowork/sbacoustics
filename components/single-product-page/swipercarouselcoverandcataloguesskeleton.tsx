@@ -24,7 +24,12 @@ const SwiperCarouselOneProductSkeleton: React.FC<PropType> = (props) => {
 
   return (
     <>
-    <SwiperCarouselCoverandCatalogues name={props.name} cover={props.cover} image_catalogues={props.image_catalogues}/>
+    <SwiperCarouselCoverandCatalogues
+      key={JSON.stringify(props)}
+      name={props.name}
+      cover={props.cover}
+      image_catalogues={props.image_catalogues}
+    />
     </>
   );
 }

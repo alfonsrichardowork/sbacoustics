@@ -12,12 +12,10 @@ import 'swiper/css/free-mode';
 //@ts-ignore
 import 'swiper/css/navigation';
 //@ts-ignore
-import 'swiper/css/thumbs';
-//@ts-ignore
 import '@/app/globals.css';
 
 // import required modules
-import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import { FreeMode, Navigation } from 'swiper/modules';
 import { Card, CardContent } from '@/components/ui/card';
 import { Eye } from 'lucide-react';
 
@@ -52,7 +50,6 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
 
   const [initialized, setInitialized] = useState(false);
   const [multipleslides, setmultipleslides] = useState(false);
-  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const [hoverImage, setHoverImage] = useState<boolean>(false)
   const [totalCatalgouesOnView, settotalCatalgouesOnView] = useState<number>(4)
   const { name, cover, image_catalogues } = props
@@ -105,8 +102,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
         loop={multipleslides}
         spaceBetween={0}
         navigation={true}
-        thumbs={{ swiper: thumbsSwiper }}
-        modules={[FreeMode, Navigation, Thumbs]}
+        modules={[FreeMode, Navigation]}
         className="mySwiper2 h-full bg-transparent custom-swiper"
       >
         {cover && (
@@ -167,12 +163,11 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
       {multipleslides &&
       <div className='lg:px-16 px-10'>
       <Swiper
-        onSwiper={setThumbsSwiper}
         spaceBetween={10}
         slidesPerView={totalCatalgouesOnView}
         freeMode={true}
         watchSlidesProgress={true}
-        modules={[FreeMode, Navigation, Thumbs]}
+        modules={[FreeMode, Navigation]}
         className="mySwiper"
       >
         {cover && (

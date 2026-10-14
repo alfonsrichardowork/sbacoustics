@@ -14,7 +14,7 @@ import '@/app/globals.css';
 
 
 // import required modules
-import { Navigation, Thumbs, FreeMode } from 'swiper/modules';
+import { Navigation, FreeMode } from 'swiper/modules';
 import { Card, CardContent } from '@/components/ui/card';
 import { Eye } from 'lucide-react';
 
@@ -50,7 +50,6 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
       setLightboxOpen(true)
     }
   
-    const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [hoverImage, setHoverImage] = useState<boolean>(false)
     const { name, cover, image_catalogues, drawing, graph } = props
@@ -100,9 +99,8 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
         onSlideChange={(swiper) => {
           setActiveIndex(swiper.realIndex)
         }}
-        thumbs={{ swiper: thumbsSwiper }}
         navigation={true}
-        modules={[Navigation, Thumbs, FreeMode]}
+        modules={[Navigation, FreeMode]}
         className="oneproductswiper h-72 custom-swiper"
         style={{
           "--swiper-pagination-color": "#000000",
@@ -235,13 +233,12 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
         }
       </Swiper>
       <Swiper
-        onSwiper={setThumbsSwiper}
         loop={true}
         spaceBetween={10}
         slidesPerView={totalCatalgouesOnView}
         freeMode={true}
         watchSlidesProgress={true}
-        modules={[FreeMode, Navigation, Thumbs]}
+        modules={[FreeMode, Navigation]}
         className="mySwiper h-[100px]"
       >
         <SwiperSlide className={`${activeIndex === 0? "opacity-100": "opacity-50"} h-fit flex items-center justify-center hover:cursor-pointer hover:opacity-100`}
