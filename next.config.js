@@ -68,7 +68,7 @@ const nextConfig = {
             value: `
               default-src 'self' https://www.google.com/ https://www.youtube.com/;
               img-src 'self' data: blob: https://img.youtube.com https://www.googletagmanager.com https://www.google-analytics.com https://www.google.co.id https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png https://c.tile.openstreetmap.org https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://webdemosbe.xyz https://*.basemaps.cartocdn.com;
-              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google.com https://www.gstatic.com;
+              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google.com https://www.gstatic.com https://static.cloudflareinsights.com;
               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
               font-src 'self' data: https://fonts.gstatic.com;
               connect-src 'self' blob: https://www.google-analytics.com https://www.googletagmanager.com https://analytics.google.com https://ipapi.co https://www.google.com https://www.gstatic.com https://webdemosbe.xyz;
