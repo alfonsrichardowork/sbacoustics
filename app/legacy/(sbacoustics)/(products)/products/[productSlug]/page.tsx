@@ -600,7 +600,7 @@ async function SingleProductSBAcoustics({ productSlug }: { productSlug: string }
                                     </div>
                                         
                                     <h3 style={{ paddingLeft: '8px'}}>
-                                        Uploading soon
+                                        FRD & ZMA data coming soon
                                     </h3>
                                 </div>
                             </div>

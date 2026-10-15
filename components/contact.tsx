@@ -176,15 +176,15 @@ const onSubmit = async (
                 <div className='space-y-2 pt-4'>
                   <h2 className='sr-only'>Sinar Baja Electric Address</h2>
                   <div className="flex items-center space-x-4">
-                    <MapPin className="h-6 w-6 text-gray-600" />
+                    <MapPin className="h-6 w-6 shrink-0 text-gray-600" />
                     <h3>{oneBrand.address}</h3>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <Phone className="h-6 w-6 text-gray-600" />
+                    <Phone className="h-6 w-6 shrink-0 text-gray-600" />
                     <h3>{oneBrand.telephone}</h3>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <Mail className="h-6 w-6 text-gray-600" />
+                    <Mail className="h-6 w-6 shrink-0 text-gray-600" />
                     <h3>{oneBrand.email}</h3>
                   </div>
                 </div>

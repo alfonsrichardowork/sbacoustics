@@ -470,7 +470,7 @@ async function SingleProductSBAudience({ productSlug }: { productSlug: string })
                                             <LazyImageCustomNavbar src={'/images/sbacoustics/FRD-ZMA-download-ver2.webp'} alt="FRD ZMA Files Download" classname="max-h-8 w-auto flex-shrink-0" width={100} height={100} lazy containerheight="h-8" containerwidth="w-8"/>
                                             {/* </div> */}
                                             <h3 className="pl-2">
-                                                Uploading soon
+                                                FRD & ZMA data coming soon
                                             </h3>
                                         </div>
                                     </div>

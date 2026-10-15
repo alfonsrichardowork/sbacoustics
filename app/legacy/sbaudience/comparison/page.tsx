@@ -134,6 +134,9 @@ const ComparisonPageSBAudience = () => {
                 const decodedSlugs = decodeURIComponent(localStorage.getItem("selectedComparisonLegacySBAudience") || '');
                 const slugArray = decodedSlugs.split(',');
                 slugArray.pop()
+                if(slugArray.length === 0) {
+                  router.push(`/sbaudience`)
+                }
                 setFinalSlug(slugArray)
                 await Promise.all(
                     slugArray.map(async (value) => {

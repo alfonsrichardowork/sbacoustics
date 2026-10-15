@@ -322,7 +322,7 @@ export default async function LandingPageSBAutomotive() {
                       alt="Sinar Baja Electric Facility" 
                       width={750} 
                       height={750} 
-                      className="w-screen h-[600px] object-cover object-center"
+                      className="w-screen h-[600px] object-cover object-[80%_center] md:object-center"
                       fetchPriority='high'
                   />
                   <div className="absolute inset-0 h-[600px] bg-gradient-to-b from-transparent via-transparent to-black" />

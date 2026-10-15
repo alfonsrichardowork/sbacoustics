@@ -42,7 +42,7 @@ export default async function AboutUsPage() {
             <div className="about-us-section-child-grid">
               <div className="about-us-section-first-order">
                 <div className="about-us-section-first-head">
-                  <h2 className="about-us-section-first-head-text">SB Acoustics</h2>
+                  <h2 className="about-us-section-first-head-text">About SB Acoustics</h2>
                 </div>
                 <div style={{
                   marginBlockStart: '24px',
@@ -63,7 +63,7 @@ export default async function AboutUsPage() {
               </div>
               <div className="about-us-section-second-relative">
                 <div className="about-us-section-second-relative-head">
-                  <div className="about-us-section-second-relative-desc">SB Acoustics</div>
+                  <div className="about-us-section-second-relative-desc">About SB Acoustics</div>
                 </div>
                 <SwiperCarouselAboutUsOld 
                   images={allData.aboutUsImages
@@ -88,7 +88,7 @@ export default async function AboutUsPage() {
               <div>
                 <div className="about-us-section-second-head">
                   <div className="about-us-section-first-head-text">
-                    Sinar Baja Electric
+                    About Sinar Baja Electric
                   </div>
                 </div>
                 <SwiperCarouselAboutUsOld 
@@ -104,7 +104,7 @@ export default async function AboutUsPage() {
               <div className="about-us-section-second-order">
                 <div className="about-us-section-first-head">
                   <h2 className="about-us-section-first-head-text">
-                    Sinar Baja Electric
+                    About Sinar Baja Electric
                   </h2>
                 </div>
                 <div style={{
@@ -140,7 +140,7 @@ export default async function AboutUsPage() {
           <div className="about-us-section-parent-div" style={{ paddingBlock: '24px' }}>
             <div className="about-us-mission-header">
               <h2 className="about-us-title">
-                Our Mission &amp; Values
+                Our Vision & Mission
               </h2>
               <Suspense fallback={<></>}>
                 <p className={`tiptap`} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(allData.mission_values_desc, {

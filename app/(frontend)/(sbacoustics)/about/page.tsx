@@ -57,7 +57,7 @@ export default async function AboutUsPage() {
             <div className="grid md:grid-cols-2 grid-cols-1 md:gap-16 gap-8 items-center">
               <div className="md:order-1 order-2">
                 <div className="md:flex hidden items-center mb-6">
-                  <h2 className="text-3xl md:text-4xl font-bold text-black">SB Acoustics</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold text-black">About SB Acoustics</h2>
                 </div>
                 <div className="space-y-6 text-slate-600">
                   <Suspense fallback={<></>}>
@@ -77,7 +77,7 @@ export default async function AboutUsPage() {
               </div>
               <div className="relative md:order-2 order-1">
                 <div className="md:hidden flex items-start mb-6">
-                  <div className="text-3xl md:text-4xl font-bold text-black">SB Acoustics</div>
+                  <div className="text-3xl md:text-4xl font-bold text-black">About SB Acoustics</div>
                 </div>
                 <Suspense fallback={<></>}>       
                   <SwiperCarouselAboutUs
@@ -102,7 +102,7 @@ export default async function AboutUsPage() {
             <div className="grid md:grid-cols-2 grid-cols-1 md:gap-16 gap-8 items-center">
               <div>
                 <div className="md:hidden flex items-start mb-6">
-                  <div className="text-3xl md:text-4xl font-bold text-black">Sinar Baja Electric</div>
+                  <div className="text-3xl md:text-4xl font-bold text-black">About Sinar Baja Electric</div>
                 </div>
                 
                 <Suspense fallback={<></>}>
@@ -119,7 +119,7 @@ export default async function AboutUsPage() {
               </div>
               <div className="order-1 md:order-2">
                 <div className="md:flex hidden items-center mb-6">
-                  <h2 className="text-3xl md:text-4xl font-bold text-black">Sinar Baja Electric</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold text-black">About Sinar Baja Electric</h2>
                 </div>
                 <div className="space-y-6 text-slate-600">
                   <Suspense fallback={<></>}>
@@ -153,7 +153,7 @@ export default async function AboutUsPage() {
         <div>
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">Our Mission & Values</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">Our Vision & Mission</h2>
               <div className="text-lg text-slate-600 max-w-3xl mx-auto">
                 <Suspense fallback={<></>}>
                   <Dompurifyclient content={allData.mission_values_desc}/>

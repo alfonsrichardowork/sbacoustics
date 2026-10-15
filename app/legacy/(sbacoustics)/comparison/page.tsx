@@ -134,6 +134,9 @@ const ComparisonPageSBAcoustics = () => {
                 const decodedSlugs = decodeURIComponent(localStorage.getItem("selectedComparisonLegacy") || '');
                 const slugArray = decodedSlugs.split(',');
                 slugArray.pop()
+                if(slugArray.length === 0) {
+                  router.push(`/`)
+                }
                 setFinalSlug(slugArray)
                 await Promise.all(
                     slugArray.map(async (value) => {

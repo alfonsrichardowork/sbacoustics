@@ -42,7 +42,7 @@ export default async function AboutUsSBAudience() {
             <div className="about-us-section-child-grid">
               <div className="about-us-section-first-order">
                 <div className="about-us-section-first-head">
-                  <h2 className="about-us-section-first-head-text">SB Audience</h2>
+                  <h2 className="about-us-section-first-head-text">About SB Audience</h2>
                 </div>
                 <div style={{
                   marginBlockStart: '24px',
@@ -63,7 +63,7 @@ export default async function AboutUsSBAudience() {
               </div>
               <div className="about-us-section-second-relative">
                 <div className="about-us-section-second-relative-head">
-                  <div className="about-us-section-second-relative-desc">SB Audience</div>
+                  <div className="about-us-section-second-relative-desc">About SB Audience</div>
                 </div>
                 {/* <SwiperCarouselAboutUsOld images={[
                   {
@@ -92,7 +92,7 @@ export default async function AboutUsSBAudience() {
                     .filter((val) => val.type === 'BRAND').sort((a,b) => Number(a.priority) - Number(b.priority))
                     .map((val, index) => ({
                       src: val.url,
-                      alt: `SB Acoustics About Us ${index + 1}`,
+                      alt: `SB Audience About Us ${index + 1}`,
                     }))
                   }
                 />
@@ -109,7 +109,7 @@ export default async function AboutUsSBAudience() {
             <div className="about-us-section-child-grid">
               <div>
                 <div className="about-us-section-second-head">
-                  <div className="about-us-section-first-head-text">Sinar Baja Electric</div>
+                  <div className="about-us-section-first-head-text">About Sinar Baja Electric</div>
                 </div>
                 {/* <SwiperCarouselAboutUsOld images={[
                   {
@@ -146,7 +146,7 @@ export default async function AboutUsSBAudience() {
               </div>
               <div className="about-us-section-second-order">
                 <div className="about-us-section-first-head">
-                  <h2 className="about-us-section-first-head-text">Sinar Baja Electric</h2>
+                  <h2 className="about-us-section-first-head-text">About Sinar Baja Electric</h2>
                 </div>
                 <div style={{
                   marginBlockStart: '24px',
@@ -190,7 +190,7 @@ export default async function AboutUsSBAudience() {
         <section>
           <div className="about-us-section-parent-div" style={{ paddingBlock: '24px' }}>
             <div className="about-us-mission-header">
-              <h2 className="about-us-title">Our Mission & Values</h2>
+              <h2 className="about-us-title">Our Vision & Mission</h2>
               {/* <p>
                 We dedicate passion and purpose to create and deliver high-valued products, where end user and OEM customer expectation are exceeded
               </p> */}
@@ -224,7 +224,7 @@ export default async function AboutUsSBAudience() {
                 .filter((val) => val.type === 'VALUES').sort((a,b) => Number(a.priority) - Number(b.priority))
                 .map((val, index) => 
                 <article className="about-us-card" key={index}>
-                  <img src={val.url} alt={`SB Acoustics About Us Mission ${index}`} width={500} height={400} />
+                  <img src={val.url} alt={`SB Audience About Us Mission ${index}`} width={500} height={400} />
                   <div className="about-us-card-content">
                     <h3>
                       {val.name}

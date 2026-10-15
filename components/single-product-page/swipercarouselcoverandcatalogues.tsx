@@ -103,7 +103,7 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
         spaceBetween={0}
         navigation={true}
         modules={[FreeMode, Navigation]}
-        className="mySwiper2 h-full bg-transparent custom-swiper"
+        className="mySwiper2 aspect-square max-h-[750px] bg-transparent custom-swiper"
       >
         {cover && (
             <SwiperSlide>

@@ -57,7 +57,7 @@ export default async function ContactUsJsonLd() {
                 alt="Sinar Baja Electric Facility" 
                 width={750} 
                 height={750} 
-                className="w-screen h-[600px] object-cover object-center"
+                className="w-screen h-[600px] object-cover object-[80%_center] md:object-center"
                 fetchPriority="high"
             />
             :

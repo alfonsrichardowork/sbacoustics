@@ -831,7 +831,7 @@ export const DistributorMap: React.FC<DistributorProps> = ({
       
     <div className="py-16 xl:px-16 lg:px-12 px-8 ">
       <h1 className="md:text-3xl text-2xl font-bold mb-16 text-center">
-        Our Distributors
+        {pathname.includes("sbaudience") ? 'SB Audience ' : 'SB Acoustics '}Distributors
       </h1>
 
       <div className="grid md:grid-cols-4 gap-4 max-w-6xl mx-auto text-left">

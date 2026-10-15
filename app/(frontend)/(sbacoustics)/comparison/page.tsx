@@ -135,6 +135,9 @@ const ComparisonPageSBAcoustics = () => {
                 const decodedSlugs = decodeURIComponent(localStorage.getItem("selectedComparison") || '');
                 const slugArray = decodedSlugs.split(',');
                 slugArray.pop()
+                if(slugArray.length === 0) {
+                  router.push(`/`)
+                }
                 setFinalSlug(slugArray)
                 await Promise.all(
                     slugArray.map(async (value) => {
@@ -170,6 +173,9 @@ const ComparisonPageSBAcoustics = () => {
             router.push('/')
         }
     }
+
+    const shouldFillMobile = finalFetchedProducts.length > 0 && finalFetchedProducts.length <= 2;
+
     return (
         <div className="xl:px-16 lg:px-12 pt-14 pb-6 px-8">
       {loading ? 
@@ -223,11 +229,11 @@ const ComparisonPageSBAcoustics = () => {
           onMouseLeave={handleMouseLeave}
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          <div className="inline-flex">
-          <Table className="w-max">
+          <div className={shouldFillMobile ? "w-full md:w-auto md:inline-flex" : "inline-flex"}>
+          <Table className={shouldFillMobile ? "w-full table-fixed md:w-max md:table-auto" : "w-max"}>
             <TableHeader>
                 <TableRow className="hover:bg-white w-full">
-                <TableHead className='md:w-full w-12'>
+                <TableHead className={shouldFillMobile ? "w-1/4 md:w-full" : "md:w-full w-12"}>
                     <div className={`${!hasOverflow && "hidden"}`}>
                     <div className="flex items-center gap-1 text-primary">
                         <Lightbulb className="h-4 w-4 text-yellow-500" />
@@ -239,7 +245,9 @@ const ComparisonPageSBAcoustics = () => {
                 {finalFetchedProducts.map((product) => (
                   <TableHead
                     key={product.name}
-                    className="relative w-fit text-center align-top md:px-0 px-1 md:max-w-full max-w-[120px]"
+                    className={shouldFillMobile
+                      ? "relative w-auto text-center align-top px-1 max-w-none md:w-fit md:px-0 md:max-w-full"
+                      : "relative w-fit text-center align-top md:px-0 px-1 md:max-w-full max-w-[120px]"}
                   >
                     <div className="flex flex-col items-center justify-center w-full">
                       <X
@@ -257,17 +265,11 @@ const ComparisonPageSBAcoustics = () => {
                         alt={`${product.name} - Comparison`}
                         width={100}
                         height={100}
-                        className="
-                          md:min-w-[200px]
-                          min-w-[100px]
-                          md:max-w-[400px]
-                          max-w-[200px]
-                          h-fit
-                          mx-auto
-                          object-contain
-                          block"
+                        className={shouldFillMobile
+                          ? "w-full min-w-0 max-w-[200px] md:w-auto md:min-w-[200px] md:max-w-[400px] h-fit mx-auto object-contain block"
+                          : "md:min-w-[200px] min-w-[100px] md:max-w-[400px] max-w-[200px] h-fit mx-auto object-contain block"}
                       />
-                      <div className="md:font-bold md:text-lg font-semibold text-xs text-center max-w-52 break-words whitespace-normal w-full">
+                      <div className="md:font-bold md:text-lg font-semibold sm:text-base text-sm text-center max-w-52 break-words whitespace-normal w-full">
                         {product.name}
                       </div>
                     </div>
@@ -322,7 +324,9 @@ const ComparisonPageSBAcoustics = () => {
                         return (
                           <TableCell
                             key={`${product.id}-${childKey}`}
-                            className="md:text-sm text-xs text-foreground text-center md:min-w-[250px] w-24 min-w-[100px] md:max-w-[400px] max-w-[200px] break-all whitespace-normal px-2"
+                            className={shouldFillMobile
+                              ? "md:text-sm text-xs text-foreground text-center md:min-w-[250px] w-auto min-w-0 md:max-w-[400px] max-w-none break-all whitespace-normal px-2"
+                              : "md:text-sm text-xs text-foreground text-center md:min-w-[250px] w-24 min-w-[100px] md:max-w-[400px] max-w-[200px] break-all whitespace-normal px-2"}
                           >
                             {value !== "-" ? `${value} ${unit}` : value}
                           </TableCell>
