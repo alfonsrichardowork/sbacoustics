@@ -107,7 +107,7 @@ const SearchLightbox: FC<PropType> = (props) => {
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter' && activeSearch.trim() !== '') {
+    if (event.key === 'Enter' && activeSearch.trim() !== '' && foundProducts.length !== 0) {
       skipBlurRef.current = true;
       setIsOpen(false);
       setactiveSearch('');

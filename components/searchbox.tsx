@@ -90,7 +90,7 @@ const SearchBox: FC<PropType> = (props) => {
         }}
         value={activeSearch}
         onKeyDown={(event) => {
-          if (event.key === "Enter" && activeSearch.trim() !== "") {
+          if (event.key === "Enter" && activeSearch.trim() !== "" && foundProducts.length !== 0) {
             skipBlurRef.current = true; // mark to skip blur
             setactiveSearch("");
             inputRef.current?.blur(); // remove focus

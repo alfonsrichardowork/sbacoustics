@@ -222,7 +222,7 @@ const ComparisonPageSBAcoustics = () => {
 
         <div
           ref={scrollContainerRef}
-          className={`flex overflow-x-auto ${hasOverflow && 'cursor-grab'}`}
+          className={`flex overflow-x-auto overflow-y-hidden ${hasOverflow && 'cursor-grab'}`}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
