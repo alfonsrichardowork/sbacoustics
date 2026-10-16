@@ -111,8 +111,8 @@ export default function Layout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="overflow-x-hidden">
-      <body className={`${font.className} overflow-x-hidden`}>
+    <html lang="en" className="">
+      <body className={`${font.className} `}>
         <CookieProvider>
         <Suspense fallback={<LoadingScreen isLoading={true}/>}>
           <ThemeWrapper>
