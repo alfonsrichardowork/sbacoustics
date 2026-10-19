@@ -1,3 +1,4 @@
+import { allowedHostnames, disposableDomains } from "@/lib/security-settings";
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
@@ -148,15 +149,6 @@ function isRateLimited(ip: string) {
 function isDisposableEmail(
   email: string
 ) {
-  const disposableDomains =
-    new Set([
-      "mailinator.com",
-      "guerrillamail.com",
-      "10minutemail.com",
-      "tempmail.com",
-      "throwawaymail.com",
-    ]);
-
   const domain =
     email
       .split("@")[1]
@@ -253,15 +245,6 @@ async function verifyRecaptcha(
         "Invalid spam verification action.",
     };
   }
-
-  const allowedHostnames =
-    new Set([
-      "sbacoustics.com",
-      "www.sbacoustics.com",
-      "webdemosbe.xyz",
-      "www.webdemosbe.xyz",
-      "localhost",
-    ]);
 
   if (
     data.hostname &&

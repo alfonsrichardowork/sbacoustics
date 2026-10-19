@@ -12,7 +12,6 @@ import { NavbarComponents, NewProduct } from '@/app/(frontend)/types';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordionmobilemenu';
 import getAllNewProducts from '@/app/(frontend)/actions/get-all-new-products';
 import SearchBoxNavbar from './searchboxnavbar';
-import { EmptyMenu } from '@/app/(frontend)/utils/navbar-content';
 import { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
 import { getHref } from '@/app/(frontend)/utils/getHref';
 import getAllNavbarContent, { SerializedCategory } from '@/app/(frontend)/actions/get-all-navbar-content';
@@ -22,6 +21,19 @@ import { buildNavbarMenus, menuKey } from './build-navbar-menu';
 
 const styledDropdown = "text-sm px-1 py-2 text-foreground"
 
+
+const EmptyMenu: NavbarComponents[] = [
+  {
+    title: "",
+    href: "",
+    parent: "",
+    url: "",
+    imageDesc: "",
+    priority: "",
+    newProd: false,
+    hasProduct: false
+  },
+]
 
 type MobileMenuProps = {
   items: NavbarComponents[];

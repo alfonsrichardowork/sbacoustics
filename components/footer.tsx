@@ -157,7 +157,7 @@ export default function Footer() {
                 Sinar Baja Electric
               </h3>  
             </li>
-            <li className="flex items-start justify-center md:justify-start group">
+            {/* <li className="flex items-start justify-center md:justify-start group">
                 {loading ?
                   <Skeleton className="h-5 w-[250px] bg-background/20" />
                 :
@@ -168,25 +168,37 @@ export default function Footer() {
                   </span>
                 </>
                 }
+            </li> */}
+            <li className="text-center md:text-left">
+              {loading ?
+                <Skeleton className="h-5 w-[250px] bg-background/20" />
+              :
+              <>
+                <MapPin className="mr-2 inline-block h-5 w-5 align-center text-primary" />
+                <span className="text-sm">
+                  {finalData && finalData.address}
+                </span>
+              </>
+              }
             </li>
-            <li className="flex items-center justify-center md:justify-start group">
+            <li className="text-center md:text-left">
                 {loading ?
                   <Skeleton className="h-5 w-[250px] bg-background/20" />
                 :
                   <>  
-                    <Phone className="mr-2 h-5 w-5 text-primary shrink-0" />
+                    <Phone className="mr-2 inline-block h-5 w-5 align-center text-primary" />
                     <span className="text-sm">
                       {finalData && finalData.telephone}
                     </span>
                   </>
                 }
             </li>
-            <li className="flex items-center justify-center md:justify-start group">
+            <li className="text-center md:text-left">
                 {loading ?
                   <Skeleton className="h-5 w-[250px] bg-background/20" />
                 :
                   <>
-                    <Mail className="mr-2 h-5 w-5 text-primary shrink-0" />
+                    <Mail className="mr-2 inline-block h-5 w-5 align-center text-primary" />
                     <span className="text-sm">
                       {finalData && finalData.email}
                     </span>
