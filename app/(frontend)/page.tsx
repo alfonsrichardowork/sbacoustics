@@ -121,52 +121,49 @@ export default async function LandingPageSBAcoustics() {
                     src={brandImages.homepage_open_source_kits_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_open_source_kits_url}` : brandImages.homepage_open_source_kits_url} alt={"SB Acoustics Open Source Kits"} className='w-full h-full object-cover' />
               </div>
             </div>
-            {brandImages.homepage_open_source_kits_url !== '' &&
-              <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 pt-4 flex items-end z-50 text-black bg-linear-to-l from-white/70 via-white/60 to-white/0 w-full">
-                <div className="grid gap-0 grid-cols-1 w-fit">
-                  <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4">
-                    Open Source Kits
-                  </h2>
-                  <div className="text-left text-sm pb-4 hidden md:block">
-                    {brandImages.homepage_open_source_kits_text}
-                  </div>
-                  <div className="items-start pb-4">
-                    <Button asChild size="sm">
-                      <Link href="/kits/open-source-kits">Learn More</Link>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            }
           </div>
         }
-      
 
-        <div className="relative min-h-screen">
+        <div className="relative z-10">
+          {brandImages.homepage_open_source_kits_url !== '' &&
+            <div className="relative xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 text-black bg-transparent w-full bg-linear-to-l from-white/70 via-white/60 to-white/0">
+              <div className="grid gap-0 grid-cols-1 w-fit">
+                <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4">
+                  Open Source Kits
+                </h2>
+                <div className="text-left text-sm pb-4 hidden md:block">
+                  {brandImages.homepage_open_source_kits_text}
+                </div>
+                <div className="items-start pb-4">
+                  <Button asChild size="sm">
+                    <Link href="/kits/open-source-kits">Learn More</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          }
 
           {brandImages.homepage_about_us_url !== '' &&
-            <div className="relative min-h-screen">
-              <div className="relative w-full h-[calc(100vh)]">
+            <div className="relative w-full h-screen">
               <img
                 src={brandImages.homepage_about_us_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_about_us_url}` : brandImages.homepage_about_us_url}
                 alt='Sinar Baja Electric Facility'
                 width={1000}
                 height={1000}
                 className="object-cover w-full h-full object-[80%_center] md:object-center"
-              />  
+              />
               <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 h-fit flex items-end bg-linear-to-t from-black to-transparent w-full">
-              <div className="grid gap-0 grid-cols-1 w-fit">
-                      <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4 text-white">About Us</h2>
-                      <div className="text-left text-sm text-white pb-4 hidden md:block">
-                        {brandImages.homepage_about_us_text}
-                      </div>
-                      <div className="items-start pb-4">
-                        <Button size={"sm"} asChild>
-                          <Link href={'/about'}>
-                            Learn More
-                          </Link>
-                        </Button>
-                      </div>
+                <div className="grid gap-0 grid-cols-1 w-fit">
+                  <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4 text-white">About Us</h2>
+                  <div className="text-left text-sm text-white pb-4 hidden md:block">
+                    {brandImages.homepage_about_us_text}
+                  </div>
+                  <div className="items-start pb-4">
+                    <Button size={"sm"} asChild>
+                      <Link href={'/about'}>
+                        Learn More
+                      </Link>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -174,54 +171,73 @@ export default async function LandingPageSBAcoustics() {
           }
         </div>
 
-          {brandImages.homepage_catalogues_url !== '' && 
-            <div className="sticky top-0 left-0 w-full h-screen flex items-center justify-center">
-              <div className="absolute top-0 left-0 w-full h-full object-cover bg-white">
-                <div className="relative w-full h-screen">
-                  <img src={brandImages.homepage_catalogues_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_catalogues_url}` : brandImages.homepage_catalogues_url} alt={"SB Acoustics Catalogues"} className='w-full h-full object-cover' />
+        {brandImages.homepage_catalogues_url !== '' &&
+          <div className="sticky top-0 left-0 w-full h-screen flex items-center justify-center">
+            <div className="absolute top-0 left-0 w-full h-full object-cover bg-white">
+              <div className="relative w-full h-screen">
+                <img src={brandImages.homepage_catalogues_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brandImages.homepage_catalogues_url}` : brandImages.homepage_catalogues_url} alt={"SB Acoustics Catalogues"} className='w-full h-full object-cover' />
+              </div>
+            </div>
+            {/* <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 pt-4 flex items-end z-50 text-black bg-linear-to-tl from-white/70 via-white/60 to-white/0 w-full">
+              <div className="grid gap-0 grid-cols-1 w-fit">
+                <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4">
+                  Catalogues
+                </h2>
+                <div className="text-left text-sm pb-4 hidden md:block">
+                  {brandImages.homepage_catalogues_text}
+                </div>
+                <div className="items-start pb-4">
+                  <Button size={"sm"} asChild>
+                    <Link href={'/catalogues'}>
+                      View Catalogues
+                    </Link>
+                  </Button>
                 </div>
               </div>
-              <div className="absolute inset-x-0 bottom-0 xl:px-16 xl:pb-8 lg:px-12 lg:pb-6 px-8 pb-4 pt-4 flex items-end z-50 text-black bg-linear-to-tl from-white/70 via-white/60 to-white/0 w-full">
-                {brandImages.homepage_catalogues_url !== '' && 
-                  <div className="grid gap-0 grid-cols-1 w-fit">
-                    <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4">
-                      Catalogues
-                    </h2>
-                    <div className="text-left text-sm pb-4 hidden md:block">
-                      {brandImages.homepage_catalogues_text}
-                    </div>
-                    <div className="items-start pb-4">
-                      <Button size={"sm"} asChild>
-                        <Link href={'/catalogues'}>
-                          View Catalogues
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
+            </div> */}
+          </div>
+        }
+        <div className="relative z-10">
+
+          {brandImages.homepage_catalogues_url !== '' &&
+            <div className="relative xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 text-black bg-linear-to-tl from-white/70 via-white/60 to-white/0 w-full">
+              <div className="grid gap-0 grid-cols-1 w-fit">
+                <h2 className="text-left font-bold xl:text-5xl text-3xl pb-4">
+                  Catalogues
+                </h2>
+                <div className="text-left text-sm pb-4 hidden md:block">
+                  {brandImages.homepage_catalogues_text}
+                </div>
+                <div className="items-start pb-4">
+                  <Button size={"sm"} asChild>
+                    <Link href={'/catalogues'}>
+                      View Catalogues
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          }
+
+          {brandImages.socialmedia.length > 0 &&
+            <div className='xl:h-96 lg:h-80 md:h-72 sm:h-72 h-60 w-full flex flex-col justify-center items-start xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 bg-white'>
+              <h2 className="text-left font-bold xl:text-5xl text-3xl text-black py-4">
+                Social:
+              </h2>
+              <div className='md:flex hidden md:justify-start pb-4 gap-2 w-full'>
+                {brandImages.socialmedia.map((logo, index) => (
+                    <SocialIcon network={logo.type} style={{ width: 60, height: 60 }} url={logo.value} key={index}/>
+                  ))
+                }
+              </div>
+              <div className='md:hidden flex justify-start pb-4 gap-1 w-full'>
+                {brandImages.socialmedia.map((logo, index) => (
+                    <SocialIcon network={logo.type} style={{ width: 40, height: 40 }} url={logo.value} key={index}/>
+                  ))
                 }
               </div>
             </div>
           }
-          <div className="relative">
-            {brandImages.socialmedia.length > 0 &&
-              <div className='xl:h-96 lg:h-80 md:h-72 sm:h-72 h-60 w-full flex flex-col justify-center items-start xl:px-16 xl:py-8 lg:px-12 lg:py-6 px-8 py-4 bg-white'>
-                <h2 className="text-left font-bold xl:text-5xl text-3xl text-black py-4">
-                  Social:
-                </h2>
-                <div className='md:flex hidden md:justify-start pb-4 gap-2 w-full'>
-                  {brandImages.socialmedia.map((logo, index) => (
-                      <SocialIcon network={logo.type} style={{ width: 60, height: 60 }} url={logo.value} key={index}/>
-                    ))
-                  }
-                </div>
-                <div className='md:hidden flex justify-start pb-4 gap-1 w-full'>
-                  {brandImages.socialmedia.map((logo, index) => (
-                      <SocialIcon network={logo.type} style={{ width: 40, height: 40 }} url={logo.value} key={index}/>
-                    ))
-                  }
-                </div>
-              </div>
-            }
         </div>
       </div>
     </>
