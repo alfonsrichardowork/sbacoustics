@@ -1,0 +1,345 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
+import { Loader2, Map, MapPin, Send } from 'lucide-react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import axios from 'axios';
+import { motion } from 'framer-motion';
+import { Phone } from 'lucide-react';
+import { Mail } from 'lucide-react';
+import { useToast } from '@/components/hooks/use-toast';
+import Link from 'next/link';
+import { brand } from '@/generated/prisma/client';
+import { Skeleton } from './ui/skeleton';
+import { Empty, EmptyContent, EmptyDescription, EmptyMedia, EmptyTitle } from './ui/empty';
+import { getHref } from '@/app/(frontend)/utils/getHref';
+import { usePathname } from 'next/navigation';
+// import { sendEmail } from './testresend';
+
+const formSchema = z.object({
+  name: z.string().trim().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  email: z.string().trim().email({
+    message: "Please enter a valid email address.",
+  }),
+  country: z.string().trim().min(2, {
+    message: "Please enter a valid country name.",
+  }),
+  subject: z.string().trim().min(5, {
+    message: "Subject must be at least 5 characters.",
+  }),
+  message: z.string().trim().min(10, {
+    message: "Message must be at least 10 characters.",
+  }),
+  hp_company: z.string().optional(),
+});
+
+type Props = {
+  oneBrand: brand | undefined;
+  inlineRecaptchaBadge?: boolean;
+};
+
+export default function Contact({ oneBrand, inlineRecaptchaBadge = false }: Props) {
+  // const [success, setSuccess] = useState(false);
+  // const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isLoadingLoader, setIsLoadingLoader] = useState(true);
+  const [mounted, setMounted] = useState(false)
+  const { toast } = useToast()
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const pathname = usePathname()
+  const [formLoadedAt, setFormLoadedAt] = useState(() => Date.now());
+  const [hpCompany, setHpCompany] = useState("");
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      country: "",
+      subject: "",
+      message: ""
+    },
+  });
+const onSubmit = async (
+  values: z.infer<typeof formSchema>,
+) => {
+  setLoading(true);
+
+  try {
+    if (!executeRecaptcha) {
+      throw new Error(
+        "reCAPTCHA is not available. Please try again.",
+      );
+    }
+
+    const gRecaptchaToken = await executeRecaptcha(
+      "contactFormSubmit",
+    );
+
+    const requestId = crypto.randomUUID();
+
+    const response = await fetch("/api/email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...values,
+        hp_company: hpCompany,
+        gRecaptchaToken,
+        elapsedMs: Date.now() - formLoadedAt,
+        requestId,
+        brand: oneBrand?.id ?? process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "Message failed to send.",
+      );
+    }
+
+    form.reset();
+    setHpCompany("");
+    setFormLoadedAt(Date.now());
+
+    toast({
+      title: "Message Sent Successfully!",
+      description:
+        "Thank you for reaching out. We will get back to you.",
+      className: "bg-green-400 border-none",
+    });
+  } catch (error) {
+    toast({
+      variant: "destructive",
+      title: "Message failed to send!",
+      description:
+        error instanceof Error
+          ? error.message
+          : "An unexpected error occurred.",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  return (
+    <div className=" md:px-16 md:py-8 px-0 py-4">
+      <div className='bg-background md:pt-6 md:pb-6 pt-4 pb-0 md:shadow-md md:shadow-foreground/50'>
+      <div className="text-center">
+          <div className="text-4xl font-bold text-foreground md:mb-4 mb-0">Contact</div>
+        </div>
+
+        <div className="md:flex grid grid-cols-1">
+        <div className="md:w-3/5 w-full md:order-1 order-2 md:pt-0 pt-4 h-full">
+        {oneBrand &&
+          <Card className=' border-none'>
+              {/* <CardHeader>
+                <CardTitle>Our Location</CardTitle>
+              </CardHeader> */}
+              <CardContent className='bg-background text-foreground md:px-6 px-3'>
+                <div className="aspect-w-16 aspect-h-9 rounded-lg pt-1">
+                {mounted && oneBrand.maps !== '' && oneBrand.maps !== null ?
+                  <div className="relative flex items-center justify-center w-full h-96 z-10">
+                    {isLoadingLoader &&
+                      <Skeleton className="w-full h-full" />
+                    }
+                    <iframe title='Sinar Baja Electric Location' src={oneBrand.maps} className='absolute w-full h-full' onLoad={() => setIsLoadingLoader(false)} ></iframe>
+                  </div>
+                  :
+                  <Empty className='w-full min-h-96 z-10 bg-foreground/20'>
+                    <EmptyMedia variant="icon">
+                      <Map />
+                    </EmptyMedia>
+                    <EmptyContent>
+                      <EmptyTitle>No Maps Available</EmptyTitle>
+                      <EmptyDescription></EmptyDescription>
+                    </EmptyContent>
+                  </Empty>
+                }
+                </div>
+                <div className='space-y-2 pt-4'>
+                  <h2 className='sr-only'>Sinar Baja Electric Address</h2>
+                  <div className="flex items-center space-x-4">
+                    <MapPin className="h-6 w-6 shrink-0 text-gray-600" />
+                    <h3>{oneBrand.address}</h3>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <Phone className="h-6 w-6 shrink-0 text-gray-600" />
+                    <h3>{oneBrand.telephone}</h3>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <Mail className="h-6 w-6 shrink-0 text-gray-600" />
+                    <h3>{oneBrand.email}</h3>
+                  </div>
+                </div>
+              </CardContent>
+            </Card> 
+          }
+            <div className='flex justify-center pt-4'>
+              <Button asChild>
+                <Link href={getHref(pathname, 'about')}>
+                  Find Out More About Us!
+                </Link>
+              </Button>
+            </div>        
+          </div>
+
+        <div className='md:w-2/5 w-full md:order-2 order-1 md:pr-6 pl-0'>
+        {/* <Button onClick={() => sendEmail()}>TEST RESEND</Button> */}
+          <Card className='rounded-none border-none md:shadow-md md:shadow-foreground/50 bg-transparent text-foreground'>
+            <CardHeader className='md:px-6 md:pt-0 pt-4 md:pb-4 pb-2 px-3 md:space-y-1.5 space-y-0'>
+              <CardTitle className='md:text-2xl text-lg'>Send us a message</CardTitle>
+              <CardDescription className='text-foreground/50 md:text-base text-xs'>Fill out the form below and we will get back to you</CardDescription>
+            </CardHeader>
+            <CardContent className='md:p-6 p-3'>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="md:space-y-4 space-y-2">
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: "-9999px",
+                  width: "1px",
+                  height: "1px",
+                  overflow: "hidden",
+                }}
+              >
+                <label htmlFor="hp_company">
+                  Company
+                </label>
+
+                <input
+                  id="hp_company"
+                  name="hp_company"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={hpCompany}
+                  onChange={(e) =>
+                    setHpCompany(e.target.value)
+                  }
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='md:text-sm text-xs'>Name</FormLabel>
+                    <FormControl>
+                      <Input disabled={loading} placeholder="Your full name"  className='md:text-sm text-xs' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='md:text-sm text-xs'>Email</FormLabel>
+                    <FormControl>
+                      <Input disabled={loading} type="email" placeholder="example@example.com" className='md:text-sm text-xs' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='md:text-sm text-xs'>Country</FormLabel>
+                    <FormControl>
+                      <Input disabled={loading} placeholder="Which country are you contacting us from" className='md:text-sm text-xs' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="subject"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='md:text-sm text-xs'>Subject</FormLabel>
+                    <FormControl>
+                      <Input disabled={loading} placeholder="What is the subject you are contacting us about" className='md:text-sm text-xs' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="message"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='md:text-sm text-xs'>Message</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        disabled={loading} 
+                        placeholder="Write a detailed message here" 
+                        className="min-h-[120px] md:text-sm text-xs" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter
+          className={`md:px-6 px-3 ${inlineRecaptchaBadge ? "flex-col items-stretch" : ""}`}
+        >
+          {inlineRecaptchaBadge && (
+            <div className="mb-3 w-full text-xs text-foreground/60 flex justify-end">
+              <div id="recaptcha-badge-container" className="min-h-[60px]" />
+            </div>
+          )}
+          <Button 
+            onClick={form.handleSubmit(onSubmit)}
+            disabled={loading} 
+            className="w-full"
+          >
+            {loading ? (
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                className="mr-2"
+              >
+                <Loader2 className="h-4 w-4" />
+              </motion.div>
+            ) : (
+              <Send className="mr-2 h-4 w-4" />
+            )}
+            {loading ? "Sending..." : "Send Message"}
+          </Button>
+        </CardFooter>
+          </Card>
+        </div>
+      </div>
+      </div>
+    </div>
+  );
+}

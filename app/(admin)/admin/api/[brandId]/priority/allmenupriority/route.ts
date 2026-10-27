@@ -1,0 +1,54 @@
+import { NextResponse } from 'next/server';
+
+import { checkAuth, checkBearerAPI, getSession } from '@/lib/actions';
+import { revalidatePath } from 'next/cache';
+import prismadb from '@/lib/prismadb';
+
+export async function POST(req: Request, props: { params: Promise<{ brandId: string }> }) {
+  const params = await props.params;
+  try {
+    const session = await getSession();
+
+    if(!session.isLoggedIn || !session){
+      return NextResponse.json("expired_session")
+    }
+    
+    if(!(await checkBearerAPI(session))){
+      session.destroy();
+      return NextResponse.json("invalid_token")
+    }
+
+    const body = await req.json();
+
+    if (!body) {
+      return new NextResponse("No Data", { status: 400 });
+    }
+
+    if (!params.brandId) {
+      return new NextResponse("brand id is required", { status: 400 });
+    }
+    
+    if(!(await checkAuth(session.isAdmin!, params.brandId, session.userId!))){
+      return NextResponse.json("unauthorized");
+    }
+    
+    await prismadb.$transaction([
+      ...body.categories.map((c: { id: string; priority: string }) =>
+        prismadb.allcategory.update({ where: { id: c.id }, data: { priority: c.priority } }),
+      ),
+      ...body.products.map((p: { productId: string; categoryId: string; priority: string }) =>
+        prismadb.allproductcategory.updateMany({
+          where: { productId: p.productId, categoryId: p.categoryId },
+          data: { priority: p.priority },
+        }),
+      ),
+    ])
+
+
+    revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : '/'}`);
+    return NextResponse.json("success");
+  } catch (error) {
+    console.log('[PRODUCTS_POST]', error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+};

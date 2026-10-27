@@ -1,0 +1,63 @@
+import { connection } from "next/server";
+import prismadb from "@/lib/prismadb";
+import { SpecForm } from "./components/dynamic_specification_form";
+export const instant = false
+async function getData(brandId: string, productId: string){
+  const allParentSpec = await prismadb.dynamicspecificationparent.findMany(
+    {
+      orderBy: {
+        name: 'asc'
+      }
+    }
+  )
+  const allSubParentSpec = await prismadb.dynamicspecificationsubparent.findMany(
+    {
+      orderBy: {
+        name: 'asc'
+      }
+    }
+  )
+  const allChildSpec = await prismadb.dynamicspecification.findMany(
+    {
+      orderBy: {
+        name: 'asc'
+      }
+    }
+  )
+  const initial = await prismadb.specificationconnector.findMany({
+    where: {
+      brandId: brandId,
+      productId: productId
+    }
+  })
+  const productName = await prismadb.product.findFirst({
+    where: {
+      brandId: brandId,
+      id: productId
+    },
+    select:{
+      name: true
+    }
+  })
+
+  return [allParentSpec, allSubParentSpec, allChildSpec, initial, productName] as const;
+}
+
+const SBAudienceDynamicSpecPage = async (
+  props: {
+    params: Promise<{ productId: string, brandId: string }>
+  }
+) => {
+  await connection();
+  const params = await props.params;
+  const [allParentSpec, allSubParentSpec, allChildSpec, initial, productName] = await getData(params.brandId, params.productId)
+  return ( 
+    <div className="flex-col">
+      <div className="flex-1 space-y-4 p-8 pt-6">
+        <SpecForm initialData={initial} allParentSpec={allParentSpec} allSubParentSpec={allSubParentSpec} allChildSpec={allChildSpec} productName={productName?.name ?? ''}/>
+      </div>
+    </div>
+  );
+}
+
+export default SBAudienceDynamicSpecPage;

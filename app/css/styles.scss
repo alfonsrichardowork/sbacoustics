@@ -1,0 +1,90 @@
+/* Basic editor styles */
+.tiptap {
+    :first-child {
+      margin-top: 0;
+    }
+  
+    ul {
+      list-style-type: disc; /* Show bullets */
+      padding-left: 1.5rem; /* Indent */
+      margin-bottom: 1rem; /* Spacing below list */
+    }
+     
+    ol {
+      list-style-type: decimal; /* Show bullets */
+      padding-left: 1.5rem; /* Indent */
+      margin-bottom: 1rem; /* Spacing below list */
+    }
+  
+    li {
+      margin-bottom: -1rem; /* Space between list items */
+    }
+    
+    p {
+      padding-bottom: 1rem;
+    }
+  
+    a {
+      text-decoration: underline; /* Underline links */
+      color: var(--blue, #e60013); /* Link color */
+  
+      &:hover {
+        color: var(--blue-hover, #d02b30); /* Change color on hover */
+      }
+    }
+
+    img {
+      max-width: 35vw; /* Responsive images */
+      height: auto;
+      margin: 0.5rem auto; /* Top margin and auto horizontally to center */
+      display: block; /* Block display ensures margin auto works */
+    }
+
+    @media (max-width: 768px) {
+      img {
+        max-width: 50vw; /* Make image full width */
+      }
+    }
+
+      h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 1rem 0;
+      }
+      
+     h2 {
+        font-size: 1.75rem;
+        font-weight: bold;
+        margin: 0.875rem 0;
+      }
+      
+     h3 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0.75rem 0;
+      }
+      
+     h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin: 0.625rem 0;
+      }
+      
+     h5 {
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0.5rem 0;
+      }
+      
+      h6 {
+        font-size: 0.875rem;
+        font-weight: bold;
+        margin: 0.375rem 0;
+      }
+      
+  }
+
+.scrollable-container {
+  scrollbar-gutter: stable;
+  overflow-y: scroll;
+}

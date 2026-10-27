@@ -1,0 +1,492 @@
+import { NextResponse } from "next/server";
+
+import prismadb from "@/lib/prismadb";
+import { checkAuth, checkBearerAPI, getSession } from "@/lib/actions";
+import fs from 'fs/promises';
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { multipleaboutusimages } from "@/generated/prisma/client";
+import { MAX_FILE_SIZE, uploadsprefix } from "../../../lib";
+import {
+  getSafeOtherImageUploadPath,
+  isSafeSettingsImageList,
+  isSafeSettingsImageUrl,
+} from "@/app/(admin)/admin/application-upload";
+
+async function isValidSettingsImageUrl(value: unknown): Promise<boolean> {
+  if (value === undefined) return true;
+  if (!isSafeSettingsImageUrl(value)) return false;
+  if (typeof value !== "string" || !value.startsWith("/uploads/")) return true;
+
+  const filePath = getSafeOtherImageUploadPath(value);
+  if (!filePath) return false;
+
+  try {
+    const file = await fs.stat(filePath);
+    return file.isFile() && file.size <= MAX_FILE_SIZE;
+  } catch (error) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      error.code === "ENOENT"
+    ) {
+      return false;
+    }
+    throw error;
+  }
+}
+
+async function deleteSettingsImage(url: string): Promise<void> {
+  if (!url.startsWith(uploadsprefix)) return;
+
+  const filePath = getSafeOtherImageUploadPath(url);
+  if (!filePath) {
+    console.warn("Refusing to delete a settings image outside the uploads/other folder.");
+    return;
+  }
+
+  try {
+    await fs.unlink(filePath);
+  } catch (error) {
+    console.warn(`Could not delete settings image ${url}:`, error);
+  }
+}
+
+
+export async function PATCH(req: Request, props: { params: Promise<{ brandId: string }> }) {
+  const params = await props.params;
+  try {
+    const session = await getSession();
+
+    if(!session.isLoggedIn){
+      return NextResponse.json("expired_session")
+    }
+
+    if(!(await checkBearerAPI(session))){
+      session.destroy();
+      return NextResponse.json("invalid_token")
+    }
+    
+    if(!session.isAdmin){
+      return NextResponse.json("not_admin")
+    }
+
+    const body = await req.json();
+
+    const settingsData = body?.data;
+    if (!settingsData || typeof settingsData !== "object" || Array.isArray(settingsData)) {
+      return new NextResponse("Invalid settings data", { status: 400 });
+    }
+
+    const {
+      name,
+      telephone,
+      email,
+      address,
+      maps,
+      cover,
+      homepage_brand_choice_url,
+      homepage_open_source_kits_url,
+      homepage_about_us_url,
+      homepage_catalogues_url,
+      homepage_brand_choice_text,
+      homepage_open_source_kits_text,
+      homepage_about_us_text,
+      homepage_catalogues_text,
+      aboutUsImages,
+      brand_desc,
+      sbe_desc,
+      mission_values_desc
+    } = settingsData;
+    const { socials } = body;
+
+    if (!name) {
+      return new NextResponse("Name is required", { status: 400 });
+    }
+
+    if (!params.brandId) {
+      return new NextResponse("Brand id is required", { status: 400 });
+    }
+
+    const settingsImageUrls = [
+      cover,
+      homepage_brand_choice_url,
+      homepage_open_source_kits_url,
+      homepage_about_us_url,
+      homepage_catalogues_url,
+    ];
+    const validImageUrls = await Promise.all(settingsImageUrls.map(isValidSettingsImageUrl));
+    if (
+      typeof name !== "string" ||
+      !name.trim() ||
+      validImageUrls.some((isValid) => !isValid) ||
+      (aboutUsImages !== undefined && !isSafeSettingsImageList(aboutUsImages))
+    ) {
+      return new NextResponse("Invalid settings data or image upload", { status: 400 });
+    }
+
+    if (aboutUsImages !== undefined) {
+      const validAboutUsImageUrls = await Promise.all(
+        aboutUsImages.map((image: multipleaboutusimages) => isValidSettingsImageUrl(image.url))
+      );
+      if (validAboutUsImageUrls.some((isValid) => !isValid)) {
+        return new NextResponse("Invalid image upload", { status: 400 });
+      }
+    }
+
+    if (!session.isLoggedIn) {
+      return new NextResponse("Unauthenticated", { status: 403 });
+    }
+    
+    if(!(await checkAuth(session.isAdmin!, params.brandId, session.userId!))){
+      return new NextResponse("Unauthorized", { status: 405 });
+    }
+    
+
+
+    if(params.brandId != 'new'){
+      const oldUrl = await prismadb.brand.findFirst({
+        where: {
+          id: params.brandId
+        },
+        select:{
+          cover: true,
+          homepage_brand_choice_url: true,
+          homepage_open_source_kits_url: true,
+          homepage_about_us_url: true,
+          homepage_catalogues_url: true,
+          aboutUsImages: true
+        }
+      })
+      //Delete physical files
+      if(oldUrl) {
+        if(oldUrl.cover != cover) {
+          await deleteSettingsImage(oldUrl.cover);
+        }
+        if(oldUrl.homepage_brand_choice_url != homepage_brand_choice_url) {
+          await deleteSettingsImage(oldUrl.homepage_brand_choice_url);
+        }
+        if(oldUrl.homepage_open_source_kits_url != homepage_open_source_kits_url) {
+          await deleteSettingsImage(oldUrl.homepage_open_source_kits_url);
+        }
+        if(oldUrl.homepage_about_us_url != homepage_about_us_url) {
+          await deleteSettingsImage(oldUrl.homepage_about_us_url);
+        }
+        if(oldUrl.homepage_catalogues_url != homepage_catalogues_url) {
+          await deleteSettingsImage(oldUrl.homepage_catalogues_url);
+        }
+        // if(oldUrl.aboutUsImages != aboutUsImages) {
+        //   const aboutImages = await prismadb.multipleaboutusimages.findMany({
+        //     where: {
+        //       brandId: params.brandId,
+        //     },
+        //   });
+        //   let finalfound : multipleaboutusimages[] = []
+        //   aboutImages.forEach((val) => {
+        //     const found = aboutUsImages.find((value: multipleaboutusimages) => value.url === val.url);
+            
+        //     if (found && !finalfound.some((item) => item.url === found.url)) {
+        //       finalfound.push(found);
+        //     }
+        //   });
+        //   //DELETE IMAGE CATALOGUES
+        //   //Delete physical files
+        //   for (const image of aboutImages) {
+        //     const isInFinal = finalfound.some((item) => item.url === image.url);
+        //     if (isInFinal) continue;
+
+        //     if (image.url) {
+        //       const imagePath = path.join(process.cwd(), image.url);
+
+        //       try {
+        //         await fs.unlink(imagePath);
+        //       } catch (error) {
+        //         console.warn(`Could not delete file ${image.url}:`, error);
+        //       }
+        //     }
+        //   }
+        //   //Delete Image_catalogues records
+        //   await prismadb.multipleaboutusimages.deleteMany({
+        //     where: {
+        //       brandId: params.brandId,
+        //       url: {
+        //         notIn: finalfound.map((val) => val.url),
+        //       },
+        //     },
+        //   });
+        //   if (aboutUsImages.length !== 0) {
+        //     const creations = aboutUsImages.map(async (value: multipleaboutusimages) => {
+        //       if(value !== null && value !== undefined){
+        //         const alreadyInDB = finalfound.some((val) => val.url === value.url);
+        //         if (!alreadyInDB && value.url !== '') {
+        //           await prismadb.multipleaboutusimages.create({
+        //             data: {
+        //               brandId: params.brandId,
+        //               type: value.type,
+        //               desc: value.desc,
+        //               url: value.url,
+        //               name: value.name,
+        //             }
+        //           });
+        //         }
+        //         else{ //UPDATE NAME
+        //           const multiple_about_us_image_Id = await prismadb.multipleaboutusimages.findFirst({
+        //             where: {
+        //               url: value.url,
+        //               brandId: params.brandId
+        //             },
+        //             select: {
+        //               id: true
+        //             }
+        //           })
+        //           if (multiple_about_us_image_Id) {
+        //             await prismadb.multipleaboutusimages.update({
+        //               where: {
+        //                 id: multiple_about_us_image_Id.id
+        //               },
+        //               data: {
+        //                 name: value.name,
+        //                 desc: value.desc,
+        //                 url: value.url,
+        //                 type: value.type,
+        //               },
+        //             });
+        //           }
+        //         }
+        //       }
+        //     });
+
+        //     await Promise.all(creations);
+        //   }
+        // }
+      }
+
+      await prismadb.brand.updateMany({
+        where: {
+          id: params.brandId
+        },
+        data: {
+          name,
+          telephone,
+          email,
+          address,
+          maps,
+          cover,
+          homepage_brand_choice_url,
+          homepage_open_source_kits_url,
+          homepage_about_us_url,
+          homepage_catalogues_url,
+          homepage_brand_choice_text,
+          homepage_open_source_kits_text,
+          homepage_about_us_text,
+          homepage_catalogues_text,
+          brand_desc,
+          sbe_desc,
+          mission_values_desc,
+          updatedAt: new Date(),
+        },
+      })
+
+      await prismadb.socialmedia.deleteMany({
+        where: {
+          brandId: params.brandId
+        }
+      })
+      
+      if(socials && socials.length > 0){
+        await prismadb.socialmedia.createMany({
+          data: socials.map((social: any) => ({
+            brandId: params.brandId,   // ✅ important for relation
+            type: social.network,
+            value: social.link,
+            updatedBy: session.userId,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          })),
+        })
+      }
+
+      await prismadb.multipleaboutusimages.deleteMany({
+        where: {
+          brandId: params.brandId
+        }
+      })
+      
+      if(aboutUsImages && aboutUsImages.length > 0){
+        await prismadb.multipleaboutusimages.createMany({
+          data: aboutUsImages.map((val: multipleaboutusimages) => ({
+            brandId: params.brandId,   // ✅ important for relation
+            type: val.type,
+            priority: val.priority,
+            name: val.name,
+            desc: val.desc,
+            url: val.url
+          })),
+        })
+      }
+      
+
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : '/'}`);
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/contact`);
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/about`);
+
+    }
+    else{
+      const duplicates = await prismadb.brand.findFirst({
+        where:{
+          name
+        }
+      })
+
+      if(duplicates){
+        return NextResponse.json("duplicate")
+      }
+
+      const newBrand = await prismadb.brand.create({
+        data: {
+          name,
+          telephone,
+          email,
+          address,
+          maps,
+          cover,
+          homepage_brand_choice_url,
+          homepage_open_source_kits_url,
+          homepage_about_us_url,
+          homepage_catalogues_url,
+          homepage_brand_choice_text,
+          homepage_open_source_kits_text,
+          homepage_about_us_text,
+          homepage_catalogues_text,
+          brand_desc,
+          sbe_desc,
+          mission_values_desc,
+          updatedAt: new Date(),
+          createdAt: new Date(),
+          userId: session.userId!,
+        },
+      })
+
+      
+
+      if(aboutUsImages && aboutUsImages.length > 0){
+        await prismadb.multipleaboutusimages.createMany({
+          data: aboutUsImages.map((val: multipleaboutusimages) => ({
+            brandId: newBrand.id,   // ✅ important for relation
+            name: val.name,
+            priority: val.priority,
+            type: val.type,
+            url: val.url,
+            desc: val.desc
+          })),
+        })
+      }
+
+
+      if(socials && socials.length > 0){
+        await prismadb.socialmedia.createMany({
+          data: socials.map((social: any) => ({
+            brandId: newBrand.id,   // ✅ important for relation
+            type: social.network,
+            value: social.link,
+            updatedBy: session.userId,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          })),
+        })
+      }
+
+
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : '/'}`);
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/contact`);
+      revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/about`);
+
+    }
+
+    await prismadb.roles.updateMany({
+      where: {
+        brandId: params.brandId
+      },
+      data: {
+        brandName: name,
+      }
+    });
+  
+    return NextResponse.json("success");
+  } catch (error) {
+    console.log('[BRAND_PATCH]', error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+};
+
+
+export async function DELETE(req: Request, props: { params: Promise<{ brandId: string }> }) {
+  const params = await props.params;
+  try {
+    const session = await getSession();
+
+    if(!session.isLoggedIn){
+      redirect("/admin")
+    }
+
+    if (!params.brandId) {
+      return new NextResponse("Brand id is required", { status: 400 });
+    }
+    
+    if (!session.isLoggedIn) {
+      return new NextResponse("Unauthenticated", { status: 403 });
+    }
+    
+    if(!(await checkAuth(session.isAdmin!, params.brandId, session.userId!))){
+      return new NextResponse("Unauthorized", { status: 405 });
+    }
+    
+  
+    const oldUrl = await prismadb.brand.findFirst({
+      where: {
+        id: params.brandId
+      },
+      select:{
+        cover: true,
+        homepage_brand_choice_url: true,
+        homepage_open_source_kits_url: true,
+        homepage_about_us_url: true,
+        homepage_catalogues_url: true,
+        aboutUsImages: true
+      }
+    })
+    if (oldUrl) {
+      await Promise.all([
+        oldUrl.cover,
+        oldUrl.homepage_brand_choice_url,
+        oldUrl.homepage_open_source_kits_url,
+        oldUrl.homepage_about_us_url,
+        oldUrl.homepage_catalogues_url,
+        ...oldUrl.aboutUsImages.map((image) => image.url),
+      ].map(deleteSettingsImage));
+    }
+
+    const brand = await prismadb.brand.deleteMany({
+      where: {
+        id: params.brandId
+      }
+    });
+
+    await prismadb.socialmedia.deleteMany({
+      where: {
+        brandId: params.brandId
+      }
+    })
+    await prismadb.multipleaboutusimages.deleteMany({
+      where: {
+        brandId: params.brandId
+      }
+    })
+  
+    return NextResponse.json(brand);
+  } catch (error) {
+    console.log('[BRAND_DELETE]', error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+};

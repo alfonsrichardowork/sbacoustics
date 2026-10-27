@@ -1,0 +1,96 @@
+import { NextResponse } from 'next/server';
+
+import prismadb from '@/lib/prismadb';
+import { checkAuth, checkBearerAPI, getSession } from '@/lib/actions';
+import { revalidatePath } from 'next/cache';
+import { parseCoordinate } from '@/lib/distributor-validation';
+
+export async function POST(req: Request, props: { params: Promise<{ brandId: string }> }) {
+  const params = await props.params;
+  try {
+
+    if (!params.brandId) {
+      return new NextResponse("brand id is required", { status: 400 });
+    }
+    const session = await getSession();
+
+    if(!session.isLoggedIn || !session){
+      return NextResponse.json("expired_session")
+    }
+    
+    if(!(await checkBearerAPI(session))){
+      session.destroy();
+      return NextResponse.json("invalid_token")
+    }
+
+    const body = await req.json();
+
+    const { 
+      name,
+      country,
+      phone,
+      email,
+      website,
+      facebook,
+      instagram,
+      lat,
+      lng,
+      continent,
+      address
+     } = body;
+
+    const latitude = parseCoordinate(lat);
+    const longitude = parseCoordinate(lng);
+    if (latitude === undefined || longitude === undefined || typeof continent !== 'string' || !continent.trim()) {
+      return new NextResponse("Latitude and longitude must be numbers and continent is required", { status: 400 });
+    }
+    
+    const duplicates = await prismadb.distributors.findFirst({
+      where:{
+        name,
+        brandId: params.brandId
+      }
+    })
+
+    if(duplicates){
+      return NextResponse.json("duplicate")
+    }
+
+    await prismadb.distributors.create({
+      data: {
+        name,
+        brandId: params.brandId,
+        country,
+        phone,
+        email,
+        website,
+        facebook,
+        instagram,
+        lat: latitude,
+        lng: longitude,
+        continent: continent.trim(),
+        address,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        updatedBy: session.name
+      }
+    });
+
+    revalidatePath(`${params.brandId === process.env.NEXT_PUBLIC_SB_AUDIENCE_ID ? '/sbaudience': params.brandId === process.env.NEXT_PUBLIC_SB_AUTOMOTIVE_ID ? '/sbautomotive' : ''}/distributors`)
+    return NextResponse.json("success");
+  } catch (error) {
+    console.log('[NEW_DISTRIBUTOR_POST]', error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+};
+
+export async function GET(req: Request) {
+  try {
+    const distributor = await prismadb.distributors.findMany({});
+  
+    return NextResponse.json(distributor);
+  } catch (error) {
+    console.log('[DISTRIBUTOR_GET]', error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+};

@@ -1,0 +1,148 @@
+.drivers-container {
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.drivers-grid {
+  display: block;
+}
+
+.technical {
+  display: block;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.comparison-text-style {
+  margin-bottom: 60px;
+}
+
+.all-driver-page-parent {
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.all-driver-page-child-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* sm: 768px */
+@media (min-width: 640px) {
+  .all-driver-page-child-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* md: 768px */
+@media (min-width: 768px) {
+  .drivers-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .technical {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  .comparison-text-style {
+    margin-bottom: 0px;
+  }
+  
+  .all-driver-page-child-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* lg: 1024px */
+@media (min-width: 1024px) {
+  .drivers-container {    
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .drivers-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .all-driver-page-parent {
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  .all-driver-page-child-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* xl: 1280px */
+@media (min-width: 1280px) {
+  .drivers-container {
+    padding-left: 160px;
+    padding-right: 160px;
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+
+  .all-driver-page-parent {
+    padding-left: 160px;
+    padding-right: 160px;
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+}
+
+/* 2xl: 1536px */
+@media (min-width: 1536px) {
+  .drivers-container {
+    padding-left: 240px;
+    padding-right: 240px;
+  }
+
+  .all-driver-page-parent {
+    padding-left: 240px;
+    padding-right: 240px;
+  }
+}
+
+
+
+.product-item {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+  padding-top: 0.5rem;
+}
+
+.product-image {
+  margin-left: auto;
+  margin-right: auto;
+  max-height: 10rem;
+  object-fit: contain;
+}
+
+.product-name {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.product-divider {
+  margin: 0;
+}

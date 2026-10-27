@@ -1,0 +1,69 @@
+import { connection } from "next/server";
+
+import prismadb from "@/lib/prismadb";
+import Contact from "../../components/contact";
+import GoogleCaptchaWrapper from "@/components/GoogleCaptchaWrapper";
+import { cacheLife } from "next/cache";
+import { Suspense } from "react";
+import { extractIframeSrc } from "@/lib/iframesrc";
+
+
+async function getContactData(){
+  'use cache'
+  cacheLife('minutes')
+  const brand = await prismadb.brand.findFirst({
+    where: {
+      id: process.env.NEXT_PUBLIC_SB_ACOUSTICS_ID
+    }
+  });
+  return brand;
+}
+
+export default async function ContactUsJsonLd() {
+  await connection();  const brand = await getContactData();
+  if(!brand){
+    return null;
+  }
+  const extractedSrc = extractIframeSrc(brand.maps) ?? '';
+  brand.maps = extractedSrc;
+
+  return (
+    <>
+      {/* <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <h1 className="sr-only">Contact | SB Acoustics</h1>
+      <div className="relative pb-[420px]">
+        <div className="absolute inset-0 z-0">
+          {brand && brand.cover != "" ?
+            <img 
+                src={brand.cover.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${brand.cover}` : brand.cover } 
+                alt="Sinar Baja Electric Facility" 
+                width={1000} 
+                height={1000} 
+                className="w-screen h-[600px] object-cover object-center"
+            />
+            :
+            <Empty className='w-screen min-h-[600px] z-10 bg-foreground/20'>
+              <EmptyMedia variant="icon">
+                <Image />
+              </EmptyMedia>
+              <EmptyContent>
+                <EmptyTitle>No Cover Image Available</EmptyTitle>
+                <EmptyDescription></EmptyDescription>
+              </EmptyContent>
+            </Empty>
+          }
+        </div>
+        <div className="relative z-10 top-96"> */}
+        <Suspense fallback={<></>}>
+          <GoogleCaptchaWrapper>
+            <Contact oneBrand={brand}/>
+          </GoogleCaptchaWrapper>
+        </Suspense>
+        {/* </div>
+      </div> */}
+    </>
+  );
+}

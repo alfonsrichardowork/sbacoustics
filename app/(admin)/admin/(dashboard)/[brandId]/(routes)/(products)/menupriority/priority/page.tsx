@@ -1,0 +1,150 @@
+import { connection } from "next/server";
+import prismadb from '@/lib/prismadb'
+import {
+  CategoryNode,
+  CategoryPriorityManager,
+  PriorityCategoryRecord,
+  PriorityProduct,
+  PriorityProductRecord,
+} from './components/priority-form'
+import { normalizeTree } from '@/lib/priority-admin';
+export const instant = false
+async function getData(brandId: string){
+  const allBrandCategories = await prismadb.allcategory.findMany({
+    where: { brandId },
+    select: {
+      id: true, name: true, type: true, priority: true,
+      under_categoryId: true, shown_on_all_drivers_page: true,
+    },
+  })
+
+  return allBrandCategories;
+}
+
+async function getDataProduct(brandId: string, seen: Set<string>){
+  const products = await prismadb.product.findMany({
+    where: {
+      brandId,
+      isArchived: false,
+      allCat: { some: { categoryId: { in: [...seen] } } },
+    },
+    select: {
+      id: true, name: true, slug: true, cover_img_url: true,
+      allCat: { select: { categoryId: true, priority: true } },
+    },
+  })
+  return products
+}
+
+function buildCategoryPriorityTree(
+  categories: PriorityCategoryRecord[],
+  products: PriorityProductRecord[],
+): CategoryNode[] {
+  const byParent = new Map<string | null, PriorityCategoryRecord[]>()
+  for (const category of categories) {
+    const parent = category.under_categoryId?.trim() || null
+    byParent.set(parent, [...(byParent.get(parent) ?? []), category])
+  }
+
+  // depth of every category, so we can find the deepest link of a product
+  const depthById = new Map<string, number>()
+  const walk = (parent: string | null, depth: number) => {
+    for (const category of byParent.get(parent) ?? []) {
+      depthById.set(category.id, depth)
+      walk(category.id, depth + 1)
+    }
+  }
+  walk(null, 0)
+
+  // one product -> ONE ENTRY PER INCLUDED CATEGORY LINK
+  const productsByCategory = new Map<string, PriorityProduct[]>()
+  for (const product of products) {
+    for (const link of product.links) {
+      if (!depthById.has(link.categoryId)) continue
+      productsByCategory.set(link.categoryId, [
+        ...(productsByCategory.get(link.categoryId) ?? []),
+        {
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          image: product.image,
+          categoryId: link.categoryId,   // this row's own link
+          priority: link.priority ?? '',
+        },
+      ])
+    }
+  }
+
+
+  const makeNode = (category: PriorityCategoryRecord): CategoryNode => ({
+    id: category.id,
+    name: category.name,
+    type: category.type,
+    priority: category.priority ?? '',
+    products: productsByCategory.get(category.id) ?? [],
+    children: (byParent.get(category.id) ?? []).map(makeNode),
+  })
+
+  return normalizeTree((byParent.get(null) ?? []).map(makeNode))
+}
+
+export default async function Page(props: { params: Promise<{ brandId: string }> }) {
+  await connection();
+  const { brandId } = await props.params
+
+  const allBrandCategories = await getData(brandId)
+  
+  const shown = allBrandCategories.filter((c) => c.shown_on_all_drivers_page)
+  const shownIds = new Set(shown.map((c) => c.id))
+  // 'Category' type is top level; anything else shown sits under its parent
+  const roots = shown.filter(
+    (c) => c.type === 'Category' || !c.under_categoryId?.trim() || !shownIds.has(c.under_categoryId.trim()),
+  )
+
+  const childrenByParent = new Map<string, typeof allBrandCategories>()
+  for (const c of allBrandCategories) {
+    const parent = c.under_categoryId?.trim()
+    if (!parent) continue
+    childrenByParent.set(parent, [...(childrenByParent.get(parent) ?? []), c])
+  }
+
+  const included: typeof allBrandCategories = []
+  const seen = new Set<string>()
+  const stack = [...roots]
+  while (stack.length) {
+    const current = stack.pop()!
+    if (seen.has(current.id)) continue
+    seen.add(current.id)
+    included.push(current)
+    stack.push(...(childrenByParent.get(current.id) ?? []))
+  }
+
+
+  const products = await getDataProduct(brandId, seen)
+
+
+  const categories: PriorityCategoryRecord[] = included.map((c) => ({
+    id: c.id,
+    name: c.name,
+    type: c.type,
+    priority: c.priority,
+    under_categoryId: roots.some((r) => r.id === c.id) ? null : c.under_categoryId || null,
+  }))
+
+  const adaptedProducts: PriorityProductRecord[] = products.map((p) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    image: p.cover_img_url ?? undefined,
+    links: p.allCat
+      .filter((rel) => seen.has(rel.categoryId))
+      .map((rel) => ({ categoryId: rel.categoryId, priority: rel.priority ?? '' })),
+  }))
+
+  return (
+    <CategoryPriorityManager
+      initialTree={buildCategoryPriorityTree(categories, adaptedProducts)}
+      brandId={brandId}
+    />
+  )
+}

@@ -1,0 +1,167 @@
+.single-product-page-parent {
+    display: block; 
+    justify-content: center; 
+    width: 100%;
+    height: 100%;
+}
+
+.single-product-page-outer-parent {
+    padding-left: 32px;
+    padding-right: 32px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.single-product-page-outer-parent-2 {
+    display: block;
+}
+
+.single-product-page-child-1 {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    padding-right: 40px;
+}
+
+.single-product-page-child-1-mobile {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 16px;
+    display: block;
+}
+
+.single-product-page-child-2 {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 16px;
+}
+
+.single-product-page-SwiperCarouselOneProductMobileOld {
+    display: flex; 
+    justify-content: center; 
+    width: 100%; 
+    height: 100%; 
+    flex: 1 1 50% 
+}
+
+.single-product-page-all-data {
+    justify-content: center;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.single-product-page-all-data-h1 {
+    text-align: left;
+    font-weight: 700;
+    color: #000000;
+}
+
+.single-product-page-all-data-desc-1 {
+    text-align: left;
+    font-size: 12px;
+    line-height: 1.33;
+    color: #000000;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.single-product-page-kits-finishing-display {
+    display: block;
+}
+
+@media (min-width:640px){
+    .single-product-page-all-data-h1 {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .single-product-page-all-data-desc-1 {
+        font-size: 14px;
+        line-height: 1.43;
+    }
+}
+
+@media (min-width:768px){
+    .single-product-page-parent {
+        display: flex; 
+        width: 50%;
+        height: 50%;
+    }
+    
+    .single-product-page-SwiperCarouselOneProductMobileOld {
+        display: none; 
+        width: 50%;
+    }
+
+    .single-product-page-all-data {
+        display: flex;
+        width: 50%;
+        height: 50%;
+    }
+
+    .single-product-page-outer-parent-2 {
+        display: flex;
+    }
+
+    .single-product-page-child-1 {
+        display: flex;
+    }
+    
+    .single-product-page-child-1-mobile {
+        display: none;
+    }
+
+    .single-product-page-all-data-h1 {
+        font-size: 18px;
+        line-height: 1.56;
+    }
+
+    .single-product-page-kits-finishing-display {
+        display: none;
+    }
+}
+
+@media (min-width:1024px){
+    .single-product-page-outer-parent {
+        padding-left: 42px;
+        padding-right: 42px;
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+    
+    .single-product-page-all-data-h1 {
+        font-size: 20px;
+        line-height: 1.4;
+    }
+}
+
+@media (min-width:1280px){
+    .single-product-page-outer-parent {
+        padding-left: 160px;
+        padding-right: 160px;
+        padding-top: 32px;
+        padding-bottom: 32px;
+    }
+    
+    .single-product-page-all-data-h1 {
+        font-size: 24px;
+        line-height: 1.33;
+    }
+
+    .single-product-page-all-data-desc-1 {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+}
+
+@media (min-width:1536px){
+    .single-product-page-outer-parent {
+        padding-left: 240px;
+        padding-right: 240px;
+    }
+
+}
+

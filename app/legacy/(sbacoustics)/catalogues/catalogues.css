@@ -1,0 +1,57 @@
+.catalogues-parent-page {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.catalogues-child-page {
+    display: block;
+    gap: 1rem;
+    padding-top: 2rem;
+}
+
+.catalogues-files-page {
+    display: flex;
+    justify-content: center;
+    padding-left: 0px;
+}
+
+
+@media (min-width: 768px) {
+    .catalogues-child-page {
+        display: flex;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .catalogues-files-page {
+        justify-content: flex-start;
+        padding-left: 5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .catalogues-parent-page {
+        padding-left: 3rem;
+        padding-right: 3rem;
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .catalogues-parent-page {
+        padding-left: 15rem;
+        padding-right: 15rem;
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+}
+
+@media (min-width: 1536px) {
+    .catalogues-parent-page {
+        padding-left: 20rem;
+        padding-right: 20rem;
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+    }
+}
