@@ -113,12 +113,16 @@ const SwiperCarouselOneProduct: React.FC<PropType> = (props) => {
         onSlideChange={(swiper) => {
           setActiveIndex(swiper.realIndex)
           const thumbnailSwiper = thumbnailSwiperRef.current
-          const activeThumbnailIsVisible = thumbnailSwiper && Array.from(thumbnailSwiper.slides).some(
+          if (!thumbnailSwiper || thumbnailSwiper.destroyed || !thumbnailSwiper.slides) {
+            return
+          }
+
+          const activeThumbnailIsVisible = Array.from(thumbnailSwiper.slides).some(
             (slide) =>
               slide.getAttribute('data-swiper-slide-index') === String(swiper.realIndex) &&
               slide.classList.contains('swiper-slide-visible')
           )
-          if (thumbnailSwiper && !activeThumbnailIsVisible) {
+          if (!activeThumbnailIsVisible && thumbnailSwiper.slides.length > 0) {
             thumbnailSwiper.slideToLoop(swiper.realIndex)
           }
         }}

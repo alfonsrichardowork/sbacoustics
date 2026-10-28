@@ -1,4 +1,3 @@
-import { connection } from "next/server";
 import { AllFilterProductsOnlyType, CheckBoxData, ChildSpecificationProp, SliderData } from '@/app/(frontend)/types';
 import { LazyImageClickable } from '@/components/lazyImageclickable';
 import prismadb from '@/lib/prismadb';
@@ -376,12 +375,39 @@ async function getDriversData(subslug: string | null, subsubslug: string | null,
     return [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] as const
 }
 
-export default async function SBAudienceDriversPage({
+function SBAudienceDriversPageFallback() {
+  return (
+    <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
+      <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
+        <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-8">
+          {Array.from({ length: 12 }, (_, index) => (
+            <div key={index} className="px-2 pt-4">
+              <ProductCard data={null} hovered={false} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function SBAudienceDriversPage({
   params,
 }: {
   params: Promise<{ slug?: string[] }>;
 }) {
-    //await connection();
+  return (
+    <Suspense fallback={<SBAudienceDriversPageFallback />}>
+      <SBAudienceDriversPageContent params={params} />
+    </Suspense>
+  );
+}
+
+async function SBAudienceDriversPageContent({
+  params,
+}: {
+  params: Promise<{ slug?: string[] }>;
+}) {
     const { slug = [] } = await params;
     const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
   
@@ -671,4 +697,3 @@ export default async function SBAudienceDriversPage({
     </>
   );
 }
-

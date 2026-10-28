@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Oct 16, 2026 at 08:55 AM
--- Server version: 11.4.13-MariaDB
--- PHP Version: 8.4.26
+-- Host: 127.0.0.1
+-- Generation Time: Oct 28, 2026 at 05:17 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `sbacoust_new_sbacoustics`
+-- Database: `sbacoustics`
 --
 
 -- --------------------------------------------------------

@@ -1,11 +1,11 @@
-import { connection } from "next/server";
-
 import prismadb from "@/lib/prismadb";
 //@ts-ignore
 import "@/app/css/styles.scss";
 import Link from "next/link";
+import { Suspense } from "react";
 import { LazyImageCustom } from "@/components/lazyImageCustom";
 import { LazyImageCustomNavbar } from "@/components/lazyImageCustomNavbar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cacheLife } from "next/cache";
 import { Dompurifyclient } from "@/components/dompurify-content";
 
@@ -43,9 +43,39 @@ export async function generateStaticParams(){
   }));
 }
 
-export default async function SingleAppJsonLd(props: Props) {
-    //await connection();
-    const { applicationSlug = '' } = await props.params;
+function SingleApplicationFallback() {
+    return (
+        <div className="2xl:px-60 xl:px-40 xl:py-10 lg:py-10 lg:px-12 px-8 py-8">
+            <div className="grid md:grid-cols-2 grid-cols-1 md:gap-16 gap-4">
+                <div>
+                    <Skeleton className="h-8 w-3/4" />
+                    <Skeleton className="mt-3 h-5 w-1/3" />
+                    <Skeleton className="mt-8 h-40 w-full" />
+                    <Skeleton className="mt-12 h-5 w-2/3" />
+                    <Skeleton className="mt-4 h-6 w-1/2" />
+                </div>
+                <div>
+                    <Skeleton className="aspect-square w-full" />
+                    <div className="mt-4 grid grid-cols-2 gap-4">
+                        <Skeleton className="aspect-square w-full" />
+                        <Skeleton className="aspect-square w-full" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default function SingleAppJsonLd(props: Props) {
+    return (
+        <Suspense fallback={<SingleApplicationFallback />}>
+            <SingleAppContent params={props.params} />
+        </Suspense>
+    );
+}
+
+async function SingleAppContent({ params }: Props) {
+    const { applicationSlug = '' } = await params;
     const baseUrl = process.env.NEXT_PUBLIC_ROOT_URL ?? 'http://localhost:3000';
     
     const data = await getSingleApplicationData(applicationSlug);
