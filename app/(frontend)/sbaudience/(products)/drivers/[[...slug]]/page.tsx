@@ -11,6 +11,7 @@ import { getNavbarRoutes } from '@/app/(frontend)/(sbacoustics)/(products)/drive
 import { cacheLife } from 'next/cache';
 import { Suspense } from 'react';
 import ProductCard from '../../components-all-drivers-page/product-card';
+import { AllDriversPageFallback, DriversPageFallback } from '@/components/loading-product-card';
 
 
 export async function generateStaticParams() {
@@ -397,7 +398,7 @@ export default function SBAudienceDriversPage({
   params: Promise<{ slug?: string[] }>;
 }) {
   return (
-    <Suspense fallback={<SBAudienceDriversPageFallback />}>
+    <Suspense fallback={<div className='h-screen' />}>
       <SBAudienceDriversPageContent params={params} />
     </Suspense>
   );
@@ -538,45 +539,47 @@ async function SBAudienceDriversPageContent({
                 />
                 <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <h1 className="sr-only">All Drivers | SB Audience</h1>
-                {allDriver && allDriver.thumbnail_url !== '' &&
-                    <div>
-                    <Link 
-                        href='/sbaudience/drivers/all'
-                        className=" group cursor-pointer space-y-4 block"
-                    >
-                        <div className="relative aspect-square">
-                        <LazyImageClickable
-                            src={allDriver.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${allDriver.thumbnail_url}` : allDriver.thumbnail_url} 
-                            alt={`${allDriver.name} by SB Audience`}
-                            width={1000}
-                            height={1000}
-                        />
+                <Suspense fallback={<AllDriversPageFallback />}>
+                    {allDriver && allDriver.thumbnail_url !== '' &&
+                        <div>
+                        <Link 
+                            href='/sbaudience/drivers/all'
+                            className=" group cursor-pointer space-y-4 block"
+                        >
+                            <div className="relative aspect-square">
+                            <LazyImageClickable
+                                src={allDriver.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${allDriver.thumbnail_url}` : allDriver.thumbnail_url} 
+                                alt={`${allDriver.name} by SB Audience`}
+                                width={1000}
+                                height={1000}
+                            />
+                            </div>
+                            
+                            <h2 className="font-bold text-xl text-center">All {allDriver.name}</h2>
+                        </Link>
                         </div>
-                        
-                        <h2 className="font-bold text-xl text-center">All {allDriver.name}</h2>
-                    </Link>
-                    </div>
-                }
-                {uniqueCategories.map((item, i) => (
-                    item.thumbnail_url !== '' &&
-                    <div key={i}>
-                    <Link 
-                        href={`/sbaudience${item.url}`} 
-                        className=" group cursor-pointer space-y-4 block"
-                    >
-                        <div className="relative aspect-square">
-                        <LazyImageClickable
-                            src={item.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}` : item.thumbnail_url} 
-                            alt={`${item.name} by SB Audience`}
-                            width={1000}
-                            height={1000}
-                        />
+                    }
+                    {uniqueCategories.map((item, i) => (
+                        item.thumbnail_url !== '' &&
+                        <div key={i}>
+                        <Link 
+                            href={`/sbaudience${item.url}`} 
+                            className=" group cursor-pointer space-y-4 block"
+                        >
+                            <div className="relative aspect-square">
+                            <LazyImageClickable
+                                src={item.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}` : item.thumbnail_url} 
+                                alt={`${item.name} by SB Audience`}
+                                width={1000}
+                                height={1000}
+                            />
+                            </div>
+                            
+                            <h2 className="font-bold text-xl text-center">{item.name}</h2>
+                        </Link>
                         </div>
-                        
-                        <h2 className="font-bold text-xl text-center">{item.name}</h2>
-                    </Link>
-                    </div>
-                ))}
+                    ))}
+                </Suspense>
                 </div>
             </div>
         );
@@ -673,19 +676,8 @@ async function SBAudienceDriversPageContent({
       <h1 className='sr-only'>{!subslug || subslug === 'all' ? `All Drivers` 
         : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Drivers`} | SB Audience</h1>
       
-        <Suspense fallback={
-            <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
-                <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
-                    <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-8">
-                        {Array.from({ length: 12 }).map((_, index) => (
-                            <div key={index} className="px-2 pt-4">
-                                <ProductCard data={null} hovered={false}/>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        }>
+        
+        <Suspense fallback={<DriversPageFallback />}>
             {tempData &&
                 <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
                     <div className="md:grid lg:grid-cols-5 md:grid-cols-4">

@@ -11,8 +11,7 @@ import { buildNavbarMenus } from '@/components/build-navbar-menu';
 import { getNavbarRoutes } from '../../drivers/[[...slug]]/page';
 import { cacheLife } from 'next/cache';
 import { Suspense } from 'react';
-import ProductCard from '../../components-all-drivers-page/product-card';
-import { Loader2 } from 'lucide-react';
+import { AllDriversPageFallback, DriversPageFallback } from "@/components/loading-product-card";
 
 export const instant = false
 
@@ -381,7 +380,19 @@ function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSli
   return Array.from(new Set(arr));
 }
 
-export default async function KitsPage({
+export default function KitsPage({
+  params,
+}: {
+  params: Promise<{ slug?: string[] }>;
+}) {
+  return (
+    <Suspense fallback={<div className='h-screen' />}>
+      <KitsPageContent params={params} />
+    </Suspense>
+  );
+}
+
+async function KitsPageContent({
   params,
 }: {
   params: Promise<{ slug?: string[] }>;
@@ -514,60 +525,46 @@ export default async function KitsPage({
             />
             <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <h1 className="sr-only">All Kits | SB Acoustics</h1>
-                <Suspense fallback={
-                    Array.from({ length: 4 }, (_, index) => index + 1).map((i) => {
-                    return (
-                        <div key={i}>
-                        <div className=" group cursor-pointer space-y-4 block">
+                <Suspense fallback={<AllDriversPageFallback />}>
+                    {allKit && allKit.thumbnail_url !== '' &&
+                        <div>
+                        <Link 
+                            href='/kits/all'
+                            className=" group cursor-pointer space-y-4 block"
+                        >
                             <div className="relative aspect-square">
-                            <Loader2 />
+                            <LazyImageClickable
+                                src={allKit.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${allKit.thumbnail_url}` : allKit.thumbnail_url} 
+                                alt={`${allKit.name} by SB Acoustics`}
+                                width={1000}
+                                height={1000}
+                            />
                             </div>
                             
-                            <h2 className="font-bold text-xl text-center">...</h2>
+                            <h2 className="font-bold text-xl text-center">All {allKit.name}</h2>
+                        </Link>
                         </div>
-                        </div>
-                    );
                     }
-                )}>
-                 {allKit && allKit.thumbnail_url !== '' &&
-                    <div>
-                    <Link 
-                        href='/kits/all'
-                        className=" group cursor-pointer space-y-4 block"
-                    >
-                        <div className="relative aspect-square">
-                        <LazyImageClickable
-                            src={allKit.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${allKit.thumbnail_url}` : allKit.thumbnail_url} 
-                            alt={`${allKit.name} by SB Acoustics`}
-                            width={1000}
-                            height={1000}
-                        />
+                    {uniqueCategories.map((item, i) => (
+                        item.thumbnail_url !== '' &&
+                        <div key={i}>
+                        <Link 
+                            href={item.url}
+                            className=" group cursor-pointer space-y-4 block"
+                        >
+                            <div className="relative aspect-square">
+                            <LazyImageClickable
+                                src={item.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}` : item.thumbnail_url} 
+                                alt={`${item.name} by SB Acoustics`}
+                                width={1000}
+                                height={1000}
+                            />
+                            </div>
+                            
+                            <h2 className="font-bold text-xl text-center">{item.name}</h2>
+                        </Link>
                         </div>
-                        
-                        <h2 className="font-bold text-xl text-center">All {allKit.name}</h2>
-                    </Link>
-                    </div>
-                }
-                 {uniqueCategories.map((item, i) => (
-                    item.thumbnail_url !== '' &&
-                    <div key={i}>
-                    <Link 
-                        href={item.url}
-                        className=" group cursor-pointer space-y-4 block"
-                    >
-                        <div className="relative aspect-square">
-                        <LazyImageClickable
-                            src={item.thumbnail_url.startsWith('/uploads/') ? `${process.env.NEXT_PUBLIC_ROOT_URL}${item.thumbnail_url}` : item.thumbnail_url} 
-                            alt={`${item.name} by SB Acoustics`}
-                            width={1000}
-                            height={1000}
-                        />
-                        </div>
-                        
-                        <h2 className="font-bold text-xl text-center">{item.name}</h2>
-                    </Link>
-                    </div>
-                ))}
+                    ))}
                 </Suspense>
             </div>
             </div>
@@ -666,19 +663,7 @@ export default async function KitsPage({
       
       <h1 className='sr-only'>{!subslug || subslug === 'all' ? `All Kits` 
         : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Kits`} | SB Acoustics</h1>
-        <Suspense fallback={
-            <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
-                <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
-                    <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-8">
-                        {Array.from({ length: 12 }).map((_, index) => (
-                            <div key={index} className="px-2 pt-4">
-                                <ProductCard data={null} hovered={false}/>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        }>
+        <Suspense fallback={<DriversPageFallback />}>
             {tempData &&
                 <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
                     <div className="md:grid lg:grid-cols-4 md:grid-cols-3">
@@ -686,7 +671,7 @@ export default async function KitsPage({
                     </div>
                 </div>
             }
-      </Suspense>
+        </Suspense>
     </>
   );
 }

@@ -10,6 +10,7 @@ import { Suspense } from 'react';
 import ProductCard from '../../components-all-drivers-page/product-card';
 import { Loader2 } from 'lucide-react';
 import { buildHierarchy, serializeCategory, SerializedCategory } from '@/app/(frontend)/actions/get-all-navbar-content';
+import { AllDriversPageFallback, DriversPageFallback } from '../../../../../../components/loading-product-card';
 
 
 export function getNavbarRoutes(menus: NavbarMenus): string[][] {
@@ -403,30 +404,13 @@ async function getDriversData(subslug: string | null, subsubslug: string | null,
     return [subCatNameResult, subsubCatNameResult, subsubsubCatNameResult] as const
 }
 
-
-function DriversPageFallback() {
-  return (
-    <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
-      <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
-        <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-8">
-          {Array.from({ length: 12 }, (_, index) => (
-            <div key={index} className="px-2 pt-4">
-              <ProductCard data={null} hovered={false} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function DriversPage({
   params,
 }: {
   params: Promise<{ slug?: string[] }>;
 }) {
   return (
-    <Suspense fallback={<DriversPageFallback />}>
+    <Suspense fallback={<div className='h-screen' />}>
       <DriversPageContent params={params} />
     </Suspense>
   );
@@ -565,21 +549,7 @@ async function DriversPageContent({
                 <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <h1 className="sr-only">All Drivers | SB Acoustics</h1>
                 
-                <Suspense fallback={
-                    Array.from({ length: 8 }, (_, index) => index + 1).map((i) => {
-                    return (
-                        <div key={i}>
-                        <div className=" group cursor-pointer space-y-4 block">
-                            <div className="relative aspect-square">
-                            <Loader2 />
-                            </div>
-                            
-                            <h2 className="font-bold text-xl text-center">...</h2>
-                        </div>
-                        </div>
-                    );
-                    }
-                )}>
+                <Suspense fallback={<AllDriversPageFallback />}>
                     {allDriver && allDriver.thumbnail_url !== '' &&
                         <div>
                         <Link 
@@ -599,7 +569,6 @@ async function DriversPageContent({
                         </Link>
                         </div>
                     }
-
 
                     {uniqueCategories.map((item, i) => (
                         item.thumbnail_url !== '' &&
@@ -725,26 +694,14 @@ async function DriversPageContent({
       <h1 className='sr-only'>{!subslug || subslug === 'all' ? `All Drivers` 
         : subslug && !subsubslug && !subsubsubslug ? subCatName?.name : subslug && subsubslug && !subsubsubslug ? subSubCatName?.name : subslug && subsubslug && subsubsubslug ? subSubsubCatName?.name : `All Drivers`} | SB Acoustics</h1>
       
-        <Suspense fallback={
+        <Suspense fallback={<DriversPageFallback />}>
+        {tempData &&
             <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
                 <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
-                    <div className="h-screen grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 pt-8">
-                        {Array.from({ length: 12 }).map((_, index) => (
-                            <div key={index} className="px-2 pt-4">
-                                <ProductCard data={null} hovered={false}/>
-                            </div>
-                        ))}
-                    </div>
+                        <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
                 </div>
             </div>
-        }>
-            {tempData &&
-                <div className="2xl:px-60 xl:px-40 xl:py-8 lg:py-6 lg:px-12 px-8 py-4">
-                    <div className="md:grid lg:grid-cols-5 md:grid-cols-4">
-                            <AllDriversandFiltersProducts data={tempData} slider={sliderRows} checkbox={checkboxRows} showFilters={counterShow!==0}/>
-                    </div>
-                </div>
-            }
+        }
         </Suspense>
     </>
   );
