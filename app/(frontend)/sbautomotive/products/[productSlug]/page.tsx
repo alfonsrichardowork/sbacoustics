@@ -17,6 +17,7 @@ import { cacheLife } from "next/cache";
 import { ProductSkeleton } from "@/components/productskeleton";
 import { Dompurifyclient } from "@/components/dompurify-content";
 import { tempproducts } from "@/lib/sbautomotive-data";
+import ExplodeMedia from "./explode";
 
 const all_desc_style = "text-left xl:text-base sm:text-sm text-xs text-black p-0 py-1"
 const all_sub_title_style = "text-left font-bold xl:text-2xl lg:text-xl md:text-lg sm:text-md text-black"
@@ -25,11 +26,11 @@ type Props = {
   params: Promise<{ productSlug?: string }>
 }
 
-export async function generateStaticParams(){
-    return tempproducts.map((product) => ({
-        productSlug: product.slug
-    }));
-}
+// export async function generateStaticParams(){
+//     return tempproducts.map((product) => ({
+//         productSlug: product.slug
+//     }));
+// }
 
 
 // async function getOneDriverData(productSlug: string){
@@ -263,13 +264,28 @@ async function SingleProductSBAutomotive({ productSlug }: { productSlug: string 
                 )}
             </div>
 
-            <img
-                src={`/images/sbautomotive/${val.slug}/spec.png`}
-                alt={`${val.slug} specs`}
-                width={1000}
-                height={1000}
-                className="object-cover w-full h-full"
-            />
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+           <ExplodeMedia slug={val.slug}/>
+
+
+
+
+
+
+
+
+
+
+
             
             <div className="bg-zinc-100 w-full h-full block py-16">
                 <div className="flex justify-center text-center items-center text-3xl font-light tracking-widest w-full p-4">SPECIFICATION</div>

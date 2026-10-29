@@ -143,7 +143,9 @@ export default function Layout({
           </ThemeWrapper>
 
         </Suspense>
-          <CookieBanner />
+          <Suspense fallback={null}>
+            <CookieBanner />
+          </Suspense>
         </CookieProvider>
       </body>
     </html>

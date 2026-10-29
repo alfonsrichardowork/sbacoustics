@@ -29,19 +29,19 @@ type Props = {
   params: Promise<{ applicationSlug?: string }>
 }
 
-export async function generateStaticParams(){
-  const app = await prismadb.sbaudienceapplication.findMany({
-    where: {
-      brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
-    },
-    select: {
-      slug: true,
-    },
-  });
-  return app.map((application: { slug: string }) => ({
-    applicationSlug: application.slug
-  }));
-}
+// export async function generateStaticParams(){
+//   const app = await prismadb.sbaudienceapplication.findMany({
+//     where: {
+//       brandId: process.env.NEXT_PUBLIC_SB_AUDIENCE_ID,
+//     },
+//     select: {
+//       slug: true,
+//     },
+//   });
+//   return app.map((application: { slug: string }) => ({
+//     applicationSlug: application.slug
+//   }));
+// }
 
 function SingleApplicationFallback() {
     return (
