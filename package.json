@@ -13,8 +13,8 @@
   "dependencies": {
     "@google-analytics/data": "^5.2.0",
     "@hookform/resolvers": "^5.0.1",
-    "@next/bundle-analyzer": "^16.4.3",
-    "@next/third-parties": "^16.4.3",
+    "@next/bundle-analyzer": "16.4.5",
+    "@next/third-parties": "16.4.5",
     "@prisma/adapter-mariadb": "^7.10.1",
     "@prisma/client": "^7.10.1",
     "@radix-ui/react-accordion": "^1.2.0",
@@ -69,8 +69,8 @@
     "cross-env": "^10.1.0",
     "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
-    "eslint": "10.11.0",
-    "eslint-config-next": "^16.4.3",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.5",
     "express": "^5.1.0",
     "formidable": "^3.5.1",
     "framer-motion": "^12.4.1",
@@ -83,15 +83,15 @@
     "lucide-react": "^0.488.0",
     "mapbox-gl": "^3.7.0",
     "motion": "^12.33.0",
-    "next": "^16.4.3",
+    "next": "16.4.5",
     "next-connect": "^1.0.0",
     "next-themes": "^0.4.6",
     "nextjs-toploader": "^3.8.16",
     "nodemailer": "^10.2.1",
     "prisma": "^7.10.1",
     "query-string": "^9.0.0",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "react-google-recaptcha": "^3.1.0",
     "react-google-recaptcha-v3": "^1.10.1",
     "react-hook-form": "^7.45.0",
@@ -129,5 +129,12 @@
     "not op_mini all",
     "safari >= 10.15",
     "ios >= 10.15"
-  ]
+  ],
+  "allowScripts": {
+    "argon2@0.41.1": true,
+    "prisma@7.10.1": true,
+    "protobufjs@7.6.6": true,
+    "@prisma/engines@7.10.1": true,
+    "@parcel/watcher@2.6.0": true
+  }
 }
