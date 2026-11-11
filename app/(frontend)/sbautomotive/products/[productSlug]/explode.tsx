@@ -189,11 +189,11 @@ export default function ExplodeMedia({ slug, hotspots = defaultHotspots }: Explo
                     ) : (
                         // <Triangle className="lg:size-5 md:size-4 size-3 rotate-180 fill-transparent stroke-primary stroke-4 drop-shadow-md animate-bounce hover:cursor-pointer" aria-hidden="true" />
                         <Image
-                        src="/images/sbautomotive/triangle.svg"
+                        src="/images/sbautomotive/triangle.png"
                         alt=""
                         width={100}
                         height={100}
-                        className="lg:size-5 md:size-4 size-3 drop-shadow-[0_0_8px_rgba(239,68,68,0.95)] rotate-180 font-bold"
+                        className="lg:size-7 md:size-5 size-4 drop-shadow-[0_0_8px_rgba(239,68,68,0.95)] font-bold"
                         />
                     )}
                     </button>
